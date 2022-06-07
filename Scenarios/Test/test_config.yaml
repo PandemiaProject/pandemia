@@ -1,0 +1,294 @@
+---
+# ######################################### Basic Parameters #######################################
+
+# Scale factor
+scale_factor: 0.5
+
+# Profiler
+profile: False
+pstats_records: 100
+
+# Random seeds for each region
+random_seed: 1
+
+# Enable or disable the use of ctypes
+enable_ctypes: True
+
+# Enable or disable the use of parallel processing. Parallel processing requires the use of ctypes.
+# Note that the number of jobs is automatically reset according to the number of regions and
+# population ratio between regions:
+enable_parallel: True
+num_jobs: -2
+
+# ######################################### Clock ##################################################
+
+# Time length of each tick in the simulation. Weeks must contain the same number of ticks, because
+# we use weekly routines. This means the week length (604800) should be divisible by the following
+# tick length:
+tick_length_s: 600
+# How long the simulation should run for, in days. Note the number of iterations will be computed
+# from the tick length above:
+simulation_length_days: 100
+# the date at which the simulation starts:
+epoch: 23th February 2020
+
+# ######################################### World ##################################################
+
+world_factory:
+  __type__: test_world_factory.TestWorldFactory
+  random_seed: 1
+  # The order in which the region names are listed here determines the index of that region referred
+  # to in vectors and matrices appearing in other components:
+  region_names: ["Test Region 0", "Test Region 1", "Test Region 2", "Test Region 3"]
+  # Locations
+  location_type_counts: {"House": 2500, "Hospital": 2, "Cemetery": 1, "Other_Location": 2497}
+  # Agents
+  number_of_agents_per_region: 100000
+  max_age: 100
+  # Activities
+  activities: ["Home_Activity", "Other_Activity"]
+  activity_location_types: {"Home_Activity": ["House"], "Other_Activity": [Other_Location]}
+  number_of_locations_for_agent_by_activity: {"Home_Activity": 1, "Other_Activity": 10}
+  contacts: 5
+  contact_hours: 8
+  travel_prob_per_day: 0.0001
+
+# ######################################### Seasonal Effects #######################################
+
+seasonal_effects_model:
+  __type__: simple_seasonal_effects_model.SimpleSeasonalEffectsModel
+  seasonal_multiplier_by_region_by_month: [[1,1,1,1,1,1,1,1,1,1,1,1], [1,1,1,1,1,1,1,1,1,1,1,1],
+                                           [1,1,1,1,1,1,1,1,1,1,1,1], [1,1,1,1,1,1,1,1,1,1,1,1]]
+
+# ######################################### Health #################################################
+
+# Disease (mutation viewed from the point of view of within-host competition, for the case in which
+# strains can be ordered by within-host fitness). Cross immunity is represented by the off-diagonal
+# step functions. Furthermore tau refers to the set of possible outcomes, while rho refers to the
+# probability distribution over these outcomes. For simplicity we assume only two possible outcomes.
+# Note that the infectiousness probability give a probability per tick, and must therefore be
+# adjusted if the tick length is changed.
+
+health_model:
+  __type__: simple_health_model.SimpleHealthModel
+  location_typ_multipliers:
+    House: 1.0
+    Hospital: 1.0
+    Cemetery: 0.0
+    Other_Location: 1.0
+  divide_location_multipliers_by_number_of_agents_in_region: False
+  facemask_transmission_multiplier: 0.1
+  immunity_period_days: 7
+  num_initial_infections_by_region_by_strain:
+    'Test Region 0': [1000, 0]
+    'Test Region 1': [1000, 0]
+    'Test Region 2': [1000, 0]
+    'Test Region 3': [1000, 0]
+  mutation_matrix: [[0.99, 0.01], [0.0, 1.0]]
+  number_of_strains: 2
+  preset_weights_by_age:
+    0:  {preset_0: 1.00, preset_1: 0.00}
+    18: {preset_0: 0.99, preset_1: 0.01}
+    65: {preset_0: 0.98, preset_1: 0.02}
+  health_presets:
+    preset_0:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 5, 30], [1.0, 0.5, 1.0]],
+            [[-1, 5, 30], [1.0, 0.5, 1.0]]],
+           [[[-1, 5, 30], [1.0, 0.5, 1.0]],
+            [[-1, 5, 30], [1.0, 0.5, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 5], [0.0, 0.0075, 0.0]],
+           [[-1, 0, 5], [0.0, 0.0075, 0.0]]]
+        disease:
+          [[[-1, 0, 5], [0.0, 0.2, 0.0]],
+           [[-1, 0, 5], [0.0, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 5], [-1, 0, -1]],
+           [[-1, 0, 5], [-1, 1, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 7, 60], [1.0, 0.5, 1.0]],
+            [[-1, 7, 60], [1.0, 0.5, 1.0]]],
+           [[[-1, 7, 60], [1.0, 0.5, 1.0]],
+            [[-1, 7, 60], [1.0, 0.5, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 7], [0.0, 0.001, 0.0]],
+           [[-1, 0, 7], [0.0, 0.001, 0.0]]]
+        disease:
+          [[[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]],
+           [[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 7], [-1, 0, -1]],
+           [[-1, 0, 7], [-1, 1, -1]]]
+    preset_1:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 30], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 5, 30], [1.0, 0.5, 1.0]],
+            [[-1, 5, 30], [1.0, 0.5, 1.0]]],
+           [[[-1, 5, 30], [1.0, 0.5, 1.0]],
+            [[-1, 5, 30], [1.0, 0.5, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 5], [0.0, 0.0055, 0.0]],
+           [[-1, 0, 5], [0.0, 0.0055, 0.0]]]
+        disease:
+          [[[-1, 0, 5], [0.0, 0.2, 0.0]],
+           [[-1, 0, 5], [0.0, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 5], [-1, 0, -1]],
+           [[-1, 0, 5], [-1, 1, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 60], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 7, 60], [1.0, 0.5, 1.0]],
+            [[-1, 7, 60], [1.0, 0.5, 1.0]]],
+           [[[-1, 7, 60], [1.0, 0.5, 1.0]],
+            [[-1, 7, 60], [1.0, 0.5, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 7], [0.0, 0.0009, 0.0]],
+           [[-1, 0, 7], [0.0, 0.0009, 0.0]]]
+        disease:
+          [[[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]],
+           [[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 7], [-1, 0, -1]],
+           [[-1, 0, 7], [-1, 1, -1]]]
+
+# ######################################### Movement ###############################################
+
+movement_model:
+  __type__: simple_movement_model.SimpleMovementModel
+  weighted_sampling: True
+  home_activity: "Home_Activity"
+  location_closure_exemptions:
+    House: ["Home_Activity"]
+  facemask_activities: [Other_Activity]
+  age_groups:         [  0,  18,  65]
+  facemask_hesitancy: [0.9, 0.5, 0.2]
+
+# ######################################### Hospitalization and Death ##############################
+
+hospitalization_and_death_model:
+  __type__: simple_hospitalization_and_death_model.SimpleHospitalizationAndDeathModel
+  hospital_threshold: 0.5
+  hospital_location_type: Hospital
+  cemetery_location_type: Cemetery
+
+# ######################################### Testing and Contact Tracing ############################
+
+testing_and_contact_tracing_model:
+  __type__: simple_testing_and_contact_tracing_model.SimpleTestingAndContactTracingModel
+  quarantine_period_days: 14
+  symptomatic_disease_treshold: 0.2
+  prob_self_isolate_with_symptoms_without_test: 0.0
+  prob_quarantine_with_contact_without_test: 0.0
+  test_threshold: 0.4
+  test_false_negative: 0.01
+  max_regular_contacts_to_test: 10
+
+# ######################################### Vaccination ############################################
+
+vaccination_model:
+  __type__: simple_vaccination_model.SimpleVaccinationModel
+  number_of_vaccines: 2
+  age_groups:        [  0,  18,  65]
+  vaccine_hesitancy: [0.8, 0.4, 0.1]
+  booster_waiting_time_days: 50
+  vaccines:
+    vaccine_0:
+      rho_immunity_failure:
+        [[[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+         [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]
+      sigma_immunity_failure:
+        [[[-1, 0, 14], [1.0, 0.5, 1.0]],
+         [[-1, 0, 14], [1.0, 0.5, 1.0]]]
+    vaccine_1:
+      rho_immunity_failure:
+        [[[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+         [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]
+      sigma_immunity_failure:
+        [[[-1, 0, 14], [1.0, 0.5, 1.0]],
+         [[-1, 0, 14], [1.0, 0.5, 1.0]]]
+
+# ######################################### Regional Mixing ########################################
+
+regional_mixing_model:
+  __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
+  border_closure_factor: 0.1
+  travel_transmission_multiplier: 1.0
+
+# ######################################### Input ##################################################
+
+input_model:
+  __type__: simple_input_model.SimpleInputModel
+
+# ######################################### Output #################################################
+
+# Output that should be rendered from the simulation:
+reporters:
+  cli.TimeReporter: {}
+  csv.StrainCounts:
+    filename: /tmp/strain_counts.csv
+  plot.PlotInfected:
+    show: True
+    savefig: False
+    filename: /tmp/infected.png
+  # pygame_display.PygameDisplay:
+  #   fullscreen: True
+  #   font_size: 20
+  #   max_norm_prev: 1.0
+  #   refresh_rate: 60
+  #   display_width: 1500
+  #   display_height: 700
+  #   points_per_polygon: 400
+  #   cmap: "Oranges"
+
+# ######################################### Logging ################################################
+
+# Format is https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
+logging:
+  version: 1
+  disable_existing_loggers: False
+  formatters:
+    standard:
+      # format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+      format: '[%(levelname)s] %(name)s: %(message)s'
+  handlers:
+    default:
+      level: INFO
+      formatter: standard
+      class: logging.StreamHandler
+      stream: 'ext://sys.stdout'  # Default is stderr
+  loggers:
+    '':   # root logger
+      handlers: ['default']
+      level: INFO
+      propagate: False
+#    'my.packg':
+#      handlers: ['default']
+#      level: INFO
+#      propagate: False
+#    '__main__':
+#        handlers': ['default']
+#        level: DEBUG
+#        propagate: False
