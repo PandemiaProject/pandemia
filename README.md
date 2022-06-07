@@ -24,9 +24,10 @@ Output data are stored in a configured output directory.
  * python 3.10
 
 ## Usage
+To install and run:
 
- * `pip install .`
- * `pandemia Scenarios/Global/global_config.yaml`
+    pip install .
+    pandemia Scenarios/Global/global_config.yaml
 
 ## Testing
 To test:
@@ -41,9 +42,9 @@ To generate documentation:
     pdoc --html --overwrite --html-dir docs pandemia
 
 ## Citing This Work
-Pandemia is based on the [ABMlux model](https://github.com/abm-covid-lux/abmlux), which was used for the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330.
+Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), a simpler epidemic model which was used for the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330.
 
-If you publish using technology from this repository, please cite [the above article](https://doi.org/10.1371/journal.pone.0261330), using this BibTeX:
+If you publish using technology from this repository, please cite the above article using this BibTeX:
 
     @article{10.1371/journal.pone.0261330,
         doi = {10.1371/journal.pone.0261330},
