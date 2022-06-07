@@ -4,7 +4,7 @@
 ![Pylint](https://github.com/?/workflows/Pylint/badge.svg)
 [![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
-Pandemia is an individual based pandemic simulator.
+Pandemia is an individual based pandemic simulator. This is currently a work in progress.
 
 ![pandemia Logo](pandemia_logo.jpg)
 
