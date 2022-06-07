@@ -1,8 +1,8 @@
 # Pandemia
-![Integration](https://github.com/?/workflows/Integration/badge.svg?branch=master)
+<!-- ![Integration](https://github.com/?/workflows/Integration/badge.svg?branch=master)
 ![Pytest](https://github.com/?/workflows/Pytest/badge.svg)
 ![Pylint](https://github.com/?/workflows/Pylint/badge.svg)
-[![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?)
+[![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
 Pandemia is an individual based pandemic simulator.
 
