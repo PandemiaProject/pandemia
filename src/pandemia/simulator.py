@@ -15,33 +15,6 @@ from pandemia.version import VERSION
 
 log = logging.getLogger('sim')
 
-# TODO
-# - define environment and dependencies etc
-# - generate documentation
-# - compile for different operating systems and test
-
-# TESTING
-# - tests and assertions, e.g. assertions for all presets and vaccines, e.g. for
-#   number_of_rho_immunity_outcomes (assert that number_of_rho_immunity_outcomes is the same for
-#   both health model and vaccination model etc...)
-
-# SCENARIOS
-# - configure other scenarios (i.e. world objects) using data, e.g. the Luxembourg data...
-
-# PERFORMANCE
-# - need to check don't overflow stack when allocating memory in the C functions, if array length
-#   (e.g. population size) too big etc...? (move those arrays outside of stack?)
-# - optimize runtime and memory usage (padded arrays can be compressed with offsets, for example)
-
-# FEATURES
-# - variable resolution, meaning a different scale factor for each region(?)
-# - rigourous statistical validation methods?
-# - include a regional/location transmission factor intervention respresenting social distancing?
-# - impact of hospitalization and capacity?
-# - testing and contact tracing delays?
-# - improved immunity subsampling approach?
-# - fast forward remaining sim if total infected is zero?
-
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class Simulator:
