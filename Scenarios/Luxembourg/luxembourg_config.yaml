@@ -1,0 +1,161 @@
+---
+# ######################################### Basic Parameters #######################################
+
+# Scale factor
+scale_factor: 0.1
+
+# Profiler
+profile: False
+pstats_records: 100
+
+# Random seeds for each region
+random_seed: 1
+
+# Enable or disable the use of ctypes
+enable_ctypes: True
+
+# Enable or disable the use of parallel processing. Note that the number of jobs is automatically
+# reset according to the number of regions and population ratio between regions:
+enable_parallel: True
+num_jobs: -2
+
+# ######################################### Clock ##################################################
+
+# Time length of each tick in the simulation. Weeks must contain the same number of ticks, because
+# we use weekly routines. This means the week length (604800) should be divisible by the following
+# tick length:
+tick_length_s: 600
+# How long the simulation should run for, in days. Note the number of iterations will be computed
+# from the tick length above:
+simulation_length_days: 100
+# the date at which the simulation starts:
+epoch: 23th February 2020
+
+# ######################################### World ##################################################
+
+world_factory:
+  __type__: luxembourg_world_factory.LuxembourgWorldFactory
+  luxembourg_data_path: Scenarios/Luxembourg/data/?
+
+# ######################################### Seasonal Effects #######################################
+
+seasonal_effects_model:
+  __type__: void_seasonal_effects_model.VoidSeasonalEffectsModel
+
+# ######################################### Health #################################################
+
+# Disease (mutation viewed from the point of view of within-host competition, for the case in which
+# strains can be ordered by within-host fitness). Cross immunity is represented by the off-diagonal
+# step functions. Furthermore tau refers to the set of possible outcomes, while rho refers to the
+# probability distribution over these outcomes. For simplicity we assume only two possible outcomes.
+# Note that the infectiousness probability give a probability per tick, and must therefore be
+# adjusted if the tick length is changed.
+
+health_model:
+  __type__: simple_health_model.SimpleHealthModel
+  location_typ_multipliers: null
+  divide_location_multipliers_by_number_of_agents_in_region: True
+  facemask_transmission_multiplier: 1.0
+  immunity_period_days: 30
+  num_initial_infections_by_region_by_strain:
+    'CO11': [1000]
+  mutation_matrix: [[1.0]]
+  number_of_strains: 1
+  preset_weights_by_age:
+    0:  {preset_0: 1.00}
+  health_presets:
+    preset_0:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 5, 365], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 5, 365], [1.0, 0.0, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 5], [0.0, 0.02, 0.0]]]
+        disease:
+          [[[-1, 0, 5], [0.0, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 5], [-1, 0, -1]]]
+
+# ######################################### Movement ###############################################
+
+movement_model:
+  __type__: void_movement_model.VoidMovementModel
+
+# ######################################### Hospitalization and Death ##############################
+
+hospitalization_and_death_model:
+  __type__: void_hospitalization_and_death_model.VoidHospitalizationAndDeathModel
+
+# ######################################### Testing and Contact Tracing ############################
+
+testing_and_contact_tracing_model:
+  __type__: void_testing_and_contact_tracing_model.VoidTestingAndContactTracingModel
+
+# ######################################### Vaccination ############################################
+
+vaccination_model:
+  __type__: void_vaccination_model.VoidVaccinationModel
+
+# ######################################### Regional Mixing ########################################
+
+regional_mixing_model:
+  __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
+  border_closure_factor: 0.1
+  travel_transmission_multiplier: 1.0
+
+# ######################################### Input ##################################################
+
+input_model:
+  __type__: void_input_model.VoidInputModel
+
+# ######################################### Output #################################################
+
+# Output that should be rendered from the simulation:
+reporters:
+  cli.TimeReporter: {}
+  csv.StrainCounts:
+    filename: /tmp/strain_counts.csv
+  plot.PlotInfected:
+    show: False
+    savefig: True
+    filename: /tmp/infected.png
+  pygame_display.PygameDisplay:
+    fullscreen: False
+    font_size: 20
+    max_norm_prev: 1.0
+    refresh_rate: 60
+    display_width: 800
+    display_height: 800
+    points_per_polygon: 1000
+    cmap: "Oranges"
+
+# ######################################### Logging ################################################
+
+# Format is https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
+logging:
+  version: 1
+  disable_existing_loggers: False
+  formatters:
+    standard:
+      # format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+      format: '[%(levelname)s] %(name)s: %(message)s'
+  handlers:
+    default:
+      level: INFO
+      formatter: standard
+      class: logging.StreamHandler
+      stream: 'ext://sys.stdout'  # Default is stderr
+  loggers:
+    '':   # root logger
+      handlers: ['default']
+      level: INFO
+      propagate: False
+#    'my.packg':
+#      handlers: ['default']
+#      level: INFO
+#      propagate: False
+#    '__main__':
+#        handlers': ['default']
+#        level: DEBUG
+#        propagate: False
