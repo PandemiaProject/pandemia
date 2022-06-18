@@ -47,8 +47,10 @@ class PlotInfected(Reporter):
 
         plt.rc('font', **font)
         plot_label = 'Infected'
-        plt.plot(list(range(len(self.days))),
-                 self.infected,'black', linewidth=1, alpha=1.0, label=plot_label)
+        # plt.plot(list(range(len(self.days))),
+        #          self.infected, 'black', linewidth=1, alpha=1.0, label=plot_label)
+        plt.bar(list(range(len(self.days))),
+                self.infected, label=plot_label)
 
         # self.plot_sir()
 

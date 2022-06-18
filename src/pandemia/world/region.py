@@ -80,11 +80,11 @@ class Region:
         for agent in self.agents:
             assert ticks_in_week == len(agent.weekly_routine)
 
-        max_num_activity_locations = max([len(self.agents[0].activity_locations[a])
-                                         for a in self.activities])
+        max_num_activity_locations = 0
         for agent in self.agents:
-            assert max_num_activity_locations == max([len(agent.activity_locations[a])
-                                                    for a in self.activities])
+            max_for_agent = max([len(agent.activity_locations[a]) for a in self.activities])
+            if max_for_agent > max_num_activity_locations:
+                max_num_activity_locations = max_for_agent
 
         vector_region = VectorRegion(self.id, self.name, ticks_in_week, number_of_activities,
                                      number_of_agents, number_of_locations,

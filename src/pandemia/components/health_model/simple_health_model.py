@@ -277,8 +277,9 @@ class SimpleHealthModel(HealthModel):
 
         # Determine location transmission multipliers
         for m in range(vector_region.number_of_locations):
-            if self.location_typ_multipliers is not None:
-                location_typ = vector_region.location_typ_strings[m]
+            location_typ = vector_region.location_typ_strings[m]
+            if (self.location_typ_multipliers is not None) and\
+                (location_typ in self.location_typ_multipliers):
                 multiplier = self.location_typ_multipliers[location_typ]
             else:
                 multiplier = 1.0

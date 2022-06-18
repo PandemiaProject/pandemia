@@ -2,7 +2,7 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 0.1
+scale_factor: 0.25
 
 # Profiler
 profile: False
@@ -16,8 +16,8 @@ enable_ctypes: True
 
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
-enable_parallel: True
-num_jobs: -2
+enable_parallel: False
+num_jobs: 1
 
 # ######################################### Clock ##################################################
 
@@ -34,8 +34,10 @@ epoch: 23th February 2020
 # ######################################### World ##################################################
 
 world_factory:
-  __type__: luxembourg_world_factory.LuxembourgWorldFactory
-  luxembourg_data_path: Scenarios/Luxembourg/data/?
+  __type__: abmlux_world_factory.ABMluxWorldFactory
+  # The file path from where to load the world file
+  world_fp: Scenarios/Luxembourg/data/sim_factory.abm
+  region_name: Luxembourg
 
 # ######################################### Seasonal Effects #######################################
 
@@ -53,34 +55,119 @@ seasonal_effects_model:
 
 health_model:
   __type__: simple_health_model.SimpleHealthModel
-  location_typ_multipliers: null
-  divide_location_multipliers_by_number_of_agents_in_region: True
-  facemask_transmission_multiplier: 1.0
-  immunity_period_days: 30
+  location_typ_multipliers: # Unless specfified set to 1.0
+    Outdoor: 0.0
+    Belgium: 0.0
+    France: 0.0
+    Germany: 0.0
+    Construction: 0.0
+    Cemetery: 0.0
+  divide_location_multipliers_by_number_of_agents_in_region: False
+  facemask_transmission_multiplier: 0.1
+  immunity_period_days: 7
   num_initial_infections_by_region_by_strain:
-    'CO11': [1000]
-  mutation_matrix: [[1.0]]
-  number_of_strains: 1
+    'Luxembourg': [320, 0]
+  mutation_matrix: [[0.99, 0.01], [0.0, 1.0]]
+  number_of_strains: 2
   preset_weights_by_age:
-    0:  {preset_0: 1.00}
+    0:  {preset_0: 1.00, preset_1: 0.00}
+    18: {preset_0: 0.99, preset_1: 0.01}
+    65: {preset_0: 0.98, preset_1: 0.02}
   health_presets:
     preset_0:
       0:
         rho_immunity_failure:
-          [[[[-1, 5, 365], [[0.0], [0.0], [0.0]]]]]
+          [[[[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 5, 365], [1.0, 0.0, 1.0]]]]
+          [[[[-1, 5, 300], [1.0, 0.5, 1.0]],
+            [[-1, 5, 300], [1.0, 0.5, 1.0]]],
+           [[[-1, 5, 300], [1.0, 0.5, 1.0]],
+            [[-1, 5, 300], [1.0, 0.5, 1.0]]]]
         infectiousness:
-          [[[-1, 0, 5], [0.0, 0.02, 0.0]]]
+          [[[-1, 0, 5], [0.0, 0.00035, 0.0]],
+           [[-1, 0, 5], [0.0, 0.00035, 0.0]]]
         disease:
-          [[[-1, 0, 5], [0.0, 0.2, 0.0]]]
+          [[[-1, 0, 5], [0.0, 0.2, 0.0]],
+           [[-1, 0, 5], [0.0, 0.2, 0.0]]]
         strain:
-          [[[-1, 0, 5], [-1, 0, -1]]]
+          [[[-1, 0, 5], [-1, 0, -1]],
+           [[-1, 0, 5], [-1, 1, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 7, 300], [1.0, 0.5, 1.0]],
+            [[-1, 7, 300], [1.0, 0.5, 1.0]]],
+           [[[-1, 7, 300], [1.0, 0.5, 1.0]],
+            [[-1, 7, 300], [1.0, 0.5, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 7], [0.0, 0.00035, 0.0]],
+           [[-1, 0, 7], [0.0, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]],
+           [[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 7], [-1, 0, -1]],
+           [[-1, 0, 7], [-1, 1, -1]]]
+    preset_1:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 5, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 5, 300], [1.0, 0.5, 1.0]],
+            [[-1, 5, 300], [1.0, 0.5, 1.0]]],
+           [[[-1, 5, 300], [1.0, 0.5, 1.0]],
+            [[-1, 5, 300], [1.0, 0.5, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 5], [0.0, 0.00035, 0.0]],
+           [[-1, 0, 5], [0.0, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 5], [0.0, 0.2, 0.0]],
+           [[-1, 0, 5], [0.0, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 5], [-1, 0, -1]],
+           [[-1, 0, 5], [-1, 1, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]],
+           [[[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+            [[-1, 7, 300], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 7, 300], [1.0, 0.5, 1.0]],
+            [[-1, 7, 300], [1.0, 0.5, 1.0]]],
+           [[[-1, 7, 300], [1.0, 0.5, 1.0]],
+            [[-1, 7, 300], [1.0, 0.5, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 7], [0.0, 0.00035, 0.0]],
+           [[-1, 0, 7], [0.0, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]],
+           [[-1, 0, 2, 4, 7], [0.0, 0.2, 0.5, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 7], [-1, 0, -1]],
+           [[-1, 0, 7], [-1, 1, -1]]]
 
 # ######################################### Movement ###############################################
 
 movement_model:
-  __type__: void_movement_model.VoidMovementModel
+  __type__: simple_movement_model.SimpleMovementModel
+  weighted_sampling: False
+  home_activity: "House"
+  location_closure_exemptions:
+    House: ["House"]
+  facemask_activities: ["Public Transport"]
+  age_groups:         [  0,  18,  65]
+  facemask_hesitancy: [0.9, 0.5, 0.2]
 
 # ######################################### Hospitalization and Death ##############################
 
@@ -100,9 +187,7 @@ vaccination_model:
 # ######################################### Regional Mixing ########################################
 
 regional_mixing_model:
-  __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
-  border_closure_factor: 0.1
-  travel_transmission_multiplier: 1.0
+  __type__: void_regional_mixing_model.VoidRegionalMixingModel
 
 # ######################################### Input ##################################################
 
@@ -120,15 +205,6 @@ reporters:
     show: False
     savefig: True
     filename: /tmp/infected.png
-  pygame_display.PygameDisplay:
-    fullscreen: False
-    font_size: 20
-    max_norm_prev: 1.0
-    refresh_rate: 60
-    display_width: 800
-    display_height: 800
-    points_per_polygon: 1000
-    cmap: "Oranges"
 
 # ######################################### Logging ################################################
 
