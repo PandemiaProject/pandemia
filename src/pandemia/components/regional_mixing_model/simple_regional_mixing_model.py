@@ -73,7 +73,7 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
 
         vector_region.border_closure_intervention = -1
         vector_region.current_region = np.full((vector_region.number_of_agents),
-                                               vector_region.id, dtype=int)
+                                                vector_region.id, dtype=int)
 
     def initial_conditions(self, sim):
         """Initial regional mixing"""
