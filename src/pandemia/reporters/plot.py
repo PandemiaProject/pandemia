@@ -72,8 +72,8 @@ class PlotInfected(Reporter):
         """Plots solution to an SIR model"""
 
         step_size = 1
-        gamma = 1/5
-        beta = 0.48
+        gamma = 1/9
+        beta = 0.27
 
         T = len(self.days)
         N = self.total_population

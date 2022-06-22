@@ -159,6 +159,8 @@ void transmission
     int L, // number_of_locations
     int N, // number_of_agents
     int id,
+    int sir_rescaling_int,
+    int ticks_in_day,
     double facemask_transmission_multiplier,
     double current_region_transmission_multiplier,
     const int * current_strain,
@@ -178,13 +180,22 @@ void transmission
     double * transmission_force = (double *)malloc(sizeof(double) * L);
     double * sum = (double *)malloc(sizeof(double) * L);
     double * sum_by_strain = (double *)malloc(sizeof(double) * (L * S));
+    int * num_agents_by_location = (int *)malloc(sizeof(int) * L);
     for(int m=0; m<L; m++){
         transmission_force[m] = 1.0;
         sum[m] = 0.0;
+        num_agents_by_location[m] = 0;
         for(int s=0; s<S; s++){sum_by_strain[(m * S) + s] = 0.0;}
     }
 
     // Transmission out
+    if(sir_rescaling_int == 1){
+        for(int n=0; n<N; n++){
+            if(current_region[n] == id){
+                num_agents_by_location[current_location[n]] += 1;
+            }
+        }
+    }
     for(int n=0; n<N; n++){
         if(current_region[n] == id && current_strain[n] != -1){
             double f;
@@ -193,6 +204,9 @@ void transmission
                 (1 + (current_facemask[n] * (facemask_transmission_multiplier - 1))) *
                 current_infectiousness[n];
             sum_by_strain[(current_location[n] * S) + current_strain[n]] += f;
+            if(sir_rescaling_int == 1){
+                f /= num_agents_by_location[current_location[n]] * ticks_in_day;
+            }
             transmission_force[current_location[n]] *= 1 - f;
         }
     }

@@ -1,5 +1,6 @@
 """Simple health model"""
 
+from collections import defaultdict
 import logging
 import copy
 import numpy as np
@@ -12,7 +13,7 @@ log = logging.getLogger("simple_health_model")
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class SimpleHealthModel(HealthModel):
+class SIRHealthModel(HealthModel):
     """Simple model of agent health"""
 
     def __init__(self, config, scale_factor, clock, enable_ctypes):
@@ -40,10 +41,19 @@ class SimpleHealthModel(HealthModel):
 
         self.number_of_strains                = config['number_of_strains']
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
-        self.health_presets_config            = config['health_presets']
-        self.preset_weights_by_age            = config['preset_weights_by_age']
+
+        beta          = config['beta']
+        gamma_inverse = config['gamma_inverse']
+        disease_level = config['disease_level']
+        max_dist_days = config['max_dist_days']
+
+        self.health_presets_config = defaultdict(dict)
+        self.preset_weights_by_age = defaultdict(dict)
+        self._generate_presets_and_weights(beta, gamma_inverse, disease_level,
+                                           max_dist_days, self.clock)
+
         self.facemask_transmission_multiplier = config['facemask_transmission_multiplier']
-        self.mutation_matrix                  = config['mutation_matrix']
+        self.mutation_matrix                  = [[1.0]]
         self.location_typ_multipliers         = config['location_typ_multipliers']
         self.immunity_period_days             = config['immunity_period_days']
 
@@ -908,6 +918,35 @@ class SimpleHealthModel(HealthModel):
                         self.preset_strain_partitions[id][r][s][strain_length - 1]
                     assert final_infectiousness_partition <= final_strain_partition
                     assert final_disease_partition <= final_strain_partition
+
+    def _generate_presets_and_weights(self, beta, gamma_inverse,
+                                      disease_level, max_dist_days, clock):
+        """Generates simple health presets using geometric distribution"""
+
+        ticks_in_day = clock.ticks_in_day
+        max_day = clock.simulation_length_days
+
+        for t in range(1, max_dist_days * ticks_in_day):
+            preset_name = "preset_" + str(t - 1)
+            self.health_presets_config[preset_name] =\
+                {
+                    0:
+                    {
+                        "rho_immunity_failure":
+                            [[[[-1, t / ticks_in_day, max_day], [[0.0], [0.0], [0.0]]]]],
+                        "sigma_immunity_failure":
+                            [[[[-1, t / ticks_in_day, max_day], [1.0, 0.0, 1.0]]]],
+                        "infectiousness":
+                            [[[-1, 0, t / ticks_in_day], [0.0, beta, 0.0]]],
+                        "disease":
+                            [[[-1, 0, t / ticks_in_day], [0.0, disease_level, 0.0]]],
+                        "strain":
+                            [[[-1, 0, t / ticks_in_day], [-1, 0, -1]]]
+                    }
+                }
+            self.preset_weights_by_age[0][preset_name] =\
+                ((1 - (1 / (gamma_inverse * ticks_in_day)))**(t - 1)) *\
+                    (1 / (gamma_inverse * ticks_in_day))
 
     def _assign_preset_name(self, age_group, prng):
         """Assigns agents infection response preset names by age"""

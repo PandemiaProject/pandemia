@@ -59,7 +59,7 @@ seasonal_effects_model:
 health_model:
   __type__: simple_health_model.SimpleHealthModel
   location_typ_multipliers: null
-  divide_location_multipliers_by_number_of_agents_in_region: True
+  sir_rescaling: True
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:

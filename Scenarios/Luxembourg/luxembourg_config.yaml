@@ -62,7 +62,7 @@ health_model:
     Germany: 0.0
     Construction: 0.0
     Cemetery: 0.0
-  divide_location_multipliers_by_number_of_agents_in_region: False
+  sir_rescaling: False
   facemask_transmission_multiplier: 0.1
   immunity_period_days: 7
   num_initial_infections_by_region_by_strain:

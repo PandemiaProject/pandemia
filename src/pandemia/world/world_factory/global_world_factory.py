@@ -81,23 +81,30 @@ class GlobalWorldFactory(WorldFactory):
         world.regions = []
         total_number_of_agents = 0
         with open(regions_data_path, newline='') as csvfile:
+            next(csvfile)
             region_data = csv.reader(csvfile, delimiter=',')
             for row in region_data:
                 id = int(row[1])
                 iso = str(row[2])
+                if iso == 'GB':
+                    iso = 'UK'
                 new_location = Location(iso, (0.0, 0.0))
                 locations = []
                 locations.append(new_location)
                 population_size = int(row[3])
+                age_distribution = [float(row[5 + r]) for r in range(101)]
                 number_of_agents = max(int(population_size * self.scale_factor), 1)
                 total_number_of_agents += number_of_agents
                 agents = []
-                for _ in range(number_of_agents):
-                    new_agent = Agent(0)
-                    new_agent.weekly_routine = ["Default" for _ in range(ticks_in_week)]
-                    new_agent.activity_locations = {"Default": [new_location]}
-                    new_agent.activity_location_weights = {"Default": [1.0]}
-                    agents.append(new_agent)
+                for age in range(101):
+                    number_of_agents_of_this_age =\
+                        max(int(age_distribution[age] * number_of_agents), 1)
+                    for _ in range(number_of_agents_of_this_age):
+                        new_agent = Agent(age)
+                        new_agent.weekly_routine = ["Default" for _ in range(ticks_in_week)]
+                        new_agent.activity_locations = {"Default": [new_location]}
+                        new_agent.activity_location_weights = {"Default": [1.0]}
+                        agents.append(new_agent)
                 new_region = Region(id, iso, activities, agents, locations)
                 world.regions.append(new_region)
         world.number_of_regions = len(world.regions)
@@ -159,6 +166,8 @@ class GlobalWorldFactory(WorldFactory):
             for row in airport_data:
                 airport = str(row[0])
                 region_iso = str(row[3])
+                if region_iso == 'GB':
+                    region_iso = 'UK'
                 airports_to_region_iso[airport] = region_iso
 
         # Get air travel matrix, recording the number of travellers between regions either per month
