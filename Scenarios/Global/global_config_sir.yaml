@@ -2,7 +2,7 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 1
+scale_factor: 0.000033
 
 # Profiler
 profile: False
@@ -27,20 +27,23 @@ num_jobs: -2
 tick_length_s: 3600
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
-simulation_length_days: 100
+simulation_length_days: 200
 # the date at which the simulation starts:
 epoch: 23rd February 2020
 
 # ######################################### World ##################################################
 
 world_factory:
-  __type__: colombia_world_factory.ColombiaWorldFactory
-  regions_shape_path: Scenarios/Wales/data/localauthorities_lwm.shp
-  regions_data_path: Scenarios/Wales/data/country_data.csv
+  __type__: global_world_factory.GlobalWorldFactory
+  regions_shape_path: Scenarios/Global/data/CNTR_RG_60M_2020_4326.shp
+  regions_data_path: Scenarios/Global/data/country_data.csv
   contacts: 5
   contact_hours: 8
-  local_travel_prob_per_day: 0.001
-  distance_threshold: 1
+  local_travel_prob_per_day: 0.0
+  distance_threshold: 10
+  airport_path: Scenarios/Global/data/Airports_2010.csv
+  air_travel_path: Scenarios/Global/data/Prediction_Monthly.csv
+  interpolation: 0.1
 
 # ######################################### Seasonal Effects #######################################
 
@@ -49,38 +52,20 @@ seasonal_effects_model:
 
 # ######################################### Health #################################################
 
-# Disease (mutation viewed from the point of view of within-host competition, for the case in which
-# strains can be ordered by within-host fitness). Cross immunity is represented by the off-diagonal
-# step functions. Furthermore tau refers to the set of possible outcomes, while rho refers to the
-# probability distribution over these outcomes. For simplicity we assume only two possible outcomes.
-# Note that the infectiousness probability give a probability per tick, and must therefore be
-# adjusted if the tick length is changed.
-
 health_model:
-  __type__: simple_health_model.SimpleHealthModel
+  __type__: sir_health_model.SIRHealthModel
   location_typ_multipliers: null
   sir_rescaling: True
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
-    'Cardiff': [1000]
-  mutation_matrix: [[1.0]]
+    'CN': [1000000]
   number_of_strains: 1
-  preset_weights_by_age:
-    0:  {preset_0: 1.00}
-  health_presets:
-    preset_0:
-      0:
-        rho_immunity_failure:
-          [[[[-1, 5, 365], [[0.0], [0.0], [0.0]]]]]
-        sigma_immunity_failure:
-          [[[[-1, 5, 365], [1.0, 0.0, 1.0]]]]
-        infectiousness:
-          [[[-1, 0, 5], [0.0, 0.02, 0.0]]]
-        disease:
-          [[[-1, 0, 5], [0.0, 0.2, 0.0]]]
-        strain:
-          [[[-1, 0, 5], [-1, 0, -1]]]
+  beta: 0.27 # Units: days^{-1}
+  gamma_inverse: 9 # Units: days
+  disease_level: 0.2
+  # Maximum day to sample in the geometric distribution:
+  max_dist_days: 100
 
 # ######################################### Movement ###############################################
 
@@ -119,20 +104,20 @@ input_model:
 # Output that should be rendered from the simulation:
 reporters:
   cli.TimeReporter: {}
-  csv.StrainCounts:
-    filename: /tmp/strain_counts.csv
+  # csv.StrainCounts:
+  #   filename: /tmp/strain_counts.csv
   plot.PlotInfected:
     show: False
     savefig: True
     filename: /tmp/infected.png
   pygame_display.PygameDisplay:
-    fullscreen: False
+    fullscreen: True
     font_size: 20
     max_norm_prev: 1.0
     refresh_rate: 60
-    display_width: 600
-    display_height: 600
-    points_per_polygon: 600
+    display_width: 1500
+    display_height: 700
+    points_per_polygon: 400
     cmap: "Oranges"
 
 # ######################################### Logging ################################################

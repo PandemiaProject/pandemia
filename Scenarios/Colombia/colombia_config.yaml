@@ -29,7 +29,7 @@ tick_length_s: 3600
 # from the tick length above:
 simulation_length_days: 100
 # the date at which the simulation starts:
-epoch: 23th February 2020
+epoch: 23rd February 2020
 
 # ######################################### World ##################################################
 
