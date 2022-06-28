@@ -68,6 +68,9 @@ class PlotInfected(Reporter):
         if self.show:
             plt.show()
         if self.savefig:
+            dirname = os.path.dirname(self.filename)
+            if dirname != '':
+                os.makedirs(dirname, exist_ok=True)
             fig.savefig(self.filename, bbox_inches='tight')
 
         # dirname = os.path.dirname('/tmp/infected.csv')
