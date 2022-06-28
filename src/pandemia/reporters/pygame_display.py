@@ -103,7 +103,7 @@ class PygameDisplay(Reporter):
             FONT = pygame.font.Font("freesansbold.ttf", self.font_size)
             surface = pygame.display.get_surface()
 
-            text_surf = FONT.render("Infected: " + str(infected), True, BLACK)
+            text_surf = FONT.render("Infected: " + str(int(infected)), True, BLACK)
             text_rect = text_surf.get_rect(topleft=(0, surface.get_height() - (2 * self.font_size)))
             self.screen.blit(text_surf, text_rect)
 

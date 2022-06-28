@@ -275,7 +275,7 @@ class Simulator:
     def _publish_telemetry_data_update(self):
         """Published strain count updates to the telemetry bus"""
 
-        strain_counts = np.zeros((self.number_of_regions * self.number_of_strains), dtype=int)
+        strain_counts = np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.uint64)
         for vector_region in self.vector_regions:
             if self.enable_ctypes:
                 self.collect_telemetry_data(
