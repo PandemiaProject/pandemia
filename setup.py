@@ -99,7 +99,10 @@ setup(
                       'pyYAML~=5.4',
                       'matplotlib~=3.5',
                       'pyproj~=3.3',
-                      'joblib~=1.1'
+                      'joblib~=1.1',
+                      'pyshp~=2.3',
+                      'pygame~=2.1',
+                      'shapely~=1.8'
                      ],
 
     # List additional groups of dependencies here (e.g. development
