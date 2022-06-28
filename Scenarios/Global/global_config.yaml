@@ -2,7 +2,7 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 0.000033
+scale_factor: 0.00033
 
 # Profiler
 profile: False
@@ -24,12 +24,12 @@ num_jobs: -2
 # Time length of each tick in the simulation. Weeks must contain the same number of ticks, because
 # we use weekly routines. This means the week length (604800) should be divisible by the following
 # tick length:
-tick_length_s: 3600
+tick_length_s: 21600 # 3600
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
-simulation_length_days: 200
+simulation_length_days: 730 # 365
 # the date at which the simulation starts:
-epoch: 23rd February 2020
+epoch: 15th December 2019
 
 # ######################################### World ##################################################
 
@@ -48,7 +48,9 @@ world_factory:
 # ######################################### Seasonal Effects #######################################
 
 seasonal_effects_model:
-  __type__: void_seasonal_effects_model.VoidSeasonalEffectsModel
+  __type__: simple_seasonal_effects_model.SimpleSeasonalEffectsModel
+  # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
+  seasonal_multiplier_by_region_by_month: Scenarios/Global/data/country_data_seasonality.csv
 
 # ######################################### Health #################################################
 
@@ -59,7 +61,7 @@ health_model:
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
-    'CN': [1000000]
+    'CN': [100000]
   mutation_matrix: [[1.0]]
   number_of_strains: 1
   preset_weights_by_age:
@@ -68,15 +70,15 @@ health_model:
     preset_0:
       0:
         rho_immunity_failure:
-          [[[[-1, 9, 365], [[0.0], [0.0], [0.0]]]]]
+          [[[[-1, 15, 60, 120, 180], [[0.0], [0.0], [0.0], [0.0], [0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 9, 365], [1.0, 0.0, 1.0]]]]
+          [[[[-1, 15, 60, 120, 180], [1.0, 0.1, 0.2, 0.35, 0.5]]]]
         infectiousness:
-          [[[-1, 0, 9], [0.0, 0.27, 0.0]]]
+          [[[-1, 0, 15], [0.0, 0.20, 0.0]]]
         disease:
-          [[[-1, 0, 9], [0.0, 0.2, 0.0]]]
+          [[[-1, 0, 15], [0.0, 0.2, 0.0]]]
         strain:
-          [[[-1, 0, 9], [-1, 0, -1]]]
+          [[[-1, 0, 15], [-1, 0, -1]]]
 
 # ######################################### Movement ###############################################
 

@@ -11,7 +11,7 @@ void collect_telemetry_data
     int S, // number_of_strains
     int id,
     const int * current_strain,
-    int * strain_counts
+    uint64_t * strain_counts
 )
 {
     for(int n=0; n<N; n++){

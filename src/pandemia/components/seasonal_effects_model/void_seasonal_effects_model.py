@@ -11,7 +11,7 @@ log = logging.getLogger("void_seasonal_effects_model")
 class VoidSeasonalEffectsModel(SeasonalEffectsModel):
     """Void model of seasonal effects"""
 
-    def __init__(self, config, clock, enable_ctypes):
+    def __init__(self, config, vector_world, clock, enable_ctypes):
         """Initial seasonal effects"""
         super().__init__(config)
 

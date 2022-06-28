@@ -61,6 +61,7 @@ def build_components(sim_factory):
     seasonal_effects_config = config.subconfig('seasonal_effects_model')
     seasonal_effects = instantiate_class("pandemia.components.seasonal_effects_model",
                                          seasonal_effects_class, seasonal_effects_config,
+                                         sim_factory.vector_world,
                                          sim_factory.clock, enable_ctypes)
     sim_factory.set_seasonal_effects_model(seasonal_effects)
 

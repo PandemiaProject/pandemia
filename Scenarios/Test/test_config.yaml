@@ -57,8 +57,8 @@ world_factory:
 
 seasonal_effects_model:
   __type__: simple_seasonal_effects_model.SimpleSeasonalEffectsModel
-  seasonal_multiplier_by_region_by_month: [[1,1,1,1,1,1,1,1,1,1,1,1], [1,1,1,1,1,1,1,1,1,1,1,1],
-                                           [1,1,1,1,1,1,1,1,1,1,1,1], [1,1,1,1,1,1,1,1,1,1,1,1]]
+  # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
+  seasonal_multiplier_by_region_by_month: null
 
 # ######################################### Health #################################################
 
