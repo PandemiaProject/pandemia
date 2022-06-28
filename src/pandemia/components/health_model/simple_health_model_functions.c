@@ -251,6 +251,7 @@ void transmission
     free(transmission_force);
     free(sum);
     free(sum_by_strain);
+    free(num_agents_by_location);
     free(weights);
     return;
 }

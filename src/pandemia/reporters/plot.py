@@ -3,6 +3,8 @@
 import matplotlib.pyplot as plt
 from pandemia.reporters import Reporter
 import numpy as np
+import csv
+import os
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
@@ -68,12 +70,21 @@ class PlotInfected(Reporter):
         if self.savefig:
             fig.savefig(self.filename, bbox_inches='tight')
 
+        # dirname = os.path.dirname('/tmp/infected.csv')
+        # if dirname != '':
+        #     os.makedirs(dirname, exist_ok=True)
+        # handle = open('/tmp/infected.csv', 'w', newline='')
+        # writer = csv.writer(handle)
+        # for row in self.infected:
+        #     writer.writerow([row])
+        # handle.close()
+
     def plot_sir(self):
         """Plots solution to an SIR model"""
 
         step_size = 1
-        gamma = 1/9
-        beta = 0.27
+        gamma = 1/15
+        beta = 0.15
 
         T = len(self.days)
         N = self.total_population
@@ -95,3 +106,12 @@ class PlotInfected(Reporter):
         # Plot output
         plot_label = 'Infected SIR'
         plt.plot(list(range(len(self.days))), I,'red', linewidth=1, alpha=1.0, label=plot_label)
+
+        # dirname = os.path.dirname('/tmp/infected_sir.csv')
+        # if dirname != '':
+        #     os.makedirs(dirname, exist_ok=True)
+        # handle = open('/tmp/infected_sir.csv', 'w', newline='')
+        # writer = csv.writer(handle)
+        # for row in I:
+        #     writer.writerow([row])
+        # handle.close()

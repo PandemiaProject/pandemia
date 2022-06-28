@@ -39,7 +39,7 @@ class SIRHealthModel(HealthModel):
             self.transmission.restype  = None
             self.infect.restype        = None
 
-        self.number_of_strains                = config['number_of_strains']
+        self.number_of_strains = 1
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
 
         beta          = config['beta']

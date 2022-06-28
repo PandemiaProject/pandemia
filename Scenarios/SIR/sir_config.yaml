@@ -2,21 +2,21 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 0.000033
+scale_factor: 1.0
 
 # Profiler
 profile: False
 pstats_records: 100
 
 # Random seeds for each region
-random_seed: 1
+random_seed: 666
 
 # Enable or disable the use of ctypes
 enable_ctypes: True
 
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
-enable_parallel: True
+enable_parallel: False
 num_jobs: -2
 
 # ######################################### Clock ##################################################
@@ -34,16 +34,9 @@ epoch: 23rd February 2020
 # ######################################### World ##################################################
 
 world_factory:
-  __type__: global_world_factory.GlobalWorldFactory
-  regions_shape_path: Scenarios/Global/data/CNTR_RG_60M_2020_4326.shp
-  regions_data_path: Scenarios/Global/data/country_data.csv
-  contacts: 5
-  contact_hours: 8
-  local_travel_prob_per_day: 0.0
-  distance_threshold: 10
-  airport_path: Scenarios/Global/data/Airports_2010.csv
-  air_travel_path: Scenarios/Global/data/Prediction_Monthly.csv
-  interpolation: 0.1
+  __type__: sir_world_factory.SIRWorldFactory
+  region_name: sir_region
+  N: 100000
 
 # ######################################### Seasonal Effects #######################################
 
@@ -52,19 +45,50 @@ seasonal_effects_model:
 
 # ######################################### Health #################################################
 
+# health_model:
+#   __type__: sir_health_model.SIRHealthModel
+#   location_typ_multipliers: null
+#   sir_rescaling: True
+#   facemask_transmission_multiplier: 1.0
+#   immunity_period_days: 30
+#   disease_level: 0.2
+#   max_dist_days: 200 # Tail cutoff in the geometric distribution of recovery times
+#   num_initial_infections_by_region_by_strain:
+#     'sir_region': [1000]
+#   beta: 0.15 # Units: days^{-1}
+#   gamma_inverse: 15 # Units: days
+
 health_model:
-  __type__: sir_health_model.SIRHealthModel
-  location_typ_multipliers: null
+  __type__: simple_health_model.SimpleHealthModel
+  location_typ_multipliers:
+    sir_region: 0.5
   sir_rescaling: True
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
-    'CN': [1000000]
-  beta: 0.27 # Units: days^{-1}
-  gamma_inverse: 9 # Units: days
-  disease_level: 0.2
-  # Maximum day to sample in the geometric distribution:
-  max_dist_days: 100
+    'sir_region': [1000]
+  mutation_matrix: [[1.0]]
+  number_of_strains: 1
+  preset_weights_by_age:
+    0:  {preset_0: 1.00}
+  health_presets:
+    preset_0:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 15, 365], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 15, 365], [1.0, 0.0, 1.0]]]]
+        infectiousness:
+          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.299333, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.0]]]
+          [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.562341455, 0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002, 0.004466837, 0.0]]]
+          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
+          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
+          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.562341455, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
+          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.562341455, 0.316227839, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
+        disease:
+          [[[-1, 0, 15], [0.0, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 15], [-1, 0, -1]]]
 
 # ######################################### Movement ###############################################
 
@@ -106,18 +130,18 @@ reporters:
   # csv.StrainCounts:
   #   filename: /tmp/strain_counts.csv
   plot.PlotInfected:
-    show: False
-    savefig: True
+    show: True
+    savefig: False
     filename: /tmp/infected.png
-  pygame_display.PygameDisplay:
-    fullscreen: True
-    font_size: 20
-    max_norm_prev: 1.0
-    refresh_rate: 60
-    display_width: 1500
-    display_height: 700
-    points_per_polygon: 400
-    cmap: "Oranges"
+  # pygame_display.PygameDisplay:
+  #   fullscreen: True
+  #   font_size: 20
+  #   max_norm_prev: 1.0
+  #   refresh_rate: 60
+  #   display_width: 1500
+  #   display_height: 700
+  #   points_per_polygon: 400
+  #   cmap: "Oranges"
 
 # ######################################### Logging ################################################
 
