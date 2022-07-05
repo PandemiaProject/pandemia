@@ -9,7 +9,7 @@ profile: False
 pstats_records: 100
 
 # Random seeds for each region
-random_seed: 666
+random_seed: 1
 
 # Enable or disable the use of ctypes
 enable_ctypes: True
@@ -27,7 +27,7 @@ num_jobs: -2
 tick_length_s: 3600
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
-simulation_length_days: 200
+simulation_length_days: 100
 # the date at which the simulation starts:
 epoch: 23rd February 2020
 
@@ -45,50 +45,28 @@ seasonal_effects_model:
 
 # ######################################### Health #################################################
 
-# health_model:
-#   __type__: sir_health_model.SIRHealthModel
-#   location_typ_multipliers: null
-#   sir_rescaling: True
-#   facemask_transmission_multiplier: 1.0
-#   immunity_period_days: 30
-#   disease_level: 0.2
-#   max_dist_days: 200 # Tail cutoff in the geometric distribution of recovery times
-#   num_initial_infections_by_region_by_strain:
-#     'sir_region': [1000]
-#   beta: 0.15 # Units: days^{-1}
-#   gamma_inverse: 15 # Units: days
-
 health_model:
   __type__: simple_health_model.SimpleHealthModel
-  location_typ_multipliers:
-    sir_region: 0.5
-  sir_rescaling: True
+  location_typ_multipliers: null
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
     'sir_region': [1000]
   mutation_matrix: [[1.0]]
   number_of_strains: 1
-  preset_weights_by_age:
-    0:  {preset_0: 1.00}
-  health_presets:
-    preset_0:
-      0:
-        rho_immunity_failure:
-          [[[[-1, 15, 365], [[0.0], [0.0], [0.0]]]]]
-        sigma_immunity_failure:
-          [[[[-1, 15, 365], [1.0, 0.0, 1.0]]]]
-        infectiousness:
-          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.299333, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.299333000, 0.0]]]
-          [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.562341455, 0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002, 0.004466837, 0.0]]]
-          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
-          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
-          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.562341455, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
-          # [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], [0.0, 0.000000000, 0.000000000, 0.000177828, 0.007943284, 0.562341455, 1.0000000, 0.944061094, 0.794328418, 0.562341455, 0.316227839, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.0]]]
-        disease:
-          [[[-1, 0, 15], [0.0, 0.2, 0.0]]]
-        strain:
-          [[[-1, 0, 15], [-1, 0, -1]]]
+  preset_weights_by_age: null
+  health_presets: null
+  # Rescale by time and population in each location, deactivate by setting sir_rescaling = False
+  sir_rescaling: True
+  # Deactivate by setting age_mixing_matrices = null
+  age_mixing_matrices: null # Scenarios/SIR/data/age_mixing_matrices/
+  age_group_interval: null # 5
+  # Deactivate by setting auto_generate_presets = False
+  auto_generate_presets: True
+  beta: 0.27 # Units: days^{-1}
+  gamma_inverse: 9 # Units: days
+  disease_level: 0.2
+  max_dist_days: 100 # Maximum infectiousness period, curtailing the geometric distribution
 
 # ######################################### Movement ###############################################
 
@@ -113,9 +91,7 @@ vaccination_model:
 # ######################################### Regional Mixing ########################################
 
 regional_mixing_model:
-  __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
-  border_closure_factor: 0.1
-  travel_transmission_multiplier: 1.0
+  __type__: void_regional_mixing_model.VoidRegionalMixingModel
 
 # ######################################### Input ##################################################
 
@@ -127,21 +103,12 @@ input_model:
 # Output that should be rendered from the simulation:
 reporters:
   cli.TimeReporter: {}
-  # csv.StrainCounts:
-  #   filename: /tmp/strain_counts.csv
+  csv.StrainCounts:
+    filename: /tmp/strain_counts.csv
   plot.PlotInfected:
     show: True
     savefig: False
     filename: /tmp/infected.png
-  # pygame_display.PygameDisplay:
-  #   fullscreen: True
-  #   font_size: 20
-  #   max_norm_prev: 1.0
-  #   refresh_rate: 60
-  #   display_width: 1500
-  #   display_height: 700
-  #   points_per_polygon: 400
-  #   cmap: "Oranges"
 
 # ######################################### Logging ################################################
 

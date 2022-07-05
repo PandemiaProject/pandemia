@@ -73,7 +73,6 @@ health_model:
   __type__: simple_health_model.SimpleHealthModel
   location_typ_multipliers: # Unless specfified set to 1.0
     Cemetery: 0.0
-  sir_rescaling: False
   facemask_transmission_multiplier: 0.1
   immunity_period_days: 7
   num_initial_infections_by_region_by_strain:
@@ -170,6 +169,17 @@ health_model:
         strain:
           [[[-1, 0, 7], [-1, 0, -1]],
            [[-1, 0, 7], [-1, 1, -1]]]
+  # Rescale by time and population in each location, deactivate by setting sir_rescaling = False
+  sir_rescaling: False
+  # Deactivate by setting age_mixing_matrices = null
+  age_mixing_matrices: null
+  age_group_interval: null
+  # Deactivate by setting auto_generate_presets = False
+  auto_generate_presets: False
+  beta: null # Units: days^{-1}
+  gamma_inverse: null # Units: days
+  disease_level: null
+  max_dist_days: null # Maximum infectiousness period, curtailing the geometric distribution 
 
 # ######################################### Movement ###############################################
 

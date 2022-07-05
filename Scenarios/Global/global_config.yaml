@@ -9,7 +9,7 @@ profile: False
 pstats_records: 100
 
 # Random seeds for each region
-random_seed: 1
+random_seed: 12
 
 # Enable or disable the use of ctypes
 enable_ctypes: True
@@ -27,7 +27,7 @@ num_jobs: -2
 tick_length_s: 21600 # 3600
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
-simulation_length_days: 730 # 365
+simulation_length_days: 365 # 730
 # the date at which the simulation starts:
 epoch: 15th December 2019
 
@@ -57,7 +57,6 @@ seasonal_effects_model:
 health_model:
   __type__: simple_health_model.SimpleHealthModel
   location_typ_multipliers: null
-  sir_rescaling: True
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
@@ -74,11 +73,22 @@ health_model:
         sigma_immunity_failure:
           [[[[-1, 15, 60, 120, 180], [1.0, 0.1, 0.2, 0.35, 0.5]]]]
         infectiousness:
-          [[[-1, 0, 15], [0.0, 0.20, 0.0]]]
+          [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
         disease:
           [[[-1, 0, 15], [0.0, 0.2, 0.0]]]
         strain:
           [[[-1, 0, 15], [-1, 0, -1]]]
+  # Rescale by time and population in each location, deactivate by setting sir_rescaling = False. If
+  # activated, can still deactivate age mixing by setting age_mixing_matrices = null
+  sir_rescaling: True
+  age_mixing_matrices: Scenarios/Global/data/age_mixing_matrices/
+  age_group_interval: 5
+  # Deactivate by setting auto_generate_presets = False
+  auto_generate_presets: False
+  beta: null # Units: days^{-1}
+  gamma_inverse: null # Units: days
+  disease_level: null
+  max_dist_days: null # Maximum infectiousness period, curtailing the geometric distribution 
 
 # ######################################### Movement ###############################################
 

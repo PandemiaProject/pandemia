@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from pandemia.reporters import Reporter
 import numpy as np
 import csv
+from numpy import genfromtxt
 import os
 
 #pylint: disable=unused-argument
@@ -51,8 +52,18 @@ class PlotInfected(Reporter):
         plot_label = 'Infected'
         # plt.plot(list(range(len(self.days))),
         #          self.infected, 'black', linewidth=1, alpha=1.0, label=plot_label)
-        plt.bar(list(range(len(self.days))),
-                self.infected, label=plot_label)
+
+        # vector_region = vector_world.vector_regions[0]
+        # pop_by_age_group = np.zeros((17,), dtype=np.uint64)
+        # initial_cases_by_age_group = np.zeros((17,), dtype=int)
+        # for n in range(vector_region.number_of_agents):
+        #     pop_by_age_group[vector_region.age_group[n]] += 1
+        #     initial_cases_by_age_group[vector_region.age_group[n]] += vector_region.initial_cases[n]
+        # self.plot_sir_age(pop_by_age_group, initial_cases_by_age_group)
+        # num_initial_cases = np.sum(initial_cases_by_age_group)
+        # self.infected.insert(0, num_initial_cases)
+
+        plt.bar(list(range(len(self.days))), self.infected, label=plot_label)
 
         # self.plot_sir()
 
@@ -86,8 +97,8 @@ class PlotInfected(Reporter):
         """Plots solution to an SIR model"""
 
         step_size = 1
-        gamma = 1/15
-        beta = 0.15
+        gamma = 1/9
+        beta = 0.27
 
         T = len(self.days)
         N = self.total_population
@@ -118,3 +129,42 @@ class PlotInfected(Reporter):
         # for row in I:
         #     writer.writerow([row])
         # handle.close()
+
+    def plot_sir_age(self, pop_by_age_group, initial_cases_by_age_group):
+        """Plots solution to an SIR model"""
+
+        mat = genfromtxt("Scenarios/SIR/data/age_mixing_matrices/sir_region.csv",
+                         delimiter=',', dtype=float)
+        row_sums = mat.sum(axis=1)
+        mat = mat / row_sums[:, np.newaxis]
+        A = 17
+
+        step_size = 1
+        gamma = 1/ (8 + (23/24))
+        beta = [1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 0.5 * 0.27, 0.5 * 0.27, 0.5 * 0.27, 0.5 * 0.27]
+
+        T = len(self.days)
+        N = pop_by_age_group
+        S = np.zeros((T, A), dtype=float)
+        I = np.zeros((T, A), dtype=float)
+        R = np.zeros((T, A), dtype=float)
+
+        # Initial conditions
+        for b in range(A):
+            R[0][b] = 0
+            I[0][b] = initial_cases_by_age_group[b]
+            S[0][b] = N[b] - I[0][b]
+
+        # Simulate
+        for t in range(T-1):
+            for a in range(A):
+                B = sum([mat[a][b] * ((I[t][b] * beta[b]) / (N[b])) for b in range(A)])
+                S[t+1][a] = S[t][a] - (step_size * B * S[t][a])
+                I[t+1][a] = I[t][a] + (step_size * B * S[t][a]) -\
+                                      (step_size * gamma * I[t][a])
+                R[t+1][a] = R[t][a] + (step_size * gamma * I[t][a])
+
+        # Plot output
+        plot_label = 'Infected SIR'
+        plt.plot(list(range(T)), I.sum(axis=1),'red',
+                 linewidth=1, alpha=1.0, label=plot_label)

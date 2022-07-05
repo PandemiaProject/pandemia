@@ -2,7 +2,11 @@
 
 import logging
 import copy
+import os
+from matplotlib.pyplot import axis
 import numpy as np
+from collections import defaultdict
+from numpy import genfromtxt
 
 from ctypes import c_void_p, c_double, pointer, c_int, cdll
 
@@ -25,6 +29,8 @@ class SimpleHealthModel(HealthModel):
 
         self.enable_ctypes = enable_ctypes
 
+        assert self.enable_ctypes, "Must use ctypes, Python transmission function is out-of-date"
+
         if self.enable_ctypes:
 
             lib = cdll.LoadLibrary("./src/pandemia/components/health_model/"
@@ -40,15 +46,31 @@ class SimpleHealthModel(HealthModel):
 
         self.number_of_strains                = config['number_of_strains']
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
-        self.health_presets_config            = config['health_presets']
-        self.preset_weights_by_age            = config['preset_weights_by_age']
+
+        self.sir_rescaling                    = config['sir_rescaling']
+        self.sir_rescaling_int                = int(self.sir_rescaling == True)
+
+        self.age_mixing_matrices_directory    = config['age_mixing_matrices']
+        self.age_group_interval               = config['age_group_interval']
+
+        if config['auto_generate_presets']:
+            self.number_of_strains = 1
+            beta          = config['beta']
+            gamma_inverse = config['gamma_inverse']
+            disease_level = config['disease_level']
+            max_dist_days = config['max_dist_days']
+            self.health_presets_config = defaultdict(dict)
+            self.preset_weights_by_age = defaultdict(dict)
+            self._generate_presets_and_weights(beta, gamma_inverse, disease_level,
+                                               max_dist_days, self.clock)
+        else:
+            self.health_presets_config = config['health_presets']
+            self.preset_weights_by_age = config['preset_weights_by_age']
+
         self.facemask_transmission_multiplier = config['facemask_transmission_multiplier']
         self.mutation_matrix                  = config['mutation_matrix']
         self.location_typ_multipliers         = config['location_typ_multipliers']
         self.immunity_period_days             = config['immunity_period_days']
-
-        self.sir_rescaling = config['sir_rescaling']
-        self.sir_rescaling_int = int(self.sir_rescaling == True)
 
         self.age_groups = list(self.preset_weights_by_age.keys())
         self.age_groups.sort()
@@ -251,6 +273,8 @@ class SimpleHealthModel(HealthModel):
         vector_region.strain_lengths            = np.zeros((number_of_agents), dtype=int)
         vector_region.strain_indexes            = np.ones((number_of_agents), dtype=int)
 
+        self._get_age_mixing_matrix(vector_region)
+
     def initial_conditions(self, vector_region):
         """Updates health functions"""
 
@@ -317,6 +341,8 @@ class SimpleHealthModel(HealthModel):
                 vector_region.current_sigma_immunity_failure.flatten()
             vector_region.sigma_immunity_failure_values =\
                 vector_region.sigma_immunity_failure_values.flatten()
+            vector_region.age_mixing_matrix =\
+                vector_region.age_mixing_matrix.flatten()
 
         # Initial infections
         if vector_region.name in self.num_initial_infections_by_region:
@@ -494,6 +520,9 @@ class SimpleHealthModel(HealthModel):
             c_int(vector_region.id),
             c_int(self.sir_rescaling_int),
             c_int(self.clock.ticks_in_day),
+            c_int(vector_region.number_of_age_mixing_groups),
+            c_void_p(vector_region.age_group.ctypes.data),
+            c_void_p(vector_region.age_mixing_matrix.ctypes.data),
             c_double(self.facemask_transmission_multiplier),
             c_double(vector_region.current_region_transmission_multiplier),
             c_void_p(vector_region.current_strain.ctypes.data),
@@ -928,3 +957,84 @@ class SimpleHealthModel(HealthModel):
             while age < age_groups[i] or age >= age_groups[i+1]:
                 i = i + 1
             return age_groups[i]
+
+    def _get_age_mixing_matrix(self, vector_region):
+        """Extracts age mixing matrix from data"""
+
+        if (self.age_mixing_matrices_directory is not None) and self.sir_rescaling:
+            for root, dir, files in os.walk(self.age_mixing_matrices_directory):
+                if vector_region.name + ".csv" in files:
+                    mat = genfromtxt(self.age_mixing_matrices_directory +\
+                                     vector_region.name + ".csv", skip_header = 1,
+                                     delimiter=',', dtype=float)
+                    assert mat.shape[0] == mat.shape[1]
+                    vector_region.number_of_age_mixing_groups = mat.shape[0]
+
+                    # Symmetrize matrix
+                    mat = (mat + np.transpose(mat)) / 2
+
+                    # Normalize rows to probability vectors
+                    row_sums = mat.sum(axis=1)
+                    mat = mat / row_sums[:, np.newaxis]
+
+                    # Scale rows to take account of the fact that some age groups have more
+                    # contacts in total than other age groups
+                    row_sums = row_sums / np.amax(row_sums)
+                    mat = mat * row_sums[:, np.newaxis]
+
+                    # Calculate share of population in each age mixing group
+                    share_in_age_group = np.zeros((mat.shape[0]), dtype=float)
+                    for n in range(vector_region.number_of_agents):
+                        age_group = min(vector_region.age[n] // self.age_group_interval,
+                                        mat.shape[0] - 1)
+                        share_in_age_group[age_group] += 1
+                    share_in_age_group /= share_in_age_group.sum(axis=0)
+
+                    # Adjust final matrix so that the inner product of the row sums and the vector
+                    # share_in_age_group is equal to 1.0, that is, the same for each region
+                    dim = vector_region.number_of_age_mixing_groups
+                    epsilon = (1.0 - np.inner(mat.sum(axis=1), share_in_age_group)) / dim
+                    mat += np.full((dim, dim), epsilon, dtype=float)
+                    vector_region.age_mixing_matrix = mat
+
+                else:
+                    vector_region.age_mixing_matrix = np.ones((1, 1), dtype=float)
+                    vector_region.number_of_age_mixing_groups = 1
+            vector_region.age_group = np.zeros((vector_region.number_of_agents), dtype=int)
+            for n in range(vector_region.number_of_agents):
+                age_group = min(vector_region.age[n] // self.age_group_interval,
+                                vector_region.number_of_age_mixing_groups - 1)
+                vector_region.age_group[n] = age_group
+        else:
+            vector_region.age_mixing_matrix = np.ones((1, 1), dtype=float)
+            vector_region.age_group = np.zeros((vector_region.number_of_agents), dtype=int)
+            vector_region.number_of_age_mixing_groups = 1
+
+    def _generate_presets_and_weights(self, beta, gamma_inverse,
+                                      disease_level, max_dist_days, clock):
+        """Generates simple health presets using geometric distribution"""
+
+        ticks_in_day = clock.ticks_in_day
+        max_day = clock.simulation_length_days
+
+        for t in range(1, max_dist_days * ticks_in_day):
+            preset_name = "preset_" + str(t - 1)
+            self.health_presets_config[preset_name] =\
+                {
+                    0:
+                    {
+                        "rho_immunity_failure":
+                            [[[[-1, t / ticks_in_day, max_day], [[0.0], [0.0], [0.0]]]]],
+                        "sigma_immunity_failure":
+                            [[[[-1, t / ticks_in_day, max_day], [1.0, 0.0, 1.0]]]],
+                        "infectiousness":
+                            [[[-1, 0, t / ticks_in_day], [0.0, beta, 0.0]]],
+                        "disease":
+                            [[[-1, 0, t / ticks_in_day], [0.0, disease_level, 0.0]]],
+                        "strain":
+                            [[[-1, 0, t / ticks_in_day], [-1, 0, -1]]]
+                    }
+                }
+            self.preset_weights_by_age[0][preset_name] =\
+                ((1 - (1 / (gamma_inverse * ticks_in_day)))**(t - 1)) *\
+                    (1 / (gamma_inverse * ticks_in_day))

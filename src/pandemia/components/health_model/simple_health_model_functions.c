@@ -161,6 +161,9 @@ void transmission
     int id,
     int sir_rescaling_int,
     int ticks_in_day,
+    int A, // number of age groups
+    const int * age_group,
+    const double * age_mixing_matrix,
     double facemask_transmission_multiplier,
     double current_region_transmission_multiplier,
     const int * current_strain,
@@ -177,43 +180,48 @@ void transmission
     int * random_p
 )
 {
-    double * transmission_force = (double *)malloc(sizeof(double) * L);
-    double * sum = (double *)malloc(sizeof(double) * L);
-    double * sum_by_strain = (double *)malloc(sizeof(double) * (L * S));
-    int * num_agents_by_location = (int *)malloc(sizeof(int) * L);
+    double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
+    double * sum_by_strain_by_age_group = (double *)malloc(sizeof(double) * L * S * A);
+    int * num_agents_by_location_by_age_group = (int *)malloc(sizeof(int) * L * A);
     for(int m=0; m<L; m++){
-        transmission_force[m] = 1.0;
-        sum[m] = 0.0;
-        num_agents_by_location[m] = 0;
-        for(int s=0; s<S; s++){sum_by_strain[(m * S) + s] = 0.0;}
+        for(int a=0; a<A; a++){
+            transmission_force_by_age_group[(m * A) + a] = 1.0;
+            num_agents_by_location_by_age_group[(m * A) + a] = 0;
+            for(int s=0; s<S; s++){sum_by_strain_by_age_group[(m * S * A) + (s * A) + a] = 0.0;}
+        }
     }
 
     // Transmission out
     if(sir_rescaling_int == 1){
         for(int n=0; n<N; n++){
             if(current_region[n] == id){
-                num_agents_by_location[current_location[n]] += 1;
+                num_agents_by_location_by_age_group[(current_location[n] * A) + age_group[n]] += 1;
             }
         }
     }
-    for(int n=0; n<N; n++){
-        if(current_region[n] == id && current_strain[n] != -1){
-            double f;
-            f = current_region_transmission_multiplier *
-                location_transmission_multiplier[current_location[n]] *
-                (1 + (current_facemask[n] * (facemask_transmission_multiplier - 1))) *
-                current_infectiousness[n];
-            sum_by_strain[(current_location[n] * S) + current_strain[n]] += f;
-            if(sir_rescaling_int == 1){
-                f /= num_agents_by_location[current_location[n]] * ticks_in_day;
+    for(int a=0; a<A; a++){
+        for(int n=0; n<N; n++){
+            if(current_region[n] == id && current_strain[n] != -1){
+                double f;
+                f = current_region_transmission_multiplier *
+                    location_transmission_multiplier[current_location[n]] *
+                    (1 + (current_facemask[n] * (facemask_transmission_multiplier - 1))) *
+                    current_infectiousness[n];
+                if(sir_rescaling_int == 1){
+                    f *= age_mixing_matrix[(a * A) + age_group[n]] /
+                         (num_agents_by_location_by_age_group[(current_location[n] * A) +
+                                                              age_group[n]] * ticks_in_day);
+                }
+                sum_by_strain_by_age_group[(current_location[n] * S * A) +
+                                           (current_strain[n] * A) + a] += f;
+                transmission_force_by_age_group[(current_location[n] * A) + a] *= 1 - f;
             }
-            transmission_force[current_location[n]] *= 1 - f;
         }
     }
-    for(int m=0; m<L; m++){
-        transmission_force[m] = 1 - transmission_force[m];
-        for(int s=0; s<S; s++){
-            sum[m] += sum_by_strain[(m * S) + s];
+    for(int a=0; a<A; a++){
+        for(int m=0; m<L; m++){
+            transmission_force_by_age_group[(m * A) + a] =
+                1 - transmission_force_by_age_group[(m * A) + a];
         }
     }
 
@@ -227,31 +235,44 @@ void transmission
             facemask_multiplier =
                 1 + (current_facemask[n] * (facemask_transmission_multiplier - 1));
             double prob;
-            prob = facemask_multiplier * transmission_force[current_location[n]];
-            if(bernoulli(random_state, random_p, prob) == 1){
-                sum_of_weights = 0;
-                for(int s=0; s<S; s++){
-                    weights[s] = sum_by_strain[(current_location[n] * S) + s];
-                    sum_of_weights += weights[s];
-                }
-                s1 = random_choice(random_state, random_p, weights, sum_of_weights);
-                prob = current_sigma_immunity_failure[(n * S) + s1];
+            if(S > 1){
+                prob = facemask_multiplier *
+                       transmission_force_by_age_group[(current_location[n] * A) + age_group[n]];
                 if(bernoulli(random_state, random_p, prob) == 1){
                     sum_of_weights = 0;
                     for(int s=0; s<S; s++){
-                        weights[s] = mutation_matrix[(s1 * S) + s];
-                        sum_of_weights += weights[s];
+                        for(int a=0; a<A; a++){
+                            weights[s] = sum_by_strain_by_age_group[(current_location[n] * S * A) +
+                                                                    (s * A) + a];
+                            sum_of_weights += weights[s];
+                        }
                     }
-                    s2 = random_choice(random_state, random_p, weights, sum_of_weights);
-                    infection_event[n] = s2;
+                    s1 = random_choice(random_state, random_p, weights, sum_of_weights);
+                    prob = current_sigma_immunity_failure[(n * S) + s1];
+                    if(bernoulli(random_state, random_p, prob) == 1){
+                        sum_of_weights = 0;
+                        for(int s=0; s<S; s++){
+                            weights[s] = mutation_matrix[(s1 * S) + s];
+                            sum_of_weights += weights[s];
+                        }
+                        s2 = random_choice(random_state, random_p, weights, sum_of_weights);
+                        infection_event[n] = s2;
+                    }
+                }
+            } else {
+                s1 = 0;
+                prob = facemask_multiplier *
+                       transmission_force_by_age_group[(current_location[n] * A) + age_group[n]] *
+                       current_sigma_immunity_failure[(n * S) + s1];
+                if(bernoulli(random_state, random_p, prob) == 1){
+                    infection_event[n] = s1;
                 }
             }
         }
     }
-    free(transmission_force);
-    free(sum);
-    free(sum_by_strain);
-    free(num_agents_by_location);
+    free(transmission_force_by_age_group);
+    free(sum_by_strain_by_age_group);
+    free(num_agents_by_location_by_age_group);
     free(weights);
     return;
 }
