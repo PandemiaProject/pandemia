@@ -21,3 +21,18 @@ void collect_telemetry_data
     }
     return;
 }
+
+int count_dead
+(
+    int N, // number_of_agents
+    const double * current_disease
+)
+{
+    int deaths = 0;
+    for(int n=0; n<N; n++){
+        if(current_disease[n] == 1.0){
+            deaths += 1;
+        }
+    }
+    return deaths;
+}

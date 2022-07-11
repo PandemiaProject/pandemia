@@ -345,21 +345,36 @@ class SimpleHealthModel(HealthModel):
                 vector_region.age_mixing_matrix.flatten()
 
         # Initial infections
-        if vector_region.name in self.num_initial_infections_by_region:
-            uninfected_population =\
-                copy.deepcopy([n for n in range(vector_region.number_of_agents) if
-                               vector_region.current_strain[n] == -1])
+        num_initial_infections_rescaled = [0 for _ in range(self.number_of_strains)]
+        if isinstance(self.num_initial_infections_by_region, dict):
+            if vector_region.name in self.num_initial_infections_by_region:
+                for s in range(self.number_of_strains):
+                    num_initial_infections_rescaled[s] = int(self.scale_factor *\
+                        self.num_initial_infections_by_region[vector_region.name][s])
+        elif isinstance(self.num_initial_infections_by_region, int):
             for s in range(self.number_of_strains):
-                num_initial_infections =\
-                    min(int(self.scale_factor *\
-                        self.num_initial_infections_by_region[vector_region.name][s]),
-                        vector_region.number_of_agents)
-                initial_infections =\
-                    vector_region.prng.random_sample(uninfected_population, num_initial_infections)
-                for n in initial_infections:
-                    vector_region.infection_event[n] = s
-                    uninfected_population.remove(n)
-
+                num_initial_infections_rescaled[s] =\
+                    int(self.scale_factor * self.num_initial_infections_by_region)
+        elif isinstance(self.num_initial_infections_by_region, float):
+            for s in range(self.number_of_strains):
+                num_initial_infections_rescaled[s] =\
+                    int(vector_region.number_of_agents * self.num_initial_infections_by_region)
+        else:
+            for s in range(self.number_of_strains):
+                num_initial_infections_rescaled[s] = 1
+        uninfected_population =\
+            copy.deepcopy([n for n in range(vector_region.number_of_agents) if
+                        vector_region.current_strain[n] == -1])
+        for s in range(self.number_of_strains):
+            num_initial_infections =\
+                min(num_initial_infections_rescaled[s], vector_region.number_of_agents)
+            initial_infections =\
+                vector_region.prng.random_sample(uninfected_population,
+                                                 num_initial_infections)
+            for n in initial_infections:
+                vector_region.infection_event[n] = s
+                uninfected_population.remove(n)
+     
         self.infect_c(vector_region, 0)
 
         self.update_c(vector_region, 0)
@@ -400,20 +415,35 @@ class SimpleHealthModel(HealthModel):
             vector_region.presets[n] = preset_id
 
         # Initial infections
-        if vector_region.name in self.num_initial_infections_by_region:
-            uninfected_population =\
-                copy.deepcopy([n for n in range(vector_region.number_of_agents) if
-                               vector_region.current_strain[n] == -1])
+        num_initial_infections_rescaled = [0 for _ in range(self.number_of_strains)]
+        if isinstance(self.num_initial_infections_by_region, dict):
+            if vector_region.name in self.num_initial_infections_by_region:
+                for s in range(self.number_of_strains):
+                    num_initial_infections_rescaled[s] = int(self.scale_factor *\
+                        self.num_initial_infections_by_region[vector_region.name][s])
+        elif isinstance(self.num_initial_infections_by_region, int):
             for s in range(self.number_of_strains):
-                num_initial_infections =\
-                    min(int(self.scale_factor *\
-                        self.num_initial_infections_by_region[vector_region.name][s]),
-                        vector_region.number_of_agents)
-                initial_infections =\
-                    vector_region.prng.random_sample(uninfected_population, num_initial_infections)
-                for n in initial_infections:
-                    vector_region.infection_event[n] = s
-                    uninfected_population.remove(n)
+                num_initial_infections_rescaled[s] =\
+                    int(self.scale_factor * self.num_initial_infections_by_region)
+        elif isinstance(self.num_initial_infections_by_region, float):
+            for s in range(self.number_of_strains):
+                num_initial_infections_rescaled[s] =\
+                    int(vector_region.number_of_agents * self.num_initial_infections_by_region)
+        else:
+            for s in range(self.number_of_strains):
+                num_initial_infections_rescaled[s] = 1
+        uninfected_population =\
+            copy.deepcopy([n for n in range(vector_region.number_of_agents) if
+                        vector_region.current_strain[n] == -1])
+        for s in range(self.number_of_strains):
+            num_initial_infections =\
+                min(num_initial_infections_rescaled[s], vector_region.number_of_agents)
+            initial_infections =\
+                vector_region.prng.random_sample(uninfected_population,
+                                                 num_initial_infections)
+            for n in initial_infections:
+                vector_region.infection_event[n] = s
+                uninfected_population.remove(n)
 
         self.infect_python(vector_region, 0)
 

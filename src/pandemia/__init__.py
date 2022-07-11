@@ -5,6 +5,7 @@ import sys
 import logging
 import logging.config
 import time
+import numpy as np
 import cProfile, pstats
 
 from pandemia.utils import instantiate_class
@@ -126,7 +127,7 @@ def build_components(sim_factory):
     input_config = config.subconfig('input_model')
     input = instantiate_class("pandemia.components.input_model",
                               input_class, input_config, scale_factor,
-                              sim_factory.clock.simulation_length_days,
+                              sim_factory.clock,
                               sim_factory.vector_world.number_of_regions,
                               vaccination_model.number_of_vaccines,
                               vaccination_model.age_groups,
@@ -141,12 +142,6 @@ def build_reporters(telemetry_bus, config):
             log.info(f"Creating reporter '{reporter_class}'...")
             instantiate_class("pandemia.reporters", reporter_class, telemetry_bus,
                               Config(_dict=reporter_config))
-
-def calculate_cost(total_deaths, input_arrays):
-    """Calculates the final cost of the pandemic, to be used for policy optimization"""
-
-    log.info("Total deaths: %d", total_deaths)
-    return total_deaths
 
 def main():
     """Main pandemia entry point"""
@@ -194,6 +189,10 @@ def main():
     input_arrays = None
     sim.input_model.new_input(input_arrays)
 
+    # ############## Setup ##############
+
+    sim.setup()
+
     # ############## Run ##############
 
     if sim_factory.config['profile']:
@@ -221,5 +220,6 @@ def main():
     log.info("Simulation finished successfully in " + str(round(total_time, 2)) + " seconds.")
 
     # ############## Output ##############
-    total_deaths = sim.total_deaths()
-    calculate_cost(total_deaths, input_arrays)
+
+    sim.calculate_cost(input_arrays)
+    sim.calculate_error(input_arrays)

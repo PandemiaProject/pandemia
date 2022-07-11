@@ -11,8 +11,6 @@ class VectorWorld:
         self.number_of_regions = None
         self.scale_factor = scale_factor
         self.travel_matrix = None
-        self.contacts_matrix = None
-        self.contact_ticks_matrix = None
 
 class World:
     """Represents a world consisting of regions"""
@@ -23,8 +21,6 @@ class World:
         self.number_of_regions = None
         self.scale_factor = scale_factor
         self.travel_matrix = None
-        self.contacts_matrix = None
-        self.contact_ticks_matrix = None
 
     def vectorize_world(self):
 
@@ -38,7 +34,5 @@ class World:
 
         new_vector_world.number_of_regions = self.number_of_regions
         new_vector_world.travel_matrix = self.travel_matrix
-        new_vector_world.contacts_matrix = self.contacts_matrix
-        new_vector_world.contact_ticks_matrix = self.contact_ticks_matrix
 
         return new_vector_world

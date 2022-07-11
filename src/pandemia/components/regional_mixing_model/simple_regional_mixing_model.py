@@ -23,21 +23,21 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
 
         self.enable_ctypes = enable_ctypes
 
+        assert self.enable_ctypes, "Must use ctypes, Python functions out-of-date"
+
         if self.enable_ctypes:
 
             lib = cdll.LoadLibrary("./src/pandemia/components/regional_mixing_model/"
                                    "simple_regional_mixing_model_functions.dll")
 
-            self.calculate_average_f = lib.calculate_average_f
-            self.average_transmission_force = lib.average_transmission_force
-            self.travel = lib.travel
+            self.transmission_out = lib.transmission_out
+            self.transmission_in = lib.transmission_in
             self.suppress_routes = lib.suppress_routes
             self.close_borders = lib.close_borders
             self.determine_travellers = lib.determine_travellers
 
-            self.calculate_average_f.restype = None
-            self.average_transmission_force.restype = None
-            self.travel.restype = None
+            self.transmission_out.restype = None
+            self.transmission_in.restype = None
             self.suppress_routes.restype = None
             self.close_borders.restype = None
             self.determine_travellers.restype = None
@@ -46,27 +46,14 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
         self.number_of_regions = vector_world.number_of_regions
         self.number_of_strains = number_of_strains
 
-        self.border_closure_factor          = config['border_closure_factor']
-        self.travel_transmission_multiplier = self.config['travel_transmission_multiplier']
-
-        self.travel_transmission_multiplier =\
-            np.full((self.number_of_regions, self.number_of_regions),
-                    self.travel_transmission_multiplier, dtype=float)
-        np.fill_diagonal(self.travel_transmission_multiplier, 0.0)
+        self.border_closure_factor = config['border_closure_factor']
+        self.travel_multiplier     = config['travel_transmission_multiplier']
 
         self.baseline_agents_travelling_matrix = vector_world.travel_matrix
-        self.contacts_matrix                   = vector_world.contacts_matrix
-        self.contact_ticks_matrix              = vector_world.contact_ticks_matrix
-
-        # Rescale
         self.baseline_agents_travelling_matrix =\
             (self.scale_factor * self.baseline_agents_travelling_matrix).astype(int)
-
         for r in range(self.number_of_regions):
             assert self.baseline_agents_travelling_matrix[r][r] == 0
-            assert self.contacts_matrix[r][r] == 0
-            assert self.contact_ticks_matrix[r][r] == 0
-            assert self.travel_transmission_multiplier[r][r] == 0.0
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
@@ -82,12 +69,6 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
         if self.enable_ctypes:
             self.baseline_agents_travelling_matrix =\
                 self.baseline_agents_travelling_matrix.flatten()
-            self.contacts_matrix =\
-                self.contacts_matrix.flatten()
-            self.contact_ticks_matrix =\
-                self.contact_ticks_matrix.flatten()
-            self.travel_transmission_multiplier =\
-                self.travel_transmission_multiplier.flatten()
 
     def dynamics(self, sim, day, ticks_in_day,
                  facemask_transmission_multiplier,
@@ -105,7 +86,8 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
                                  facemask_transmission_multiplier,
                                  mutation_matrix)
 
-    def _determine_travellers(self, vector_region_batch, agents_travelling_matrix):
+    def _out(self, vector_region_batch, agents_travelling_matrix, sum_f_by_strain,
+             transmission_force, facemask_transmission_multiplier):
         """Update record of who is travelling abroad for a batch of regions"""
 
         for vector_region in vector_region_batch:
@@ -120,34 +102,29 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
                 c_void_p(vector_region.random_state.ctypes.data),
                 pointer(vector_region.random_p)
             )
-
-    def _calculate_average_f(self, vector_region_batch, sum_f_by_strain, average_f,
-                             facemask_transmission_multiplier):
-        """Calculate average transmission force for a batch of regions"""
-
-        for vector_region in vector_region_batch:
-            self.calculate_average_f(
+            self.transmission_out(
                 c_int(vector_region.number_of_agents),
                 c_int(self.number_of_strains),
                 c_int(vector_region.id),
                 c_double(facemask_transmission_multiplier),
+                c_double(self.travel_multiplier),
                 c_double(vector_region.current_region_transmission_multiplier),
                 c_void_p(vector_region.current_region.ctypes.data),
                 c_void_p(vector_region.current_infectiousness.ctypes.data),
                 c_void_p(vector_region.current_strain.ctypes.data),
                 c_void_p(vector_region.current_facemask.ctypes.data),
                 c_void_p(sum_f_by_strain.ctypes.data),
-                c_void_p(average_f.ctypes.data),
+                c_void_p(transmission_force.ctypes.data),
                 c_void_p(vector_region.random_state.ctypes.data),
                 pointer(vector_region.random_p)
             )
 
-    def _travel(self, vector_region_batch, transmission_force, sum_f_by_strain, mutation_matrix,
-                facemask_transmission_multiplier):
+    def _in(self, sim, vector_region_batch, sum_f_by_strain, transmission_force, mutation_matrix,
+            facemask_transmission_multiplier, day, ticks_in_day):
         """Calculate who gets infected for a batch of regions"""
 
         for vector_region in vector_region_batch:
-            self.travel(
+            self.transmission_in(
                 c_int(self.number_of_regions),
                 c_int(self.number_of_strains),
                 c_int(vector_region.number_of_agents),
@@ -163,6 +140,10 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
                 c_void_p(vector_region.random_state.ctypes.data),
                 pointer(vector_region.random_p)
             )
+            time = (day * ticks_in_day) +\
+                    vector_region.prng.random_randrange(ticks_in_day)
+            sim.health_model.infect_c(vector_region, time)
+            sim.health_model.update_c(vector_region, day * ticks_in_day)
 
     def dynamics_c(self, sim, day, ticks_in_day,
                    facemask_transmission_multiplier,
@@ -193,40 +174,28 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
             c_void_p(self.baseline_agents_travelling_matrix.ctypes.data)
         )
 
-        # Update record of who is travelling abroad
+        # Update record of who is travelling abroad and calculate transmission force for each region
+        sum_f_by_strain = np.zeros((self.number_of_regions * self.number_of_strains), dtype=float)
+        transmission_force = np.ones((self.number_of_regions), dtype=float)
         if enable_parallel:
             Parallel(n_jobs=num_jobs, backend="threading",
-                     verbose=0)(delayed(self._determine_travellers)(vector_region_batch,
-                     agents_travelling_matrix) for vector_region_batch in vector_region_batches)
+                     verbose=0)(delayed(self._out)(vector_region_batch, agents_travelling_matrix,
+                     sum_f_by_strain, transmission_force, facemask_transmission_multiplier)
+                     for vector_region_batch in vector_region_batches)
         else:
-            self._determine_travellers(sim.vector_regions, agents_travelling_matrix)
+            self._out(sim.vector_regions, agents_travelling_matrix,
+                      sum_f_by_strain, transmission_force, facemask_transmission_multiplier)
 
-        # Calculate average transmission force for each region
-        sum_f_by_strain = np.zeros((self.number_of_regions * self.number_of_strains), dtype=float)
-        average_f = np.zeros((self.number_of_regions), dtype=float)
-        self._calculate_average_f(sim.vector_regions, sum_f_by_strain, average_f,
-                                  facemask_transmission_multiplier)
-        transmission_force = np.zeros((self.number_of_regions *
-                                       self.number_of_regions), dtype=float)
-        self.average_transmission_force(
-            c_int(self.number_of_regions),
-            c_void_p(self.contacts_matrix.ctypes.data),
-            c_void_p(self.travel_transmission_multiplier.ctypes.data),
-            c_void_p(self.contact_ticks_matrix.ctypes.data),
-            c_void_p(transmission_force.ctypes.data),
-            c_void_p(average_f.ctypes.data),
-        )
-
-        # Calculate who gets infected
-        self._travel(sim.vector_regions, transmission_force, sum_f_by_strain, mutation_matrix,
-                     facemask_transmission_multiplier)
-
-        # Infect
-        for vector_region in sim.vector_regions:
-            time = (day * ticks_in_day) +\
-                    vector_region.prng.random_randrange(ticks_in_day)
-            sim.health_model.infect_c(vector_region, time)
-            sim.health_model.update_c(vector_region, day * ticks_in_day)
+        # Calculate who gets infected and infect them
+        if enable_parallel:
+            Parallel(n_jobs=num_jobs, backend="threading",
+                     verbose=0)(delayed(self._in)(sim, vector_region_batch,
+                     sum_f_by_strain, transmission_force, mutation_matrix,
+                     facemask_transmission_multiplier, day, ticks_in_day)
+                     for vector_region_batch in vector_region_batches)
+        else:
+            self._in(sim, sim.vector_regions, sum_f_by_strain, transmission_force, mutation_matrix,
+                     facemask_transmission_multiplier, day, ticks_in_day)
 
     def dynamics_python(self, sim, day, ticks_in_day,
                         facemask_transmission_multiplier,

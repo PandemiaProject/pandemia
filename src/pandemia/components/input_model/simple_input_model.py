@@ -11,7 +11,7 @@ log = logging.getLogger("simple_input_model")
 class SimpleInputModel(InputModel):
     """Simple model of input"""
 
-    def __init__(self, config, scale_factor, simulation_length_days, number_of_regions,
+    def __init__(self, config, scale_factor, clock, number_of_regions,
                  number_of_vaccines, age_groups, enable_ctypes):
         """Initialize component"""
         super().__init__(config, scale_factor)
@@ -20,7 +20,7 @@ class SimpleInputModel(InputModel):
 
         self.scale_factor = scale_factor
 
-        self.simulation_length_days = simulation_length_days
+        self.simulation_length_days = clock.simulation_length_days
         self.number_of_regions = number_of_regions
         self.number_of_vaccines = number_of_vaccines
         self.number_of_vaccination_age_groups = len(age_groups)

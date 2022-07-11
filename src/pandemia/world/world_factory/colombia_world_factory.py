@@ -39,21 +39,8 @@ class ColombiaWorldFactory(WorldFactory):
 
         self._create_test_regions(world)
 
-        number_of_regions = len(world.regions)
-
         world.travel_matrix =\
             self.get_travel_matrix(world, self.local_travel_prob_per_day)
-        world.contacts_matrix =\
-            np.full((number_of_regions, number_of_regions),
-                    self.contacts, dtype=int)
-        np.fill_diagonal(world.contacts_matrix, 0)
-        contact_hours_matrix =\
-            np.full((number_of_regions, number_of_regions),
-                    self.contact_hours, dtype=int)
-        np.fill_diagonal(contact_hours_matrix, 0)
-
-        world.contact_ticks_matrix =\
-            (self.clock.ticks_in_hour * contact_hours_matrix).astype(int)
 
         return world
 

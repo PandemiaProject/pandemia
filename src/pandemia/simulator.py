@@ -3,7 +3,9 @@
 import logging
 import numpy as np
 import os
+import csv
 from datetime import datetime
+from dateutil.parser import parse
 from ctypes import c_int, c_void_p, cdll
 from joblib import Parallel, delayed
 
@@ -75,13 +77,18 @@ class Simulator:
             lib = cdll.LoadLibrary("./src/pandemia/simulator_functions.dll")
 
             self.collect_telemetry_data = lib.collect_telemetry_data
+            self.count_dead             = lib.count_dead
 
             self.collect_telemetry_data.restype = None
+            self.count_dead.restype             = c_int
 
         # Parallel processing
         self.enable_parallel       = self.config['enable_parallel']
         self.num_jobs              = self.config['num_jobs']
         self.vector_region_batches = None
+
+        # Output
+        self.historical_data_filepath = self.config['historical_data_filepath']
 
     def _set_telemetry_bus(self):
         """Assigns telemetry bus to each component"""
@@ -178,8 +185,8 @@ class Simulator:
 
         for vector_region in vector_regions:
 
-            self.input_model.dynamics(vector_region, day)
             self.seasonal_effects_model.dynamics(vector_region, day)
+            self.input_model.dynamics(vector_region, day)
 
             for tick in range(ticks_in_day):
 
@@ -194,13 +201,11 @@ class Simulator:
             self.testing_and_contact_tracing_model.dynamics(vector_region, day)
             self.vaccination_model.dynamics(vector_region, day, ticks_in_day)
 
-    def run(self):
-        """Run the simulation"""
+    def setup(self):
+        """Setup a new simulation"""
 
         # Set the correct time
         self.clock.reset()
-        ticks_in_week = self.clock.ticks_in_week
-        ticks_in_day = self.clock.ticks_in_day
         offset = self.clock.ticks_through_week()
 
         # Set telemetry bus for each component
@@ -212,6 +217,8 @@ class Simulator:
         # Partition vector_regions into approximately equally sized batches
         if self.enable_parallel and self.enable_ctypes:
             self._parallelize_vector_regions()
+        else:
+            self.num_jobs = 1
 
         # Assign prngs to each vectorized region and set random seeds
         self._seed_regions()
@@ -219,10 +226,17 @@ class Simulator:
         # Initialise components, such as disease model, movement model, interventions etc
         self._initial_conditions(offset)
 
-        # Notify telemetry bus of simulation data
-        self._publish_telemetry_data_intial()
+    def run(self):
+        """Run the simulation"""
 
-        log.info("Simulating outbreak on " + str(self.num_jobs) + " CPUs...")
+        ticks_in_week = self.clock.ticks_in_week
+        ticks_in_day = self.clock.ticks_in_day
+        offset = self.clock.ticks_through_week()
+
+        # Notify telemetry bus of simulation data
+        self._output_data_intial()
+
+        log.info("Simulating outbreak on " + str(self.num_jobs) + " CPU(s)...")
 
         # Start the main loop
         for day in self.clock:
@@ -244,7 +258,7 @@ class Simulator:
             else:
                 self.simulate_day(self.vector_regions, day, offset, ticks_in_day, ticks_in_week)
 
-            self._publish_telemetry_data_update()
+            self._output_data_update(day)
 
         # Notify the telemetry bus that the simulation has ended
         self.telemetry_bus.publish("simulation.end")
@@ -258,50 +272,123 @@ class Simulator:
         # Update current location and facemasks
         self.movement_model.update(vector_region, t)
 
-    def _publish_telemetry_data_intial(self):
+    def _output_data_intial(self):
         """Published intial strain count data to the telemetry bus"""
 
-        population_sizes = [vector_region.number_of_agents for vector_region in self.vector_regions]
-        region_names = [vector_region.name for vector_region in self.vector_regions]
+        self.day_to_date = {}
 
-        self.telemetry_bus.publish("strain_counts.initialize", self.number_of_regions,
-                                                               self.number_of_strains,
-                                                               region_names,
-                                                               population_sizes)
+        self.cumulative_deaths_old = 0
+        self.total_deaths = 0
+        self.daily_deaths = {}
+        self.cumulative_deaths = {}
 
-        self.telemetry_bus.publish("vector_world.data", self.vector_world,
-                                                        self.health_model.number_of_strains)
+        if self.config['reporters'] is not None:
 
-    def _publish_telemetry_data_update(self):
+            population_sizes =\
+                [vector_region.number_of_agents for vector_region in self.vector_regions]
+            region_names =\
+                [vector_region.name for vector_region in self.vector_regions]
+
+            self.telemetry_bus.publish("strain_counts.initialize", self.number_of_regions,
+                                                                self.number_of_strains,
+                                                                region_names,
+                                                                population_sizes)
+
+            self.telemetry_bus.publish("deaths.initialize", self.number_of_regions)
+
+            self.telemetry_bus.publish("vector_world.data", self.vector_world,
+                                                            self.health_model.number_of_strains)
+
+    def _output_data_update(self, day):
         """Published strain count updates to the telemetry bus"""
 
-        strain_counts = np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.uint64)
+        date = self.clock.iso8601()
+        self.day_to_date[day] = date
+
+        cumulative_deaths_new = 0
+
         for vector_region in self.vector_regions:
-            if self.enable_ctypes:
-                self.collect_telemetry_data(
-                    c_int(vector_region.number_of_agents),
-                    c_int(self.number_of_strains),
-                    c_int(vector_region.id),
-                    c_void_p(vector_region.current_strain.ctypes.data),
-                    c_void_p(strain_counts.ctypes.data)
-                )
-            else:
-                for n in range(vector_region.number_of_agents):
-                    if vector_region.current_strain[n] != -1:
-                        strain_counts[(vector_region.id * self.number_of_strains)
-                                      + vector_region.current_strain[n]] += 1
-        strain_counts = int(1 / self.vector_world.scale_factor) * strain_counts
-        self.telemetry_bus.publish("strain_counts.update", self.clock, strain_counts)
+            if vector_region.name not in self.config['regions_omitted_from_death_counts']:
+                if self.enable_ctypes:
+                    cumulative_deaths_new +=\
+                        self.count_dead(
+                            c_int(vector_region.number_of_agents),
+                            c_void_p(vector_region.current_disease.ctypes.data),
+                        )
+                else:
+                    for n in range(vector_region.number_of_agents):
+                        if vector_region.current_disease[n] == 1.0:
+                            cumulative_deaths_new += 1
 
-    def total_deaths(self):
-        """Calculates final death count"""
+        self.daily_deaths[date] =\
+            int((1 / self.vector_world.scale_factor) *\
+                (cumulative_deaths_new - self.cumulative_deaths_old))
+        self.cumulative_deaths[date] =\
+            int((1 / self.vector_world.scale_factor) * cumulative_deaths_new)
+        self.cumulative_deaths_old = cumulative_deaths_new
+        self.total_deaths = int((1 / self.vector_world.scale_factor) * cumulative_deaths_new)
 
-        total_deaths = 0
-        for vector_region in self.vector_regions:
-            for n in range(vector_region.number_of_agents):
-                if vector_region.current_disease[n] == 1.0:
-                    total_deaths += 1
-        scale_factor = self.vector_world.scale_factor
-        total_deaths = int((1 / scale_factor) * total_deaths)
+        if self.config['reporters'] is not None:
+            infections =\
+                np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.uint64)
+            for vector_region in self.vector_regions:
+                if self.enable_ctypes:
+                    self.collect_telemetry_data(
+                        c_int(vector_region.number_of_agents),
+                        c_int(self.number_of_strains),
+                        c_int(vector_region.id),
+                        c_void_p(vector_region.current_strain.ctypes.data),
+                        c_void_p(infections.ctypes.data)
+                    )
+                else:
+                    for n in range(vector_region.number_of_agents):
+                        if vector_region.current_strain[n] != -1:
+                            infections[(vector_region.id * self.number_of_strains)
+                                    + vector_region.current_strain[n]] += 1
+            infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.uint64)
+            self.telemetry_bus.publish("strain_counts.update", self.clock, infections)
+            self.telemetry_bus.publish("deaths.update", self.clock, self.daily_deaths[date],
+                                       self.cumulative_deaths[date])
 
-        return total_deaths
+    def calculate_cost(self, input_arrays):
+        """Calculates the final cost of the pandemic, to be used for policy optimization"""
+
+        log.info("Total deaths: %d", self.total_deaths)
+
+        return self.total_deaths
+
+    def calculate_error(self, input_arrays):
+        """Calculates the difference to historical data"""
+
+        # Calculate 21-day rolling average of daily deaths, as in historical data
+        total_num_days = self.clock.simulation_length_days
+        average_deaths_dict = {}
+        for day in range(total_num_days):
+            min_day = max(0, day - 10)
+            max_day = min(total_num_days, day + 10)
+            num_days = max_day - min_day
+            average_deaths = 0
+            for day_sample in range(min_day, max_day):
+                average_deaths += self.daily_deaths[self.day_to_date[day_sample]]
+            average_deaths /= num_days
+            average_deaths_dict[self.day_to_date[day]] = average_deaths
+
+        # Load 21-day rolling average deaths from historical data
+        historical_daily_deaths = {date: average_deaths_dict[date] for date in average_deaths_dict}
+        if self.historical_data_filepath is not None:
+            with open(self.historical_data_filepath, newline='') as csvfile:
+                next(csvfile)
+                deaths_data = csv.reader(csvfile, delimiter=',')
+                for row in deaths_data:
+                    date = parse(str(row[0]), dayfirst=True).strftime('%m/%d/%Y%Z')
+                    historical_daily_deaths[date] = int(row[1])
+
+        # Calculate L^2 difference
+        difference = 0
+        for date in average_deaths_dict:
+            difference += (average_deaths_dict[date] - historical_daily_deaths[date])**2
+        difference = np.sqrt(difference)
+
+        log.info("Simulation Error: %f", difference)
+
+        return difference

@@ -10,7 +10,7 @@ log = logging.getLogger("void_input_model")
 class VoidInputModel(InputModel):
     """Simple model of input"""
 
-    def __init__(self, config, scale_factor, simulation_length_days, number_of_regions,
+    def __init__(self, config, scale_factor, clock, number_of_regions,
                  number_of_vaccines, age_groups, enable_ctypes):
         """Initialize component"""
         super().__init__(config, scale_factor)

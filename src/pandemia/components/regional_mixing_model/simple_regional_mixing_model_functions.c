@@ -159,65 +159,40 @@ void determine_travellers
     return;
 }
 
-void calculate_average_f
+void transmission_out
 (
     int N, // number_of_agents
     int S, // number_of_strains
     int id,
     double facemask_transmission_multiplier,
+    double travel_multiplier,
     double current_region_transmission_multiplier,
     const int * current_region,
     const double * current_infectiousness,
     const int * current_strain,
     const int * current_facemask,
     double * sum_f_by_strain,
-    double * average_f,
+    double * transmission_force,
     uint64_t * random_state,
     int * random_p
 )
 {
+    double facemask_multiplier, f;
     for(int n=0; n<N; n++){
         if(current_region[n] == id && current_strain[n] != -1){
-            double facemask_multiplier, f;
             facemask_multiplier = 1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
             f = current_region_transmission_multiplier *
                 facemask_multiplier * current_infectiousness[n];
+            f = (f * travel_multiplier) / N;
             sum_f_by_strain[(id * S) + current_strain[n]] += f;
+            transmission_force[id] *= 1 - f;
         }
     }
-    double sum_f = 0;
-    for(int s=0; s<S; s++){sum_f += sum_f_by_strain[(id * S) + s];}
-    average_f[id] = sum_f / (double) N;
+    transmission_force[id] = 1 - transmission_force[id];
     return;
 }
 
-void average_transmission_force
-(
-    int R, // number_of_regions
-    const int * contacts_matrix,
-    const double * travel_transmission_multiplier,
-    const int * contact_ticks_matrix,
-    double * transmission_force,
-    const double * average_f
-)
-{
-    int num_contacted;
-    double travel_multiplier;
-    int duration;
-    for(int r1=0; r1<R; r1++){
-        for(int r2=0; r2<R; r2++){
-            num_contacted = contacts_matrix[(r1 * R) + r2];
-            travel_multiplier = travel_transmission_multiplier[(r1 * R) + r2];
-            duration = contact_ticks_matrix[(r1 * R) + r2];
-            transmission_force[(r1 * R) + r2] =
-                1 - pow(((1 - travel_multiplier * average_f[r2])),
-                        (double) (duration * num_contacted));
-        }
-    }
-    return;
-}
-
-void travel
+void transmission_in
 (
     int R, // number_of_regions
     int S, // number_of_strains
@@ -237,32 +212,42 @@ void travel
 {
     double * weights = (double *)malloc(sizeof(double) * S);
     double sum_of_weights;
-    int s1;
-    int s2;
+    int s1, s2;
     for(int n=0; n<N; n++){
         if(current_region[n] != r1){
             int r2 = current_region[n];
             double facemask_multiplier;
-            facemask_multiplier = 1 + current_facemask[n] *
-                                  (facemask_transmission_multiplier - 1);
-            if(bernoulli(random_state, random_p, facemask_multiplier
-                         * transmission_force[(r1 * R) + r2]) == 1){
-                sum_of_weights = 0;
-                for(int s=0; s<S; s++){
-                    weights[s] = sum_f_by_strain[(r2 * S) + s];
-                    sum_of_weights += weights[s];
-                }
-                s1 = random_choice(random_state, random_p, weights, sum_of_weights);
-                double prob;
-                prob = current_sigma_immunity_failure[(n * S) + s1];
+            facemask_multiplier =
+                1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
+            double prob;
+            if(S > 1){
+                prob = facemask_multiplier * transmission_force[r2];
                 if(bernoulli(random_state, random_p, prob) == 1){
                     sum_of_weights = 0;
                     for(int s=0; s<S; s++){
-                        weights[s] = mutation_matrix[(s1 * S) + s];
+                        weights[s] = sum_f_by_strain[(r2 * S) + s];
                         sum_of_weights += weights[s];
                     }
-                    s2 = random_choice(random_state, random_p, weights, sum_of_weights);
-                    infection_event[n] = s2;
+                    s1 = random_choice(random_state, random_p, weights, sum_of_weights);
+                    double prob;
+                    prob = current_sigma_immunity_failure[(n * S) + s1];
+                    if(bernoulli(random_state, random_p, prob) == 1){
+                        sum_of_weights = 0;
+                        for(int s=0; s<S; s++){
+                            weights[s] = mutation_matrix[(s1 * S) + s];
+                            sum_of_weights += weights[s];
+                        }
+                        s2 = random_choice(random_state, random_p, weights, sum_of_weights);
+                        infection_event[n] = s2;
+                    }
+                }
+            } else {
+                s1 = 0;
+                prob = facemask_multiplier *
+                       transmission_force[r2] *
+                       current_sigma_immunity_failure[(n * S) + s1];
+                if(bernoulli(random_state, random_p, prob) == 1){
+                    infection_event[n] = s1;
                 }
             }
         }

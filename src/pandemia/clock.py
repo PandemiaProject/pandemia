@@ -30,7 +30,7 @@ class Clock:
 
         # Check that day length is divisible by tick length, in seconds.
         if 86400 % tick_length_s != 0:
-            raise ValueError("Tick length must be divisible by day length")
+            raise ValueError("Day length must be divisible by tick length")
 
         if isinstance(epoch, str):
             parsed_epoch = parse(epoch)

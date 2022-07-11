@@ -40,10 +40,6 @@ class ABMluxWorldFactory(WorldFactory):
 
         world.travel_matrix =\
             np.zeros((number_of_regions, number_of_regions), dtype=int)
-        world.contacts_matrix =\
-            np.zeros((number_of_regions, number_of_regions), dtype=int)
-        world.contact_ticks_matrix =\
-            np.zeros((number_of_regions, number_of_regions), dtype=int)
 
         return world
 

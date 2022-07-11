@@ -21,9 +21,8 @@ num_jobs: -2
 
 # ######################################### Clock ##################################################
 
-# Time length of each tick in the simulation. Weeks must contain the same number of ticks, because
-# we use weekly routines. This means the week length (604800) should be divisible by the following
-# tick length:
+# Time length of each tick in the simulation. The day length (86400) should be divisible by the
+# following tick length:
 tick_length_s: 3600
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
@@ -126,6 +125,9 @@ input_model:
 
 # ######################################### Output #################################################
 
+regions_omitted_from_death_counts: []
+historical_data_filepath: null
+
 # Output that should be rendered from the simulation:
 reporters:
   cli.TimeReporter: {}
@@ -135,6 +137,7 @@ reporters:
     show: False
     savefig: True
     filename: /tmp/infected.png
+    historical_data: null
   pygame_display.PygameDisplay:
     fullscreen: False
     font_size: 20
