@@ -240,7 +240,6 @@ vaccination_model:
 
 regional_mixing_model:
   __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
-  border_closure_factor: 0.1
   travel_transmission_multiplier: 1.0
 
 # ######################################### Input ##################################################

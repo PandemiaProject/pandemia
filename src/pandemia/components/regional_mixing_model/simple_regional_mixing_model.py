@@ -32,13 +32,11 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
 
             self.transmission_out = lib.transmission_out
             self.transmission_in = lib.transmission_in
-            self.suppress_routes = lib.suppress_routes
             self.close_borders = lib.close_borders
             self.determine_travellers = lib.determine_travellers
 
             self.transmission_out.restype = None
             self.transmission_in.restype = None
-            self.suppress_routes.restype = None
             self.close_borders.restype = None
             self.determine_travellers.restype = None
 
@@ -46,8 +44,7 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
         self.number_of_regions = vector_world.number_of_regions
         self.number_of_strains = number_of_strains
 
-        self.border_closure_factor = config['border_closure_factor']
-        self.travel_multiplier     = config['travel_transmission_multiplier']
+        self.travel_multiplier = config['travel_transmission_multiplier']
 
         self.baseline_agents_travelling_matrix = vector_world.travel_matrix
         self.baseline_agents_travelling_matrix =\
@@ -58,7 +55,7 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
 
-        vector_region.border_closure_intervention = -1
+        vector_region.current_border_closure_multiplier = 1.0
         vector_region.current_region = np.full((vector_region.number_of_agents),
                                                 vector_region.id, dtype=int)
 
@@ -151,28 +148,19 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
                    num_jobs, vector_region_batches):
         """Changes to regional mixing"""
 
-        # Reset record of who is travelling abroad
+        agents_travelling_matrix = copy.deepcopy(self.baseline_agents_travelling_matrix)
+
+        # Reset record of who is travelling abroad and apply border closure if necessary
         for vector_region in sim.vector_regions:
             vector_region.current_region = np.full((vector_region.number_of_agents),
                                                    vector_region.id, dtype=int)
-
-        # Apply border closure intervention suppressing routes if necessary
-        route_suppressed = np.zeros((self.number_of_regions * self.number_of_regions), dtype=int)
-        for vector_region in sim.vector_regions:
-            self.suppress_routes(
+            self.close_borders(
                 c_int(self.number_of_regions),
                 c_int(vector_region.id),
-                c_int(vector_region.border_closure_intervention),
-                c_void_p(route_suppressed.ctypes.data)
+                c_double(vector_region.current_border_closure_multiplier),
+                c_void_p(agents_travelling_matrix.ctypes.data),
+                c_void_p(self.baseline_agents_travelling_matrix.ctypes.data)
             )
-        agents_travelling_matrix = copy.deepcopy(self.baseline_agents_travelling_matrix)
-        self.close_borders(
-            c_int(self.number_of_regions),
-            c_double(self.border_closure_factor),
-            c_void_p(route_suppressed.ctypes.data),
-            c_void_p(agents_travelling_matrix.ctypes.data),
-            c_void_p(self.baseline_agents_travelling_matrix.ctypes.data)
-        )
 
         # Update record of who is travelling abroad and calculate transmission force for each region
         sum_f_by_strain = np.zeros((self.number_of_regions * self.number_of_strains), dtype=float)

@@ -241,11 +241,9 @@ void transmission
                 if(bernoulli(random_state, random_p, prob) == 1){
                     sum_of_weights = 0;
                     for(int s=0; s<S; s++){
-                        for(int a=0; a<A; a++){
-                            weights[s] = sum_by_strain_by_age_group[(current_location[n] * S * A) +
-                                                                    (s * A) + a];
-                            sum_of_weights += weights[s];
-                        }
+                        weights[s] = sum_by_strain_by_age_group[(current_location[n] * S * A) +
+                                                                (s * A) + age_group[n]];
+                        sum_of_weights += weights[s];
                     }
                     s1 = random_choice(random_state, random_p, weights, sum_of_weights);
                     prob = current_sigma_immunity_failure[(n * S) + s1];

@@ -58,41 +58,20 @@ void random_sample(uint64_t * s, int * p, int * sample, int n, int * population,
     }
 }
 
-void suppress_routes
-(
-    int R, // number_of_regions
-    int r1,
-    int border_closure_intervention,
-    int * route_suppressed
-)
-{
-    if(border_closure_intervention == 1){
-        for(int r2=0; r2<R; r2++){
-            if(r1 != r2){
-                route_suppressed[(r1 * R) + r2] = 1;
-            }
-        }
-    }
-    return;
-}
-
 void close_borders
 (
     int R, // number_of_regions
-    double border_closure_factor,
-    const int * route_suppressed,
+    int id,
+    double current_border_closure_multiplier,
     int * agents_travelling_matrix,
     const int * baseline_agents_travelling_matrix
 )
 {
-    for(int r1=0; r1<R; r1++){
-        for(int r2=0; r2<R; r2++){
-            if(route_suppressed[(r1 * R) + r2] == 1){
-                agents_travelling_matrix[(r1 * R) + r2] =
-                    (int) ((double) baseline_agents_travelling_matrix[(r1 * R) + r2] *
-                                    border_closure_factor);
-            }
-        }
+    int r1 = id;
+    for(int r2=0; r2<R; r2++){
+        agents_travelling_matrix[(r1 * R) + r2] =
+            (int) ((double) baseline_agents_travelling_matrix[(r1 * R) + r2] *
+                            current_border_closure_multiplier);
     }
     return;
 }

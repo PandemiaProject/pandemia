@@ -49,7 +49,7 @@ class SimpleInputModel(InputModel):
             self.lockdown_input =\
                 np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=int)
             self.border_closure_input =\
-                np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=int)
+                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=float)
             self.facemask_input =\
                 np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=int)
             self.random_testing_input =\
@@ -85,7 +85,7 @@ class SimpleInputModel(InputModel):
             self.lockdown_input[0][vector_region.id]
         vector_region.facemask_intervention =\
             self.facemask_input[0][vector_region.id]
-        vector_region.border_closure_intervention =\
+        vector_region.current_border_closure_multiplier =\
             self.border_closure_input[0][vector_region.id]
         vector_region.num_to_test_random =\
             self.random_testing_input[0][vector_region.id]
@@ -103,7 +103,7 @@ class SimpleInputModel(InputModel):
             self.lockdown_input[day][vector_region.id]
         vector_region.facemask_intervention =\
             self.facemask_input[day][vector_region.id]
-        vector_region.border_closure_intervention =\
+        vector_region.current_border_closure_multiplier =\
             self.border_closure_input[day][vector_region.id]
         vector_region.num_to_test_random =\
             self.random_testing_input[day][vector_region.id]

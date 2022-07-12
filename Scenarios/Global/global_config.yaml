@@ -2,7 +2,7 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 0.000025
+scale_factor: 0.00005
 
 # Profiler
 profile: False
@@ -62,8 +62,8 @@ health_model:
   number_of_strains: 1
   preset_weights_by_age:
     0:  {preset_0: 1.00, preset_1: 0.00}
-    65: {preset_0: 0.999, preset_1: 0.001}
-    85: {preset_0: 0.99, preset_1: 0.01}
+    65: {preset_0: 0.99, preset_1: 0.01}
+    85: {preset_0: 0.9, preset_1: 0.1}
   health_presets:
     preset_0:
       0:
@@ -125,14 +125,17 @@ vaccination_model:
 
 regional_mixing_model:
   __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
-  border_closure_factor: 0.1
-  travel_transmission_multiplier: 1.5
+  travel_transmission_multiplier: 1.0
 
 # ######################################### Input ##################################################
 
 input_model:
-  __type__: void_input_model.VoidInputModel
-  # __type__: validation_input_model.ValidationInputModel
+  # __type__: void_input_model.VoidInputModel
+  __type__: validation_input_model.ValidationInputModel
+  containment_data_fp: Scenarios/Global/data/country_data_containment_and_health_index.csv
+  travel_data_fp: Scenarios/Global/data/country_data_international_travel_controls.csv
+  max_transmission_control: 0.5
+  max_travel_control: 0.5
 
 # ######################################### Output #################################################
 
@@ -147,13 +150,13 @@ reporters:
   plot.PlotInfected:
     show: False
     savefig: True
-    filename: /tmp/infected_43200_86400.png
+    filename: /tmp/infected.png
     historical_data: null
   plot.PlotDeaths:
     show: False
     savefig: True
-    daily_deaths_filename: /tmp/daily_deaths_43200_86400.png
-    cumulative_deaths_filename: /tmp/cumulative_deaths_43200_86400.png
+    daily_deaths_filename: /tmp/daily_deaths.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths.png
     historical_data: Scenarios/Global/data/WHO-COVID-19-global-data-totals.csv
   pygame_display.PygameDisplay:
     fullscreen: True
