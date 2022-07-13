@@ -52,13 +52,14 @@ class PlotDeaths(Reporter):
 
         historical_daily_deaths_dict      = {self.day_to_date[day]: 0 for day in self.days}
         historical_cumulative_deaths_dict = {self.day_to_date[day]: 0 for day in self.days}
-        with open(self.historical_data_fp, newline='') as csvfile:
-            next(csvfile)
-            deaths_data = csv.reader(csvfile, delimiter=',')
-            for row in deaths_data:
-                date = parse(str(row[0]), dayfirst=True).strftime('%m/%d/%Y%Z')
-                historical_daily_deaths_dict[date]      = float(row[4])
-                historical_cumulative_deaths_dict[date] = int(row[1])
+        if self.historical_data_fp is not None:
+            with open(self.historical_data_fp, newline='') as csvfile:
+                next(csvfile)
+                deaths_data = csv.reader(csvfile, delimiter=',')
+                for row in deaths_data:
+                    date = parse(str(row[0]), dayfirst=True).strftime('%m/%d/%Y%Z')
+                    historical_daily_deaths_dict[date]      = float(row[4])
+                    historical_cumulative_deaths_dict[date] = int(row[1])
         hist_daily_deaths = []
         hist_cumulative_deaths = []
         daily_deaths = []

@@ -134,8 +134,6 @@ class SimulationFactory:
             None
         """
 
-        log.info("Writing to %s...", output_filename)
-
         with open(output_filename, 'wb') as fout:
             pickle.dump(self, fout, protocol=pickle.HIGHEST_PROTOCOL)
 

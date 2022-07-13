@@ -71,8 +71,6 @@ class GlobalWorldFactory(WorldFactory):
             for row in region_data:
                 id = int(row[1])
                 iso = str(row[2])
-                if iso == 'GB':
-                    iso = 'UK'
                 new_location = Location(iso, (0.0, 0.0))
                 locations = []
                 locations.append(new_location)
@@ -108,6 +106,10 @@ class GlobalWorldFactory(WorldFactory):
             regions_to_coordinates[region] = None
             for id in range(len(shape_recs)):
                 iso = shape_recs[id].record[0]
+                if iso == 'GB':
+                    iso = 'UK'
+                if iso == 'EL':
+                    iso = 'GR'
                 if region.name == iso:
                     # Extract coordinates according to shape type
                     geoj = sf.shape(id).__geo_interface__
@@ -151,8 +153,6 @@ class GlobalWorldFactory(WorldFactory):
             for row in airport_data:
                 airport = str(row[0])
                 region_iso = str(row[3])
-                if region_iso == 'GB':
-                    region_iso = 'UK'
                 airports_to_region_iso[airport] = region_iso
 
         # Get air travel matrix, recording the number of travellers between regions either per month

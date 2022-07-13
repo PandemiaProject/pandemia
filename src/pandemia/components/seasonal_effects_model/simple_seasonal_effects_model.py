@@ -22,7 +22,8 @@ class SimpleSeasonalEffectsModel(SeasonalEffectsModel):
         self.epoch = clock.epoch
         self.simulation_length_days = clock.simulation_length_days
 
-        seasonality_config = config['seasonal_multiplier_by_region_by_month']
+        seasonality_config            = config['seasonal_multiplier_by_region_by_month']
+        self.out_of_season_multiplier = config['out_of_season_multiplier']
 
         self.seasonal_multiplier_by_region = defaultdict(list)
 
@@ -36,9 +37,13 @@ class SimpleSeasonalEffectsModel(SeasonalEffectsModel):
                 region_data_seasonality = csv.reader(csvfile, delimiter=',')
                 for row in region_data_seasonality:
                     iso = str(row[2])
-                    if iso == 'GB':
-                        iso = 'UK'
-                    seasonal_multipliers = [float(row[3 + r]) for r in range(12)]
+                    seasonal_multipliers = []
+                    for r in range(12):
+                        if int(row[3 + r]) == 1:
+                            multiplier = 1
+                        else:
+                            multiplier = self.out_of_season_multiplier
+                        seasonal_multipliers.append(multiplier)
                     seasonal_multiplier_records[iso] = seasonal_multipliers
             names_to_ids = {r.name: r.id for r in vector_world.vector_regions}
             for vector_region in vector_world.vector_regions:

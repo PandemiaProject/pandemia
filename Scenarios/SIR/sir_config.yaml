@@ -46,11 +46,12 @@ seasonal_effects_model:
 
 health_model:
   __type__: simple_health_model.SimpleHealthModel
+  beta: 1.0
   location_typ_multipliers: null
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
-    'sir_region': [1000]
+    'sir_region': [10]
   mutation_matrix: [[1.0]]
   number_of_strains: 1
   preset_weights_by_age: null
@@ -62,10 +63,10 @@ health_model:
   age_group_interval: null # 5
   # Deactivate by setting auto_generate_presets = False
   auto_generate_presets: True
-  beta: 0.27 # Units: days^{-1}
-  gamma_inverse: 9 # Units: days
-  disease_level: 0.2
-  max_dist_days: 100 # Maximum infectiousness period, curtailing the geometric distribution
+  sir_beta: 0.27 # Units: days^{-1}
+  sir_gamma_inverse: 9 # Units: days
+  sir_disease_level: 0.2
+  sir_max_dist_days: 100 # Maximum infectiousness period, curtailing the geometric distribution
 
 # ######################################### Movement ###############################################
 
@@ -110,7 +111,7 @@ reporters:
   plot.PlotInfected:
     show: False
     savefig: True
-    filename: /tmp/infected.png
+    filename: /tmp/infected_sir.png
     historical_data: null
 
 # ######################################### Logging ################################################

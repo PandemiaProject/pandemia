@@ -2,7 +2,7 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 0.1
+scale_factor: 0.05
 
 # Profiler
 profile: False
@@ -57,6 +57,7 @@ seasonal_effects_model:
 
 health_model:
   __type__: simple_health_model.SimpleHealthModel
+  beta: 1.0
   location_typ_multipliers: null
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
@@ -86,10 +87,10 @@ health_model:
   age_group_interval: null
   # Deactivate by setting auto_generate_presets = False
   auto_generate_presets: False
-  beta: null # Units: days^{-1}
-  gamma_inverse: null # Units: days
-  disease_level: null
-  max_dist_days: null # Maximum infectiousness period, curtailing the geometric distribution 
+  sir_beta: null # Units: days^{-1}
+  sir_gamma_inverse: null # Units: days
+  sir_disease_level: null
+  sir_max_dist_days: null # Maximum infectiousness period, curtailing the geometric distribution 
 
 # ######################################### Movement ###############################################
 
@@ -131,11 +132,11 @@ historical_data_filepath: null
 reporters:
   cli.TimeReporter: {}
   csv.StrainCounts:
-    filename: /tmp/strain_counts.csv
+    filename: /tmp/strain_counts_colombia.csv
   plot.PlotInfected:
     show: False
     savefig: True
-    filename: /tmp/infected.png
+    filename: /tmp/infected_colombia.png
     historical_data: null
   pygame_display.PygameDisplay:
     fullscreen: False
