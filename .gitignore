@@ -2,6 +2,7 @@
 # World files
 *.wld
 *.wld.bak
+*.abm
 
 .vscode/
 
