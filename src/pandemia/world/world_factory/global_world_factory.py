@@ -15,10 +15,10 @@ from pandemia.world.world_factory import WorldFactory
 log = logging.getLogger('world_factory')
 
 class GlobalWorldFactory(WorldFactory):
-    """Reads a DensityMap and generates a world based on the densities indicated therein."""
+    """Generates a world"""
 
     def __init__(self, config, clock, scale_factor):
-        """Create agents and locations according to the population density map given"""
+        """Create agents and locations"""
 
         self.config = config
         self.clock = clock
@@ -65,16 +65,16 @@ class GlobalWorldFactory(WorldFactory):
         activities = ["Default"]
         world.regions = []
         total_number_of_agents = 0
+        id = 0
         with open(regions_data_path, newline='') as csvfile:
             next(csvfile)
             region_data = csv.reader(csvfile, delimiter=',')
             for row in region_data:
-                id = int(row[1])
-                iso = str(row[2])
+                iso = str(row[1])
                 new_location = Location(iso, (0.0, 0.0))
                 locations = []
                 locations.append(new_location)
-                population_size = int(row[3])
+                population_size = int(row[4])
                 age_distribution = [float(row[5 + r]) for r in range(101)]
                 number_of_agents = max(int(population_size * self.scale_factor), 1)
                 total_number_of_agents += number_of_agents
@@ -90,6 +90,7 @@ class GlobalWorldFactory(WorldFactory):
                         agents.append(new_agent)
                 new_region = Region(id, iso, activities, agents, locations)
                 world.regions.append(new_region)
+                id += 1
         world.number_of_regions = len(world.regions)
 
         log.info("Created world with %d agents", total_number_of_agents)
@@ -101,13 +102,13 @@ class GlobalWorldFactory(WorldFactory):
         shape_recs = sf.shapeRecords()
 
         # Determine for which regions coordinate data can be found
-        regions_to_coordinates = {}
         for region in world.regions:
-            regions_to_coordinates[region] = None
             for id in range(len(shape_recs)):
                 iso = shape_recs[id].record[0]
-                if iso == 'GB':
-                    iso = 'UK'
+                if iso == 'UK':
+                    iso = 'GB'
+                if iso == 'RS':
+                    iso = 'CS'
                 if iso == 'EL':
                     iso = 'GR'
                 if region.name == iso:

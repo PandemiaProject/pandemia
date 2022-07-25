@@ -17,18 +17,18 @@ class Location:
 
         Parameters:
           typ (str): The type of location, as a string, for example House, Restaurant etc
-          etrs89_coord (tuple): 2-tuple with x, y grid coordinates in ETRS89 format
+          coord (tuple): 2-tuple with x, y grid coordinates
         """
 
         self.uuid = uuid.uuid4().hex
         self.typ = typ
-        self.etrs89_coord = coord
+        self.coord = coord
 
-    def distance_euclidean_m(self, other: Location) -> float:
-        """Return the distance between the two locations in metres."""
+    def distance_euclidean(self, other: Location) -> float:
+        """Return the distance between the two locations."""
 
-        return sqrt(((self.etrs89_coord[0]-other.etrs89_coord[0])**2)\
-                  + ((self.etrs89_coord[1]-other.etrs89_coord[1])**2))
+        return sqrt(((self.coord[0]-other.coord[0])**2)\
+                  + ((self.coord[1]-other.coord[1])**2))
 
 # pylint: disable=invalid-name
 def ETRS89_to_WGS84(coord: LocationTuple) -> LocationTuple:

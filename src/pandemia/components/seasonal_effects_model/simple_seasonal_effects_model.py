@@ -39,7 +39,7 @@ class SimpleSeasonalEffectsModel(SeasonalEffectsModel):
                     iso = str(row[2])
                     seasonal_multipliers = []
                     for r in range(12):
-                        if int(row[3 + r]) == 1:
+                        if int(row[4 + r]) == 1:
                             multiplier = 1
                         else:
                             multiplier = self.out_of_season_multiplier

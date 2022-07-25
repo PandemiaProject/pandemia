@@ -290,9 +290,9 @@ class Simulator:
                 [vector_region.name for vector_region in self.vector_regions]
 
             self.telemetry_bus.publish("strain_counts.initialize", self.number_of_regions,
-                                                                self.number_of_strains,
-                                                                region_names,
-                                                                population_sizes)
+                                                                   self.number_of_strains,
+                                                                   region_names,
+                                                                   population_sizes)
 
             self.telemetry_bus.publish("deaths.initialize", self.number_of_regions)
 
@@ -328,7 +328,20 @@ class Simulator:
         self.cumulative_deaths_old = cumulative_deaths_new
         self.total_deaths = int((1 / self.vector_world.scale_factor) * cumulative_deaths_new)
 
-        if self.config['reporters'] is not None:
+        if ("pygame_coords.PygameCoords" in self.config['reporters']):
+
+            current_location =\
+                {vr.id: vr.current_location for vr in self.vector_regions}
+            current_infectiousness =\
+                {vr.id: vr.current_infectiousness for vr in self.vector_regions}
+
+            self.telemetry_bus.publish("data.update", self.clock, current_location,
+                                       current_infectiousness)
+
+        if ("plot.PlotInfected" in self.config['reporters']) or\
+            ("csv.StrainCounts" in self.config['reporters']) or\
+            ("pygame_shapes.PygameShapes" in self.config['reporters']):
+
             infections =\
                 np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.uint64)
             for vector_region in self.vector_regions:
@@ -347,8 +360,11 @@ class Simulator:
                                     + vector_region.current_strain[n]] += 1
             infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.uint64)
             self.telemetry_bus.publish("strain_counts.update", self.clock, infections)
+
+        if ("plot.PlotDeaths" in self.config['reporters']):
+
             self.telemetry_bus.publish("deaths.update", self.clock, self.daily_deaths[date],
-                                       self.cumulative_deaths[date])
+                                        self.cumulative_deaths[date])
 
     def calculate_cost(self, input_arrays):
         """Calculates the final cost of the pandemic, to be used for policy optimization"""

@@ -1,0 +1,290 @@
+---
+# ######################################### Basic Parameters #######################################
+
+# Scale factor
+scale_factor: 0.25
+
+# Profiler
+profile: False
+pstats_records: 100
+
+# Random seeds for each region
+random_seed: 1
+
+# Enable or disable the use of ctypes
+enable_ctypes: True
+
+# Enable or disable the use of parallel processing. Note that the number of jobs is automatically
+# reset according to the number of regions and population ratio between regions:
+enable_parallel: False
+num_jobs: 1
+
+# ######################################### Clock ##################################################
+
+# Time length of each tick in the simulation. The day length (86400) should be divisible by the
+# following tick length:
+tick_length_s: 600
+# How long the simulation should run for, in days. Note the number of iterations will be computed
+# from the tick length above:
+simulation_length_days: 100
+# the date at which the simulation starts:
+epoch: 23rd February 2020
+
+# ######################################### World ##################################################
+
+world_factory:
+  __type__: abmlux_world_factory.ABMluxWorldFactory
+  # The file path from where to load the world file
+  world_fp: Scenarios/ABMlux/data/sim_factory.abm
+  region_name: Luxembourg
+
+# ######################################### Seasonal Effects #######################################
+
+seasonal_effects_model:
+  __type__: void_seasonal_effects_model.VoidSeasonalEffectsModel
+
+# ######################################### Health #################################################
+
+# Disease (mutation viewed from the point of view of within-host competition, for the case in which
+# strains can be ordered by within-host fitness). Cross immunity is represented by the off-diagonal
+# step functions. Furthermore tau refers to the set of possible outcomes, while rho refers to the
+# probability distribution over these outcomes. For simplicity we assume only two possible outcomes.
+# Note that the infectiousness probability give a probability per tick, and must therefore be
+# adjusted if the tick length is changed.
+
+health_model:
+  __type__: simple_health_model.SimpleHealthModel
+  beta: 1.0
+  location_typ_multipliers: # Unless specfified set to 1.0
+    Outdoor: 0.0
+    Belgium: 0.0
+    France: 0.0
+    Germany: 0.0
+    Construction: 0.0
+    Cemetery: 0.0
+  facemask_transmission_multiplier: 0.1
+  immunity_period_days: 7
+  num_initial_infections_by_region_by_strain:
+    'Luxembourg': [320]
+  mutation_matrix: [[1.0]]
+  number_of_strains: 1
+  preset_weights_by_age:
+    0:  {SEAS: 0.826, SEPIS: 0.161829614, SEPID: 0.00000000000, SEPIHS: 0.006085193, SEPIHD: 0.000000000, SEPIHVHS: 0.006085193, SEPIHVD: 0.000000000}
+    5:  {SEAS: 0.826, SEPIS: 0.167373901, SEPID: 0.00000000000, SEPIHS: 0.006626099, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    10: {SEAS: 0.874, SEPIS: 0.126000000, SEPID: 0.00000000000, SEPIHS: 0.000000000, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    15: {SEAS: 0.874, SEPIS: 0.123474626, SEPID: 0.00000000000, SEPIHS: 0.001262687, SEPIHD: 0.000000000, SEPIHVHS: 0.001262687, SEPIHVD: 0.000000000}
+    20: {SEAS: 0.838, SEPIS: 0.153501713, SEPID: 0.00000000000, SEPIHS: 0.008498287, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    25: {SEAS: 0.838, SEPIS: 0.157877069, SEPID: 0.00000000000, SEPIHS: 0.004122931, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    30: {SEAS: 0.802, SEPIS: 0.186385752, SEPID: 0.00000000000, SEPIHS: 0.010784659, SEPIHD: 0.000000000, SEPIHVHS: 0.000829589, SEPIHVD: 0.000000000}
+    35: {SEAS: 0.802, SEPIS: 0.185644466, SEPID: 0.00000000000, SEPIHS: 0.011405108, SEPIHD: 0.000000000, SEPIHVHS: 0.000950426, SEPIHVD: 0.000000000}
+    40: {SEAS: 0.760, SEPIS: 0.213013444, SEPID: 0.00000000000, SEPIHS: 0.020509782, SEPIHD: 0.000000000, SEPIHVHS: 0.006476773, SEPIHVD: 0.000000000}
+    45: {SEAS: 0.760, SEPIS: 0.207210413, SEPID: 0.00000000000, SEPIHS: 0.027168515, SEPIHD: 0.000000000, SEPIHVHS: 0.005621072, SEPIHVD: 0.000000000}
+    50: {SEAS: 0.706, SEPIS: 0.255245230, SEPID: 0.00000000000, SEPIHS: 0.034195385, SEPIHD: 0.000000000, SEPIHVHS: 0.004559384, SEPIHVD: 0.000000000}
+    55: {SEAS: 0.706, SEPIS: 0.222626632, SEPID: 0.00000000000, SEPIHS: 0.065775457, SEPIHD: 0.000000000, SEPIHVHS: 0.005597911, SEPIHVD: 0.000000000}
+    60: {SEAS: 0.622, SEPIS: 0.270040285, SEPID: 0.00000000000, SEPIHS: 0.086367772, SEPIHD: 0.000000000, SEPIHVHS: 0.017993286, SEPIHVD: 0.003598657}
+    65: {SEAS: 0.622, SEPIS: 0.225343587, SEPID: 0.00825169800, SEPIHS: 0.111397923, SEPIHD: 0.000000000, SEPIHVHS: 0.018861024, SEPIHVD: 0.014145768}
+    70: {SEAS: 0.586, SEPIS: 0.109950189, SEPID: 0.00000000000, SEPIHS: 0.219643826, SEPIHD: 0.018826614, SEPIHVHS: 0.032789686, SEPIHVD: 0.032789686}
+    75: {SEAS: 0.586, SEPIS: 0.072096598, SEPID: 0.02564275500, SEPIHS: 0.234401083, SEPIHD: 0.030574054, SEPIHVHS: 0.051285511, SEPIHVD: 0.000000000}
+    80: {SEAS: 0.586, SEPIS: 0.004095810, SEPID: 0.07094495600, SEPIHS: 0.213491765, SEPIHD: 0.093936377, SEPIHVHS: 0.010510364, SEPIHVD: 0.021020728}
+    85: {SEAS: 0.586, SEPIS: 0.048304351, SEPID: 0.08776695600, SEPIHS: 0.172892776, SEPIHD: 0.097722004, SEPIHVHS: 0.000000000, SEPIHVD: 0.007313913}
+    90: {SEAS: 0.586, SEPIS: 0.036140995, SEPID: 0.13109394100, SEPIHS: 0.138805349, SEPIHD: 0.107959715, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+  health_presets:
+    SEAS:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 8, 373], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 8, 373], [1.0, 0.05, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 3, 8], [0.0, 0.0, 0.0001925, 0.0]]]
+        disease:
+          [[[-1, 0, 3, 8], [0.0, 0.0, 0.0, 0.0]]]
+        strain:
+          [[[-1, 0, 8], [-1, 0, -1]]]
+    SEPIS:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 8, 373], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 8, 373], [1.0, 0.05, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 3, 5.1, 8], [0.0, 0.0, 0.0001925, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 3, 5.1, 8], [0.0, 0.0, 0.0, 0.2, 0.0]]]
+        strain:
+          [[[-1, 0, 8], [-1, 0, -1]]]
+    SEPID:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 17.6, 382.6], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 17.6, 382.6], [1.0, 0.05, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 3, 5.1, 17.6], [0.0, 0.0, 0.0001925, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 3, 5.1, 17.6], [0.0, 0.0, 0.0, 0.2, 1.0]]]
+        strain:
+          [[[-1, 0, 17.6], [-1, 0, -1]]]
+    SEPIHS:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 26.6, 391.6], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 26.6, 391.6], [1.0, 0.05, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 3, 5.1, 12.1, 26.6], [0.0, 0.0, 0.0001925, 0.00035, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 3, 5.1, 12.1, 26.6], [0.0, 0.0, 0.0, 0.2, 0.5, 0.0]]]
+        strain:
+          [[[-1, 0, 26.6], [-1, 0, -1]]]
+    SEPIHD:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 22.6, 387.6], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 22.6, 387.6], [1.0, 0.05, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 3, 5.1, 12.1, 22.6], [0.0, 0.0, 0.0001925, 0.00035, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 3, 5.1, 12.1, 22.6], [0.0, 0.0, 0.0, 0.2, 0.5, 1.0]]]
+        strain:
+          [[[-1, 0, 22.6], [-1, 0, -1]]]
+    SEPIHVHS:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 26.1, 391.1], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 26.1, 391.1], [1.0, 0.05, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 3, 5.1, 12.1, 16.1, 23.1, 26.1], [0.0, 0.0, 0.0001925, 0.00035, 0.00035, 0.00035, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 3, 5.1, 12.1, 16.1, 23.1, 26.1], [0.0, 0.0, 0.0, 0.2, 0.5, 0.8, 0.5, 0.0]]]
+        strain:
+          [[[-1, 0, 26.1], [-1, 0, -1]]]
+    SEPIHVD:
+      0:
+        rho_immunity_failure:
+          [[[[-1, 24.6, 389.6], [[0.0], [0.0], [0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 24.6, 389.6], [1.0, 0.05, 1.0]]]]
+        infectiousness:
+          [[[-1, 0, 3, 5.1, 12.1, 16.1, 24.6], [0.0, 0.0, 0.0001925, 0.00035, 0.00035, 0.00035, 0.0]]]
+        disease:
+          [[[-1, 0, 3, 5.1, 12.1, 16.1, 24.6], [0.0, 0.0, 0.0, 0.2, 0.5, 0.8, 1.0]]]
+        strain:
+          [[[-1, 0, 24.6], [-1, 0, -1]]]
+  # Rescale by time and population in each location, deactivate by setting sir_rescaling = False
+  sir_rescaling: False
+  # Deactivate by setting age_mixing_matrices = null
+  age_mixing_matrices: null
+  age_group_interval: null
+  # Deactivate by setting auto_generate_presets = False
+  auto_generate_presets: False
+  sir_beta: null # Units: days^{-1}
+  sir_gamma_inverse: null # Units: days
+  sir_disease_level: null
+  sir_max_dist_days: null # Maximum infectiousness period, curtailing the geometric distribution 
+
+# ######################################### Movement ###############################################
+
+movement_model:
+  __type__: simple_movement_model.SimpleMovementModel
+  weighted_sampling: False
+  home_activity: "House"
+  location_closure_exemptions:
+    House: ["House"]
+  facemask_activities: ["Public Transport"]
+  age_groups:         [  0,  18,  65]
+  facemask_hesitancy: [1.0, 1.0, 1.0]
+
+# ######################################### Hospitalization and Death ##############################
+
+hospitalization_and_death_model:
+  __type__: simple_hospitalization_and_death_model.SimpleHospitalizationAndDeathModel
+  hospital_threshold: 0.5
+  hospital_location_type: Hospital
+  cemetery_location_type: Cemetery
+
+# ######################################### Testing and Contact Tracing ############################
+
+testing_and_contact_tracing_model:
+  __type__: void_testing_and_contact_tracing_model.VoidTestingAndContactTracingModel
+
+# ######################################### Vaccination ############################################
+
+vaccination_model:
+  __type__: void_vaccination_model.VoidVaccinationModel
+
+# ######################################### Regional Mixing ########################################
+
+regional_mixing_model:
+  __type__: void_regional_mixing_model.VoidRegionalMixingModel
+
+# ######################################### Input ##################################################
+
+input_model:
+  __type__: void_input_model.VoidInputModel
+
+# ######################################### Output #################################################
+
+regions_omitted_from_death_counts: []
+historical_data_filepath: null
+
+# Output that should be rendered from the simulation:
+reporters:
+  cli.TimeReporter: {}
+  csv.StrainCounts:
+    filename: /tmp/strain_counts_luxembourg.csv
+  plot.PlotInfected:
+    show: False
+    savefig: True
+    filename: /tmp/infected_luxembourg.png
+    historical_data: null
+  plot.PlotDeaths:
+    show: False
+    savefig: True
+    daily_deaths_filename: /tmp/daily_deaths_luxembourg.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths_luxembourg.png
+    historical_data: null
+  # pygame_coords.PygameCoords:
+  #   fullscreen: True
+  #   font_size: 20
+  #   plot_prevalence: False
+  #   max_prev_to_plot: 1.0
+  #   plot_num_infected: True
+  #   max_num_inf_to_plot: 10
+  #   refresh_rate: 60
+  #   display_width: 1500
+  #   display_height: 700
+  #   square_width: null # 0.0416666666667
+  #   cmap: "Oranges"
+
+# ######################################### Logging ################################################
+
+# Format is https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
+logging:
+  version: 1
+  disable_existing_loggers: False
+  formatters:
+    standard:
+      # format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+      format: '[%(levelname)s] %(name)s: %(message)s'
+  handlers:
+    default:
+      level: INFO
+      formatter: standard
+      class: logging.StreamHandler
+      stream: 'ext://sys.stdout'  # Default is stderr
+  loggers:
+    '':   # root logger
+      handlers: ['default']
+      level: INFO
+      propagate: False
+#    'my.packg':
+#      handlers: ['default']
+#      level: INFO
+#      propagate: False
+#    '__main__':
+#        handlers': ['default']
+#        level: DEBUG
+#        propagate: False

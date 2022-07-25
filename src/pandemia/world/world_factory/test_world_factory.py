@@ -11,7 +11,7 @@ from pandemia.world.region import Region
 from pandemia.world import World
 from pandemia.world.world_factory import WorldFactory
 
-log = logging.getLogger('world_factory')
+log = logging.getLogger('test_world_factory')
 
 class TestWorldFactory(WorldFactory):
     """Reads a DensityMap and generates a world based on the densities indicated therein."""

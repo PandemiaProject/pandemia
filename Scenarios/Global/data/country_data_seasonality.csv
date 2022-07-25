@@ -1,201 +1,197 @@
-name,id,iso,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
-Afghanistan,0,AF,1,1,1,0,0,0,0,0,0,0,0,1
-Albania,1,AL,1,1,1,0,0,0,0,0,0,0,0,0
-Algeria,2,DZ,1,1,1,0,0,0,0,0,0,0,0,1
-Angola,3,AO,0,1,0,1,0,0,1,1,1,1,1,0
-Antigua and Barbuda,4,AG,0,0,0,1,1,1,1,0,0,0,0,0
-Argentina,5,AR,0,0,0,0,0,1,1,1,1,0,0,0
-Armenia,6,AM,1,1,1,1,0,0,0,0,0,0,0,0
-Aruba,7,AW,0,0,0,1,1,1,1,0,0,0,0,0
-Australia,8,AU,0,0,0,0,0,0,1,1,1,1,0,0
-Austria,9,AT,1,1,1,0,0,0,0,0,0,0,0,0
-Azerbaijan,10,AZ,1,1,1,1,0,0,0,0,0,0,0,0
-Bahamas (the),11,BS,0,0,0,1,1,1,1,0,0,0,0,0
-Bahrain,12,BH,1,1,0,0,0,0,0,0,0,1,1,1
-Bangladesh,13,BD,0,0,0,1,1,1,1,1,1,0,0,0
-Barbados,14,BB,0,0,0,1,1,1,1,0,0,0,0,0
-Belarus,15,BY,1,1,1,1,0,0,0,0,0,0,0,0
-Belgium,16,BE,1,1,1,0,0,0,0,0,0,0,0,0
-Belize,17,BZ,1,1,1,1,0,0,0,0,0,0,0,0
-Benin,18,BJ,1,0,0,0,0,1,0,0,0,1,1,1
-Bhutan,19,BT,1,0,1,1,1,0,1,1,0,0,0,0
-Bolivia (Plurinational State of),20,BO,0,0,1,0,1,1,1,1,1,0,0,0
-Bosnia and Herzegovina,21,BA,1,1,1,0,0,0,0,0,0,0,0,0
-Botswana,22,BW,0,0,0,0,1,1,1,1,1,0,0,0
-Brazil,23,BR,0,0,0,1,1,1,1,1,0,0,0,0
-Brunei Darussalam,24,BN,1,1,1,0,1,1,0,0,0,0,0,0
-Bulgaria,25,BG,1,1,1,0,0,0,0,0,0,0,0,0
-Burkina Faso,26,BF,1,1,1,0,0,0,1,0,0,1,0,0
-Burundi,27,BI,0,1,1,1,1,1,0,0,0,0,0,0
-Cabo Verde,28,CV,0,0,1,0,0,0,0,1,1,1,1,0
-Cambodia,29,KH,0,0,0,0,0,1,1,1,1,1,1,1
-Cameroon,30,CM,0,0,0,0,1,1,0,1,1,1,1,1
-Canada,31,CA,1,1,1,1,0,0,0,0,0,0,0,1
-Central African Republic (the),32,CF,0,0,0,0,0,0,0,1,1,0,0,0
-Chad,33,TD,1,1,0,0,0,0,0,0,0,0,0,0
-Chile,34,CL,0,0,0,0,1,1,1,1,1,1,0,0
-China,35,CN,1,1,1,0,0,0,0,0,0,0,0,1
-Colombia,36,CO,0,0,0,1,1,1,1,0,0,0,0,0
-Comoros (the),37,KM,1,1,1,0,1,1,1,1,0,0,0,0
-Congo (the Democratic Republic of the),38,CD,1,1,1,1,1,1,0,0,0,0,0,1
-Congo (the),39,CG,1,1,1,1,1,1,0,0,0,0,0,1
-Costa Rica,40,CR,1,0,0,0,0,0,0,1,1,1,1,1
-Croatia,41,HR,1,1,1,1,0,0,0,0,0,0,0,0
-Cuba,42,CU,0,0,0,0,1,1,1,1,1,1,1,0
-Curaçao,43,CW,0,0,0,1,1,1,1,0,0,0,0,0
-Cyprus,44,CY,1,1,1,0,0,0,0,0,0,0,0,1
-Czechia,45,CZ,1,1,1,0,0,0,0,0,0,0,0,0
-Côte d'Ivoire,46,CI,0,0,0,1,1,1,1,1,1,1,1,0
-Denmark,47,DK,1,1,1,0,0,0,0,0,0,0,0,0
-Djibouti,48,DJ,1,1,1,1,0,0,0,0,0,1,1,0
-Dominican Republic (the),49,DO,0,0,0,1,1,1,1,0,0,0,0,0
-Ecuador,50,EC,1,1,1,1,0,1,1,1,0,0,0,0
-Egypt,51,EG,1,1,0,0,0,0,0,0,0,0,1,1
-El Salvador,52,SV,0,0,0,0,1,1,1,0,0,0,0,1
-Equatorial Guinea,53,GQ,1,1,1,1,1,1,0,0,0,0,0,1
-Eritrea,54,ER,1,1,1,1,0,0,0,0,0,1,1,0
-Estonia,55,EE,1,1,1,1,0,0,0,0,0,0,0,0
-Eswatini,56,SZ,0,0,0,0,1,1,1,1,1,0,0,0
-Ethiopia,57,ET,1,1,1,1,0,0,0,0,0,1,1,0
-Fiji,58,FJ,0,0,1,1,0,0,1,1,1,0,0,0
-Finland,59,FI,1,1,1,0,0,0,0,0,0,0,0,1
-France,60,FR,1,1,1,0,0,0,0,0,0,0,0,1
-French Guiana,61,GF,0,1,1,1,1,1,0,0,0,0,0,0
-French Polynesia,62,PF,0,0,1,1,0,0,1,1,1,0,0,0
-Gabon,63,GA,1,1,1,1,1,1,0,0,0,0,0,1
-Gambia (the),64,GM,0,0,1,0,0,0,0,1,1,1,1,0
-Georgia,65,GE,1,1,1,1,0,0,0,0,0,0,0,0
-Germany,66,DE,1,1,1,1,0,0,0,0,0,0,0,1
-Ghana,67,GH,0,0,1,1,1,1,1,0,0,1,1,1
-Greece,68,GR,1,1,1,0,0,0,0,0,0,0,0,0
-Grenada,69,GD,0,0,0,1,1,1,1,0,0,0,0,0
-Guadeloupe,70,GP,1,1,1,0,0,0,0,0,0,0,0,0
-Guam,71,GU,1,1,0,0,0,0,1,1,1,1,0,0
-Guatemala,72,GT,1,1,1,1,0,0,0,0,0,0,0,0
-Guinea,73,GN,0,0,0,0,0,0,0,1,1,1,0,0
-Guinea-Bissau,74,GW,0,0,0,0,0,0,0,1,1,1,0,0
-Guyana,75,GY,0,1,1,1,1,1,0,0,0,0,0,0
-Haiti,76,HT,0,0,0,1,1,1,1,0,0,0,0,0
-Honduras,77,HN,0,0,0,0,1,0,1,0,1,1,1,0
-Hong Kong,78,HK,1,1,1,0,0,0,0,0,0,0,0,1
-Hungary,79,HU,1,1,1,1,0,0,0,0,0,0,0,0
-Iceland,80,IS,1,1,1,1,0,0,0,0,0,0,0,0
-India,81,IN,0,1,1,1,0,0,0,0,0,0,1,1
-Indonesia,82,ID,1,1,1,1,0,0,0,0,0,0,1,1
-Iran (Islamic Republic of),83,IR,1,1,0,0,0,0,0,0,0,0,0,1
-Iraq,84,IQ,1,1,1,0,0,0,0,0,0,0,0,1
-Ireland,85,IE,1,1,1,1,0,0,0,0,0,0,0,1
-Israel,86,IL,1,1,1,0,0,0,0,0,0,0,0,1
-Italy,87,IT,1,1,1,0,0,0,0,0,0,0,0,1
-Jamaica,88,JM,0,1,0,0,0,0,0,0,0,1,1,0
-Japan,89,JP,1,1,1,0,0,0,0,0,0,0,0,1
-Jordan,90,JO,1,1,1,1,1,0,0,0,0,0,0,1
-Kazakhstan,91,KZ,1,1,1,0,0,0,0,0,0,0,0,1
-Kenya,92,KE,0,1,1,1,0,0,1,1,0,0,1,0
-Kiribati,93,KI,0,0,1,1,0,0,1,1,1,0,0,0
-Korea (the Democratic People's Republic of),94,KP,1,1,1,1,0,0,0,0,0,0,0,1
-Korea (the Republic of),95,KR,1,1,1,1,0,0,0,0,0,0,0,1
-Kuwait,96,KW,1,1,1,0,0,0,0,0,0,0,0,1
-Kyrgyzstan,97,KG,1,1,0,0,0,0,0,0,0,0,0,1
-Lao People's Democratic Republic (the),98,LA,1,1,0,0,0,0,0,0,1,1,1,1
-Latvia,99,LV,1,1,1,1,0,0,0,0,0,0,0,0
-Lebanon,100,LB,1,1,1,0,0,0,0,0,0,0,0,1
-Lesotho,101,LS,0,0,0,0,1,1,1,1,1,0,0,0
-Liberia,102,LR,0,0,0,0,0,0,0,1,1,1,0,0
-Libya,103,LY,1,1,0,0,0,0,0,0,0,0,1,1
-Lithuania,104,LT,1,1,1,1,0,0,0,0,0,0,0,0
-Luxembourg,105,LU,1,1,1,0,0,0,0,0,0,0,0,1
-Macao,106,MO,1,1,1,0,0,0,0,0,0,0,0,1
-Madagascar,107,MG,1,1,1,0,1,1,1,1,0,0,0,0
-Malawi,108,MW,1,0,0,1,1,1,0,0,0,0,1,1
-Malaysia,109,MY,1,1,1,0,1,1,0,0,0,0,0,0
-Maldives,110,MV,1,0,1,1,1,1,1,0,0,0,1,1
-Mali,111,ML,0,1,1,1,0,0,0,0,1,1,0,0
-Malta,112,MT,1,1,1,0,0,0,0,0,0,0,0,1
-Martinique,113,MQ,1,1,1,0,0,0,0,0,0,0,0,0
-Mauritania,114,MR,1,1,0,0,0,0,0,0,0,0,0,0
-Mauritius,115,MU,0,1,1,1,1,1,1,0,0,0,0,0
-Mayotte,116,YT,0,1,1,1,1,1,1,0,0,0,0,0
-Mexico,117,MX,1,1,1,0,0,0,0,0,0,0,0,1
-Micronesia (Federated States of),118,FM,0,0,1,1,0,0,1,1,1,0,0,0
-Moldova (the Republic of),119,MD,1,1,1,0,0,0,0,0,0,0,0,0
-Mongolia,120,MN,1,1,1,1,0,0,0,0,0,0,0,1
-Montenegro,121,ME,1,1,1,1,0,0,0,0,0,0,0,0
-Morocco,122,MA,1,1,1,0,0,0,0,0,0,0,1,1
-Mozambique,123,MZ,0,1,0,1,0,0,1,1,1,1,1,0
-Myanmar,124,MM,0,1,1,0,0,0,1,1,1,1,1,0
-Namibia,125,NA,0,0,0,0,1,1,1,1,1,0,0,0
-Nepal,126,NP,0,0,1,1,0,0,1,1,0,0,0,0
-Netherlands (the),127,NL,1,1,1,1,0,0,0,0,0,0,0,1
-New Caledonia,128,NC,0,0,1,1,0,0,1,1,1,0,0,0
-New Zealand,129,NZ,0,0,0,0,0,0,1,1,1,1,0,0
-Nicaragua,130,NI,0,0,0,0,0,0,0,1,1,1,1,1
-Niger (the),131,NE,1,1,0,0,0,0,0,0,0,0,0,0
-Nigeria,132,NG,1,1,1,0,1,1,1,1,1,1,1,0
-Norway,133,NO,1,1,1,0,0,0,0,0,0,0,0,1
-Oman,134,OM,1,1,1,1,1,0,0,0,0,0,1,1
-Pakistan,135,PK,1,1,1,0,0,0,0,0,0,0,0,1
-"Palestine, State of",136,PS,1,1,1,0,0,0,0,0,0,0,0,1
-Panama,137,PA,0,0,0,0,1,1,1,1,0,0,1,0
-Papua New Guinea,138,PG,1,1,1,1,0,0,0,0,0,0,1,1
-Paraguay,139,PY,0,0,0,0,0,1,1,1,0,0,0,0
-Peru,140,PE,0,0,1,0,1,1,1,1,1,0,0,0
-Philippines (the),141,PH,1,1,0,0,0,0,1,1,1,1,0,0
-Poland,142,PL,1,1,1,1,0,0,0,0,0,0,0,0
-Portugal,143,PT,1,1,1,0,0,0,0,0,0,0,0,0
-Puerto Rico,144,PR,0,0,0,1,1,1,1,0,0,0,0,0
-Qatar,145,QA,1,0,1,1,0,0,0,0,0,0,1,1
-Republic of North Macedonia,146,MK,1,1,1,1,0,0,0,0,0,0,0,0
-Romania,147,RO,1,1,1,1,0,0,0,0,0,0,0,0
-Russian Federation (the),148,RU,1,1,1,1,0,0,0,0,0,0,0,0
-Rwanda,149,RW,0,1,1,1,1,1,0,0,0,0,0,0
-Réunion,150,RE,0,1,1,1,1,1,1,0,0,0,0,0
-Saint Lucia,151,LC,0,0,0,1,1,1,1,0,0,0,0,0
-Saint Vincent and the Grenadines,152,VC,0,0,0,1,1,1,1,0,0,0,0,0
-Samoa,153,WS,0,0,1,1,0,0,1,1,1,0,0,0
-Sao Tome and Principe,154,ST,0,0,0,0,1,1,0,1,1,1,1,1
-Saudi Arabia,155,SA,1,1,1,1,1,0,0,0,0,0,1,1
-Senegal,156,SN,0,0,1,0,0,0,0,1,1,1,1,0
-Serbia,157,RS,1,1,1,1,0,0,0,0,0,0,0,0
-Seychelles,158,SC,0,1,1,1,1,1,1,0,0,0,0,0
-Sierra Leone,159,SL,0,0,0,0,0,0,0,1,1,1,0,0
-Singapore,160,SG,1,1,0,0,0,1,1,1,0,0,0,1
-Slovakia,161,SK,1,1,1,1,0,0,0,0,0,0,0,0
-Slovenia,162,SI,1,1,1,1,0,0,0,0,0,0,0,0
-Solomon Islands,163,SB,0,0,1,1,0,0,1,1,1,0,0,0
-Somalia,164,SO,1,1,1,1,0,0,0,0,0,1,1,0
-South Africa,165,ZA,0,0,0,0,1,1,1,1,1,0,0,0
-South Sudan,166,SS,1,1,0,0,0,0,0,0,0,0,1,1
-Spain,167,ES,1,1,1,0,0,0,0,0,0,0,0,0
-Sri Lanka,168,LK,1,0,1,1,1,1,1,0,0,0,1,1
-Sudan (the),169,SD,1,1,0,0,0,0,0,0,0,0,1,1
-Suriname,170,SR,0,1,1,1,1,1,0,0,0,0,0,0
-Sweden,171,SE,1,1,1,1,0,0,0,0,0,0,0,0
-Switzerland,172,CH,1,1,1,0,0,0,0,0,0,0,0,1
-Syrian Arab Republic,173,SY,1,1,1,0,0,0,0,0,0,0,0,1
-Taiwan (Province of China),174,TW,1,1,1,0,0,0,0,0,0,0,0,1
-Tajikistan,175,TJ,1,1,0,0,0,0,0,0,0,0,0,1
-"Tanzania, United Republic of",176,TZ,1,0,0,1,1,1,0,0,0,0,1,1
-Thailand,177,TH,0,1,1,0,0,0,1,1,1,1,1,0
-Timor-Leste,178,TL,1,1,1,1,0,0,0,0,0,0,1,1
-Togo,179,TG,1,0,0,0,0,1,0,0,0,1,1,1
-Tonga,180,TO,0,0,1,1,0,0,1,1,1,0,0,0
-Trinidad and Tobago,181,TT,0,0,0,1,1,1,1,0,0,0,0,0
-Tunisia,182,TN,1,1,1,1,0,0,0,0,0,0,0,0
-Turkey,183,TR,1,1,1,0,0,0,0,0,0,0,0,0
-Turkmenistan,184,TM,1,1,0,0,0,0,0,0,0,0,0,1
-Uganda,185,UG,0,0,0,1,1,0,1,1,1,1,1,0
-Ukraine,186,UA,1,1,1,1,0,0,0,0,0,0,0,0
-United Arab Emirates (the),187,AE,1,0,1,1,0,0,0,0,0,0,1,1
-United Kingdom of Great Britain and Northern Ireland (the),188,UK,1,1,1,1,0,0,0,0,0,0,0,1
-United States of America (the),189,US,1,1,1,0,0,0,0,0,0,0,0,1
-Uruguay,190,UY,0,0,0,0,0,1,1,1,0,0,0,0
-Uzbekistan,191,UZ,0,1,1,0,0,0,0,0,0,0,0,0
-Vanuatu,192,VU,1,1,0,0,0,0,1,1,1,1,0,0
-Venezuela (Bolivarian Republic of),193,VE,0,0,0,0,0,0,1,1,0,0,0,0
-Viet Nam,194,VN,0,0,1,0,1,1,1,1,0,1,0,0
-Virgin Islands (U.S.),195,VI,0,0,0,0,1,1,1,1,1,1,1,0
-Western Sahara,196,EH,1,1,0,0,0,0,0,0,0,0,0,0
-Yemen,197,YE,1,1,1,1,1,0,0,0,0,0,1,1
-Zambia,198,ZM,0,1,0,1,0,0,1,1,1,1,1,0
-Zimbabwe,199,ZW,0,0,0,0,1,1,1,1,1,0,0,0
+name,id,iso 2,iso 3,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
+Afghanistan,0,AF,AFG,1,1,1,0,0,0,0,0,0,0,0,1
+Albania,1,AL,ALB,1,1,1,0,0,0,0,0,0,0,0,0
+Algeria,2,DZ,DZA,1,1,1,0,0,0,0,0,0,0,0,1
+Angola,3,AO,AGO,0,1,0,1,0,0,1,1,1,1,1,0
+Antigua and Barbuda,4,AG,ATG,0,0,0,1,1,1,1,0,0,0,0,0
+Argentina,5,AR,ARG,0,0,0,0,0,1,1,1,1,0,0,0
+Armenia,6,AM,ARM,1,1,1,1,0,0,0,0,0,0,0,0
+Aruba,7,AW,ABW,0,0,0,1,1,1,1,0,0,0,0,0
+Australia,8,AU,AUS,0,0,0,0,0,0,1,1,1,1,0,0
+Austria,9,AT,AUT,1,1,1,0,0,0,0,0,0,0,0,0
+Azerbaijan,10,AZ,AZE,1,1,1,1,0,0,0,0,0,0,0,0
+Bahamas (the),11,BS,BHS,0,0,0,1,1,1,1,0,0,0,0,0
+Bahrain,12,BH,BHR,1,1,0,0,0,0,0,0,0,1,1,1
+Bangladesh,13,BD,BGD,0,0,0,1,1,1,1,1,1,0,0,0
+Barbados,14,BB,BRB,0,0,0,1,1,1,1,0,0,0,0,0
+Belarus,15,BY,BLR,1,1,1,1,0,0,0,0,0,0,0,0
+Belgium,16,BE,BEL,1,1,1,0,0,0,0,0,0,0,0,0
+Belize,17,BZ,BLZ,1,1,1,1,0,0,0,0,0,0,0,0
+Benin,18,BJ,BEN,1,0,0,0,0,1,0,0,0,1,1,1
+Bhutan,19,BT,BTN,1,0,1,1,1,0,1,1,0,0,0,0
+Bolivia (Plurinational State of),20,BO,BOL,0,0,1,0,1,1,1,1,1,0,0,0
+Bosnia and Herzegovina,21,BA,BIH,1,1,1,0,0,0,0,0,0,0,0,0
+Botswana,22,BW,BWA,0,0,0,0,1,1,1,1,1,0,0,0
+Brazil,23,BR,BRA,0,0,0,1,1,1,1,1,0,0,0,0
+Brunei Darussalam,24,BN,BRN,1,1,1,0,1,1,0,0,0,0,0,0
+Bulgaria,25,BG,BGR,1,1,1,0,0,0,0,0,0,0,0,0
+Burkina Faso,26,BF,BFA,1,1,1,0,0,0,1,0,0,1,0,0
+Burundi,27,BI,BDI,0,1,1,1,1,1,0,0,0,0,0,0
+Cabo Verde,28,CV,CPV,0,0,1,0,0,0,0,1,1,1,1,0
+Cambodia,29,KH,KHM,0,0,0,0,0,1,1,1,1,1,1,1
+Cameroon,30,CM,CMR,0,0,0,0,1,1,0,1,1,1,1,1
+Canada,31,CA,CAN,1,1,1,1,0,0,0,0,0,0,0,1
+Central African Republic (the),32,CF,CAF,0,0,0,0,0,0,0,1,1,0,0,0
+Chad,33,TD,TCD,1,1,0,0,0,0,0,0,0,0,0,0
+Chile,34,CL,CHL,0,0,0,0,1,1,1,1,1,1,0,0
+China,35,CN,CHN,1,1,1,0,0,0,0,0,0,0,0,1
+Colombia,36,CO,COL,0,0,0,1,1,1,1,0,0,0,0,0
+Comoros (the),37,KM,COM,1,1,1,0,1,1,1,1,0,0,0,0
+Congo (the Democratic Republic of the),38,CD,COD,1,1,1,1,1,1,0,0,0,0,0,1
+Congo (the),39,CG,COG,1,1,1,1,1,1,0,0,0,0,0,1
+Costa Rica,40,CR,CRI,1,0,0,0,0,0,0,1,1,1,1,1
+Croatia,41,HR,HRV,1,1,1,1,0,0,0,0,0,0,0,0
+Cuba,42,CU,CUB,0,0,0,0,1,1,1,1,1,1,1,0
+Cyprus,43,CY,CYP,1,1,1,0,0,0,0,0,0,0,0,1
+Czechia,44,CZ,CZE,1,1,1,0,0,0,0,0,0,0,0,0
+Côte d'Ivoire,45,CI,CIV,0,0,0,1,1,1,1,1,1,1,1,0
+Denmark,46,DK,DNK,1,1,1,0,0,0,0,0,0,0,0,0
+Djibouti,47,DJ,DJI,1,1,1,1,0,0,0,0,0,1,1,0
+Dominican Republic (the),48,DO,DOM,0,0,0,1,1,1,1,0,0,0,0,0
+Ecuador,49,EC,ECU,1,1,1,1,0,1,1,1,0,0,0,0
+Egypt,50,EG,EGY,1,1,0,0,0,0,0,0,0,0,1,1
+El Salvador,51,SV,SLV,0,0,0,0,1,1,1,0,0,0,0,1
+Equatorial Guinea,52,GQ,GNQ,1,1,1,1,1,1,0,0,0,0,0,1
+Eritrea,53,ER,ERI,1,1,1,1,0,0,0,0,0,1,1,0
+Estonia,54,EE,EST,1,1,1,1,0,0,0,0,0,0,0,0
+Eswatini,55,SZ,SWZ,0,0,0,0,1,1,1,1,1,0,0,0
+Ethiopia,56,ET,ETH,1,1,1,1,0,0,0,0,0,1,1,0
+Fiji,57,FJ,FJI,0,0,1,1,0,0,1,1,1,0,0,0
+Finland,58,FI,FIN,1,1,1,0,0,0,0,0,0,0,0,1
+France,59,FR,FRA,1,1,1,0,0,0,0,0,0,0,0,1
+French Guiana,60,GF,GUF,0,1,1,1,1,1,0,0,0,0,0,0
+French Polynesia,61,PF,PYF,0,0,1,1,0,0,1,1,1,0,0,0
+Gabon,62,GA,GAB,1,1,1,1,1,1,0,0,0,0,0,1
+Gambia (the),63,GM,GMB,0,0,1,0,0,0,0,1,1,1,1,0
+Georgia,64,GE,GEO,1,1,1,1,0,0,0,0,0,0,0,0
+Germany,65,DE,DEU,1,1,1,1,0,0,0,0,0,0,0,1
+Ghana,66,GH,GHA,0,0,1,1,1,1,1,0,0,1,1,1
+Greece,67,GR,GRC,1,1,1,0,0,0,0,0,0,0,0,0
+Grenada,68,GD,GRD,0,0,0,1,1,1,1,0,0,0,0,0
+Guadeloupe,69,GP,GLP,1,1,1,0,0,0,0,0,0,0,0,0
+Guam,70,GU,GUM,1,1,0,0,0,0,1,1,1,1,0,0
+Guatemala,71,GT,GTM,1,1,1,1,0,0,0,0,0,0,0,0
+Guinea,72,GN,GIN,0,0,0,0,0,0,0,1,1,1,0,0
+Guinea-Bissau,73,GW,GNB,0,0,0,0,0,0,0,1,1,1,0,0
+Guyana,74,GY,GUY,0,1,1,1,1,1,0,0,0,0,0,0
+Haiti,75,HT,HTI,0,0,0,1,1,1,1,0,0,0,0,0
+Honduras,76,HN,HND,0,0,0,0,1,0,1,0,1,1,1,0
+Hong Kong,77,HK,HKG,1,1,1,0,0,0,0,0,0,0,0,1
+Hungary,78,HU,HUN,1,1,1,1,0,0,0,0,0,0,0,0
+Iceland,79,IS,ISL,1,1,1,1,0,0,0,0,0,0,0,0
+India,80,IN,IND,0,1,1,1,0,0,0,0,0,0,1,1
+Indonesia,81,ID,IDN,1,1,1,1,0,0,0,0,0,0,1,1
+Iran (Islamic Republic of),82,IR,IRN,1,1,0,0,0,0,0,0,0,0,0,1
+Iraq,83,IQ,IRQ,1,1,1,0,0,0,0,0,0,0,0,1
+Ireland,84,IE,IRL,1,1,1,1,0,0,0,0,0,0,0,1
+Israel,85,IL,ISR,1,1,1,0,0,0,0,0,0,0,0,1
+Italy,86,IT,ITA,1,1,1,0,0,0,0,0,0,0,0,1
+Jamaica,87,JM,JAM,0,1,0,0,0,0,0,0,0,1,1,0
+Japan,88,JP,JPN,1,1,1,0,0,0,0,0,0,0,0,1
+Jordan,89,JO,JOR,1,1,1,1,1,0,0,0,0,0,0,1
+Kazakhstan,90,KZ,KAZ,1,1,1,0,0,0,0,0,0,0,0,1
+Kenya,91,KE,KEN,0,1,1,1,0,0,1,1,0,0,1,0
+Kiribati,92,KI,KIR,0,0,1,1,0,0,1,1,1,0,0,0
+Korea (the Democratic People's Republic of),93,KP,PRK,1,1,1,1,0,0,0,0,0,0,0,1
+Korea (the Republic of),94,KR,KOR,1,1,1,1,0,0,0,0,0,0,0,1
+Kuwait,95,KW,KWT,1,1,1,0,0,0,0,0,0,0,0,1
+Kyrgyzstan,96,KG,KGZ,1,1,0,0,0,0,0,0,0,0,0,1
+Lao People's Democratic Republic (the),97,LA,LAO,1,1,0,0,0,0,0,0,1,1,1,1
+Latvia,98,LV,LVA,1,1,1,1,0,0,0,0,0,0,0,0
+Lebanon,99,LB,LBN,1,1,1,0,0,0,0,0,0,0,0,1
+Lesotho,100,LS,LSO,0,0,0,0,1,1,1,1,1,0,0,0
+Liberia,101,LR,LBR,0,0,0,0,0,0,0,1,1,1,0,0
+Libya,102,LY,LBY,1,1,0,0,0,0,0,0,0,0,1,1
+Lithuania,103,LT,LTU,1,1,1,1,0,0,0,0,0,0,0,0
+Luxembourg,104,LU,LUX,1,1,1,0,0,0,0,0,0,0,0,1
+Macao,105,MO,MAC,1,1,1,0,0,0,0,0,0,0,0,1
+Madagascar,106,MG,MDG,1,1,1,0,1,1,1,1,0,0,0,0
+Malawi,107,MW,MWI,1,0,0,1,1,1,0,0,0,0,1,1
+Malaysia,108,MY,MYS,1,1,1,0,1,1,0,0,0,0,0,0
+Maldives,109,MV,MDV,1,0,1,1,1,1,1,0,0,0,1,1
+Mali,110,ML,MLI,0,1,1,1,0,0,0,0,1,1,0,0
+Malta,111,MT,MLT,1,1,1,0,0,0,0,0,0,0,0,1
+Martinique,112,MQ,MTQ,1,1,1,0,0,0,0,0,0,0,0,0
+Mauritania,113,MR,MRT,1,1,0,0,0,0,0,0,0,0,0,0
+Mauritius,114,MU,MUS,0,1,1,1,1,1,1,0,0,0,0,0
+Mayotte,115,YT,MYT,0,1,1,1,1,1,1,0,0,0,0,0
+Mexico,116,MX,MEX,1,1,1,0,0,0,0,0,0,0,0,1
+Micronesia (Federated States of),117,FM,FSM,0,0,1,1,0,0,1,1,1,0,0,0
+Moldova (the Republic of),118,MD,MDA,1,1,1,0,0,0,0,0,0,0,0,0
+Mongolia,119,MN,MNG,1,1,1,1,0,0,0,0,0,0,0,1
+Morocco,120,MA,MAR,1,1,1,0,0,0,0,0,0,0,1,1
+Mozambique,121,MZ,MOZ,0,1,0,1,0,0,1,1,1,1,1,0
+Myanmar,122,MM,MMR,0,1,1,0,0,0,1,1,1,1,1,0
+Namibia,123,NA,NAM,0,0,0,0,1,1,1,1,1,0,0,0
+Nepal,124,NP,NPL,0,0,1,1,0,0,1,1,0,0,0,0
+Netherlands (the),125,NL,NLD,1,1,1,1,0,0,0,0,0,0,0,1
+New Caledonia,126,NC,NCL,0,0,1,1,0,0,1,1,1,0,0,0
+New Zealand,127,NZ,NZL,0,0,0,0,0,0,1,1,1,1,0,0
+Nicaragua,128,NI,NIC,0,0,0,0,0,0,0,1,1,1,1,1
+Niger (the),129,NE,NER,1,1,0,0,0,0,0,0,0,0,0,0
+Nigeria,130,NG,NGA,1,1,1,0,1,1,1,1,1,1,1,0
+Norway,131,NO,NOR,1,1,1,0,0,0,0,0,0,0,0,1
+Oman,132,OM,OMN,1,1,1,1,1,0,0,0,0,0,1,1
+Pakistan,133,PK,PAK,1,1,1,0,0,0,0,0,0,0,0,1
+"Palestine, State of",134,PS,PSE,1,1,1,0,0,0,0,0,0,0,0,1
+Panama,135,PA,PAN,0,0,0,0,1,1,1,1,0,0,1,0
+Papua New Guinea,136,PG,PNG,1,1,1,1,0,0,0,0,0,0,1,1
+Paraguay,137,PY,PRY,0,0,0,0,0,1,1,1,0,0,0,0
+Peru,138,PE,PER,0,0,1,0,1,1,1,1,1,0,0,0
+Philippines (the),139,PH,PHL,1,1,0,0,0,0,1,1,1,1,0,0
+Poland,140,PL,POL,1,1,1,1,0,0,0,0,0,0,0,0
+Portugal,141,PT,PRT,1,1,1,0,0,0,0,0,0,0,0,0
+Puerto Rico,142,PR,PRI,0,0,0,1,1,1,1,0,0,0,0,0
+Qatar,143,QA,QAT,1,0,1,1,0,0,0,0,0,0,1,1
+Republic of North Macedonia,144,MK,MKD,1,1,1,1,0,0,0,0,0,0,0,0
+Romania,145,RO,ROU,1,1,1,1,0,0,0,0,0,0,0,0
+Russian Federation (the),146,RU,RUS,1,1,1,1,0,0,0,0,0,0,0,0
+Rwanda,147,RW,RWA,0,1,1,1,1,1,0,0,0,0,0,0
+Réunion,148,RE,REU,0,1,1,1,1,1,1,0,0,0,0,0
+Saint Lucia,149,LC,LCA,0,0,0,1,1,1,1,0,0,0,0,0
+Saint Vincent and the Grenadines,150,VC,VCT,0,0,0,1,1,1,1,0,0,0,0,0
+Samoa,151,WS,WSM,0,0,1,1,0,0,1,1,1,0,0,0
+Sao Tome and Principe,152,ST,STP,0,0,0,0,1,1,0,1,1,1,1,1
+Saudi Arabia,153,SA,SAU,1,1,1,1,1,0,0,0,0,0,1,1
+Senegal,154,SN,SEN,0,0,1,0,0,0,0,1,1,1,1,0
+Serbia and Montenegro,155,CS,SCG,1,1,1,1,0,0,0,0,0,0,0,0
+Seychelles,156,SC,SYC,0,1,1,1,1,1,1,0,0,0,0,0
+Sierra Leone,157,SL,SLE,0,0,0,0,0,0,0,1,1,1,0,0
+Singapore,158,SG,SGP,1,1,0,0,0,1,1,1,0,0,0,1
+Slovakia,159,SK,SVK,1,1,1,1,0,0,0,0,0,0,0,0
+Slovenia,160,SI,SVN,1,1,1,1,0,0,0,0,0,0,0,0
+Solomon Islands,161,SB,SLB,0,0,1,1,0,0,1,1,1,0,0,0
+Somalia,162,SO,SOM,1,1,1,1,0,0,0,0,0,1,1,0
+South Africa,163,ZA,ZAF,0,0,0,0,1,1,1,1,1,0,0,0
+Spain,164,ES,ESP,1,1,1,0,0,0,0,0,0,0,0,0
+Sri Lanka,165,LK,LKA,1,0,1,1,1,1,1,0,0,0,1,1
+Sudan,166,SD,SDN,1,1,0,0,0,0,0,0,0,0,1,1
+Suriname,167,SR,SUR,0,1,1,1,1,1,0,0,0,0,0,0
+Sweden,168,SE,SWE,1,1,1,1,0,0,0,0,0,0,0,0
+Switzerland,169,CH,CHE,1,1,1,0,0,0,0,0,0,0,0,1
+Syrian Arab Republic,170,SY,SYR,1,1,1,0,0,0,0,0,0,0,0,1
+Taiwan (Province of China),171,TW,TWN,1,1,1,0,0,0,0,0,0,0,0,1
+Tajikistan,172,TJ,TJK,1,1,0,0,0,0,0,0,0,0,0,1
+"Tanzania, United Republic of",173,TZ,TZA,1,0,0,1,1,1,0,0,0,0,1,1
+Thailand,174,TH,THA,0,1,1,0,0,0,1,1,1,1,1,0
+Timor-Leste,175,TL,TLS,1,1,1,1,0,0,0,0,0,0,1,1
+Togo,176,TG,TGO,1,0,0,0,0,1,0,0,0,1,1,1
+Tonga,177,TO,TON,0,0,1,1,0,0,1,1,1,0,0,0
+Trinidad and Tobago,178,TT,TTO,0,0,0,1,1,1,1,0,0,0,0,0
+Tunisia,179,TN,TUN,1,1,1,1,0,0,0,0,0,0,0,0
+Turkey,180,TR,TUR,1,1,1,0,0,0,0,0,0,0,0,0
+Turkmenistan,181,TM,TKM,1,1,0,0,0,0,0,0,0,0,0,1
+Uganda,182,UG,UGA,0,0,0,1,1,0,1,1,1,1,1,0
+Ukraine,183,UA,UKR,1,1,1,1,0,0,0,0,0,0,0,0
+United Arab Emirates (the),184,AE,ARE,1,0,1,1,0,0,0,0,0,0,1,1
+United Kingdom of Great Britain and Northern Ireland (the),185,GB,GBR,1,1,1,1,0,0,0,0,0,0,0,1
+United States of America (the),186,US,USA,1,1,1,0,0,0,0,0,0,0,0,1
+Uruguay,187,UY,URY,0,0,0,0,0,1,1,1,0,0,0,0
+Uzbekistan,188,UZ,UZB,0,1,1,0,0,0,0,0,0,0,0,0
+Vanuatu,189,VU,VUT,1,1,0,0,0,0,1,1,1,1,0,0
+Venezuela (Bolivarian Republic of),190,VE,VEN,0,0,0,0,0,0,1,1,0,0,0,0
+Viet Nam,191,VN,VNM,0,0,1,0,1,1,1,1,0,1,0,0
+Virgin Islands (U.S.),192,VI,VIR,0,0,0,0,1,1,1,1,1,1,1,0
+Yemen,193,YE,YEM,1,1,1,1,1,0,0,0,0,0,1,1
+Zambia,194,ZM,ZMB,0,1,0,1,0,0,1,1,1,1,1,0
+Zimbabwe,195,ZW,ZWE,0,0,0,0,1,1,1,1,1,0,0,0

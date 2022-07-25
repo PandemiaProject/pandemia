@@ -43,7 +43,10 @@ class VectorRegion:
         self.max_num_activity_locations = max_num_activity_locations
         self.activity_strings = [None for _ in range(number_of_activities)]
         self.location_typ_strings = [None for _ in range(number_of_locations)]
+        self.location_x_coords = np.zeros((number_of_locations), dtype=float)
+        self.location_y_coords = np.zeros((number_of_locations), dtype=float)
         self.coordinates = None
+        self.populated_coordinates = None
 
 class Region:
     """Represents a region"""
@@ -57,6 +60,7 @@ class Region:
         self.agents = agents
         self.locations = locations
         self.coordinates = None
+        self.populated_coordinates = None
 
     def vectorize_region(self):
         """Converts object of type Region to object of type VectorRegion"""
@@ -108,9 +112,11 @@ class Region:
                     vector_region.activity_locations[agent_id][activity_id][j] = -1
                     vector_region.activity_location_weights[agent_id][activity_id][j] = 0.0
 
-        # Determine location type strings
+        # Determine location type strings and coordinates
         for m in range(number_of_locations):
             vector_region.location_typ_strings[m] = self.locations[m].typ
+            vector_region.location_x_coords[m] = self.locations[m].coord[0]
+            vector_region.location_y_coords[m] = self.locations[m].coord[1]
 
         # Determine activity strings
         for a in range(number_of_activities):
@@ -118,5 +124,6 @@ class Region:
 
         # Determine shape data
         vector_region.coordinates = self.coordinates
+        vector_region.populated_coordinates = self.populated_coordinates
 
         return vector_region
