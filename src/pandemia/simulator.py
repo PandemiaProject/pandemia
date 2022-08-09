@@ -180,7 +180,7 @@ class Simulator:
             self.testing_and_contact_tracing_model.initial_conditions(vector_region)
             self.vaccination_model.initial_conditions(vector_region)
 
-        # self.health_model.beta = 0.04                                                             # TODO: move this somewhere
+        # self.health_model.beta = 0.03                                                             # TODO: move this somewhere
         self.regional_mixing_model.beta = self.health_model.beta
 
     def simulate_day(self, vector_regions, day, offset, ticks_in_day, ticks_in_week):
@@ -373,6 +373,14 @@ class Simulator:
         """Calculates the final cost of the pandemic, to be used for policy optimization"""
 
         log.info("Total deaths: %d", self.total_deaths)
+
+        # deaths_by_country = {vr.name: 0 for vr in self.vector_regions}
+        # for vector_region in self.vector_regions:
+        #     if vector_region.name not in self.config['regions_omitted_from_death_counts']:
+        #         for n in range(vector_region.number_of_agents):
+        #             if vector_region.current_disease[n] == 1.0:
+        #                 deaths_by_country[vector_region.name] += 1
+        # print(deaths_by_country)
 
         return self.total_deaths
 

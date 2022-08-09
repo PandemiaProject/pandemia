@@ -6,7 +6,6 @@ import numpy as np
 import csv
 import datetime
 from dateutil.parser import parse
-from pytz import country_names
 
 from pandemia.components.input_model import InputModel
 
@@ -29,13 +28,13 @@ class ValidationInputModel(InputModel):
         self.epoch = clock.epoch
         self.number_of_regions = number_of_regions
 
-        self.containment_data_fp = config['containment_data_fp']
-        self.travel_data_fp      = config['travel_data_fp']
+        self.stay_at_home_data_fp = config['stay_at_home_data_fp']
+        self.travel_data_fp       = config['travel_data_fp']
 
         self.max_transmission_control = config['max_transmission_control']
         self.max_travel_control       = config['max_travel_control']
 
-        self.containment_dict = defaultdict(dict)
+        self.stay_at_home = defaultdict(dict)
         self.travel_dict = defaultdict(dict)
 
     def new_input(self, input_arrays):
@@ -51,13 +50,13 @@ class ValidationInputModel(InputModel):
         self.border_closure_input =\
             np.ones((self.simulation_length_days, self.number_of_regions), dtype=float)
 
-        with open(self.containment_data_fp, newline='') as csvfile:
+        with open(self.stay_at_home_data_fp, newline='') as csvfile:
             next(csvfile)
-            containment_data = csv.reader(csvfile, delimiter=',')
-            for row in containment_data:
-                date = parse(str(row[3]), dayfirst=True).strftime('%m/%d/%Y%Z')
-                iso2 = str(row[2])
-                self.containment_dict[date][iso2] = float(float(str(row[4])) / 100)
+            stay_at_home_data = csv.reader(csvfile, delimiter=',')
+            for row in stay_at_home_data:
+                date = parse(str(row[2]), dayfirst=True).strftime('%m/%d/%Y%Z')
+                iso3 = str(row[1])
+                self.stay_at_home[date][iso3] = float(float(str(row[3])) / 3)
 
         with open(self.travel_data_fp, newline='') as csvfile:
             next(csvfile)
@@ -72,11 +71,11 @@ class ValidationInputModel(InputModel):
 
         for day in range(self.simulation_length_days):
             date = self.day_to_date[day]
-            if date in self.containment_dict:
-                if vector_region.name in self.containment_dict[date]:
+            if date in self.stay_at_home:
+                if vector_region.other_name in self.stay_at_home[date]:
                     self.transmission_control_input[day][vector_region.id] =\
                         1 - (self.max_transmission_control *\
-                             self.containment_dict[date][vector_region.name])
+                             self.stay_at_home[date][vector_region.other_name])
             else:
                 self.transmission_control_input[day][vector_region.id] = 1.0
             if date in self.travel_dict:

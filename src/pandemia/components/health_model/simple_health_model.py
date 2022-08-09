@@ -55,6 +55,7 @@ class SimpleHealthModel(HealthModel):
         self.age_mixing_matrices_directory    = config['age_mixing_matrices']
         self.age_group_interval               = config['age_group_interval']
 
+        # Pre-existing immunity
         self.preexisting_sigma_multiplier     = config['preexisting_sigma_multiplier']
         self.preexisting_rho_multiplier       = config['preexisting_rho_multiplier']
         self.country_data_sigma_immunity_fp   = config['country_data_sigma_immunity_fp']
@@ -78,6 +79,7 @@ class SimpleHealthModel(HealthModel):
                     self.preexisting_rho_immunity[iso2] =\
                         [float(row[3 + r]) for r in range(self.number_of_strains)]
 
+        # Health presets
         if config['auto_generate_presets']:
             self.number_of_strains = 1
             sir_beta          = config['sir_beta']
@@ -334,15 +336,15 @@ class SimpleHealthModel(HealthModel):
                         for n in range(vector_region.number_of_agents):
                             for index in range(self.immunity_length):
                                 vector_region.sigma_immunity_failure_values[n][s][index] = level
-        # if (self.country_data_rho_immunity_fp is not None) and (num_r_vals > 1):
-        #     if vector_region.name in self.preexisting_rho_immunity:
-        #         for s in range(self.number_of_strains):
-        #             level = self.preexisting_rho_immunity[vector_region.name][s]
-        #             if level < 1.0:
-        #                 level *= self.preexisting_rho_multiplier
-        #                 for n in range(vector_region.number_of_agents):
-        #                     for index in range(self.immunity_length):
-        #                         vector_region.rho_immunity_failure_values[n][s][index][0] = level
+        if (self.country_data_rho_immunity_fp is not None) and (num_r_vals > 1):
+            if vector_region.name in self.preexisting_rho_immunity:
+                for s in range(self.number_of_strains):
+                    level = self.preexisting_rho_immunity[vector_region.name][s]
+                    if level < 1.0:
+                        level *= self.preexisting_rho_multiplier
+                        for n in range(vector_region.number_of_agents):
+                            for index in range(self.immunity_length):
+                                vector_region.rho_immunity_failure_values[n][s][index][0] = level
 
         self.update_python(vector_region, 0)
 
@@ -360,7 +362,8 @@ class SimpleHealthModel(HealthModel):
         for n in range(vector_region.number_of_agents):
             age = vector_region.age[n]
             age_group = self._determine_age_group(age, self.age_groups)
-            preset_name = self._assign_preset_name(age_group, vector_region.prng)
+            preset_name =\
+                self._assign_preset_name(age_group, vector_region.prng, vector_region.name)
             preset_id = self.preset_ids_dict[preset_name]
             vector_region.presets[n] = preset_id
 
@@ -455,7 +458,8 @@ class SimpleHealthModel(HealthModel):
         for n in range(vector_region.number_of_agents):
             age = vector_region.age[n]
             age_group = self._determine_age_group(age, self.age_groups)
-            preset_name = self._assign_preset_name(age_group, vector_region.prng)
+            preset_name =\
+                self._assign_preset_name(age_group, vector_region.prng, vector_region.name)
             preset_id = self.preset_ids_dict[preset_name]
             vector_region.presets[n] = preset_id
 
@@ -1014,7 +1018,7 @@ class SimpleHealthModel(HealthModel):
                     assert final_infectiousness_partition <= final_strain_partition
                     assert final_disease_partition <= final_strain_partition
 
-    def _assign_preset_name(self, age_group, prng):
+    def _assign_preset_name(self, age_group, prng, region_name):
         """Assigns agents infection response preset names by age"""
 
         preset_name = prng.multinoulli_dict(self.preset_weights_by_age[age_group])

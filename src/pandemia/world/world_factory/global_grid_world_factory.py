@@ -262,6 +262,8 @@ class GlobalGridWorldFactory(WorldFactory):
 
         new_region = Region(id, iso2, activities, agents, locations)
 
+        new_region.other_name = iso3
+
         new_region.populated_coordinates = populated_coordinates
 
         return new_region
