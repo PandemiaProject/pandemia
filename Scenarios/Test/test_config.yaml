@@ -83,6 +83,10 @@ health_model:
     'Test Region 3': [1000, 0]
   mutation_matrix: [[0.99, 0.01], [0.0, 1.0]]
   number_of_strains: 2
+  preexisting_sigma_multiplier: 1.0
+  preexisting_rho_multiplier: 1.0
+  country_data_sigma_immunity_fp: null
+  country_data_rho_immunity_fp: null
   preset_weights_by_age:
     0:  {preset_0: 1.00, preset_1: 0.00}
     18: {preset_0: 0.99, preset_1: 0.01}

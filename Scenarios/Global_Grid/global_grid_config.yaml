@@ -41,7 +41,7 @@ world_factory:
     Scenarios/Global_Grid/data/country_data_shapefiles/CNTR_RG_60M_2020_4326.shp
   population_dist_data_folder:
     Scenarios/Global_Grid/data/country_data_population_distribution
-  regions_to_simulate: [] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
+  regions_to_simulate: ['VN'] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
   # Locations
   house_location_type: House
   square_location_type: Square
@@ -76,16 +76,22 @@ seasonal_effects_model:
 
 health_model:
   __type__: simple_health_model.SimpleHealthModel
-  beta: 1.0 # 0.05                                                                                  # POSSIBLE FREE VARIABLE
+  beta: 1.0 # 0.04                                                                                  # POSSIBLE FREE VARIABLE
   location_typ_multipliers:
     Square: 0.5
     House: 1.0
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
-    'CN': [100000]                                                                                  # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
+    'VN': [10000]                                                                                   # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
   mutation_matrix: [[1.0]]
   number_of_strains: 1
+  preexisting_sigma_multiplier: 1.0
+  preexisting_rho_multiplier: 1.0
+  country_data_sigma_immunity_fp:
+    Scenarios/Global_Grid/data/immunity_data/country_data_sigma_immunity.csv
+  country_data_rho_immunity_fp:
+    Scenarios/Global_Grid/data/immunity_data/country_data_rho_immunity.csv
   preset_weights_by_age:
     0:  {preset_0: 1.0000, preset_1: 0.0000}
     5:  {preset_0: 0.9999, preset_1: 0.0001}
@@ -110,7 +116,22 @@ health_model:
     preset_0:
       0:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[0.0], [0.0], [0.0], [0.0], [0.0]]]]]
+          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+        infectiousness:
+          [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
+        disease:
+          [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
+        strain:
+          [[[-1, 0, 15], [-1, 0, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
           [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
         infectiousness:
@@ -126,7 +147,22 @@ health_model:
     preset_1:
       0:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[0.0], [0.0], [0.0], [0.0], [0.0]]]]]
+          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+        infectiousness:
+          [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
+        disease:
+          [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
+        strain:
+          [[[-1, 0, 15], [-1, 0, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
           [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
         infectiousness:

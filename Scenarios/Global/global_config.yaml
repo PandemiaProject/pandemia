@@ -62,6 +62,10 @@ health_model:
     'CN': [100000]                                                                                  # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
   mutation_matrix: [[1.0]]
   number_of_strains: 1
+  preexisting_sigma_multiplier: 1.0
+  preexisting_rho_multiplier: 1.0
+  country_data_sigma_immunity_fp: null
+  country_data_rho_immunity_fp: null
   preset_weights_by_age:
     0:  {preset_0: 1.0000, preset_1: 0.0000}
     5:  {preset_0: 0.9999, preset_1: 0.0001}

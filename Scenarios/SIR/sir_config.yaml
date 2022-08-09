@@ -54,6 +54,10 @@ health_model:
     'sir_region': [10]
   mutation_matrix: [[1.0]]
   number_of_strains: 1
+  preexisting_sigma_multiplier: 1.0
+  preexisting_rho_multiplier: 1.0
+  country_data_sigma_immunity_fp: null
+  country_data_rho_immunity_fp: null
   preset_weights_by_age: null
   health_presets: null
   # Rescale by time and population in each location, deactivate by setting sir_rescaling = False

@@ -349,7 +349,7 @@ void infect
 
             infectiousness_lengths[n] =
                 preset_infectiousness_lengths[(q * R * S) +
-                                                (r1 * R) +
+                                                (r1 * S) +
                                                 s1];
 
             for(int i=0; i<infectiousness_lengths[n]; i++){
@@ -374,7 +374,7 @@ void infect
 
             disease_lengths[n] =
                 preset_disease_lengths[(q * R * S) +
-                                        (r1 * R) +
+                                        (r1 * S) +
                                         s1];
 
             for(int i=0; i<disease_lengths[n]; i++){
@@ -399,7 +399,7 @@ void infect
 
             strain_lengths[n] =
                 preset_strain_lengths[(q * R * S) +
-                                        (r1 * R) +
+                                        (r1 * S) +
                                         s1];
 
             for(int i=0; i<strain_lengths[n]; i++){

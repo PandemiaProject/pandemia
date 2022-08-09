@@ -3,7 +3,7 @@
 import logging
 import copy
 import os
-from matplotlib.pyplot import axis
+import csv
 import numpy as np
 from collections import defaultdict
 from numpy import genfromtxt
@@ -54,6 +54,29 @@ class SimpleHealthModel(HealthModel):
 
         self.age_mixing_matrices_directory    = config['age_mixing_matrices']
         self.age_group_interval               = config['age_group_interval']
+
+        self.preexisting_sigma_multiplier     = config['preexisting_sigma_multiplier']
+        self.preexisting_rho_multiplier       = config['preexisting_rho_multiplier']
+        self.country_data_sigma_immunity_fp   = config['country_data_sigma_immunity_fp']
+        self.country_data_rho_immunity_fp     = config['country_data_rho_immunity_fp']
+        self.preexisting_sigma_immunity = {}
+        self.preexisting_rho_immunity = {}
+        if self.country_data_sigma_immunity_fp is not None:
+            with open(self.country_data_sigma_immunity_fp, newline='') as csvfile:
+                next(csvfile)
+                region_data = csv.reader(csvfile, delimiter=',')
+                for row in region_data:
+                    iso2 = str(row[1])
+                    self.preexisting_sigma_immunity[iso2] =\
+                        [float(row[3 + r]) for r in range(self.number_of_strains)]
+        if self.country_data_rho_immunity_fp is not None:
+            with open(self.country_data_rho_immunity_fp, newline='') as csvfile:
+                next(csvfile)
+                region_data = csv.reader(csvfile, delimiter=',')
+                for row in region_data:
+                    iso2 = str(row[1])
+                    self.preexisting_rho_immunity[iso2] =\
+                        [float(row[3 + r]) for r in range(self.number_of_strains)]
 
         if config['auto_generate_presets']:
             self.number_of_strains = 1
@@ -300,6 +323,26 @@ class SimpleHealthModel(HealthModel):
             for s in range(self.number_of_strains):
                 for index in range(self.immunity_length):
                     vector_region.rho_immunity_failure_values[n][s][index][num_r_vals - 1] = 0.0
+
+        # Assign levels of pre-existing immunity
+        if self.country_data_sigma_immunity_fp is not None:
+            if vector_region.name in self.preexisting_sigma_immunity:
+                for s in range(self.number_of_strains):
+                    level = self.preexisting_sigma_immunity[vector_region.name][s]
+                    if level < 1.0:
+                        level *= self.preexisting_sigma_multiplier
+                        for n in range(vector_region.number_of_agents):
+                            for index in range(self.immunity_length):
+                                vector_region.sigma_immunity_failure_values[n][s][index] = level
+        # if (self.country_data_rho_immunity_fp is not None) and (num_r_vals > 1):
+        #     if vector_region.name in self.preexisting_rho_immunity:
+        #         for s in range(self.number_of_strains):
+        #             level = self.preexisting_rho_immunity[vector_region.name][s]
+        #             if level < 1.0:
+        #                 level *= self.preexisting_rho_multiplier
+        #                 for n in range(vector_region.number_of_agents):
+        #                     for index in range(self.immunity_length):
+        #                         vector_region.rho_immunity_failure_values[n][s][index][0] = level
 
         self.update_python(vector_region, 0)
 
