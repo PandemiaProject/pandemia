@@ -143,6 +143,7 @@ void transmission_out
     int N, // number_of_agents
     int S, // number_of_strains
     int id,
+    double beta,
     double facemask_transmission_multiplier,
     double travel_multiplier,
     double current_region_transmission_multiplier,
@@ -161,7 +162,7 @@ void transmission_out
         if(current_region[n] == id && current_strain[n] != -1){
             facemask_multiplier = 1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
             f = current_region_transmission_multiplier *
-                facemask_multiplier * current_infectiousness[n];
+                facemask_multiplier * current_infectiousness[n] * beta;
             f = (f * travel_multiplier) / N;
             sum_f_by_strain[(id * S) + current_strain[n]] += f;
             transmission_force[id] *= 1 - f;

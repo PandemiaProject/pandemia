@@ -553,6 +553,7 @@ class SimpleHealthModel(HealthModel):
             c_int(self.sir_rescaling_int),
             c_int(self.clock.ticks_in_day),
             c_int(vector_region.number_of_age_mixing_groups),
+            c_double(self.beta),
             c_void_p(vector_region.age_group.ctypes.data),
             c_void_p(vector_region.age_mixing_matrix.ctypes.data),
             c_double(self.facemask_transmission_multiplier),
@@ -914,7 +915,7 @@ class SimpleHealthModel(HealthModel):
                     partition_data = self.health_presets_config[p][r1][f][s][0]
                     values_data = self.health_presets_config[p][r1][f][s][1]
                     partition = [int(part * ticks_in_day) for part in partition_data]
-                    values = [float(self.beta * val) for val in values_data]
+                    values = [float(val) for val in values_data]
                     length = len(partition)
                     self.preset_infectiousness_lengths[id][r1][s] = length
                     for i in range(length):
@@ -1060,7 +1061,7 @@ class SimpleHealthModel(HealthModel):
                         "sigma_immunity_failure":
                             [[[[-1, t / ticks_in_day, max_day], [1.0, 0.0, 1.0]]]],
                         "infectiousness":
-                            [[[-1, 0, t / ticks_in_day], [0.0, self.beta * sir_beta, 0.0]]],
+                            [[[-1, 0, t / ticks_in_day], [0.0, sir_beta, 0.0]]],
                         "disease":
                             [[[-1, 0, t / ticks_in_day], [0.0, sir_disease_level, 0.0]]],
                         "strain":

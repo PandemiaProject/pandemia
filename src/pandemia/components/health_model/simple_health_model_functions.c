@@ -162,6 +162,7 @@ void transmission
     int sir_rescaling_int,
     int ticks_in_day,
     int A, // number of age groups
+    double beta,
     const int * age_group,
     const double * age_mixing_matrix,
     double facemask_transmission_multiplier,
@@ -206,7 +207,7 @@ void transmission
                 f = current_region_transmission_multiplier *
                     location_transmission_multiplier[current_location[n]] *
                     (1 + (current_facemask[n] * (facemask_transmission_multiplier - 1))) *
-                    current_infectiousness[n];
+                    current_infectiousness[n] * beta;
                 if(sir_rescaling_int == 1){
                     f *= age_mixing_matrix[(a * A) + age_group[n]] /
                          (num_agents_by_location_by_age_group[(current_location[n] * A) +

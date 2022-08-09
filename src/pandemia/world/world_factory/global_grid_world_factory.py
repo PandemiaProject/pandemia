@@ -75,16 +75,15 @@ class GlobalGridWorldFactory(WorldFactory):
             for row in region_data:
                 iso2 = str(row[1])
                 if (len(self.regions_to_simulate) == 0) or (iso2 in self.regions_to_simulate):
-                    if iso2 != "RO": # data missing for Romania
-                        iso3 = str(row[2])
-                        household_size = round(float(row[3]))
-                        population_size = int(row[4])
-                        age_distribution = [float(row[5 + r]) for r in range(101)]
-                        number_of_agents = max(int(population_size * self.scale_factor), 1)
-                        new_region = self._create_region(id, iso2, iso3, number_of_agents,
-                                                         age_distribution, household_size)
-                        world.regions.append(new_region)
-                        id += 1
+                    iso3 = str(row[2])
+                    household_size = round(float(row[3]))
+                    population_size = int(row[4])
+                    age_distribution = [float(row[5 + r]) for r in range(101)]
+                    number_of_agents = max(int(population_size * self.scale_factor), 1)
+                    new_region = self._create_region(id, iso2, iso3, number_of_agents,
+                                                        age_distribution, household_size)
+                    world.regions.append(new_region)
+                    id += 1
 
         world.number_of_regions = len(world.regions)
 

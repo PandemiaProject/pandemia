@@ -103,6 +103,7 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
                 c_int(vector_region.number_of_agents),
                 c_int(self.number_of_strains),
                 c_int(vector_region.id),
+                c_double(self.beta),
                 c_double(facemask_transmission_multiplier),
                 c_double(self.travel_multiplier),
                 c_double(vector_region.current_region_transmission_multiplier),
