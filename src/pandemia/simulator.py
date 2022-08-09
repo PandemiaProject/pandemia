@@ -180,7 +180,7 @@ class Simulator:
             self.testing_and_contact_tracing_model.initial_conditions(vector_region)
             self.vaccination_model.initial_conditions(vector_region)
 
-        self.health_model.beta = 0.04                                                               # TODO: move this somewhere
+        # self.health_model.beta = 0.04                                                             # TODO: move this somewhere
         self.regional_mixing_model.beta = self.health_model.beta
 
     def simulate_day(self, vector_regions, day, offset, ticks_in_day, ticks_in_week):

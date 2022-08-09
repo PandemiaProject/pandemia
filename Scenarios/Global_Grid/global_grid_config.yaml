@@ -76,7 +76,7 @@ seasonal_effects_model:
 
 health_model:
   __type__: simple_health_model.SimpleHealthModel
-  beta: 1.0 # 0.04                                                                                  # POSSIBLE FREE VARIABLE
+  beta: 0.04                                                                                        # POSSIBLE FREE VARIABLE
   location_typ_multipliers:
     Square: 0.5
     House: 1.0
