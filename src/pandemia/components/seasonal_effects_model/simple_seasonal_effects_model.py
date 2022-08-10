@@ -25,13 +25,13 @@ class SimpleSeasonalEffectsModel(SeasonalEffectsModel):
         seasonality_config            = config['seasonal_multiplier_by_region_by_month']
         self.out_of_season_multiplier = config['out_of_season_multiplier']
 
-        self.seasonal_multiplier_by_region = defaultdict(list)
+        self.seasonal_multiplier_by_region = {}
 
         if seasonality_config is None:
             for vector_region in vector_world.vector_regions:
-                self.seasonal_multiplier_by_region[vector_region.id] = [1 for _ in range(12)]
+                self.seasonal_multiplier_by_region[vector_region.id] = np.ones((12, ), dtype=float)
         else:
-            seasonal_multiplier_records = defaultdict(list)
+            seasonal_multiplier_records = {}
             with open(seasonality_config, newline='') as csvfile:
                 next(csvfile)
                 region_data_seasonality = csv.reader(csvfile, delimiter=',')
@@ -42,9 +42,9 @@ class SimpleSeasonalEffectsModel(SeasonalEffectsModel):
                         if int(row[4 + r]) == 1:
                             multiplier = 1
                         else:
-                            multiplier = self.out_of_season_multiplier
+                            multiplier = 0
                         seasonal_multipliers.append(multiplier)
-                    seasonal_multiplier_records[iso] = seasonal_multipliers
+                    seasonal_multiplier_records[iso] = np.array(seasonal_multipliers, dtype=float)
             names_to_ids = {r.name: r.id for r in vector_world.vector_regions}
             for vector_region in vector_world.vector_regions:
                 if vector_region.name in seasonal_multiplier_records:
@@ -60,6 +60,10 @@ class SimpleSeasonalEffectsModel(SeasonalEffectsModel):
 
     def initial_conditions(self, vector_region):
         """Initial seasonal effect"""
+
+        multipliers = self.seasonal_multiplier_by_region[vector_region.id]
+        self.seasonal_multiplier_by_region[vector_region.id][multipliers == 0] =\
+            self.out_of_season_multiplier
 
         for day in range(self.simulation_length_days):
             date = self.epoch + timedelta(days=day)

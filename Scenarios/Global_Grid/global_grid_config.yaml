@@ -16,7 +16,7 @@ enable_ctypes: True
 
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
-enable_parallel: True
+enable_parallel: False
 num_jobs: -2
 
 # ######################################### Clock ##################################################
@@ -240,7 +240,7 @@ regions_omitted_from_death_counts: ['CN', 'KP']
 historical_data_filepath: Scenarios/Global_Grid/data/historical_data/who_data.csv                   # Use excess deaths???? Use country specific estimates?
 
 # Output that should be rendered from the simulation:
-reporters:
+reporters: {}
   cli.TimeReporter: {}
   # csv.StrainCounts:
   #   filename: /tmp/strain_counts.csv

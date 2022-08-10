@@ -5,7 +5,6 @@ import sys
 import logging
 import logging.config
 import time
-import numpy as np
 import cProfile, pstats
 
 from pandemia.utils import instantiate_class
@@ -186,14 +185,35 @@ def main():
     sim = sim_factory.new_sim(telemetry_bus)
 
     # ############## Input ##############
+
     input_arrays = None
     sim.input_model.new_input(input_arrays)
+
+    ############ Validation ###########
+
+    # Set the values of any free variables used in validation algorithms
+
+    # Scale historical deaths?
+
+    sim.random_seed = 1
+
+    sim.seasonal_effects_model.out_of_season_multiplier     = 0.75
+    sim.health_model.beta                                   = 0.030
+    sim.health_model.location_typ_multipliers['Square']     = 0.5
+    sim.health_model.num_initial_infections_by_region['CN'] = [100000]
+    sim.health_model.preexisting_sigma_multiplier           = 0.5
+    sim.health_model.preexisting_rho_multiplier             = 0.5
+    sim.regional_mixing_model.travel_multiplier             = 10.0
+    sim.input_model.max_transmission_control                = 0.7
+    sim.input_model.max_travel_control                      = 0.7
+
+    # sim.enable_parallel = False
 
     # ############## Setup ##############
 
     sim.setup()
 
-    # ############## Run ##############
+    # ############### Run ###############
 
     if sim_factory.config['profile']:
         profiler = cProfile.Profile()

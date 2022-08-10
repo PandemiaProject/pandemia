@@ -62,6 +62,8 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
     def initial_conditions(self, sim):
         """Initial regional mixing"""
 
+        self.beta = sim.health_model.beta
+
         # If using ctypes, flatten arrays accordingly
         if self.enable_ctypes:
             self.baseline_agents_travelling_matrix =\
