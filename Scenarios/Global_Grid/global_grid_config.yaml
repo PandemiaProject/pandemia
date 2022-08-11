@@ -92,8 +92,6 @@ health_model:
     Scenarios/Global_Grid/data/immunity_data/country_data_sigma_immunity.csv
   country_data_rho_immunity_fp:
     Scenarios/Global_Grid/data/immunity_data/country_data_rho_immunity.csv
-  country_data_gdp_fp:
-    Scenarios/Global_Grid/data/economic_data/country_data_gdp.csv
   preset_weights_by_age:
     0:  {preset_0: 1.0000, preset_1: 0.0000}
     5:  {preset_0: 0.9999, preset_1: 0.0001}
@@ -240,7 +238,7 @@ regions_omitted_from_death_counts: ['CN', 'KP']
 historical_data_filepath: Scenarios/Global_Grid/data/historical_data/who_data.csv                   # Use excess deaths???? Use country specific estimates?
 
 # Output that should be rendered from the simulation:
-reporters: {}
+reporters:
   cli.TimeReporter: {}
   # csv.StrainCounts:
   #   filename: /tmp/strain_counts.csv
