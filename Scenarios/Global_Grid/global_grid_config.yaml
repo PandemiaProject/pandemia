@@ -16,7 +16,7 @@ enable_ctypes: True
 
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
-enable_parallel: False
+enable_parallel: True
 num_jobs: -2
 
 # ######################################### Clock ##################################################
@@ -229,8 +229,8 @@ input_model:
     Scenarios/Global_Grid/data/historical_data/country_data_stay_at_home_covid.csv
   travel_data_fp:
     Scenarios/Global_Grid/data/historical_data/country_data_international_travel_controls.csv
-  max_transmission_control: 0.80                                                                    # POSSIBLE FREE VARIABLE
-  max_travel_control: 0.80                                                                          # POSSIBLE FREE VARIABLE
+  max_transmission_control: 0.70                                                                    # POSSIBLE FREE VARIABLE
+  max_travel_control: 0.70                                                                          # POSSIBLE FREE VARIABLE
 
 # ######################################### Output #################################################
 
