@@ -1,5 +1,6 @@
 """Reporters that output a plot"""
 
+from collections import defaultdict
 import matplotlib.pyplot as plt
 from pandemia.reporters import Reporter
 import numpy as np
@@ -22,6 +23,7 @@ class PlotDeaths(Reporter):
         self.daily_deaths_filename      = config['daily_deaths_filename']
         self.cumulative_deaths_filename = config['cumulative_deaths_filename']
         self.historical_data_fp         = config['historical_data']
+        self.deaths_by_country_filename = config['deaths_by_country_filename']
 
         self.num_x_ticks = 20
 
@@ -35,8 +37,19 @@ class PlotDeaths(Reporter):
         self.subscribe("deaths.update", self.update_counts)
         self.subscribe("simulation.end", self.stop_sim)
 
-    def initialize(self, number_of_regions):
+    def initialize(self, region_names_to_super_regions, regions_omitted):
         """Called when the simulation starts."""
+
+        self.regions_omitted = regions_omitted
+        self.region_names = list(region_names_to_super_regions.keys())
+        self.super_regions_dict = region_names_to_super_regions
+        self.super_regions = set()
+        for region_name in self.super_regions_dict:
+            if region_name not in self.regions_omitted:
+                super_region = self.super_regions_dict[region_name]
+                if super_region is not None:
+                    self.super_regions.add(super_region)
+        self.super_regions = list(self.super_regions)
 
     def update_counts(self, clock, daily_deaths, cumulative_deaths):
         """Update counts"""
@@ -72,10 +85,47 @@ class PlotDeaths(Reporter):
             num_days = max_day - min_day
             average_deaths = 0
             for day_sample in range(min_day, max_day):
-                average_deaths += self.daily_deaths[self.day_to_date[day_sample]]
+                for region_name in self.region_names:
+                    if region_name not in self.regions_omitted:
+                        average_deaths +=\
+                            self.daily_deaths[self.day_to_date[day_sample]][region_name]
             average_deaths /= num_days
             daily_deaths.append(average_deaths)
-            cumulative_deaths.append(self.cumulative_deaths[self.day_to_date[day]])
+            cumulative_deaths_count = 0
+            for region_name in self.region_names:
+                if region_name not in self.regions_omitted:
+                    cumulative_deaths_count +=\
+                        self.cumulative_deaths[self.day_to_date[day]][region_name]         
+            cumulative_deaths.append(cumulative_deaths_count)
+
+        if self.deaths_by_country_filename is not None:
+            handle = open(self.deaths_by_country_filename, 'w', newline='')
+            writer = csv.writer(handle)
+            for region_name in self.region_names:
+                if region_name not in self.regions_omitted:
+                    total_deaths =\
+                        self.cumulative_deaths[self.day_to_date[self.days[-1]]][region_name]
+                    row = [region_name, total_deaths]
+                    writer.writerow(row)
+            handle.close()
+
+        if len(self.super_regions) > 0:
+            daily_deaths_by_super_region = defaultdict(list)
+            average_deaths_by_super_region = {sr: 0 for sr in self.super_regions}
+            for day in range(len(self.days)):
+                min_day = max(0, day - 10)
+                max_day = min(len(self.days), day + 10)
+                num_days = max_day - min_day
+                for day_sample in range(min_day, max_day):
+                    for region_name in self.region_names:
+                        if region_name not in self.regions_omitted:
+                            super_region = self.super_regions_dict[region_name]
+                            average_deaths_by_super_region[super_region] +=\
+                                self.daily_deaths[self.day_to_date[day_sample]][region_name]
+                for super_region in self.super_regions:
+                    average_deaths_by_super_region[super_region] /= num_days
+                    average = average_deaths_by_super_region[super_region]
+                    daily_deaths_by_super_region[super_region].append(average)
 
         plt.figure(figsize=(12, 6))
 
@@ -83,14 +133,22 @@ class PlotDeaths(Reporter):
 
         plt.rc('font', **font)
 
-        plt.bar(list(range(len(self.days))), daily_deaths, label='Deaths - Simulation')
+        plt.bar(list(range(len(self.days))), daily_deaths, width=1.0, label='Deaths - Simulation',
+                alpha=0.3)
         plt.plot(list(range(len(self.days))),
-                 hist_daily_deaths, 'red', linewidth=1, alpha=1.0, label='Deaths - Historical')
+                 hist_daily_deaths, 'red', linewidth=1, linestyle='dotted',
+                 alpha=1.0, label='Deaths - Historical')
+        if len(self.super_regions) > 0:
+            for super_region in self.super_regions:
+                plt.plot(list(range(len(self.days))), daily_deaths_by_super_region[super_region],
+                         linewidth=1, alpha=1.0, label='Deaths - Simulation: ' + super_region)
 
-        plt.xlabel('Day')
-        increment = int(max(len(self.days) // self.num_x_ticks, len(self.days)))
+        plt.xlabel('Date')
+        increment = int(min(len(self.days) // self.num_x_ticks, len(self.days)))
         plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
-            labels=[self.days[i*increment] for i in range((len(self.days) // increment))])
+            labels=[self.day_to_date[self.days[i*increment]] for i in
+                    range((len(self.days) // increment))])
+        plt.xticks(rotation=90)
         plt.grid(False)
         plt.xlim([0, len(self.days)])
         plt.gca().set_ylim(bottom=0)
@@ -113,11 +171,12 @@ class PlotDeaths(Reporter):
         plt.bar(list(range(len(self.days))), cumulative_deaths, label='Deaths - Simulation')
         plt.plot(list(range(len(self.days))),
                  hist_cumulative_deaths, 'red', linewidth=1, alpha=1.0, label='Deaths - Historical')
-
-        plt.xlabel('Day')
-        increment = int(max(len(self.days) // self.num_x_ticks, len(self.days)))
+        plt.xlabel('Date')
+        increment = int(min(len(self.days) // self.num_x_ticks, len(self.days)))
         plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
-            labels=[self.days[i*increment] for i in range((len(self.days) // increment))])
+            labels=[self.day_to_date[self.days[i*increment]] for i in
+                    range((len(self.days) // increment))])
+        plt.xticks(rotation=90)
         plt.grid(False)
         plt.xlim([0, len(self.days)])
         plt.gca().set_ylim(bottom=0)

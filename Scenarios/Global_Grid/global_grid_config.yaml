@@ -116,9 +116,9 @@ health_model:
     preset_0:
       0:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
@@ -131,9 +131,9 @@ health_model:
           [[[-1, 0, 15], [-1, 0, -1]]]
       1:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
@@ -147,9 +147,9 @@ health_model:
     preset_1:
       0:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
@@ -162,9 +162,9 @@ health_model:
           [[[-1, 0, 15], [-1, 0, -1]]]
       1:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
@@ -223,7 +223,6 @@ regional_mixing_model:
 # ######################################### Input ##################################################
 
 input_model:
-  # __type__: void_input_model.VoidInputModel
   __type__: validation_input_model.ValidationInputModel
   stay_at_home_data_fp:
     Scenarios/Global_Grid/data/historical_data/country_data_stay_at_home_covid.csv
@@ -235,7 +234,7 @@ input_model:
 # ######################################### Output #################################################
 
 regions_omitted_from_death_counts: ['CN', 'KP']
-historical_data_filepath: Scenarios/Global_Grid/data/historical_data/who_data.csv                   # Use excess deaths???? Use country specific estimates?
+historical_data_filepath: Scenarios/Global_Grid/data/historical_data/who_data.csv
 
 # Output that should be rendered from the simulation:
 reporters:
@@ -252,6 +251,7 @@ reporters:
     savefig: True
     daily_deaths_filename: /tmp/daily_deaths_global_grid.png
     cumulative_deaths_filename: /tmp/cumulative_deaths_global_grid.png
+    deaths_by_country_filename: /tmp/deaths_by_region.csv
     historical_data: Scenarios/Global_Grid/data/historical_data/who_data.csv
   # pygame_shapes.PygameShapes:
   #   fullscreen: True

@@ -1,5 +1,6 @@
 """Simulates an epidemic"""
 
+from collections import defaultdict
 import logging
 import numpy as np
 import os
@@ -277,10 +278,10 @@ class Simulator:
 
         self.day_to_date = {}
 
-        self.cumulative_deaths_old = 0
+        self.cumulative_deaths_old = {vr.name: 0 for vr in self.vector_regions}
         self.total_deaths = 0
-        self.daily_deaths = {}
-        self.cumulative_deaths = {}
+        self.daily_deaths = defaultdict(dict)
+        self.cumulative_deaths = defaultdict(dict)
 
         if self.config['reporters'] is not None:
 
@@ -288,13 +289,18 @@ class Simulator:
                 [vector_region.number_of_agents for vector_region in self.vector_regions]
             region_names =\
                 [vector_region.name for vector_region in self.vector_regions]
+            region_names_to_super_regions =\
+                {vr.name: vr.super_region for vr in self.vector_regions}
 
             self.telemetry_bus.publish("strain_counts.initialize", self.number_of_regions,
                                                                    self.number_of_strains,
                                                                    region_names,
                                                                    population_sizes)
 
-            self.telemetry_bus.publish("deaths.initialize", self.number_of_regions)
+            regions_omitted = self.config['regions_omitted_from_death_counts']
+
+            self.telemetry_bus.publish("deaths.initialize", region_names_to_super_regions,
+                                                            regions_omitted)
 
             self.telemetry_bus.publish("vector_world.data", self.vector_world,
                                                             self.health_model.number_of_strains)
@@ -305,28 +311,30 @@ class Simulator:
         date = self.clock.iso8601()
         self.day_to_date[day] = date
 
-        cumulative_deaths_new = 0
-
+        total_deaths = 0
         for vector_region in self.vector_regions:
             if vector_region.name not in self.config['regions_omitted_from_death_counts']:
+                cumulative_deaths_new = 0
                 if self.enable_ctypes:
                     cumulative_deaths_new +=\
                         self.count_dead(
                             c_int(vector_region.number_of_agents),
                             c_void_p(vector_region.current_disease.ctypes.data),
                         )
+                    total_deaths += cumulative_deaths_new
                 else:
                     for n in range(vector_region.number_of_agents):
                         if vector_region.current_disease[n] == 1.0:
                             cumulative_deaths_new += 1
+                    total_deaths += cumulative_deaths_new
+                self.daily_deaths[date][vector_region.name] =\
+                    int((1 / self.vector_world.scale_factor) *\
+                    (cumulative_deaths_new - self.cumulative_deaths_old[vector_region.name]))
+                self.cumulative_deaths[date][vector_region.name] =\
+                    int((1 / self.vector_world.scale_factor) * cumulative_deaths_new)
+                self.cumulative_deaths_old[vector_region.name] = cumulative_deaths_new
 
-        self.daily_deaths[date] =\
-            int((1 / self.vector_world.scale_factor) *\
-                (cumulative_deaths_new - self.cumulative_deaths_old))
-        self.cumulative_deaths[date] =\
-            int((1 / self.vector_world.scale_factor) * cumulative_deaths_new)
-        self.cumulative_deaths_old = cumulative_deaths_new
-        self.total_deaths = int((1 / self.vector_world.scale_factor) * cumulative_deaths_new)
+        self.total_deaths = int((1 / self.vector_world.scale_factor) * total_deaths)
 
         if ("pygame_coords.PygameCoords" in self.config['reporters']):
 
@@ -371,19 +379,6 @@ class Simulator:
 
         log.info("Total deaths: %d", self.total_deaths)
 
-        handle = open('/tmp/deaths_by_country.csv', 'w', newline='')                                # TODO move into a reporter
-        writer = csv.writer(handle)
-        deaths_by_country = {vr.name: 0 for vr in self.vector_regions}
-        for vector_region in self.vector_regions:
-            if vector_region.name not in self.config['regions_omitted_from_death_counts']:
-                for n in range(vector_region.number_of_agents):
-                    if vector_region.current_disease[n] == 1.0:
-                        deaths_by_country[vector_region.name] += 1
-                row = [vector_region.name, int((1 / self.vector_world.scale_factor) *\
-                                               deaths_by_country[vector_region.name])]
-                writer.writerow(row)
-        handle.close()
-
         return self.total_deaths
 
     def calculate_error(self, input_arrays):
@@ -398,7 +393,10 @@ class Simulator:
             num_days = max_day - min_day
             average_deaths = 0
             for day_sample in range(min_day, max_day):
-                average_deaths += self.daily_deaths[self.day_to_date[day_sample]]
+                for vector_region in self.vector_regions:
+                    if vector_region.name not in self.config['regions_omitted_from_death_counts']:
+                        average_deaths +=\
+                            self.daily_deaths[self.day_to_date[day_sample]][vector_region.name]
             average_deaths /= num_days
             average_deaths_dict[self.day_to_date[day]] = average_deaths
 

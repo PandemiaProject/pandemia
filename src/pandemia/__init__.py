@@ -193,21 +193,21 @@ def main():
 
     # Set the values of any free variables used in validation algorithms
 
-    # Scale historical deaths?
+    # Scale historical deaths? Code grid search here...
 
     # sim.random_seed = 1
 
     # sim.seasonal_effects_model.out_of_season_multiplier     = 0.75
-    # sim.health_model.beta                                   = 0.030
+    # sim.health_model.beta                                   = 0.025
     # sim.health_model.location_typ_multipliers['Square']     = 0.5
     # sim.health_model.num_initial_infections_by_region['CN'] = [100000]
     # sim.health_model.preexisting_sigma_multiplier           = 0.5
     # sim.health_model.preexisting_rho_multiplier             = 0.5
     # sim.regional_mixing_model.travel_multiplier             = 10.0
     # sim.input_model.max_transmission_control                = 0.7
-    # sim.input_model.max_travel_control                      = 0.7
+    # sim.input_model.max_travel_control                      = 0.5
 
-    # sim.enable_parallel = False
+    # sim.enable_parallel = True
 
     # ############## Setup ##############
 

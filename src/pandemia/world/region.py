@@ -24,6 +24,7 @@ class VectorRegion:
         self.id = id
         self.name = name
         self.other_name = None
+        self.super_region = None
         self.random_state = None
         self.random_p = None
         self.prng = None
@@ -58,6 +59,7 @@ class Region:
         self.id = id
         self.name = name
         self.other_name = None
+        self.super_region = None
         self.activities = activities
         self.agents = agents
         self.locations = locations
@@ -97,6 +99,7 @@ class Region:
                                      max_num_activity_locations)
 
         vector_region.other_name = self.other_name
+        vector_region.super_region = self.super_region
 
         for agent in self.agents:
             agent_id = agent_ids[agent]

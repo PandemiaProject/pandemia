@@ -160,14 +160,7 @@ regional_mixing_model:
 # ######################################### Input ##################################################
 
 input_model:
-  # __type__: void_input_model.VoidInputModel
-  __type__: validation_input_model.ValidationInputModel
-  containment_data_fp:
-    Scenarios/Global/data/historical_data/country_data_containment_and_health_index.csv             # Use stay at home data instead????
-  travel_data_fp:
-    Scenarios/Global/data/historical_data/country_data_international_travel_controls.csv
-  max_transmission_control: 0.00                                                                    # POSSIBLE FREE VARIABLE
-  max_travel_control: 0.00                                                                          # POSSIBLE FREE VARIABLE
+  __type__: void_input_model.VoidInputModel
 
 # ######################################### Output #################################################
 
@@ -189,6 +182,7 @@ reporters:
     savefig: True
     daily_deaths_filename: /tmp/daily_deaths_global.png
     cumulative_deaths_filename: /tmp/cumulative_deaths_global.png
+    deaths_by_country_filename: null
     historical_data: Scenarios/Global/data/historical_data/who_data.csv
   pygame_shapes.PygameShapes:
     fullscreen: True

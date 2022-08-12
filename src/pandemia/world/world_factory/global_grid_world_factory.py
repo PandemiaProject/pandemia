@@ -76,11 +76,12 @@ class GlobalGridWorldFactory(WorldFactory):
                 iso2 = str(row[1])
                 if (len(self.regions_to_simulate) == 0) or (iso2 in self.regions_to_simulate):
                     iso3 = str(row[2])
-                    household_size = round(float(row[3]))
-                    population_size = int(row[4])
-                    age_distribution = [float(row[5 + r]) for r in range(101)]
+                    super_region = str(row[3])
+                    household_size = round(float(row[4]))
+                    population_size = int(row[5])
+                    age_distribution = [float(row[6 + r]) for r in range(101)]
                     number_of_agents = max(int(population_size * self.scale_factor), 1)
-                    new_region = self._create_region(id, iso2, iso3, number_of_agents,
+                    new_region = self._create_region(id, iso2, iso3, super_region, number_of_agents,
                                                         age_distribution, household_size)
                     world.regions.append(new_region)
                     id += 1
@@ -100,7 +101,8 @@ class GlobalGridWorldFactory(WorldFactory):
 
         return world
 
-    def _create_region(self, id, iso2, iso3, number_of_agents, age_distribution, household_size):
+    def _create_region(self, id, iso2, iso3, super_region, number_of_agents,
+                       age_distribution, household_size):
         """Creates test agents and test locations and assembles them into test regions"""
 
         assert self.clock.ticks_in_day == 3
@@ -263,6 +265,7 @@ class GlobalGridWorldFactory(WorldFactory):
         new_region = Region(id, iso2, activities, agents, locations)
 
         new_region.other_name = iso3
+        new_region.super_region = super_region
 
         new_region.populated_coordinates = populated_coordinates
 
