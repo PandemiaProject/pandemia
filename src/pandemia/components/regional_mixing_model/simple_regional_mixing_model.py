@@ -47,8 +47,6 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
         self.travel_multiplier = config['travel_transmission_multiplier']
 
         self.baseline_agents_travelling_matrix = vector_world.travel_matrix
-        self.baseline_agents_travelling_matrix =\
-            (self.scale_factor * self.baseline_agents_travelling_matrix).astype(int)
         for r in range(self.number_of_regions):
             assert self.baseline_agents_travelling_matrix[r][r] == 0
 
@@ -160,6 +158,7 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
             self.close_borders(
                 c_int(self.number_of_regions),
                 c_int(vector_region.id),
+                c_double(self.scale_factor),
                 c_double(vector_region.current_border_closure_multiplier),
                 c_void_p(agents_travelling_matrix.ctypes.data),
                 c_void_p(self.baseline_agents_travelling_matrix.ctypes.data)

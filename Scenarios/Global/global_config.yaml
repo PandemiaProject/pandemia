@@ -165,7 +165,8 @@ input_model:
 # ######################################### Output #################################################
 
 regions_omitted_from_death_counts: ['CN', 'KP']
-historical_data_filepath: Scenarios/Global/data/historical_data/who_data.csv
+super_regions_omitted_from_deaths_counts: []
+historical_data_filepath: null
 
 # Output that should be rendered from the simulation:
 reporters:

@@ -62,16 +62,22 @@ void close_borders
 (
     int R, // number_of_regions
     int id,
+    double scale_factor,
     double current_border_closure_multiplier,
     int * agents_travelling_matrix,
     const int * baseline_agents_travelling_matrix
 )
 {
     int r1 = id;
+    double rescaled;
     for(int r2=0; r2<R; r2++){
-        agents_travelling_matrix[(r1 * R) + r2] =
-            (int) ((double) baseline_agents_travelling_matrix[(r1 * R) + r2] *
-                            current_border_closure_multiplier);
+        rescaled = (double) baseline_agents_travelling_matrix[(r1 * R) + r2] * scale_factor *
+                            current_border_closure_multiplier;
+        if(rescaled > 0 && rescaled < 1){
+            agents_travelling_matrix[(r1 * R) + r2] = 1;
+        } else {
+            agents_travelling_matrix[(r1 * R) + r2] = (int) rescaled ;
+        }
     }
     return;
 }

@@ -256,6 +256,7 @@ input_model:
 # ######################################### Output #################################################
 
 regions_omitted_from_death_counts: []
+super_regions_omitted_from_deaths_counts: []
 historical_data_filepath: null
 
 # Output that should be rendered from the simulation:

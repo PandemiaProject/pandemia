@@ -89,8 +89,10 @@ class Simulator:
         self.vector_region_batches = None
 
         # Output
+        self.error = 0
         self.historical_data_filepath = self.config['historical_data_filepath']
-
+        self.average_deaths_dict_historical = None
+   
     def _set_telemetry_bus(self):
         """Assigns telemetry bus to each component"""
 
@@ -381,12 +383,22 @@ class Simulator:
 
         return self.total_deaths
 
-    def calculate_error(self, input_arrays):
-        """Calculates the difference to historical data"""
+    def calculate_error(self):
+        """Calculates rolling 21 day average of daily deaths and historical deaths and calculates
+        difference"""
 
-        # Calculate 21-day rolling average of daily deaths, as in historical data
+        omitted_region_names = []
+        for vector_region in self.vector_regions:
+            if (vector_region.super_region in\
+                self.config['super_regions_omitted_from_deaths_counts']) or\
+                (vector_region.name in\
+                self.config['regions_omitted_from_death_counts']):
+                omitted_region_names.append(vector_region.name)
+        
+        average_deaths_dict_simulation = {}
+
+        # Calculate 21-day rolling average of daily deaths
         total_num_days = self.clock.simulation_length_days
-        average_deaths_dict = {}
         for day in range(total_num_days):
             min_day = max(0, day - 10)
             max_day = min(total_num_days, day + 10)
@@ -394,28 +406,53 @@ class Simulator:
             average_deaths = 0
             for day_sample in range(min_day, max_day):
                 for vector_region in self.vector_regions:
-                    if vector_region.name not in self.config['regions_omitted_from_death_counts']:
+                    if vector_region.name not in omitted_region_names:
                         average_deaths +=\
                             self.daily_deaths[self.day_to_date[day_sample]][vector_region.name]
             average_deaths /= num_days
-            average_deaths_dict[self.day_to_date[day]] = average_deaths
+            average_deaths_dict_simulation[self.day_to_date[day]] = average_deaths
 
-        # Load 21-day rolling average deaths from historical data
-        historical_daily_deaths = {date: average_deaths_dict[date] for date in average_deaths_dict}
-        if self.historical_data_filepath is not None:
-            with open(self.historical_data_filepath, newline='') as csvfile:
-                next(csvfile)
-                deaths_data = csv.reader(csvfile, delimiter=',')
-                for row in deaths_data:
-                    date = parse(str(row[0]), dayfirst=True).strftime('%m/%d/%Y%Z')
-                    historical_daily_deaths[date] = int(row[1])
+        included_region_names = []
+        for vector_region in self.vector_regions:
+            if vector_region.name not in omitted_region_names:
+                included_region_names.append(vector_region.name)
+
+        # Load historical data
+        if self.average_deaths_dict_historical is None:
+            historical_daily_deaths =\
+                {date: average_deaths_dict_simulation[date] for\
+                date in average_deaths_dict_simulation}
+            if self.historical_data_filepath is not None:
+                with open(self.historical_data_filepath, newline='') as csvfile:
+                    next(csvfile)
+                    deaths_data = csv.reader(csvfile, delimiter=',')
+                    for row in deaths_data:
+                        iso2 = str(row[1])
+                        if iso2 in included_region_names:
+                            date = parse(str(row[0]), dayfirst=True).strftime('%m/%d/%Y%Z')
+                            if date in historical_daily_deaths:
+                                historical_daily_deaths[date] += int(row[6])
+                            else:
+                                historical_daily_deaths[date] = int(row[6])
+
+            self.average_deaths_dict_historical = {}
+
+            # Calculate 21-day rolling average
+            total_num_days = self.clock.simulation_length_days
+            for day in range(total_num_days):
+                min_day = max(0, day - 10)
+                max_day = min(total_num_days, day + 10)
+                num_days = max_day - min_day
+                average_deaths = 0
+                for day_sample in range(min_day, max_day):
+                    average_deaths += historical_daily_deaths[self.day_to_date[day_sample]]
+                average_deaths /= num_days
+                self.average_deaths_dict_historical[self.day_to_date[day]] = average_deaths
 
         # Calculate L^2 difference
-        difference = 0
-        for date in average_deaths_dict:
-            difference += (average_deaths_dict[date] - historical_daily_deaths[date])**2
-        difference = np.sqrt(difference)
+        for date in average_deaths_dict_simulation:
+            self.error += (average_deaths_dict_simulation[date] -\
+                          self.average_deaths_dict_historical[date])**2
+        self.error = np.sqrt(self.error)
 
-        log.info("Simulation Error: %f", difference)
-
-        return difference
+        log.info("Simulation Error: %f", self.error)

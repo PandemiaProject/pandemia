@@ -234,7 +234,8 @@ input_model:
 # ######################################### Output #################################################
 
 regions_omitted_from_death_counts: ['CN', 'KP']
-historical_data_filepath: Scenarios/Global_Grid/data/historical_data/who_data.csv
+super_regions_omitted_from_deaths_counts: ['Africa', 'Asia']
+historical_data_filepath: Scenarios/Global_Grid/data/historical_data/WHO-COVID-19-global-data.csv
 
 # Output that should be rendered from the simulation:
 reporters:

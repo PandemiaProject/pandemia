@@ -189,25 +189,30 @@ def main():
     input_arrays = None
     sim.input_model.new_input(input_arrays)
 
-    ############ Validation ###########
+    # set validation parameter values (move all this etc...)
+#     sim.enable_parallel = False
+#     sim.random_seed = 1
+#     import numpy as np
+#     solution = np.array([0.23158827, -1.62024969,  1.21581631,  2.67700538, -5.51327734,  0.63630115,
+#   3.91088871,  1.98532524, -3.83862847])
 
-    # Set the values of any free variables used in validation algorithms
+#     solution = np.divide(1, 1 + np.power(np.e, solution))
 
-    # Scale historical deaths? Code grid search here...
+#     sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.25)) + 0.25
+#     sim.health_model.beta = (solution[1] * (0.05-0.01)) + 0.01
+#     sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (1.0-0.0)) + 0.0
+#     sim.health_model.num_initial_infections_by_region['GB'] = [(solution[3] * (1000000-2000)) + 2000]
+#     sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.1)) + 0.1
+#     sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.1)) + 0.1
+#     sim.regional_mixing_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
+#     sim.input_model.max_transmission_control = (solution[7] * (1.0-0.25)) + 0.25
+#     sim.input_model.max_travel_control = (solution[8] * (1.0-0.25)) + 0.25
 
-    # sim.random_seed = 1
-
-    # sim.seasonal_effects_model.out_of_season_multiplier     = 0.75
-    # sim.health_model.beta                                   = 0.025
-    # sim.health_model.location_typ_multipliers['Square']     = 0.5
-    # sim.health_model.num_initial_infections_by_region['CN'] = [100000]
-    # sim.health_model.preexisting_sigma_multiplier           = 0.5
-    # sim.health_model.preexisting_rho_multiplier             = 0.5
-    # sim.regional_mixing_model.travel_multiplier             = 10.0
-    # sim.input_model.max_transmission_control                = 0.7
-    # sim.input_model.max_travel_control                      = 0.5
-
-    # sim.enable_parallel = True
+#     print(sim.seasonal_effects_model.out_of_season_multiplier)
+#     print(sim.health_model.beta)
+#     print(sim.health_model.location_typ_multipliers['Square'])
+#     print(sim.health_model.num_initial_infections_by_region['GB'][0])
+#     print(sim.input_model.max_transmission_control)
 
     # ############## Setup ##############
 
@@ -242,4 +247,3 @@ def main():
     # ############## Output ##############
 
     sim.calculate_cost(input_arrays)
-    sim.calculate_error(input_arrays)
