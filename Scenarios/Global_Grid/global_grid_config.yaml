@@ -62,7 +62,6 @@ world_factory:
     Scenarios/Global_Grid/data/airport_data.csv
   air_travel_data_file:
     Scenarios/Global_Grid/data/air_travel_data.csv
-  interpolation: 0.1 # Between 0 and 1, values larger than 0 boost international travel
 
 # ######################################### Seasonal Effects #######################################
 
@@ -78,7 +77,7 @@ health_model:
   __type__: simple_health_model.SimpleHealthModel
   beta: 0.03                                                                                        # POSSIBLE FREE VARIABLE
   location_typ_multipliers:
-    Square: 0.5                                                                                     # POSSIBLE FREE VARIABLE
+    Square: 0.2                                                                                     # POSSIBLE FREE VARIABLE
     House: 1.0
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
@@ -219,6 +218,7 @@ vaccination_model:
 regional_mixing_model:
   __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
   travel_transmission_multiplier: 10.0                                                              # POSSIBLE FREE VARIABLE
+  interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
 
 # ######################################### Input ##################################################
 

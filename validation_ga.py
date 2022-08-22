@@ -153,19 +153,20 @@ def build_and_run(solution, solution_idx):
     sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.25)) + 0.25
     sim.health_model.beta = (solution[1] * (0.05-0.01)) + 0.01
     sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (1.0-0.0)) + 0.0
-    sim.health_model.num_initial_infections_by_region['GB'] = [(solution[3] * (1000000-2000)) + 2000]
+    sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-2000)) + 2000]
     sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.1)) + 0.1
     sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.1)) + 0.1
     sim.regional_mixing_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
     sim.input_model.max_transmission_control = (solution[7] * (1.0-0.25)) + 0.25
     sim.input_model.max_travel_control = (solution[8] * (1.0-0.25)) + 0.25
+    sim.regional_mixing_model.interpolation = (solution[9] * (0.25-0.0)) + 0.0
 
     sim.random_seed = 1
 
     # Run simulation and calculate error versus historical data
     sim.setup()
     sim.run()
-    sim.average_deaths_dict_historical = copy.deepcopy(average_deaths_dict_historical)
+    # sim.average_deaths_dict_historical = copy.deepcopy(average_deaths_dict_historical)
     sim.calculate_error() # Scale historical deaths?
 
     return 1 / sim.error
@@ -188,17 +189,17 @@ def tabulate_results(num_configs):
         writer_results.writerow(row)
     handle_results.close()
 
-world_filepath = 'fr.wld'
+world_filepath = 'Scenarios\Global_Grid\global_grid_world.wld'
 
-average_deaths_dict_historical = get_historial_data()
+# average_deaths_dict_historical = get_historial_data()
 
 config_optimizer =\
 {
-    'num_generations': 20,
-    'num_parents_mating': 5,
-    'sol_per_pop': 10,
+    'num_generations': 50,
+    'num_parents_mating': 4,
+    'sol_per_pop': 8,
     'mutation_num_genes': 3,
-    'num_genes': 9
+    'num_genes': 10
 }
 
 fitness_func = build_and_run
@@ -235,7 +236,7 @@ if __name__ == "__main__":
     # ga_instance = pygad.load(filename=filename)
 
     # Run the genetic algorithm
-    with Pool(processes=10) as pool:
+    with Pool(processes=8) as pool:
         ga_instance.run()
 
     # Plot the fitness curve

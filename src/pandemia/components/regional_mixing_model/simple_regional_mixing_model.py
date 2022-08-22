@@ -45,6 +45,7 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
         self.number_of_strains = number_of_strains
 
         self.travel_multiplier = config['travel_transmission_multiplier']
+        self.interpolation     = config['interpolation']
 
         self.baseline_agents_travelling_matrix = vector_world.travel_matrix
         for r in range(self.number_of_regions):
@@ -61,6 +62,10 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
         """Initial regional mixing"""
 
         self.beta = sim.health_model.beta
+
+        self.baseline_agents_travelling_matrix =\
+            self.interpolate_matrix(self.baseline_agents_travelling_matrix, sim.vector_world,
+                                    self.interpolation)
 
         # If using ctypes, flatten arrays accordingly
         if self.enable_ctypes:
@@ -149,7 +154,8 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
                    num_jobs, vector_region_batches):
         """Changes to regional mixing"""
 
-        agents_travelling_matrix = copy.deepcopy(self.baseline_agents_travelling_matrix)
+        agents_travelling_matrix =\
+            np.zeros((self.number_of_regions, self.number_of_regions), dtype=int)
 
         # Reset record of who is travelling abroad and apply border closure if necessary
         for vector_region in sim.vector_regions:
@@ -286,3 +292,27 @@ class SimpleRegionalMixingModel(RegionalMixingModel):
         weights = mutation_matrix[s1]
         strains = [s2 for s2 in range(len(weights))]
         return prng.random_choices(strains, weights, 1)[0]
+
+    def interpolate_matrix(self, baseline_agents_travelling_matrix, vector_world, interpolation):
+        """Artificially inflate number of travellers"""
+
+        ids_to_population_sizes =\
+            {vr.id: int(vr.number_of_agents * (1 / self.scale_factor))\
+                        for vr in vector_world.vector_regions}
+
+        # Adjust matrix using interpolation parameter
+        row_sums = baseline_agents_travelling_matrix.sum(axis=1)
+        for i in range(self.number_of_regions):
+            for j in range(self.number_of_regions):
+                if baseline_agents_travelling_matrix[i][j] > 0:
+                    max_proportion_travelling =\
+                        baseline_agents_travelling_matrix[i][j] / row_sums[i]
+                    proportion_travelling =\
+                        baseline_agents_travelling_matrix[i][j] / ids_to_population_sizes[i]
+                    interpolated_proportion =\
+                        (proportion_travelling * (1 - interpolation)) +\
+                            (max_proportion_travelling * interpolation)
+                    baseline_agents_travelling_matrix[i][j] =\
+                        (ids_to_population_sizes[i] * interpolated_proportion)
+
+        return baseline_agents_travelling_matrix

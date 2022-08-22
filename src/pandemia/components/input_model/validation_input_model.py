@@ -5,7 +5,6 @@ import logging
 import numpy as np
 import csv
 import datetime
-from dateutil.parser import parse
 
 from pandemia.components.input_model import InputModel
 
@@ -43,7 +42,7 @@ class ValidationInputModel(InputModel):
         self.day_to_date = {}
         for day in range(self.simulation_length_days):
             self.day_to_date[day] =\
-                (self.epoch + datetime.timedelta(days=day)).strftime('%m/%d/%Y%Z')
+                (self.epoch + datetime.timedelta(days=day)).strftime('%d/%m/%Y%Z')
 
         self.transmission_control_input =\
             np.ones((self.simulation_length_days, self.number_of_regions), dtype=float)
@@ -54,7 +53,7 @@ class ValidationInputModel(InputModel):
             next(csvfile)
             stay_at_home_data = csv.reader(csvfile, delimiter=',')
             for row in stay_at_home_data:
-                date = parse(str(row[2]), dayfirst=True).strftime('%m/%d/%Y%Z')
+                date = datetime.datetime.strptime(str(row[2]), '%Y-%m-%d').strftime('%d/%m/%Y%Z')
                 iso3 = str(row[1])
                 self.stay_at_home[date][iso3] = float(float(str(row[3])) / 3)
 
@@ -62,9 +61,9 @@ class ValidationInputModel(InputModel):
             next(csvfile)
             travel_data = csv.reader(csvfile, delimiter=',')
             for row in travel_data:
-                date = parse(str(row[3]), dayfirst=True).strftime('%m/%d/%Y%Z')
-                iso2 = str(row[2])
-                self.travel_dict[date][iso2] = float(int(str(row[4])) / 4)
+                date = datetime.datetime.strptime(str(row[3]), '%Y-%m-%d').strftime('%d/%m/%Y%Z')
+                iso3 = str(row[1])
+                self.travel_dict[date][iso3] = float(int(str(row[4])) / 4)
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
@@ -79,10 +78,10 @@ class ValidationInputModel(InputModel):
             else:
                 self.transmission_control_input[day][vector_region.id] = 1.0
             if date in self.travel_dict:
-                if vector_region.name in self.travel_dict[date]:
+                if vector_region.other_name in self.travel_dict[date]:
                     self.border_closure_input[day][vector_region.id] =\
                         1 - (self.max_travel_control *\
-                             self.travel_dict[date][vector_region.name])
+                             self.travel_dict[date][vector_region.other_name])
             else:
                 self.border_closure_input[day][vector_region.id] = 1.0
 

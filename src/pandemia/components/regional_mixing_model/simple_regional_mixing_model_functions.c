@@ -65,14 +65,14 @@ void close_borders
     double scale_factor,
     double current_border_closure_multiplier,
     int * agents_travelling_matrix,
-    const int * baseline_agents_travelling_matrix
+    const double * baseline_agents_travelling_matrix
 )
 {
     int r1 = id;
     double rescaled;
     for(int r2=0; r2<R; r2++){
-        rescaled = (double) baseline_agents_travelling_matrix[(r1 * R) + r2] * scale_factor *
-                            current_border_closure_multiplier;
+        rescaled = baseline_agents_travelling_matrix[(r1 * R) + r2] * scale_factor *
+                   current_border_closure_multiplier;
         if(rescaled > 0 && rescaled < 1){
             agents_travelling_matrix[(r1 * R) + r2] = 1;
         } else {
@@ -170,6 +170,7 @@ void transmission_out
             f = current_region_transmission_multiplier *
                 facemask_multiplier * current_infectiousness[n] * beta;
             f = (f * travel_multiplier) / N;
+            f = fmin(f, 1.0);
             sum_f_by_strain[(id * S) + current_strain[n]] += f;
             transmission_force[id] *= 1 - f;
         }

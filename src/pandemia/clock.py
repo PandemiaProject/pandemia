@@ -89,7 +89,7 @@ class Clock:
     def iso8601(self) -> str:
         """Return ISO 8601 time as a string"""
 
-        return self.now().strftime('%m/%d/%Y%Z')
+        return self.now().strftime('%d/%m/%Y%Z')
 
     def ticks_through_week(self) -> int:
         """Returns the number of whole ticks through the week this is"""

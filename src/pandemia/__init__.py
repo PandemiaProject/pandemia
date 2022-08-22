@@ -175,6 +175,8 @@ def main():
             log.info("Writing to state file: %s", sys.argv[2])
             sim_factory.to_file(sys.argv[2])
 
+    # sim_factory.clock.simulation_length_days = 365
+
     # Build simulation components
     build_components(sim_factory)
 
@@ -189,30 +191,35 @@ def main():
     input_arrays = None
     sim.input_model.new_input(input_arrays)
 
-    # set validation parameter values (move all this etc...)
-#     sim.enable_parallel = False
-#     sim.random_seed = 1
-#     import numpy as np
-#     solution = np.array([0.23158827, -1.62024969,  1.21581631,  2.67700538, -5.51327734,  0.63630115,
-#   3.91088871,  1.98532524, -3.83862847])
+    # ############## set validation parameter values (move all this etc...) ##############
+    # sim.enable_parallel = False
+    # sim.random_seed = 1
+    # import numpy as np
+    # solution = np.array([-0.69633612, -0.65282459,  1.54293516, -1.03238783,  1.54628728,  1.64040738,
+    #                      -2.78343851, -1.30537533,  1.4300206 ])
 
-#     solution = np.divide(1, 1 + np.power(np.e, solution))
+    # solution = np.divide(1, 1 + np.power(np.e, solution))
 
-#     sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.25)) + 0.25
-#     sim.health_model.beta = (solution[1] * (0.05-0.01)) + 0.01
-#     sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (1.0-0.0)) + 0.0
-#     sim.health_model.num_initial_infections_by_region['GB'] = [(solution[3] * (1000000-2000)) + 2000]
-#     sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.1)) + 0.1
-#     sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.1)) + 0.1
-#     sim.regional_mixing_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
-#     sim.input_model.max_transmission_control = (solution[7] * (1.0-0.25)) + 0.25
-#     sim.input_model.max_travel_control = (solution[8] * (1.0-0.25)) + 0.25
+    # sim.seasonal_effects_model.out_of_season_multiplier = 0.75 # (solution[0] * (1.00-0.25)) + 0.25
+    # sim.health_model.beta = 0.035 # (solution[1] * (0.05-0.01)) + 0.01
+    # sim.health_model.location_typ_multipliers['Square'] = 0.2 # (solution[2] * (1.0-0.0)) + 0.0
+    # sim.health_model.num_initial_infections_by_region['CN'] = [100000] # [(solution[3] * (1000000-2000)) + 2000]
+    # sim.health_model.preexisting_sigma_multiplier = 0.5 # (solution[4] * (1.0-0.1)) + 0.1
+    # sim.health_model.preexisting_rho_multiplier = 0.5 # (solution[5] * (1.0-0.1)) + 0.1
+    # sim.regional_mixing_model.travel_multiplier = 100 # (solution[6] * (100.0-1.0)) + 1.0
+    # sim.input_model.max_transmission_control = 0.0 # (solution[7] * (1.0-0.25)) + 0.25
+    # sim.input_model.max_travel_control = 0.0 # (solution[8] * (1.0-0.25)) + 0.25
+    # sim.regional_mixing_model.interpolation = 0.0 # (solution[9] * (0.25-0.0)) + 0.0
 
-#     print(sim.seasonal_effects_model.out_of_season_multiplier)
-#     print(sim.health_model.beta)
-#     print(sim.health_model.location_typ_multipliers['Square'])
-#     print(sim.health_model.num_initial_infections_by_region['GB'][0])
-#     print(sim.input_model.max_transmission_control)
+    # print("out_of_season_multiplier: ", sim.seasonal_effects_model.out_of_season_multiplier)
+    # print("beta: ", sim.health_model.beta)
+    # print("location_typ_multipliers['Square']: ", sim.health_model.location_typ_multipliers['Square'])
+    # print("num_initial_infections_by_region['CN']: ", sim.health_model.num_initial_infections_by_region['CN'][0])
+    # print("preexisting_sigma_multiplier: ", sim.health_model.preexisting_sigma_multiplier)
+    # print("preexisting_rho_multiplier: ", sim.health_model.preexisting_rho_multiplier)
+    # print("travel_multiplier: ", sim.regional_mixing_model.travel_multiplier)
+    # print("max_transmission_control: ", sim.input_model.max_transmission_control)
+    # print("max_travel_control: ", sim.input_model.max_travel_control)
 
     # ############## Setup ##############
 

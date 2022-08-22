@@ -30,7 +30,6 @@ class GlobalWorldFactory(WorldFactory):
         self.air_travel_path           = self.config['air_travel_path']
         self.local_travel_prob_per_day = self.config['local_travel_prob_per_day']
         self.distance_threshold        = self.config['distance_threshold']
-        self.interpolation             = self.config['interpolation']
 
     def get_world(self) -> World:
 
@@ -43,7 +42,7 @@ class GlobalWorldFactory(WorldFactory):
         world.travel_matrix =\
             self.get_travel_matrix(world, self.airport_path, self.air_travel_path,
                                    self.local_travel_prob_per_day,
-                                   self.distance_threshold, self.interpolation)
+                                   self.distance_threshold)
 
         return world
 
@@ -123,8 +122,7 @@ class GlobalWorldFactory(WorldFactory):
                     region.coordinates = coordinates
 
     def get_travel_matrix(self, world, airport_path, air_travel_path,
-                          local_travel_prob_per_day, distance_threshold,
-                          interpolation):
+                          local_travel_prob_per_day, distance_threshold):
         """Constructs matrix of mixing between regions, constructed via a combination of
         air travel and local travel. Since the air travel data used for these simulaitons also
         records the month of travel, we additionally calculate an air travel matrix for each month,
@@ -247,20 +245,5 @@ class GlobalWorldFactory(WorldFactory):
         # Check there are not too many travellers
         for i in range(num_of_regions):
             assert sum(baseline_agents_travelling_matrix[i]) < ids_to_population_sizes[i]
-
-        # Adjust matrix using interpolation parameter
-        for i in range(num_of_regions):
-            for j in range(num_of_regions):
-                if baseline_agents_travelling_matrix[i][j] > 0:
-                    max_proportion_travelling =\
-                        baseline_agents_travelling_matrix[i][j] /\
-                            sum(baseline_agents_travelling_matrix[i])
-                    proportion_travelling =\
-                        baseline_agents_travelling_matrix[i][j] / ids_to_population_sizes[i]
-                    interpolated_proportion =\
-                        (proportion_travelling * (1 - interpolation)) +\
-                            (max_proportion_travelling * interpolation)
-                    baseline_agents_travelling_matrix[i][j] =\
-                        int(ids_to_population_sizes[i] * interpolated_proportion)
 
         return baseline_agents_travelling_matrix

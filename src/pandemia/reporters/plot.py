@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from pandemia.reporters import Reporter
 import numpy as np
 import csv
-from dateutil.parser import parse
+import datetime
+
 from numpy import genfromtxt
 import os
 
@@ -70,7 +71,8 @@ class PlotDeaths(Reporter):
                 next(csvfile)
                 deaths_data = csv.reader(csvfile, delimiter=',')
                 for row in deaths_data:
-                    date = parse(str(row[0]), dayfirst=True).strftime('%m/%d/%Y%Z')
+                    date =\
+                        datetime.datetime.strptime(str(row[0]), '%d/%m/%Y').strftime('%d/%m/%Y%Z')
                     historical_daily_deaths_dict[date]      = float(row[4])
                     historical_cumulative_deaths_dict[date] = int(row[1])
         hist_daily_deaths = []

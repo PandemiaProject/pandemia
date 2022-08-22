@@ -40,7 +40,6 @@ world_factory:
   distance_threshold: 10
   airport_path: Scenarios/Global/data/airport_data.csv
   air_travel_path: Scenarios/Global/data/air_travel_data.csv
-  interpolation: 0.1 # Between 0 and 1, values larger than 0 boost international travel
 
 # ######################################### Seasonal Effects #######################################
 
@@ -156,6 +155,7 @@ vaccination_model:
 regional_mixing_model:
   __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
   travel_transmission_multiplier: 10.0                                                              # POSSIBLE FREE VARIABLE
+  interpolation: 0.1 # Between 0 and 1, values larger than 0 boost international travel
 
 # ######################################### Input ##################################################
 
