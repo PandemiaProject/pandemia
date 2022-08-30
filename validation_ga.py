@@ -3,11 +3,13 @@ import pygad
 import logging
 import logging.config
 from tqdm import tqdm
+from functools import partial
 import copy
 import csv
 from multiprocessing import Pool
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 from pandemia.utils import instantiate_class
 from pandemia.messagebus import MessageBus
@@ -136,7 +138,7 @@ def get_historial_data():
 
     return sim.average_deaths_dict_historical
 
-def build_and_run(solution, solution_idx):
+def build_and_run(solution, seed):
     """Builds simulator and runs"""
 
     # Load simulation factory and build sim
@@ -152,16 +154,16 @@ def build_and_run(solution, solution_idx):
 
     sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.25)) + 0.25
     sim.health_model.beta = (solution[1] * (0.05-0.01)) + 0.01
-    sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (1.0-0.0)) + 0.0
-    sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-2000)) + 2000]
+    sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (0.5-0.0)) + 0.0
+    sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-10000)) + 10000]
     sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.1)) + 0.1
     sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.1)) + 0.1
     sim.regional_mixing_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
     sim.input_model.max_transmission_control = (solution[7] * (1.0-0.25)) + 0.25
     sim.input_model.max_travel_control = (solution[8] * (1.0-0.25)) + 0.25
-    sim.regional_mixing_model.interpolation = (solution[9] * (0.25-0.0)) + 0.0
+    sim.regional_mixing_model.interpolation = (solution[9] * (0.01-0.0)) + 0.0
 
-    sim.random_seed = 1
+    sim.random_seed = seed
 
     # Run simulation and calculate error versus historical data
     sim.setup()
@@ -189,28 +191,29 @@ def tabulate_results(num_configs):
         writer_results.writerow(row)
     handle_results.close()
 
-world_filepath = 'Scenarios\Global_Grid\global_grid_world.wld'
+seed = 0
 
-# average_deaths_dict_historical = get_historial_data()
+world_filepath = 'gb.wld' # 'Scenarios\Global_Grid\global_grid_world.wld'
+
+average_deaths_dict_historical = get_historial_data()
 
 config_optimizer =\
 {
-    'num_generations': 50,
+    'num_generations': 100,
     'num_parents_mating': 4,
     'sol_per_pop': 8,
-    'mutation_num_genes': 3,
+    'mutation_num_genes': 2,
     'num_genes': 10
 }
 
-fitness_func = build_and_run
-
-def fitness_wrapper(solution):
-    return fitness_func(solution, 0)
+def fitness_func(solution, solution_idx):
+    return build_and_run(solution, 0)
 
 class PooledGA(pygad.GA):
     def cal_pop_fitness(self):
         global pool
-        pop_fitness = pool.map(fitness_wrapper, self.population)
+        seed = self.generations_completed
+        pop_fitness = pool.map(partial(build_and_run, seed=seed), self.population)
         pop_fitness = np.array(pop_fitness)
         return pop_fitness
 

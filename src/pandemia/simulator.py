@@ -428,8 +428,7 @@ class Simulator:
                     for row in deaths_data:
                         iso2 = str(row[1])
                         if iso2 in included_region_names:
-                            date = datetime.datetime.strptime(str(row[0]),
-                                                                  '%Y-%m-%d').strftime('%d/%m/%Y%Z')
+                            date = datetime.strptime(str(row[0]), '%Y-%m-%d').strftime('%d/%m/%Y%Z')
                             if date in historical_daily_deaths:
                                 historical_daily_deaths[date] += int(row[6])
                             else:

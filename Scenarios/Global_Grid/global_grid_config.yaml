@@ -28,7 +28,7 @@ tick_length_s: 28800
 # from the tick length above:
 simulation_length_days: 365
 # the date at which the simulation starts:
-epoch: 1st December 2019                                                                            # POSSIBLE FREE VARIABLE
+epoch: 1st January 2020                                                                            # POSSIBLE FREE VARIABLE
 
 # ######################################### World ##################################################
 
