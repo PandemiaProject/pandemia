@@ -103,43 +103,41 @@ void determine_travellers
 
     if(total_num_to_travel > 0){
 
-        // Determine who is eligible to travel from this region today
-        int * eligible = (int *)malloc(sizeof(int) * N);
+        // Determine who is eligible to travel from this region today and count how many
+        int * agents_eligible_to_travel = (int *)malloc(sizeof(int) * N);
+        int num_eligible_to_travel = 0;
+        int j = 0;
         for(int n=0; n<N; n++){
             if(current_strain[n] == -1 && current_disease[n] < 1.0){
-                eligible[n] = 1;
-            } else {
-                eligible[n] = 0;
+                agents_eligible_to_travel[j] = n;
+                j += 1;
+                num_eligible_to_travel += 1;
             }
         }
 
-        // Among those eligible determine who travels today
+        // Among these eligible agents determine who actually travels today
+        int num_agents_to_travel;
+        num_agents_to_travel = fmin(total_num_to_travel, num_eligible_to_travel);
+        int * agents_to_travel = (int *)malloc(sizeof(int) * num_agents_to_travel);
+        random_sample(random_state, random_p, agents_to_travel, num_agents_to_travel,
+                      agents_eligible_to_travel, num_eligible_to_travel);
+
+        // Among those who actually travel determine to which region they travel
+        int num_agents_to_travel_r2;
+        int j_min, j_max;
+        j_min = 0;
+        j_max = 0;
         for(int r2=0; r2<R; r2++){
-            int num_eligible_to_travel = 0;
-            for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_to_travel += 1;}}
-            int * agents_eligible_to_travel = (int *)malloc(sizeof(int) * num_eligible_to_travel);
-            int j = 0;
-            for(int n=0; n<N; n++){if(eligible[n] == 1){agents_eligible_to_travel[j] = n; j += 1;}}
-            int num_to_travel;
-            num_to_travel = agents_travelling_matrix[(r1 * R) + r2];
-            if(num_to_travel > 0){
-                int num_agents_to_travel;
-                num_agents_to_travel = fmin(num_to_travel, num_eligible_to_travel);
-                int * agents_to_travel = (int *)malloc(sizeof(int) * num_agents_to_travel);
-                random_sample(random_state, random_p, agents_to_travel,
-                              num_agents_to_travel, agents_eligible_to_travel,
-                              num_eligible_to_travel);
-                for(int j=0; j<num_agents_to_travel; j++){
-                    int n;
-                    n = agents_to_travel[j];
-                    eligible[n] = 0;
-                    current_region[n] = r2;
-                }
-                free(agents_to_travel);
+            num_agents_to_travel_r2 = agents_travelling_matrix[(r1 * R) + r2];
+            j_max += num_agents_to_travel_r2;
+            for(int j=fmin(j_min, num_agents_to_travel); j<fmin(j_max, num_agents_to_travel); j++){
+                current_region[agents_to_travel[j]] = r2;
             }
-            free(agents_eligible_to_travel);
+            j_min += num_agents_to_travel_r2;
         }
-        free(eligible);
+
+        free(agents_to_travel);
+        free(agents_eligible_to_travel);
     }
     return;
 }

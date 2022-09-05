@@ -211,6 +211,17 @@ def main():
     # sim.input_model.max_travel_control = (solution[8] * (1.0-0.25)) + 0.25
     # sim.regional_mixing_model.interpolation = (solution[9] * (0.25-0.0)) + 0.0
 
+    # sim.seasonal_effects_model.out_of_season_multiplier = 0.75
+    # sim.health_model.beta = 0.3
+    # sim.health_model.location_typ_multipliers['Square'] = 0.2
+    # sim.health_model.num_initial_infections_by_region['CN'] = [100000]
+    # sim.health_model.preexisting_sigma_multiplier = 0.5
+    # sim.health_model.preexisting_rho_multiplier = 0.5
+    # sim.regional_mixing_model.travel_multiplier = 20
+    # sim.input_model.max_transmission_control = 0.75
+    # sim.input_model.max_travel_control = 0.75
+    # sim.regional_mixing_model.interpolation = 0.0
+
     # print("out_of_season_multiplier: ", sim.seasonal_effects_model.out_of_season_multiplier)
     # print("beta: ", sim.health_model.beta)
     # print("location_typ_multipliers['Square']: ", sim.health_model.location_typ_multipliers['Square'])

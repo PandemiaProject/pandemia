@@ -152,15 +152,15 @@ def build_and_run(solution, seed):
     # Set validation parameter values
     solution = np.divide(1, 1 + np.power(np.e, solution))
 
-    sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.25)) + 0.25
-    sim.health_model.beta = (solution[1] * (0.05-0.01)) + 0.01
-    sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (0.5-0.0)) + 0.0
-    sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-10000)) + 10000]
-    sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.1)) + 0.1
-    sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.1)) + 0.1
+    sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.5)) + 0.5
+    sim.health_model.beta = (solution[1] * (0.045-0.025)) + 0.025
+    sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (0.5-0.1)) + 0.1
+    sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-50000)) + 50000]
+    sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.5)) + 0.5
+    sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.5)) + 0.5
     sim.regional_mixing_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
-    sim.input_model.max_transmission_control = (solution[7] * (1.0-0.25)) + 0.25
-    sim.input_model.max_travel_control = (solution[8] * (1.0-0.25)) + 0.25
+    sim.input_model.max_transmission_control = (solution[7] * (1.0-0.5)) + 0.5
+    sim.input_model.max_travel_control = (solution[8] * (1.0-0.5)) + 0.5
     sim.regional_mixing_model.interpolation = (solution[9] * (0.01-0.0)) + 0.0
 
     sim.random_seed = seed
@@ -193,9 +193,9 @@ def tabulate_results(num_configs):
 
 seed = 0
 
-world_filepath = 'gb.wld' # 'Scenarios\Global_Grid\global_grid_world.wld'
+world_filepath = 'Scenarios\Global_Grid\global_grid_world.wld'
 
-average_deaths_dict_historical = get_historial_data()
+# average_deaths_dict_historical = get_historial_data()
 
 config_optimizer =\
 {
