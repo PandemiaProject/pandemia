@@ -69,12 +69,14 @@ class GlobalWorldFactory(WorldFactory):
             next(csvfile)
             region_data = csv.reader(csvfile, delimiter=',')
             for row in region_data:
-                iso = str(row[1])
-                new_location = Location(iso, (0.0, 0.0))
+                iso2 = str(row[1])
+                iso3 = str(row[2])
+                new_location = Location(iso2, (0.0, 0.0))
                 locations = []
                 locations.append(new_location)
-                population_size = int(row[4])
-                age_distribution = [float(row[5 + r]) for r in range(101)]
+                super_region = str(row[3])
+                population_size = int(row[5])
+                age_distribution = [float(row[6 + r]) for r in range(101)]
                 number_of_agents = max(int(population_size * self.scale_factor), 1)
                 total_number_of_agents += number_of_agents
                 agents = []
@@ -87,7 +89,9 @@ class GlobalWorldFactory(WorldFactory):
                         new_agent.activity_locations = {"Default": [new_location]}
                         new_agent.activity_location_weights = {"Default": [1.0]}
                         agents.append(new_agent)
-                new_region = Region(id, iso, activities, agents, locations)
+                new_region = Region(id, iso2, activities, agents, locations)
+                new_region.super_region = super_region
+                new_region.other_name = iso3
                 world.regions.append(new_region)
                 id += 1
         world.number_of_regions = len(world.regions)

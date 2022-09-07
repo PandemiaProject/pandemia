@@ -2,7 +2,7 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 0.00005
+scale_factor: 0.0005
 
 # Profiler
 profile: False
@@ -23,12 +23,12 @@ num_jobs: -2
 
 # Time length of each tick in the simulation. The day length (86400) should be divisible by the
 # following tick length:
-tick_length_s: 21600 # 3600 # 7200 # 10800 # 21600 # 43200 # 86400
+tick_length_s: 28800 # 3600 # 7200 # 10800 # 21600 # 43200 # 86400
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
 simulation_length_days: 365 # 730
 # the date at which the simulation starts:
-epoch: 1st December 2019                                                                            # POSSIBLE FREE VARIABLE
+epoch: 1st January 2020                                                                            # POSSIBLE FREE VARIABLE
 
 # ######################################### World ##################################################
 
@@ -61,8 +61,8 @@ health_model:
     'CN': [100000]                                                                                  # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
   mutation_matrix: [[1.0]]
   number_of_strains: 1
-  preexisting_sigma_multiplier: 1.0
-  preexisting_rho_multiplier: 1.0
+  preexisting_sigma_multiplier: 0.5
+  preexisting_rho_multiplier: 0.5
   country_data_sigma_immunity_fp: null
   country_data_rho_immunity_fp: null
   preset_weights_by_age:
@@ -89,9 +89,24 @@ health_model:
     preset_0:
       0:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[0.0], [0.0], [0.0], [0.0], [0.0]]]]]
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
+        infectiousness:
+          [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
+        disease:
+          [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
+        strain:
+          [[[-1, 0, 15], [-1, 0, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
@@ -105,9 +120,24 @@ health_model:
     preset_1:
       0:
         rho_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [[0.0], [0.0], [0.0], [0.0], [0.0]]]]]
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
         sigma_immunity_failure:
-          [[[[-1, 15, 30, 120, 180], [1.0, 0.0, 0.25, 0.35, 0.75]]]]
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
+        infectiousness:
+          [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
+        disease:
+          [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
+        strain:
+          [[[-1, 0, 15], [-1, 0, -1]]]
+      1:
+        rho_immunity_failure:
+          [[[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]]
+        sigma_immunity_failure:
+          [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
@@ -121,7 +151,7 @@ health_model:
   # Rescale by time and population in each location, deactivate by setting sir_rescaling = False. If
   # activated, can still deactivate age mixing by setting age_mixing_matrices = null
   sir_rescaling: True
-  age_mixing_matrices: Scenarios/Global/data/country_data_mixing_matrices/
+  age_mixing_matrices: null # Scenarios/Global/data/country_data_mixing_matrices/
   age_group_interval: 5
   # Deactivate by setting auto_generate_presets = False
   auto_generate_presets: False
@@ -155,18 +185,24 @@ vaccination_model:
 regional_mixing_model:
   __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
   travel_transmission_multiplier: 10.0                                                              # POSSIBLE FREE VARIABLE
-  interpolation: 0.1 # Between 0 and 1, values larger than 0 boost international travel
+  interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
 
 # ######################################### Input ##################################################
 
 input_model:
-  __type__: void_input_model.VoidInputModel
+  __type__: validation_input_model.ValidationInputModel
+  stay_at_home_data_fp:
+    Scenarios/Global_Grid/data/historical_data/country_data_stay_at_home_covid.csv
+  travel_data_fp:
+    Scenarios/Global_Grid/data/historical_data/country_data_international_travel_controls.csv
+  max_transmission_control: 0.70                                                                    # POSSIBLE FREE VARIABLE
+  max_travel_control: 0.70                                                                          # POSSIBLE FREE VARIABLE
 
 # ######################################### Output #################################################
 
 regions_omitted_from_death_counts: ['CN', 'KP']
-super_regions_omitted_from_deaths_counts: []
-historical_data_filepath: null
+super_regions_omitted_from_deaths_counts: ['Africa', 'Asia']
+historical_data_filepath: Scenarios/Global_Grid/data/historical_data/WHO-COVID-19-global-data.csv
 
 # Output that should be rendered from the simulation:
 reporters:
@@ -185,15 +221,15 @@ reporters:
     cumulative_deaths_filename: /tmp/cumulative_deaths_global.png
     deaths_by_country_filename: null
     historical_data: Scenarios/Global/data/historical_data/who_data.csv
-  pygame_shapes.PygameShapes:
-    fullscreen: True
-    font_size: 20
-    max_norm_prev: 1.0
-    refresh_rate: 60
-    display_width: 1500
-    display_height: 700
-    points_per_polygon: 400
-    cmap: "Oranges"
+  # pygame_shapes.PygameShapes:
+  #   fullscreen: True
+  #   font_size: 20
+  #   max_norm_prev: 1.0
+  #   refresh_rate: 60
+  #   display_width: 1500
+  #   display_height: 700
+  #   points_per_polygon: 400
+  #   cmap: "Oranges"
 
 # ######################################### Logging ################################################
 
