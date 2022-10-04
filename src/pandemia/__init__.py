@@ -175,7 +175,7 @@ def main():
             log.info("Writing to state file: %s", sys.argv[2])
             sim_factory.to_file(sys.argv[2])
 
-    # sim_factory.clock.simulation_length_days = 365
+    # sim_factory.clock.simulation_length_days = 730 # 365
 
     # Build simulation components
     build_components(sim_factory)
@@ -193,7 +193,7 @@ def main():
 
     # ############## set validation parameter values (move all this etc...) ##############
     # sim.enable_parallel = False
-    # sim.random_seed = 1
+    # sim.random_seed = 13
     # import numpy as np
     # solution = np.array([-3.6723102, -0.64972947, 2.72811164, 4.44037522, 3.13302174, -2.28823345,
     #                      -2.06260188, 2.02718859, 2.99305056, 3.52555033])
@@ -201,7 +201,7 @@ def main():
     # solution = np.divide(1, 1 + np.power(np.e, solution))
 
     # sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.25)) + 0.25
-    # sim.health_model.beta = (solution[1] * (0.05-0.01)) + 0.01
+    # sim.health_model.beta = [(solution[1] * (0.05-0.01)) + 0.01]
     # sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (1.0-0.0)) + 0.0
     # sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-2000)) + 2000]
     # sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.1)) + 0.1
@@ -212,15 +212,18 @@ def main():
     # sim.regional_mixing_model.interpolation = (solution[9] * (0.25-0.0)) + 0.0
 
     # sim.seasonal_effects_model.out_of_season_multiplier = 0.75
-    # sim.health_model.beta = 0.3
+    # sim.health_model.beta = [0.035]
+    # import numpy as np
+    # mutation_matrix = [[0.9995, 0.0005], [0.0, 1.0]]
+    # sim.health_model.mutation_matrix = np.asarray(mutation_matrix, dtype=float).flatten()
     # sim.health_model.location_typ_multipliers['Square'] = 0.2
-    # sim.health_model.num_initial_infections_by_region['CN'] = [100000]
+    # sim.health_model.num_initial_infections_by_region['CN'] = [500000]
     # sim.health_model.preexisting_sigma_multiplier = 0.5
     # sim.health_model.preexisting_rho_multiplier = 0.5
-    # sim.regional_mixing_model.travel_multiplier = 20
-    # sim.input_model.max_transmission_control = 0.75
-    # sim.input_model.max_travel_control = 0.75
-    # sim.regional_mixing_model.interpolation = 0.0
+    # sim.regional_mixing_model.travel_multiplier = 600
+    # sim.input_model.max_transmission_control = 0.9
+    # sim.input_model.max_travel_control = 0.9
+    # sim.regional_mixing_model.interpolation = 0.00
 
     # print("out_of_season_multiplier: ", sim.seasonal_effects_model.out_of_season_multiplier)
     # print("beta: ", sim.health_model.beta)

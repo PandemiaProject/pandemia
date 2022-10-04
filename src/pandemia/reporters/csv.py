@@ -3,6 +3,7 @@
 import os
 import os.path
 import csv
+import numpy as np
 
 from pandemia.reporters import Reporter
 
@@ -23,6 +24,9 @@ class StrainCounts(Reporter):
     def initialize(self, number_of_regions, number_of_strains, region_names, population_sizes):
         """Called when the simulation starts.  Writes headers and creates the file handle."""
 
+        self.number_of_regions = number_of_regions
+        self.number_of_strains = number_of_strains
+
         # Check dir exists and open handle
         dirname = os.path.dirname(self.filename)
         if dirname != '':
@@ -38,6 +42,10 @@ class StrainCounts(Reporter):
 
     def update_counts(self, clock, strain_counts):
         """Update the CSV, writing a single row for every clock tick"""
+
+        strain_counts = np.reshape(strain_counts, (self.number_of_regions, self.number_of_strains))
+        strain_counts = np.sum(strain_counts, axis=0)
+        strain_counts = strain_counts.flatten()
 
         row = [clock.day, clock.iso8601()]
         row += strain_counts.tolist()

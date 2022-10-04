@@ -44,7 +44,7 @@ class SimpleHealthModel(HealthModel):
             self.transmission.restype  = None
             self.infect.restype        = None
 
-        self.beta                             = config['beta']
+        self.beta                             = np.array(config['beta'], dtype=float)
 
         self.number_of_strains                = config['number_of_strains']
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
@@ -600,7 +600,7 @@ class SimpleHealthModel(HealthModel):
             c_int(self.sir_rescaling_int),
             c_int(self.clock.ticks_in_day),
             c_int(vector_region.number_of_age_mixing_groups),
-            c_double(self.beta),
+            c_void_p(self.beta.ctypes.data),
             c_void_p(vector_region.age_group.ctypes.data),
             c_void_p(vector_region.age_mixing_matrix.ctypes.data),
             c_double(self.facemask_transmission_multiplier),

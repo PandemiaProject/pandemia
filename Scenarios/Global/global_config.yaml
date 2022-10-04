@@ -53,7 +53,7 @@ seasonal_effects_model:
 
 health_model:
   __type__: simple_health_model.SimpleHealthModel
-  beta: 0.42                                                                                        # POSSIBLE FREE VARIABLE
+  beta: [0.42]                                                                                      # POSSIBLE FREE VARIABLE
   location_typ_multipliers: null
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30

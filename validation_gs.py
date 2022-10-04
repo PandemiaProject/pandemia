@@ -122,7 +122,7 @@ def build_and_run(validation_config, num_configs, world_filepath):
     sim.seasonal_effects_model.out_of_season_multiplier =\
         validation_config['out_of_season_multiplier']
     sim.health_model.beta =\
-        validation_config['beta']
+        [validation_config['beta']]
     sim.health_model.location_typ_multipliers['Square'] =\
         validation_config['location_typ_multipliers[Square]']
     sim.health_model.num_initial_infections_by_region['GB'] =\

@@ -120,7 +120,7 @@ def get_historial_data():
 
     # Set validation parameter values
     sim.seasonal_effects_model.out_of_season_multiplier = 0.75
-    sim.health_model.beta = 0.025
+    sim.health_model.beta = [0.025]
     sim.health_model.location_typ_multipliers['Square'] = 0.5
     sim.health_model.num_initial_infections_by_region['GB'] = [100000]
     sim.health_model.preexisting_sigma_multiplier = 0.5
@@ -153,7 +153,7 @@ def build_and_run(solution, seed):
     solution = np.divide(1, 1 + np.power(np.e, solution))
 
     sim.seasonal_effects_model.out_of_season_multiplier = (solution[0] * (1.00-0.5)) + 0.5
-    sim.health_model.beta = (solution[1] * (0.045-0.025)) + 0.025
+    sim.health_model.beta = [(solution[1] * (0.045-0.025)) + 0.025]
     sim.health_model.location_typ_multipliers['Square'] = (solution[2] * (0.5-0.1)) + 0.1
     sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-50000)) + 50000]
     sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.5)) + 0.5
