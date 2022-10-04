@@ -11,9 +11,6 @@ pstats_records: 100
 # Random seeds for each region
 random_seed: 1
 
-# Enable or disable the use of ctypes
-enable_ctypes: True
-
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
 enable_parallel: True
@@ -41,7 +38,7 @@ world_factory:
     Scenarios/Global_Grid/data/country_data_shapefiles/CNTR_RG_60M_2020_4326.shp
   population_dist_data_folder:
     Scenarios/Global_Grid/data/country_data_population_distribution
-  regions_to_simulate: ['KP', 'KR'] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
+  regions_to_simulate: [] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
   # Locations
   house_location_type: House
   square_location_type: Square
@@ -66,7 +63,7 @@ world_factory:
 # ######################################### Seasonal Effects #######################################
 
 seasonal_effects_model:
-  __type__: simple_seasonal_effects_model.SimpleSeasonalEffectsModel
+  __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
   seasonal_multiplier_by_region_by_month: Scenarios/Global_Grid/data/country_data_seasonality.csv
   out_of_season_multiplier: 0.75                                                                    # POSSIBLE FREE VARIABLE
@@ -74,7 +71,7 @@ seasonal_effects_model:
 # ######################################### Health #################################################
 
 health_model:
-  __type__: simple_health_model.SimpleHealthModel
+  __type__: default_health_model.DefaultHealthModel
   beta: [0.035, 0.035]                                                                              # POSSIBLE FREE VARIABLE
   location_typ_multipliers:
     Square: 0.2                                                                                     # POSSIBLE FREE VARIABLE
@@ -82,7 +79,7 @@ health_model:
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
-    'KR': [100000, 0]                                                                              # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
+    'CN': [100000, 0]                                                                              # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
   mutation_matrix: [[0.9999, 0.0001], [0.0, 1.0]]
   number_of_strains: 2
   preexisting_sigma_multiplier: 0.5                                                                 # POSSIBLE FREE VARIABLE
@@ -209,7 +206,7 @@ health_model:
 # ######################################### Movement ###############################################
 
 movement_model:
-  __type__: simple_movement_model.SimpleMovementModel
+  __type__: default_movement_model.DefaultMovementModel
   weighted_sampling: True
   home_activity: "Home_Activity"
   location_closure_exemptions:
@@ -236,7 +233,7 @@ vaccination_model:
 # ######################################### Regional Mixing ########################################
 
 regional_mixing_model:
-  __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
+  __type__: default_regional_mixing_model.DefaultRegionalMixingModel
   travel_transmission_multiplier: 100                                                               # POSSIBLE FREE VARIABLE
   interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
 

@@ -3,24 +3,31 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// gcc -fPIC -shared -o simple_movement_model_functions.dll simple_movement_model_functions.c
+// gcc -fPIC -shared -o default_movement_model_functions.dll default_movement_model_functions.c
 
-uint64_t next(uint64_t * s, int * p) {
-    const uint64_t s0 = s[*p];
-    uint64_t s1 = s[*p = (*p + 1) & 15];
-    s1 ^= s1 << 31; // a
-    s[*p] = s1 ^ s0 ^ (s1 >> 11) ^ (s0 >> 30); // b,c
-    return s[*p] * 0x9e3779b97f4a7c13;
+static inline uint64_t rotl(const uint64_t x, int k) {
+	return (x << k) | (x >> (64 - k));
 }
 
-int randrange(uint64_t * s, int * p, int num) {
+// https://prng.di.unimi.it/xoroshiro128plus.c
+uint64_t next(uint64_t * s) {
+	const uint64_t s0 = s[0];
+	uint64_t s1 = s[1];
+	const uint64_t result = s0 + s1;
+	s1 ^= s0;
+	s[0] = rotl(s0, 24) ^ s1 ^ (s1 << 16); // a, b
+	s[1] = rotl(s1, 37); // c
+	return result;
+}
+
+int randrange(uint64_t * s, int num) {
     // Returns an int in the range [0, num)
-    return next(s, p) % num;
+    return next(s) % num;
 }
 
-int random_choice(uint64_t * s, int * p, double * weights, double sum_of_weights) {
+int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
     // Returns an int in the range [0,l) where l is the length of weights
-    int rnd = randrange(s, p, INT_MAX);
+    int rnd = randrange(s, INT_MAX);
     int index = 0;
     while (rnd >= (int) ((weights[index] / sum_of_weights) * INT_MAX)){
         rnd -= (weights[index] / sum_of_weights) * INT_MAX;
@@ -79,8 +86,7 @@ void dynamics_movement
     const int * home_location,
     const int * current_quarantine,
     int * requesting_location_update,
-    uint64_t * random_state,
-    int * random_p
+    uint64_t * random_state
 )
 {
     int t_now = (t + offset) % ticks_in_week;
@@ -115,10 +121,10 @@ void dynamics_movement
                         weights[j] = activity_location_weights[index_0 + j];
                         sum_of_weights += weights[j];
                     }
-                    index = random_choice(random_state, random_p, weights, sum_of_weights);
+                    index = random_choice(random_state, weights, sum_of_weights);
                     free(weights);
                 } else {
-                    index = randrange(random_state, random_p, num);
+                    index = randrange(random_state, num);
                 }
                 // Override location choice if necessary
                 if(current_quarantine[n] == 1 || (lockdown_intervention == 1 &&

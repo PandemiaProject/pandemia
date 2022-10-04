@@ -3,24 +3,31 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// gcc -fPIC -shared -o simple_health_model_functions.dll simple_health_model_functions.c
+// gcc -fPIC -shared -o default_health_model_functions.dll default_health_model_functions.c
 
-uint64_t next(uint64_t * s, int * p) {
-    const uint64_t s0 = s[*p];
-    uint64_t s1 = s[*p = (*p + 1) & 15];
-    s1 ^= s1 << 31; // a
-    s[*p] = s1 ^ s0 ^ (s1 >> 11) ^ (s0 >> 30); // b,c
-    return s[*p] * 0x9e3779b97f4a7c13;
+static inline uint64_t rotl(const uint64_t x, int k) {
+	return (x << k) | (x >> (64 - k));
 }
 
-int randrange(uint64_t * s, int * p, int num) {
+// https://prng.di.unimi.it/xoroshiro128plus.c
+uint64_t next(uint64_t * s) {
+	const uint64_t s0 = s[0];
+	uint64_t s1 = s[1];
+	const uint64_t result = s0 + s1;
+	s1 ^= s0;
+	s[0] = rotl(s0, 24) ^ s1 ^ (s1 << 16); // a, b
+	s[1] = rotl(s1, 37); // c
+	return result;
+}
+
+int randrange(uint64_t * s, int num) {
     // Returns an int in the range [0, num)
-    return next(s, p) % num;
+    return next(s) % num;
 }
 
-int bernoulli(uint64_t * s, int * p, double prob_success) {
+int bernoulli(uint64_t * s,double prob_success) {
     // Returns the value 1 if success, 0 otherwise
-    int rnd = randrange(s, p, INT_MAX);
+    int rnd = randrange(s, INT_MAX);
     int result = 0;
     if(rnd < (int) (prob_success * INT_MAX)){
         result = 1;
@@ -28,9 +35,9 @@ int bernoulli(uint64_t * s, int * p, double prob_success) {
     return result;
 }
 
-int random_choice(uint64_t * s, int * p, double * weights, double sum_of_weights) {
+int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
     // Returns an int in the range [0,l) where l is the length of weights
-    int rnd = randrange(s, p, INT_MAX);
+    int rnd = randrange(s, INT_MAX);
     int index = 0;
     while (rnd >= (int) ((weights[index] / sum_of_weights) * INT_MAX)){
         rnd -= (weights[index] / sum_of_weights) * INT_MAX;
@@ -163,8 +170,8 @@ void transmission
     int ticks_in_day,
     int A, // number of age groups
     const double * beta,
-    const int * age_group,
-    const double * age_mixing_matrix,
+    const int * subpopulation_index,
+    const double * subpopulation_mixing_matrix,
     double facemask_transmission_multiplier,
     double current_region_transmission_multiplier,
     const int * current_strain,
@@ -177,8 +184,7 @@ void transmission
     const double * mutation_matrix,
     const double * current_sigma_immunity_failure,
     int * infection_event,
-    uint64_t * random_state,
-    int * random_p
+    uint64_t * random_state
 )
 {
     double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
@@ -196,7 +202,8 @@ void transmission
     if(sir_rescaling_int == 1){
         for(int n=0; n<N; n++){
             if(current_region[n] == id){
-                num_agents_by_location_by_age_group[(current_location[n] * A) + age_group[n]] += 1;
+                num_agents_by_location_by_age_group[(current_location[n] * A) +
+                                                    subpopulation_index[n]] += 1;
             }
         }
     }
@@ -209,9 +216,9 @@ void transmission
                     (1 + (current_facemask[n] * (facemask_transmission_multiplier - 1))) *
                     current_infectiousness[n] * beta[current_strain[n]];
                 if(sir_rescaling_int == 1){
-                    f *= age_mixing_matrix[(a * A) + age_group[n]] /
+                    f *= subpopulation_mixing_matrix[(a * A) + subpopulation_index[n]] /
                          (num_agents_by_location_by_age_group[(current_location[n] * A) +
-                                                              age_group[n]] * ticks_in_day);
+                                                            subpopulation_index[n]] * ticks_in_day);
                 }
                 sum_by_strain_by_age_group[(current_location[n] * S * A) +
                                            (current_strain[n] * A) + a] += f;
@@ -238,32 +245,34 @@ void transmission
             double prob;
             if(S > 1){
                 prob = facemask_multiplier *
-                       transmission_force_by_age_group[(current_location[n] * A) + age_group[n]];
-                if(bernoulli(random_state, random_p, prob) == 1){
+                       transmission_force_by_age_group[(current_location[n] * A) +
+                                                       subpopulation_index[n]];
+                if(bernoulli(random_state, prob) == 1){
                     sum_of_weights = 0;
                     for(int s=0; s<S; s++){
                         weights[s] = sum_by_strain_by_age_group[(current_location[n] * S * A) +
-                                                                (s * A) + age_group[n]];
+                                                                (s * A) + subpopulation_index[n]];
                         sum_of_weights += weights[s];
                     }
-                    s1 = random_choice(random_state, random_p, weights, sum_of_weights);
+                    s1 = random_choice(random_state, weights, sum_of_weights);
                     prob = current_sigma_immunity_failure[(n * S) + s1];
-                    if(bernoulli(random_state, random_p, prob) == 1){
+                    if(bernoulli(random_state, prob) == 1){
                         sum_of_weights = 0;
                         for(int s=0; s<S; s++){
                             weights[s] = mutation_matrix[(s1 * S) + s];
                             sum_of_weights += weights[s];
                         }
-                        s2 = random_choice(random_state, random_p, weights, sum_of_weights);
+                        s2 = random_choice(random_state, weights, sum_of_weights);
                         infection_event[n] = s2;
                     }
                 }
             } else {
                 s1 = 0;
                 prob = facemask_multiplier *
-                       transmission_force_by_age_group[(current_location[n] * A) + age_group[n]] *
+                       transmission_force_by_age_group[(current_location[n] * A) +
+                                                       subpopulation_index[n]] *
                        current_sigma_immunity_failure[(n * S) + s1];
-                if(bernoulli(random_state, random_p, prob) == 1){
+                if(bernoulli(random_state, prob) == 1){
                     infection_event[n] = s1;
                 }
             }
@@ -319,8 +328,7 @@ void infect
     const double * preset_sigma_immunity_failure_values,
     const int * preset_sigma_immunity_failure_lengths,
     const int * presets,
-    uint64_t * random_state,
-    int * random_p
+    uint64_t * random_state
 )
 {
     for(int n=0; n<N; n++){
@@ -339,8 +347,8 @@ void infect
             int q, r1, r2;
             q = presets[n];
             r2 = 0;
-            while(bernoulli(random_state, random_p,
-                    current_rho_immunity_failure[(n * S * R) + (s1 * R) + r2]) == 1){
+            while(bernoulli(random_state,
+                            current_rho_immunity_failure[(n * S * R) + (s1 * R) + r2]) == 1){
                 r2 += 1;
             }
             r1 = r2;

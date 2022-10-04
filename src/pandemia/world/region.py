@@ -26,7 +26,6 @@ class VectorRegion:
         self.other_name = None
         self.super_region = None
         self.random_state = None
-        self.random_p = None
         self.prng = None
         self.number_of_agents = number_of_agents
         self.age = np.zeros((number_of_agents), dtype=int)

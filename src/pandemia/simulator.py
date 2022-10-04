@@ -69,18 +69,13 @@ class Simulator:
         self.number_of_vaccines = self.vaccination_model.number_of_vaccines
         self.number_of_regions = vector_world.number_of_regions
 
-        # Enable ctypes
-        self.enable_ctypes = self.config['enable_ctypes']
+        lib = cdll.LoadLibrary("./src/pandemia/simulator_functions.dll")
 
-        if self.enable_ctypes:
+        self.collect_telemetry_data = lib.collect_telemetry_data
+        self.count_dead             = lib.count_dead
 
-            lib = cdll.LoadLibrary("./src/pandemia/simulator_functions.dll")
-
-            self.collect_telemetry_data = lib.collect_telemetry_data
-            self.count_dead             = lib.count_dead
-
-            self.collect_telemetry_data.restype = None
-            self.count_dead.restype             = c_int
+        self.collect_telemetry_data.restype = None
+        self.count_dead.restype             = c_int
 
         # Parallel processing
         self.enable_parallel       = self.config['enable_parallel']
@@ -156,11 +151,10 @@ class Simulator:
             seed = self.random_seed
             # Each vector region gets an instance of Random()
             vector_region.prng = Random(seed)
-            # Each vector region also gets a state and counter for the prng used inside C
+            # Each vector region also gets a state for the prng used inside C functions
             np.random.seed(seed)
             vector_region.random_state =\
-                np.random.randint(0, ULONG_MAX + 1, size=16, dtype=np.uint64)
-            vector_region.random_p = c_int(0)
+                np.random.randint(0, ULONG_MAX + 1, size=2, dtype=np.uint64)
 
     def _initial_conditions(self, offset):
         """Initialize the various submodels"""
@@ -217,7 +211,7 @@ class Simulator:
         self._vectorize_components()
 
         # Partition vector_regions into approximately equally sized batches
-        if self.enable_parallel and self.enable_ctypes:
+        if self.enable_parallel:
             self._parallelize_vector_regions()
         else:
             self.num_jobs = 1
@@ -252,7 +246,7 @@ class Simulator:
                                                 self.num_jobs,
                                                 self.vector_region_batches)
 
-            if self.enable_parallel and self.enable_ctypes:
+            if self.enable_parallel:
                 Parallel(n_jobs=self.num_jobs, backend="threading",
                          verbose=0)(delayed(self.simulate_day)(vector_region_batch, day, offset,
                                                                ticks_in_day, ticks_in_week)
@@ -316,18 +310,12 @@ class Simulator:
         for vector_region in self.vector_regions:
             if vector_region.name not in self.config['regions_omitted_from_death_counts']:
                 cumulative_deaths_new = 0
-                if self.enable_ctypes:
-                    cumulative_deaths_new +=\
-                        self.count_dead(
-                            c_int(vector_region.number_of_agents),
-                            c_void_p(vector_region.current_disease.ctypes.data),
-                        )
-                    total_deaths += cumulative_deaths_new
-                else:
-                    for n in range(vector_region.number_of_agents):
-                        if vector_region.current_disease[n] == 1.0:
-                            cumulative_deaths_new += 1
-                    total_deaths += cumulative_deaths_new
+                cumulative_deaths_new +=\
+                    self.count_dead(
+                        c_int(vector_region.number_of_agents),
+                        c_void_p(vector_region.current_disease.ctypes.data),
+                    )
+                total_deaths += cumulative_deaths_new
                 self.daily_deaths[date][vector_region.name] =\
                     int((1 / self.vector_world.scale_factor) *\
                     (cumulative_deaths_new - self.cumulative_deaths_old[vector_region.name]))
@@ -354,19 +342,13 @@ class Simulator:
             infections =\
                 np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.uint64)
             for vector_region in self.vector_regions:
-                if self.enable_ctypes:
-                    self.collect_telemetry_data(
-                        c_int(vector_region.number_of_agents),
-                        c_int(self.number_of_strains),
-                        c_int(vector_region.id),
-                        c_void_p(vector_region.current_strain.ctypes.data),
-                        c_void_p(infections.ctypes.data)
-                    )
-                else:
-                    for n in range(vector_region.number_of_agents):
-                        if vector_region.current_strain[n] != -1:
-                            infections[(vector_region.id * self.number_of_strains)
-                                    + vector_region.current_strain[n]] += 1
+                self.collect_telemetry_data(
+                    c_int(vector_region.number_of_agents),
+                    c_int(self.number_of_strains),
+                    c_int(vector_region.id),
+                    c_void_p(vector_region.current_strain.ctypes.data),
+                    c_void_p(infections.ctypes.data)
+                )
             infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.uint64)
             self.telemetry_bus.publish("strain_counts.update", self.clock, infections)
 

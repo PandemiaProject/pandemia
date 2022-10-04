@@ -11,12 +11,8 @@ pstats_records: 100
 # Random seeds for each region
 random_seed: 1
 
-# Enable or disable the use of ctypes
-enable_ctypes: True
-
-# Enable or disable the use of parallel processing. Parallel processing requires the use of ctypes.
-# Note that the number of jobs is automatically reset according to the number of regions and
-# population ratio between regions:
+# Enable or disable the use of parallel processing. Note that the number of jobs is automatically
+# reset according to the number of regions and population ratio between regions:
 enable_parallel: True
 num_jobs: -2
 
@@ -55,7 +51,7 @@ world_factory:
 # ######################################### Seasonal Effects #######################################
 
 seasonal_effects_model:
-  __type__: simple_seasonal_effects_model.SimpleSeasonalEffectsModel
+  __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
   seasonal_multiplier_by_region_by_month: null
   out_of_season_multiplier: 1.0
@@ -70,7 +66,7 @@ seasonal_effects_model:
 # adjusted if the tick length is changed.
 
 health_model:
-  __type__: simple_health_model.SimpleHealthModel
+  __type__: default_health_model.DefaultHealthModel
   beta: [1.0, 1.0, 1.0, 1.0]
   location_typ_multipliers: # Unless specfified set to 1.0
     Cemetery: 0.0
@@ -189,7 +185,7 @@ health_model:
 # ######################################### Movement ###############################################
 
 movement_model:
-  __type__: simple_movement_model.SimpleMovementModel
+  __type__: default_movement_model.DefaultMovementModel
   weighted_sampling: True
   home_activity: "Home_Activity"
   location_closure_exemptions:
@@ -201,7 +197,7 @@ movement_model:
 # ######################################### Hospitalization and Death ##############################
 
 hospitalization_and_death_model:
-  __type__: simple_hospitalization_and_death_model.SimpleHospitalizationAndDeathModel
+  __type__: default_hospitalization_and_death_model.DefaultHospitalizationAndDeathModel
   hospital_threshold: 0.5
   hospital_location_type: Hospital
   cemetery_location_type: Cemetery
@@ -209,7 +205,7 @@ hospitalization_and_death_model:
 # ######################################### Testing and Contact Tracing ############################
 
 testing_and_contact_tracing_model:
-  __type__: simple_testing_and_contact_tracing_model.SimpleTestingAndContactTracingModel
+  __type__: default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel
   quarantine_period_days: 14
   symptomatic_disease_treshold: 0.2
   prob_self_isolate_with_symptoms_without_test: 0.0
@@ -221,7 +217,7 @@ testing_and_contact_tracing_model:
 # ######################################### Vaccination ############################################
 
 vaccination_model:
-  __type__: simple_vaccination_model.SimpleVaccinationModel
+  __type__: default_vaccination_model.DefaultVaccinationModel
   number_of_vaccines: 2
   age_groups:        [  0,  18,  65]
   vaccine_hesitancy: [0.8, 0.4, 0.1]
@@ -245,13 +241,14 @@ vaccination_model:
 # ######################################### Regional Mixing ########################################
 
 regional_mixing_model:
-  __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
+  __type__: default_regional_mixing_model.DefaultRegionalMixingModel
   travel_transmission_multiplier: 1.0
+  interpolation: 0.0
 
 # ######################################### Input ##################################################
 
 input_model:
-  __type__: simple_input_model.SimpleInputModel
+  __type__: default_input_model.DefaultInputModel
 
 # ######################################### Output #################################################
 

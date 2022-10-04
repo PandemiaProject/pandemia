@@ -1,4 +1,4 @@
-"""Void input model"""
+"""Void input model, specifiying a model with no policy interventions"""
 
 import logging
 
@@ -8,10 +8,10 @@ log = logging.getLogger("void_input_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class VoidInputModel(InputModel):
-    """Simple model of input"""
+    """Default model of input, specifiying a model with no policy interventions"""
 
     def __init__(self, config, scale_factor, clock, number_of_regions,
-                 number_of_vaccines, age_groups, enable_ctypes):
+                 number_of_vaccines, age_groups):
         """Initialize component"""
         super().__init__(config, scale_factor)
 

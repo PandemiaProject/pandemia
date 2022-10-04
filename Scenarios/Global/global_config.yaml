@@ -11,9 +11,6 @@ pstats_records: 100
 # Random seeds for each region
 random_seed: 1
 
-# Enable or disable the use of ctypes
-enable_ctypes: True
-
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
 enable_parallel: True
@@ -44,7 +41,7 @@ world_factory:
 # ######################################### Seasonal Effects #######################################
 
 seasonal_effects_model:
-  __type__: simple_seasonal_effects_model.SimpleSeasonalEffectsModel
+  __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
   seasonal_multiplier_by_region_by_month: Scenarios/Global/data/country_data_seasonality.csv
   out_of_season_multiplier: 0.75                                                                    # POSSIBLE FREE VARIABLE
@@ -52,7 +49,7 @@ seasonal_effects_model:
 # ######################################### Health #################################################
 
 health_model:
-  __type__: simple_health_model.SimpleHealthModel
+  __type__: default_health_model.DefaultHealthModel
   beta: [0.42]                                                                                      # POSSIBLE FREE VARIABLE
   location_typ_multipliers: null
   facemask_transmission_multiplier: 1.0
@@ -183,7 +180,7 @@ vaccination_model:
 # ######################################### Regional Mixing ########################################
 
 regional_mixing_model:
-  __type__: simple_regional_mixing_model.SimpleRegionalMixingModel
+  __type__: default_regional_mixing_model.DefaultRegionalMixingModel
   travel_transmission_multiplier: 10.0                                                              # POSSIBLE FREE VARIABLE
   interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
 

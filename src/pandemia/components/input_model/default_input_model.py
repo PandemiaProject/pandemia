@@ -1,22 +1,23 @@
-"""Simple input model"""
+"""Default test input model, specifiying a predefined set of policy interventions"""
 
 import logging
 import numpy as np
 
 from pandemia.components.input_model import InputModel
 
-log = logging.getLogger("simple_input_model")
+log = logging.getLogger("default_input_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class SimpleInputModel(InputModel):
-    """Simple model of input"""
+class DefaultInputModel(InputModel):
+    """Default model of input, specifiying a predefined set of policy interventions. The numbers
+    appearing in the arrays below are for test purposes. To represents a new policy intervention,
+    for example a historical set of interventions, the numbers in these arrays should be changed
+    accordingly."""
 
     def __init__(self, config, scale_factor, clock, number_of_regions,
-                 number_of_vaccines, age_groups, enable_ctypes):
+                 number_of_vaccines, age_groups):
         """Initialize component"""
         super().__init__(config, scale_factor)
-
-        self.enable_ctypes = enable_ctypes
 
         self.scale_factor = scale_factor
 

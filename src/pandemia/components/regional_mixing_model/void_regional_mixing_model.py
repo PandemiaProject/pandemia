@@ -2,7 +2,6 @@
 
 import logging
 import numpy as np
-import copy
 
 from pandemia.components.regional_mixing_model import RegionalMixingModel
 
@@ -14,7 +13,7 @@ class VoidRegionalMixingModel(RegionalMixingModel):
     """Void model of regional mixing"""
 
     def __init__(self, config, scale_factor, number_of_strains,
-                 number_of_regions, enable_ctypes):
+                 number_of_regions):
         """Initial regional mixing"""
         super().__init__(config, scale_factor)
 

@@ -1,9 +1,8 @@
 """Module supporting configuration of the simulation.
 
-Configuration is set in a single YAML file, and used by many components throughout
-the simulation process."""
+A configuration is set in a single YAML file, and used by the simulator and simulator components."""
 
-# Allows classes to return their own type, e.g. from_file below
+# Allows classes to return their own type
 from __future__ import annotations
 
 import os
@@ -13,7 +12,7 @@ from typing import Optional, Any
 import yaml
 
 class Config:
-    """Represents the simulation configuration.
+    """Represents a simulation configuration.
 
     This class behaves like a dict, but is read-only"""
 
@@ -21,7 +20,6 @@ class Config:
 
     def __init__(self, filename: Optional[str]=None, _dict: Optional[dict]=None,
                  dirname: Optional[str]=None):
-        # print(f"Loading config from {filename}...")
 
         if _dict and filename:
             raise ValueError("Filename and dict value specified.  Please provide only one")
@@ -35,7 +33,6 @@ class Config:
         # Fall through to handle the dict/dirname case
         self.conf = _dict or {}
         self.dirname = dirname or osp.dirname(osp.realpath(__file__))
-
 
     def __len__(self):
         return len(self.conf)

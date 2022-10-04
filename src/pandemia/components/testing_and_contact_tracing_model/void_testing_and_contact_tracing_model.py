@@ -11,7 +11,7 @@ log = logging.getLogger("void_testing_and_contact tracing_model")
 class VoidTestingAndContactTracingModel(TestingAndContactTracingModel):
     """Void model of testing and contact tracing"""
 
-    def __init__(self, config, enable_ctypes):
+    def __init__(self, config):
         """Initial testing and contact tracing"""
         super().__init__(config)
 

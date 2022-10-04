@@ -11,7 +11,7 @@ log = logging.getLogger("void_hospitalization_and_death_model")
 class VoidHospitalizationAndDeathModel(HospitalizationAndDeathModel):
     """Void model of agent hospitalization and death"""
 
-    def __init__(self, config, enable_ctypes):
+    def __init__(self, config):
         """Initial agent hospitalization and death"""
         super().__init__(config)
 

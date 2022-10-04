@@ -1,4 +1,5 @@
-"""Simple input model"""
+"""Default input model, specifiying a predefined set of policy updates, on regional transmission and
+to travel between regions"""
 
 from collections import defaultdict
 import logging
@@ -12,14 +13,13 @@ log = logging.getLogger("validation_input_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class ValidationInputModel(InputModel):
-    """Simple model of input"""
+    """Default model of input, specifiying a predefined set of policy interventions loaded from
+    data files, affecting transmission in regions and travel between regions"""
 
     def __init__(self, config, scale_factor, clock, number_of_regions,
-                 number_of_vaccines, age_groups, enable_ctypes):
+                 number_of_vaccines, age_groups):
         """Initialize component"""
         super().__init__(config, scale_factor)
-
-        self.enable_ctypes = enable_ctypes
 
         self.scale_factor = scale_factor
 

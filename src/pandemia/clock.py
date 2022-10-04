@@ -18,17 +18,15 @@ class Clock:
         """Create a new clock.
 
         The clock is an iterator that counts forward in time by one day, ignoring timezone changes
-        and other complexities. It records two units of time, a 'day' and a 'tick'. The simulation
-        deals with a weekly repeating cycle, and as such the length of a day must be divisible by
-        the length of a tick.
+        and other complexities. Each day is subdivided into ticks.
 
         Parameters:
             tick_length_s (int):Number of wall-clock seconds per simulation tick
-            simulation_length_days (int):How many days will this simulation run for?
-            epoch (str or datetime):A datetime representing the starting point for the sim.
+            epoch (str or datetime):A datetime representing the starting point for the simulation
+            simulation_length_days (int):Number of days the simulation will run for
         """
 
-        # Check that day length is divisible by tick length, in seconds.
+        # Check that day length (in seconds) is divisible by tick length
         if 86400 % tick_length_s != 0:
             raise ValueError("Day length must be divisible by tick length")
 
@@ -58,11 +56,11 @@ class Clock:
         self.started = False
         self.reset()
 
-        log.debug("New clock created at %s, tick_length=%i, simulation_days=%i, week_offset=%i",
-                  self.epoch, tick_length_s, simulation_length_days, self.epoch_week_offset)
+        log.debug("New clock created starting %s, tick_length=%i, simulation_days=%i",
+                  self.epoch, tick_length_s, simulation_length_days)
 
     def reset(self) -> None:
-        """Reset the clock to the start once more"""
+        """Reset the clock to the start"""
         log.debug("Resetting clock at day=%i", self.day)
         self.day = 0
         self.started = False

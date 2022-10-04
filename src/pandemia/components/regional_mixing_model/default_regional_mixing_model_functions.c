@@ -3,24 +3,31 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// gcc -fPIC -shared -o simple_regional_mixing_model_functions.dll simple_regional_mixing_model_functions.c
+// gcc -fPIC -shared -o default_regional_mixing_model_functions.dll default_regional_mixing_model_functions.c
 
-uint64_t next(uint64_t * s, int * p) {
-    const uint64_t s0 = s[*p];
-    uint64_t s1 = s[*p = (*p + 1) & 15];
-    s1 ^= s1 << 31; // a
-    s[*p] = s1 ^ s0 ^ (s1 >> 11) ^ (s0 >> 30); // b,c
-    return s[*p] * 0x9e3779b97f4a7c13;
+static inline uint64_t rotl(const uint64_t x, int k) {
+	return (x << k) | (x >> (64 - k));
 }
 
-int randrange(uint64_t * s, int * p, int num) {
+// https://prng.di.unimi.it/xoroshiro128plus.c
+uint64_t next(uint64_t * s) {
+	const uint64_t s0 = s[0];
+	uint64_t s1 = s[1];
+	const uint64_t result = s0 + s1;
+	s1 ^= s0;
+	s[0] = rotl(s0, 24) ^ s1 ^ (s1 << 16); // a, b
+	s[1] = rotl(s1, 37); // c
+	return result;
+}
+
+int randrange(uint64_t * s, int num) {
     // Returns an int in the range [0, num)
-    return next(s, p) % num;
+    return next(s) % num;
 }
 
-int bernoulli(uint64_t * s, int * p, double prob_success) {
+int bernoulli(uint64_t * s, double prob_success) {
     // Returns the value 1 if success, 0 otherwise
-    int rnd = randrange(s, p, INT_MAX);
+    int rnd = randrange(s, INT_MAX);
     int result = 0;
     if(rnd < (int) (prob_success * INT_MAX)){
         result = 1;
@@ -28,9 +35,9 @@ int bernoulli(uint64_t * s, int * p, double prob_success) {
     return result;
 }
 
-int random_choice(uint64_t * s, int * p, double * weights, double sum_of_weights) {
+int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
     // Returns an int in the range [0,l) where l is the length of weights
-    int rnd = randrange(s, p, INT_MAX);
+    int rnd = randrange(s, INT_MAX);
     int index = 0;
     while (rnd >= (int) ((weights[index] / sum_of_weights) * INT_MAX)){
         rnd -= (weights[index] / sum_of_weights) * INT_MAX;
@@ -39,13 +46,13 @@ int random_choice(uint64_t * s, int * p, double * weights, double sum_of_weights
     return index;
 }
 
-void random_sample(uint64_t * s, int * p, int * sample, int n, int * population, int N) {
+void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
     int t = 0; // total input records dealt with
     int m = 0; // number of items selected so far
     int u;
     while (m < n)
     {
-        u = randrange(s, p, N - t);
+        u = randrange(s, N - t);
         if ( u >= n - m )
         {
             t++;
@@ -91,8 +98,7 @@ void determine_travellers
     const int * current_strain,
     int * current_region,
     const int * agents_travelling_matrix,
-    uint64_t * random_state,
-    int * random_p
+    uint64_t * random_state
 )
 {
     int r1 = id;
@@ -119,7 +125,7 @@ void determine_travellers
         int num_agents_to_travel;
         num_agents_to_travel = fmin(total_num_to_travel, num_eligible_to_travel);
         int * agents_to_travel = (int *)malloc(sizeof(int) * num_agents_to_travel);
-        random_sample(random_state, random_p, agents_to_travel, num_agents_to_travel,
+        random_sample(random_state, agents_to_travel, num_agents_to_travel,
                       agents_eligible_to_travel, num_eligible_to_travel);
 
         // Among those who actually travel determine to which region they travel
@@ -157,8 +163,7 @@ void transmission_out
     const int * current_facemask,
     double * sum_f_by_strain,
     double * transmission_force,
-    uint64_t * random_state,
-    int * random_p
+    uint64_t * random_state
 )
 {
     double facemask_multiplier, f;
@@ -191,8 +196,7 @@ void transmission_in
     int * infection_event,
     double * transmission_force,
     double * mutation_matrix,
-    uint64_t * random_state,
-    int * random_p
+    uint64_t * random_state
 )
 {
     double * weights = (double *)malloc(sizeof(double) * S);
@@ -207,22 +211,22 @@ void transmission_in
             double prob;
             if(S > 1){
                 prob = facemask_multiplier * transmission_force[r2];
-                if(bernoulli(random_state, random_p, prob) == 1){
+                if(bernoulli(random_state, prob) == 1){
                     sum_of_weights = 0;
                     for(int s=0; s<S; s++){
                         weights[s] = sum_f_by_strain[(r2 * S) + s];
                         sum_of_weights += weights[s];
                     }
-                    s1 = random_choice(random_state, random_p, weights, sum_of_weights);
+                    s1 = random_choice(random_state, weights, sum_of_weights);
                     double prob;
                     prob = current_sigma_immunity_failure[(n * S) + s1];
-                    if(bernoulli(random_state, random_p, prob) == 1){
+                    if(bernoulli(random_state, prob) == 1){
                         sum_of_weights = 0;
                         for(int s=0; s<S; s++){
                             weights[s] = mutation_matrix[(s1 * S) + s];
                             sum_of_weights += weights[s];
                         }
-                        s2 = random_choice(random_state, random_p, weights, sum_of_weights);
+                        s2 = random_choice(random_state, weights, sum_of_weights);
                         infection_event[n] = s2;
                     }
                 }
@@ -231,7 +235,7 @@ void transmission_in
                 prob = facemask_multiplier *
                        transmission_force[r2] *
                        current_sigma_immunity_failure[(n * S) + s1];
-                if(bernoulli(random_state, random_p, prob) == 1){
+                if(bernoulli(random_state, prob) == 1){
                     infection_event[n] = s1;
                 }
             }

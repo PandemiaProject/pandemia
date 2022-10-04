@@ -3,28 +3,35 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// gcc -fPIC -shared -o simple_vaccination_model_functions.dll simple_vaccination_model_functions.c
+// gcc -fPIC -shared -o default_vaccination_model_functions.dll default_vaccination_model_functions.c
 
-uint64_t next(uint64_t * s, int * p) {
-    const uint64_t s0 = s[*p];
-    uint64_t s1 = s[*p = (*p + 1) & 15];
-    s1 ^= s1 << 31; // a
-    s[*p] = s1 ^ s0 ^ (s1 >> 11) ^ (s0 >> 30); // b,c
-    return s[*p] * 0x9e3779b97f4a7c13;
+static inline uint64_t rotl(const uint64_t x, int k) {
+	return (x << k) | (x >> (64 - k));
 }
 
-int randrange(uint64_t * s, int * p, int num) {
+// https://prng.di.unimi.it/xoroshiro128plus.c
+uint64_t next(uint64_t * s) {
+	const uint64_t s0 = s[0];
+	uint64_t s1 = s[1];
+	const uint64_t result = s0 + s1;
+	s1 ^= s0;
+	s[0] = rotl(s0, 24) ^ s1 ^ (s1 << 16); // a, b
+	s[1] = rotl(s1, 37); // c
+	return result;
+}
+
+int randrange(uint64_t * s, int num) {
     // Returns an int in the range [0, num)
-    return next(s, p) % num;
+    return next(s) % num;
 }
 
-void random_sample(uint64_t * s, int * p, int * sample, int n, int * population, int N) {
+void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
     int t = 0; // total input records dealt with
     int m = 0; // number of items selected so far
     int u;
     while (m < n)
     {
-        u = randrange(s, p, N - t);
+        u = randrange(s, N - t);
         if ( u >= n - m )
         {
             t++;
@@ -100,8 +107,7 @@ void dynamics_vaccination
     int * requesting_immunity_update,
     int * most_recent_first_dose,
     int * vaccine_hesitant,
-    uint64_t * random_state,
-    int * random_p
+    uint64_t * random_state
 )
 {
 
@@ -134,8 +140,8 @@ void dynamics_vaccination
         }
         num_agents_to_vaccinate = fmin(num_eligible, num_agents_to_vaccinate);
         int * agents_to_vaccinate = (int *)malloc(sizeof(int) * num_agents_to_vaccinate);
-        random_sample(random_state, random_p, agents_to_vaccinate,
-                      num_agents_to_vaccinate, eligible_agents, num_eligible);
+        random_sample(random_state, agents_to_vaccinate, num_agents_to_vaccinate, eligible_agents,
+                      num_eligible);
         int v = 0;
         int num_vaccinated = 0;
         for(int j=0; j<num_agents_to_vaccinate; j++){

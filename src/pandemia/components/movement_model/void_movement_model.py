@@ -12,7 +12,7 @@ log = logging.getLogger("void_movement_model")
 class VoidMovementModel(MovementModel):
     """Void movement model"""
 
-    def __init__(self, config, enable_ctypes):
+    def __init__(self, config):
         """Initial agent locations"""
         super().__init__(config)
 

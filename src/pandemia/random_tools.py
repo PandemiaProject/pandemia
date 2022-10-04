@@ -3,7 +3,7 @@
 import random
 import logging
 import math
-from typing import Sequence, TypeVar, MutableSequence, Any, Optional
+from typing import Sequence, TypeVar, MutableSequence, Any
 import numpy
 
 log = logging.getLogger("random_tools")
@@ -51,12 +51,10 @@ class Random:
 
         return self.prng.randrange(start, stop)
 
-
     def random_choice(self, sequence: Sequence[T]) -> T:
         """Random choice function"""
 
         return sequence[math.floor(self.prng.random()*len(sequence))]
-
 
     def random_choices(self, population: Sequence[T], weights: Sequence[int],
                     sample_size: int) -> list[T]:
@@ -64,12 +62,10 @@ class Random:
 
         return self.prng.choices(population, weights=weights, cum_weights=None, k=sample_size)
 
-
     def random_sample(self, population: Sequence[T], k: int) -> list[T]:
         """Select k items from the population given."""
 
         return self.prng.sample(population, k)
-
 
     def random_shuffle(self, x: MutableSequence[Any]) -> None:
         """Random shuffle function"""
@@ -90,13 +86,7 @@ class Random:
 
         Returns: The index number of the item chosen"""
 
-        # Convert to a list if we've been handed a pandas dataframe
-        # or someting else with an index
-        # if not isinstance(problist, list):
-        #     problist = list(problist)
-
         return self.prng.choices(range(len(problist)), problist)[0]
-
 
     def multinoulli_dict(self, problist_dict: dict[T, Probability]) -> T:
         """Sample from a key:value dict and return a key
@@ -116,25 +106,6 @@ class Random:
             weights = [1.0] * len(weights)
 
         return self.prng.choices(list(problist_dict.keys()), weights)[0]
-
-
-    def multinoulli_2d(self, problist_arr: Sequence[Sequence[float]],
-                      marginals: Optional[Sequence[float]]=None) -> tuple[Probability, Probability]:
-        """Sample from a 2D array of weights, returning
-        an (x, y) tuple within the array.
-
-        marginals --- optional list of weights for marginals.
-        """
-
-        if marginals is None:
-            y_marginals: Sequence[float] = [sum(x) for x in problist_arr]
-        else:
-            y_marginals = marginals
-
-        y = self.multinoulli(y_marginals)
-        x = self.multinoulli(problist_arr[y])
-
-        return x, y
 
     def boolean(self, probability_true: Probability) -> bool:
         """Return true with the probability given."""

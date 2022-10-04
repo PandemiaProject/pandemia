@@ -13,7 +13,7 @@ log = logging.getLogger("void_health_model")
 class VoidHealthModel(HealthModel):
     """Void model of agent health"""
 
-    def __init__(self, config, scale_factor, clock, enable_ctypes):
+    def __init__(self, config, scale_factor, clock):
         """Initial agent health"""
         super().__init__(config, scale_factor)
 

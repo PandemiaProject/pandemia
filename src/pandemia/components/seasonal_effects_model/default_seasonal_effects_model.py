@@ -1,6 +1,5 @@
-"""Simple seasonal effects model"""
+"""Default seasonal effects model"""
 
-from collections import defaultdict
 import logging
 import numpy as np
 import csv
@@ -8,14 +7,14 @@ from datetime import timedelta
 
 from pandemia.components.seasonal_effects_model import SeasonalEffectsModel
 
-log = logging.getLogger("simple_seasonal_effects_model")
+log = logging.getLogger("default_seasonal_effects_model")
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class SimpleSeasonalEffectsModel(SeasonalEffectsModel):
-    """Simple model of seasonal effects"""
+class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
+    """Default model of seasonal effects"""
 
-    def __init__(self, config, vector_world, clock, enable_ctypes):
+    def __init__(self, config, vector_world, clock):
         """Initialize component"""
         super().__init__(config)
 

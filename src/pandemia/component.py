@@ -10,7 +10,7 @@ log = logging.getLogger("component")
 
 #pylint: disable=attribute-defined-outside-init
 class Component:
-    """A simulation component. Submodels, for example of mobility and health, are represented as
+    """A simulation component. Submodels, for example of movement and health, are represented as
     objects of this class."""
 
     def __init__(self, component_config: Config):
