@@ -17,7 +17,16 @@ log = logging.getLogger("default_health_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultHealthModel(HealthModel):
-    """Default model of agent health"""
+    """Default model of agent health. This model abandons the compartmental description of health
+    often applied in epidemic models. Instead, an agent's health is determined by five parameters:
+    
+        - sigma immunity
+        - rho immunity
+        - infectiousness
+        - disease
+        - strain
+    
+    """
 
     def __init__(self, config, scale_factor, clock):
         """Initialize component"""
