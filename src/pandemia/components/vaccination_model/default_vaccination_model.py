@@ -13,7 +13,9 @@ log = logging.getLogger("default_vaccination_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultVaccinationModel(VaccinationModel):
-    """Default model of vaccination"""
+    """Default model of vaccination. This supports multiple vaccines, acting on multiple strains of
+    the pathogen. Vaccines update individual immunity according to the same mechanism used to update
+    immunity in the default health model."""
 
     def __init__(self, config, clock, number_of_strains, immunity_length, immunity_period_ticks):
         """Initialize component"""

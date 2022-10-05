@@ -12,7 +12,11 @@ log = logging.getLogger("default_hospitalization_and_death_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
-    """Default model of agent hospitalization and death"""
+    """Default model of agent hospitalization and death. Moves agents to hospitals and cemeteries
+    when necessary. In this simple default implementation, hospitalization only has an impact on
+    agent location, not on health. Otherwise, a parameter representing the 'efficacy' of
+    hospitalization would be needed. Hospitals and cemeteries are chosen at random from all such
+    locations in the region."""
 
     def __init__(self, config):
         """Initialize component"""

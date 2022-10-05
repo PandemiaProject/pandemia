@@ -13,7 +13,12 @@ log = logging.getLogger("default_testing_and_contact_tracing_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
-    """Default model of testing and contact tracing"""
+    """Default model of testing and contact tracing. Agents can be tested in this model for one of
+    three reasons. First, they might be tested as a result of random testing of the population.
+    Second, they might be tested after they develop symptoms. Third, they might be tested via the
+    contract tracing system. Limited numbers of tests are available for each purpose. Testing and
+    contact tracing indicate who is or who might be infected. Those who test positive are directed
+    by this component to quarantine. For the duration of quarantine, these agents remain at home."""
 
     def __init__(self, config):
         """Initialize component"""

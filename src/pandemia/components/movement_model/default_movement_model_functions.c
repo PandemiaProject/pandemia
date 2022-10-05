@@ -39,22 +39,22 @@ int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
 void update_movement
 (
     int N, // number_of_agents
-    int * l_requesting,
-    const int * l_requested,
-    int * l_current,
-    int * f_requesting,
-    const int * f_requested,
-    int * f_current
+    int * requesting_location_update,
+    const int * requested_location_update,
+    int * current_location,
+    int * requesting_facemask_update,
+    const int * requested_facemask_update,
+    int * current_facemask
 )
 {
     for(int n=0; n<N; n++){
-        if(l_requesting[n] == 1){
-            l_current[n] = l_requested[n];
-            l_requesting[n] = 0;
+        if(requesting_location_update[n] == 1){
+            current_location[n] = requested_location_update[n];
+            requesting_location_update[n] = 0;
         }
-        if(f_requesting[n] == 1){
-            f_current[n] = f_requested[n];
-            f_requesting[n] = 0;
+        if(requesting_facemask_update[n] == 1){
+            current_facemask[n] = requested_facemask_update[n];
+            requesting_facemask_update[n] = 0;
         }
     }
     return;
@@ -92,7 +92,7 @@ void dynamics_movement
     int t_now = (t + offset) % ticks_in_week;
     int t_next = (t + 1 + offset) % ticks_in_week;
 
-    // Determine new locations
+    // Determine new locations, for those agents starting a new activity
     for(int n=0; n<N; n++){
         if(current_region[n] == id){
             int new_activity = weekly_routines[(n * ticks_in_week) + t_next];

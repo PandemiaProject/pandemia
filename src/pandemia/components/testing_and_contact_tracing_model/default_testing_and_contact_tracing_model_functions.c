@@ -127,7 +127,7 @@ void default_testing_and_contact_tracing_dynamics
     int * newly_testing_positive = (int *)malloc(sizeof(int) * N);
     for(int n=0; n<N; n++){newly_testing_positive[n] = 0;}
 
-    // Random testing
+    // Random testing (test eligible agents at random)
     if(num_to_test_random > 0){
         int num_eligible_rand = 0;
         for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_rand += 1;}}
@@ -155,7 +155,7 @@ void default_testing_and_contact_tracing_dynamics
         free(eligible_agents_rand);
     }
 
-    // Symptomatic testing
+    // Symptomatic testing (test eligible agents who have just become symptomatic)
     int num_eligible_symp = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_symp += 1;}}
     int * eligible_agents_symp = (int *)malloc(sizeof(int) * num_eligible_symp);
     int j = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_symp[j] = n; j += 1;}}
@@ -185,7 +185,7 @@ void default_testing_and_contact_tracing_dynamics
     }
     free(eligible_agents_symp);
 
-    // Contact tracing
+    // Contact tracing (contact trace and test eligible agents)
     int num_newly_testing_positive = 0;
     for(int n=0; n<N; n++){if(newly_testing_positive[n] == 1){num_newly_testing_positive += 1;}}
     if(num_newly_testing_positive > 0 && num_to_test_contact > 0){

@@ -12,7 +12,13 @@ log = logging.getLogger("default_movement_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultMovementModel(MovementModel):
-    """Uses random sampling to select locations in response to activity changes."""
+    """Uses random sampling to select locations in response to activity changes. When an agent
+    n selects a new activity a, a new location is chosen for them at random from the array
+    activity_locations[n][a]. If weighted sampling is used, then the random choice is made using
+    the weights contained in the array activity_location_weights[n][a]. Location closures are also
+    implemented here, which can be used to represent, for example, lockdowns. The wearing of
+    facemasks is also determined here, since the wearing of facemasks is assumed to depend on the
+    location type and activity of agents."""
 
     def __init__(self, config):
         """Initial agent locations"""
@@ -68,6 +74,7 @@ class DefaultMovementModel(MovementModel):
                 vector_region.activity_locations[n][home_activity_id][0]
 
     def initial_conditions(self, vector_region, offset):
+        """Initialize location of each agent"""
 
         # Assign initial locations
         for n in range(vector_region.number_of_agents):
@@ -90,7 +97,7 @@ class DefaultMovementModel(MovementModel):
                     if vector_region.activity_strings[a] in self.facemask_activities:
                         vector_region.wears_facemask[n][a] = 1
 
-        # Determine location closure
+        # Determine which locations may be subject to closure
         for n in range(vector_region.number_of_agents):
             for a in range(vector_region.number_of_activities):
                 locs = vector_region.activity_locations[n][a]
@@ -112,7 +119,7 @@ class DefaultMovementModel(MovementModel):
         vector_region.location_closure = vector_region.location_closure.flatten()
 
     def update(self, vector_region, t):
-        """Updates movement functions"""
+        """Updates related to movement"""
 
         self.update_movement(
             c_int(vector_region.number_of_agents),
@@ -125,7 +132,7 @@ class DefaultMovementModel(MovementModel):
         )
 
     def dynamics(self, vector_region, t, offset, ticks_in_week):
-        """Changes agent locations"""
+        """Changes related to movement"""
 
         self.dynamics_movement(
             c_int(vector_region.number_of_agents),

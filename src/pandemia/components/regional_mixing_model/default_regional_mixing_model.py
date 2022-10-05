@@ -14,7 +14,14 @@ log = logging.getLogger("default_regional_mixing_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultRegionalMixingModel(RegionalMixingModel):
-    """Default model of regional mixing"""
+    """Default model of mixing between regions. Each day, a number of agents are selected from each
+    region to travel to each other region. The numbers travelling between regions are given by the
+    matrix agents_travelling_matrix. The destination of the travellers is recorded using the array
+    current_region. Agents outside their home region are typically ignored by other components
+    while they are travelling. Only uninfected agents can travel, but such agents can become
+    infected whlie travelling. The probability that they become infected is given in terms of the
+    average infectiousness of their destination region. The border closure intervention is also
+    implemented here."""
 
     def __init__(self, config, scale_factor, number_of_strains,
                  vector_world):

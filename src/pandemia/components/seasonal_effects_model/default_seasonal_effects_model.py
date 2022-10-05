@@ -12,7 +12,9 @@ log = logging.getLogger("default_seasonal_effects_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
-    """Default model of seasonal effects"""
+    """Default model of seasonal effects. Each region is assigned a region_transmission_multiplier.
+    Seasonal effects can implemented by varying this multiplier, which in this default model occurs
+    for each region each month."""
 
     def __init__(self, config, vector_world, clock):
         """Initialize component"""
