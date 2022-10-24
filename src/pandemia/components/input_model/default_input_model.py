@@ -34,18 +34,18 @@ class DefaultInputModel(InputModel):
         self.contact_testing_input = None
         self.vaccination_input = None
 
-    def new_input(self, input_arrays):
+    def new_input(self, policy):
         """Set new input"""
 
-        if input_arrays is not None:
-            self._validate_input(input_arrays)
-            self.lockdown_input            = input_arrays.lockdown_input
-            self.border_closure_input      = input_arrays.border_closure_input
-            self.facemask_input            = input_arrays.facemask_input
-            self.random_testing_input      = input_arrays.random_testing_input
-            self.symptomatic_testing_input = input_arrays.symptomatic_testing_input
-            self.contact_testing_input     = input_arrays.contact_testing_input
-            self.vaccination_input         = input_arrays.vaccination_input
+        if policy is not None:
+            self._validate_input(policy)
+            self.lockdown_input            = policy.lockdown_input
+            self.border_closure_input      = policy.border_closure_input
+            self.facemask_input            = policy.facemask_input
+            self.random_testing_input      = policy.random_testing_input
+            self.symptomatic_testing_input = policy.symptomatic_testing_input
+            self.contact_testing_input     = policy.contact_testing_input
+            self.vaccination_input         = policy.vaccination_input
         else:
             self.lockdown_input =\
                 np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=int)
@@ -115,21 +115,21 @@ class DefaultInputModel(InputModel):
         vector_region.num_to_vaccinate =\
             self.vaccination_input[day][vector_region.id]
 
-    def _validate_input(self, input_arrays):
+    def _validate_input(self, policy):
         """Validates shape of input array"""
 
-        assert input_arrays.lockdown_input.shape ==\
+        assert policy.lockdown_input.shape ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert input_arrays.border_closure_input ==\
+        assert policy.border_closure_input ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert input_arrays.facemask_input ==\
+        assert policy.facemask_input ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert input_arrays.random_testing_input ==\
+        assert policy.random_testing_input ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert input_arrays.symptomatic_testing_input ==\
+        assert policy.symptomatic_testing_input ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert input_arrays.contact_testing_input ==\
+        assert policy.contact_testing_input ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert input_arrays.vaccination_input ==\
+        assert policy.vaccination_input ==\
             (self.simulation_length_days, self.number_of_regions,
              self.number_of_vaccination_age_groups, self.number_of_vaccines)

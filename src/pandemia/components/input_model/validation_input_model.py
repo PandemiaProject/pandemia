@@ -36,7 +36,7 @@ class ValidationInputModel(InputModel):
         self.stay_at_home = defaultdict(dict)
         self.travel_dict = defaultdict(dict)
 
-    def new_input(self, input_arrays):
+    def new_input(self, policy):
         """Set new input"""
 
         self.day_to_date = {}

@@ -66,8 +66,8 @@ def main():
 
     # ############## Input ##############
 
-    input_arrays = None
-    sim.input_model.new_input(input_arrays)
+    policy = None
+    sim.input_model.new_input(policy)
 
     # ############## Manual Parameter Adjustment ##############
 
@@ -119,4 +119,4 @@ def main():
 
     # ############## Output ##############
 
-    sim.calculate_cost(input_arrays)
+    sim.calculate_cost(policy)

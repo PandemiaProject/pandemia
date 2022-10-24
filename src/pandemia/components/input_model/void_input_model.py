@@ -15,7 +15,7 @@ class VoidInputModel(InputModel):
         """Initialize component"""
         super().__init__(config, scale_factor)
 
-    def new_input(self, input_arrays):
+    def new_input(self, policy):
         """Set new input"""
 
         pass

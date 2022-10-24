@@ -357,7 +357,7 @@ class Simulator:
             self.telemetry_bus.publish("deaths.update", self.clock, self.daily_deaths[date],
                                         self.cumulative_deaths[date])
 
-    def calculate_cost(self, input_arrays):
+    def calculate_cost(self, policy):
         """Calculates the final cost of the pandemic, to be used for policy optimization"""
 
         log.info("Total deaths: %d", self.total_deaths)

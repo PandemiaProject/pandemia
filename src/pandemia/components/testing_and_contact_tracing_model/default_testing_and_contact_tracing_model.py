@@ -38,8 +38,8 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         self.test_false_negative          = config['test_false_negative']
         self.max_regular_contacts_to_test = config['max_regular_contacts_to_test']
 
-        self.prob_self_isolate_with_symptoms_without_test =\
-            config['prob_self_isolate_with_symptoms_without_test']
+        self.prob_quarantine_with_symptoms_without_test =\
+            config['prob_quarantine_with_symptoms_without_test']
         self.prob_quarantine_with_contact_without_test =\
             config['prob_quarantine_with_contact_without_test']
 
@@ -106,7 +106,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
             c_double(self.symptomatic_disease_treshold),
             c_double(self.test_threshold),
             c_double(self.test_false_negative),
-            c_double(self.prob_self_isolate_with_symptoms_without_test),
+            c_double(self.prob_quarantine_with_symptoms_without_test),
             c_double(self.prob_quarantine_with_contact_without_test),
             c_void_p(vector_region.num_regular_contacts_to_test.ctypes.data),
             c_void_p(vector_region.regular_contacts_to_test.ctypes.data),

@@ -93,7 +93,7 @@ void default_testing_and_contact_tracing_dynamics
     double symptomatic_disease_treshold,
     double test_threshold,
     double test_false_negative,
-    double prob_self_isolate_with_symptoms_without_test,
+    double prob_quarantine_with_symptoms_without_test,
     double prob_quarantine_with_contact_without_test,
     const int * num_regular_contacts_to_test,
     const int * regular_contacts_to_test,
@@ -175,7 +175,7 @@ void default_testing_and_contact_tracing_dynamics
                     }
                     num_to_test_symptomatic -= 1;
                 } else {
-                    if(bernoulli(random_state, prob_self_isolate_with_symptoms_without_test)){
+                    if(bernoulli(random_state, prob_quarantine_with_symptoms_without_test)){
                         current_quarantine[n] = 1;
                         end_of_quarantine_days[n] = day + quarantine_period_days;
                     }

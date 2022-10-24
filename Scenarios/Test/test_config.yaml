@@ -208,7 +208,7 @@ testing_and_contact_tracing_model:
   __type__: default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel
   quarantine_period_days: 14
   symptomatic_disease_treshold: 0.2
-  prob_self_isolate_with_symptoms_without_test: 0.0
+  prob_quarantine_with_symptoms_without_test: 0.0
   prob_quarantine_with_contact_without_test: 0.0
   test_threshold: 0.4
   test_false_negative: 0.01
