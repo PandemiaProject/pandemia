@@ -45,13 +45,6 @@ seasonal_effects_model:
 
 # ######################################### Health #################################################
 
-# Disease (mutation viewed from the point of view of within-host competition, for the case in which
-# strains can be ordered by within-host fitness). Cross immunity is represented by the off-diagonal
-# step functions. Furthermore tau refers to the set of possible outcomes, while rho refers to the
-# probability distribution over these outcomes. For simplicity we assume only two possible outcomes.
-# Note that the infectiousness probability give a probability per tick, and must therefore be
-# adjusted if the tick length is changed.
-
 health_model:
   __type__: default_health_model.DefaultHealthModel
   beta: [1.0]
