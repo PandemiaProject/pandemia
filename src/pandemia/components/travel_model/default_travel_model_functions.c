@@ -112,11 +112,9 @@ void determine_travellers
         // Determine who is eligible to travel from this region today and count how many
         int * agents_eligible_to_travel = (int *)malloc(sizeof(int) * N);
         int num_eligible_to_travel = 0;
-        int j = 0;
         for(int n=0; n<N; n++){
             if(current_strain[n] == -1 && current_disease[n] < 1.0){
-                agents_eligible_to_travel[j] = n;
-                j += 1;
+                agents_eligible_to_travel[num_eligible_to_travel] = n;
                 num_eligible_to_travel += 1;
             }
         }

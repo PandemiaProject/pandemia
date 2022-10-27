@@ -111,6 +111,7 @@ vaccination_model:
 travel_model:
   __type__: default_travel_model.DefaultTravelModel
   travel_transmission_multiplier: 1.0
+  interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel
 
 # ######################################### Input ##################################################
 
