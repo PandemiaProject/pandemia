@@ -2,7 +2,7 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor
-scale_factor: 0.05
+scale_factor: 0.01
 
 # Profiler
 profile: False
@@ -20,10 +20,10 @@ num_jobs: -2
 
 # Time length of each tick in the simulation. The day length (86400) should be divisible by the
 # following tick length:
-tick_length_s: 3600
+tick_length_s: 21600
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
-simulation_length_days: 100
+simulation_length_days: 365
 # the date at which the simulation starts:
 epoch: 23rd February 2020
 
@@ -33,10 +33,7 @@ world_factory:
   __type__: colombia_world_factory.ColombiaWorldFactory
   regions_shape_path: Scenarios/Colombia/data/col_admbnda_adm1_mgn_20200416.shp
   regions_data_path: Scenarios/Colombia/data/country_data.csv
-  contacts: 5
-  contact_hours: 8
   local_travel_prob_per_day: 0.1
-  distance_threshold: 10
 
 # ######################################### Seasonal Effects #######################################
 
@@ -111,6 +108,7 @@ vaccination_model:
 regional_mixing_model:
   __type__: default_regional_mixing_model.DefaultRegionalMixingModel
   travel_transmission_multiplier: 1.0
+  interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel
 
 # ######################################### Input ##################################################
 

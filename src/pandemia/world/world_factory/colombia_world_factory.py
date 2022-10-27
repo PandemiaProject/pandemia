@@ -27,9 +27,6 @@ class ColombiaWorldFactory(WorldFactory):
         self.regions_shape_path        = self.config['regions_shape_path']
         self.regions_data_path         = self.config['regions_data_path']
         self.local_travel_prob_per_day = self.config['local_travel_prob_per_day']
-        self.distance_threshold        = self.config['distance_threshold']
-        self.contacts                  = self.config['contacts']
-        self.contact_hours             = self.config['contact_hours']
 
     def get_world(self) -> World:
 
