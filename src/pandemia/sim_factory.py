@@ -21,7 +21,7 @@ from pandemia.components.movement_model import MovementModel
 from pandemia.components.hospitalization_and_death_model import HospitalizationAndDeathModel
 from pandemia.components.testing_and_contact_tracing_model import TestingAndContactTracingModel
 from pandemia.components.vaccination_model import VaccinationModel
-from pandemia.components.regional_mixing_model import RegionalMixingModel
+from pandemia.components.travel_model import TravelModel
 from pandemia.components.input_model import InputModel
 
 log = logging.getLogger("sim_state")
@@ -56,7 +56,7 @@ class SimulationFactory:
         self.hospitalization_and_death_model = None
         self.testing_and_contact_tracing_model = None
         self.vaccination_model = None
-        self.regional_mixing_model = None
+        self.travel_model = None
 
     def set_clock(self, clock: Clock) -> None:
         """Sets clock"""
@@ -92,9 +92,9 @@ class SimulationFactory:
         """Sets vaccination model"""
         self.vaccination_model = vaccination_model
 
-    def set_regional_mixing_model(self, regional_mixing_model: RegionalMixingModel) -> None:
+    def set_travel_model(self, travel_model: TravelModel) -> None:
         """Sets regional mixing model"""
-        self.regional_mixing_model = regional_mixing_model
+        self.travel_model = travel_model
 
     def set_input_model(self, input_model: InputModel) -> None:
         """Sets seasonal effects model"""
@@ -191,14 +191,14 @@ class SimulationFactory:
         self.set_vaccination_model(vaccination_model)
 
         # Create regional mixing model
-        regional_mixing_model_class = config['regional_mixing_model.__type__']
-        regional_mixing_config = config.subconfig('regional_mixing_model')
-        regional_mixing = instantiate_class("pandemia.components.regional_mixing_model",
-                                            regional_mixing_model_class, regional_mixing_config,
+        travel_model_class = config['travel_model.__type__']
+        travel_config = config.subconfig('travel_model')
+        travel = instantiate_class("pandemia.components.travel_model",
+                                            travel_model_class, travel_config,
                                             scale_factor,
                                             health_model.number_of_strains,
                                             self.vector_world)
-        self.set_regional_mixing_model(regional_mixing)
+        self.set_travel_model(travel)
 
         # Create input model
         input_class = config['input_model.__type__']
@@ -240,7 +240,7 @@ class SimulationFactory:
                         self.hospitalization_and_death_model,
                         self.testing_and_contact_tracing_model,
                         self.vaccination_model,
-                        self.regional_mixing_model,
+                        self.travel_model,
                         self.input_model,
                         telemetry_bus)
 

@@ -233,8 +233,8 @@ vaccination_model:
 
 # ######################################### Regional Mixing ########################################
 
-regional_mixing_model:
-  __type__: default_regional_mixing_model.DefaultRegionalMixingModel
+travel_model:
+  __type__: default_travel_model.DefaultTravelModel
   travel_transmission_multiplier: 1.0
   interpolation: 0.0
 

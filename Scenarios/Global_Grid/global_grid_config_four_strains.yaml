@@ -355,8 +355,8 @@ vaccination_model:
 
 # ######################################### Regional Mixing ########################################
 
-regional_mixing_model:
-  __type__: default_regional_mixing_model.DefaultRegionalMixingModel
+travel_model:
+  __type__: default_travel_model.DefaultTravelModel
   travel_transmission_multiplier: 600                                                               # POSSIBLE FREE VARIABLE
   interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
 

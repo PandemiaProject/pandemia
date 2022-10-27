@@ -32,7 +32,7 @@ class Simulator:
                  hospitalization_and_death_model,
                  testing_and_contact_tracing_model,
                  vaccination_model,
-                 regional_mixing_model,
+                 travel_model,
                  input_model,
                  telemetry_bus):
 
@@ -62,7 +62,7 @@ class Simulator:
         self.hospitalization_and_death_model = hospitalization_and_death_model
         self.testing_and_contact_tracing_model = testing_and_contact_tracing_model
         self.vaccination_model = vaccination_model
-        self.regional_mixing_model = regional_mixing_model
+        self.travel_model = travel_model
         self.input_model = input_model
 
         self.number_of_strains = self.health_model.number_of_strains
@@ -96,7 +96,7 @@ class Simulator:
         self.hospitalization_and_death_model.set_telemetry_bus(self.telemetry_bus)
         self.testing_and_contact_tracing_model.set_telemetry_bus(self.telemetry_bus)
         self.vaccination_model.set_telemetry_bus(self.telemetry_bus)
-        self.regional_mixing_model.set_telemetry_bus(self.telemetry_bus)
+        self.travel_model.set_telemetry_bus(self.telemetry_bus)
         self.input_model.set_telemetry_bus(self.telemetry_bus)
 
     def _vectorize_components(self):
@@ -104,7 +104,7 @@ class Simulator:
 
         for vector_region in self.vector_regions:
 
-            self.regional_mixing_model.vectorize_component(vector_region)
+            self.travel_model.vectorize_component(vector_region)
             self.input_model.vectorize_component(vector_region)
             self.seasonal_effects_model.vectorize_component(vector_region)
             self.health_model.vectorize_component(vector_region)
@@ -159,7 +159,7 @@ class Simulator:
     def _initial_conditions(self, offset):
         """Initialize the various submodels"""
 
-        self.regional_mixing_model.initial_conditions(self)
+        self.travel_model.initial_conditions(self)
 
         for vector_region in self.vector_regions:
 
@@ -239,7 +239,7 @@ class Simulator:
 
             self.telemetry_bus.publish("sim.time", self.clock)
 
-            self.regional_mixing_model.dynamics(self, day, ticks_in_day,
+            self.travel_model.dynamics(self, day, ticks_in_day,
                                                 self.health_model.facemask_transmission_multiplier,
                                                 self.health_model.mutation_matrix,
                                                 self.enable_parallel,

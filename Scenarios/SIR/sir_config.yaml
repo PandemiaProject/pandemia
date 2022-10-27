@@ -91,8 +91,8 @@ vaccination_model:
 
 # ######################################### Regional Mixing ########################################
 
-regional_mixing_model:
-  __type__: void_regional_mixing_model.VoidRegionalMixingModel
+travel_model:
+  __type__: void_travel_model.VoidTravelModel
 
 # ######################################### Input ##################################################
 

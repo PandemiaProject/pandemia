@@ -31,7 +31,7 @@ def get_historial_data():
     sim.health_model.num_initial_infections_by_region['GB'] = [100000]
     sim.health_model.preexisting_sigma_multiplier = 0.5
     sim.health_model.preexisting_rho_multiplier = 0.5
-    sim.regional_mixing_model.travel_multiplier = 10.0
+    sim.travel_model.travel_multiplier = 10.0
     sim.input_model.max_transmission_control = 0.7
     sim.input_model.max_travel_control = 0.5
 
@@ -64,10 +64,10 @@ def build_and_run(solution, seed):
     sim.health_model.num_initial_infections_by_region['CN'] = [(solution[3] * (1000000-50000)) + 50000]
     sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.5)) + 0.5
     sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.5)) + 0.5
-    sim.regional_mixing_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
+    sim.travel_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
     sim.input_model.max_transmission_control = (solution[7] * (1.0-0.5)) + 0.5
     sim.input_model.max_travel_control = (solution[8] * (1.0-0.5)) + 0.5
-    sim.regional_mixing_model.interpolation = (solution[9] * (0.01-0.0)) + 0.0
+    sim.travel_model.interpolation = (solution[9] * (0.01-0.0)) + 0.0
 
     sim.random_seed = seed
 

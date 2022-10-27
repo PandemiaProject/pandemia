@@ -40,7 +40,7 @@ def build_and_run(validation_config, num_configs, world_filepath):
         validation_config['preexisting_sigma_multiplier']
     sim.health_model.preexisting_rho_multiplier =\
         validation_config['preexisting_rho_multiplier']
-    sim.regional_mixing_model.travel_multiplier =\
+    sim.travel_model.travel_multiplier =\
         validation_config['travel_multiplier']
     sim.input_model.max_transmission_control =\
         validation_config['max_transmission_control']

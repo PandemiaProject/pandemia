@@ -82,10 +82,10 @@ def main():
     # sim.health_model.num_initial_infections_by_region['CN'] = [500000]
     # sim.health_model.preexisting_sigma_multiplier = 0.5
     # sim.health_model.preexisting_rho_multiplier = 0.5
-    # sim.regional_mixing_model.travel_multiplier = 600
+    # sim.travel_model.travel_multiplier = 600
     # sim.input_model.max_transmission_control = 0.9
     # sim.input_model.max_travel_control = 0.9
-    # sim.regional_mixing_model.interpolation = 0.00
+    # sim.travel_model.interpolation = 0.00
 
     # ############## Setup ##############
 

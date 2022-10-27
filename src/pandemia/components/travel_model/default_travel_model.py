@@ -7,13 +7,13 @@ from joblib import Parallel, delayed
 
 from ctypes import c_void_p, c_double, c_int, cdll
 
-from pandemia.components.regional_mixing_model import RegionalMixingModel
+from pandemia.components.travel_model import TravelModel
 
-log = logging.getLogger("default_regional_mixing_model")
+log = logging.getLogger("default_travel_model")
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class DefaultRegionalMixingModel(RegionalMixingModel):
+class DefaultTravelModel(TravelModel):
     """Default model of mixing between regions. Each day, a number of agents are selected from each
     region to travel to each other region. The numbers travelling between regions are given by the
     matrix agents_travelling_matrix. The destination of the travellers is recorded using the array
@@ -28,8 +28,8 @@ class DefaultRegionalMixingModel(RegionalMixingModel):
         """Initialize component"""
         super().__init__(config, scale_factor)
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/regional_mixing_model/"
-                                "default_regional_mixing_model_functions.dll")
+        lib = cdll.LoadLibrary("./src/pandemia/components/travel_model/"
+                                "default_travel_model_functions.dll")
 
         self.transmission_out = lib.transmission_out
         self.transmission_in = lib.transmission_in

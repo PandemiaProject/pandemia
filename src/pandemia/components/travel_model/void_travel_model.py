@@ -3,13 +3,13 @@
 import logging
 import numpy as np
 
-from pandemia.components.regional_mixing_model import RegionalMixingModel
+from pandemia.components.travel_model import TravelModel
 
-log = logging.getLogger("void_regional_mixing_model")
+log = logging.getLogger("void_travel_model")
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class VoidRegionalMixingModel(RegionalMixingModel):
+class VoidTravelModel(TravelModel):
     """Void model of regional mixing"""
 
     def __init__(self, config, scale_factor, number_of_strains,
