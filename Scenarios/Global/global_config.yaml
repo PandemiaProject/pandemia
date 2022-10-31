@@ -181,19 +181,13 @@ vaccination_model:
 
 travel_model:
   __type__: default_travel_model.DefaultTravelModel
-  travel_transmission_multiplier: 10.0                                                              # POSSIBLE FREE VARIABLE
+  travel_transmission_multiplier: 100.0                                                             # POSSIBLE FREE VARIABLE
   interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
 
 # ######################################### Input ##################################################
 
 input_model:
-  __type__: validation_input_model.ValidationInputModel
-  stay_at_home_data_fp:
-    Scenarios/Global_Grid/data/historical_data/country_data_stay_at_home_covid.csv
-  travel_data_fp:
-    Scenarios/Global_Grid/data/historical_data/country_data_international_travel_controls.csv
-  max_transmission_control: 0.0                                                                     # POSSIBLE FREE VARIABLE
-  max_travel_control: 0.0                                                                           # POSSIBLE FREE VARIABLE
+  __type__: void_input_model.VoidInputModel
 
 # ######################################### Output #################################################
 

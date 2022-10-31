@@ -10,7 +10,8 @@ from pandemia.reporters import Reporter
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class StrainCounts(Reporter):
-    """Reporter that writes to a CSV file as it runs."""
+    """Reporter that writes to a CSV file as it runs. This reporter records the number of people in
+    each region infected with each strain, each day."""
 
     def __init__(self, telemetry_bus, config):
         super().__init__(telemetry_bus)
@@ -42,10 +43,6 @@ class StrainCounts(Reporter):
 
     def update_counts(self, clock, strain_counts):
         """Update the CSV, writing a single row for every clock tick"""
-
-        # strain_counts = np.reshape(strain_counts, (self.number_of_regions, self.number_of_strains))
-        # strain_counts = np.sum(strain_counts, axis=0)
-        # strain_counts = strain_counts.flatten()
 
         row = [clock.day, clock.iso8601()]
         row += strain_counts.tolist()

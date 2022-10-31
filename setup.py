@@ -34,11 +34,11 @@ setup(
 
     # This should be your name or the name of the organization which owns the
     # project.
-    author='J. Thompson, M & S. Wattam',
+    author='J. Thompson, & S. Wattam',
 
     # This should be a valid email address corresponding to the author listed
     # above.
-    author_email='j.thompson@turing.ac.uk',  # Optional
+    author_email='j.thompson22@imperial.ac.uk',  # Optional
 
     # Classifiers help users find your project by categorizing it.
     #
@@ -94,15 +94,15 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
                       'tqdm~=4.64',
-                      'numpy~=1.22',
+                      'numpy~=1.23',
                       'scipy~=1.8',
-                      'pyYAML~=5.4',
                       'matplotlib~=3.5',
                       'pyproj~=3.3',
                       'joblib~=1.1',
                       'pyshp~=2.3',
                       'pygame~=2.1',
-                      'shapely~=1.8'
+                      'Shapely~=1.8',
+                      'pygad~=2.17'
                      ],
 
     # List additional groups of dependencies here (e.g. development

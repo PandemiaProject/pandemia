@@ -1,4 +1,4 @@
-"""This file creates the world, adding the map and a population of agents."""
+"""This file creates a world."""
 
 import logging
 import numpy as np
@@ -21,10 +21,22 @@ from pandemia.random_tools import Random
 log = logging.getLogger('global_grid_world_factory')
 
 class GlobalGridWorldFactory(WorldFactory):
-    """Reads a population distribution map and generates a world based on the indicated densities"""
+    """In this World model, for each region there are two activities, namely Home_Activity and
+    Community_Activity. Each agent in assigned a weekly routine, with days divided into three
+    periods, each period lasting eight hours. Each agent is assigned a home, at which they perform
+    the activity Home_Activity, with the homes spatially distributed within each region using
+    population grid data for that region. Each agent is also assigned a set of grid squares, which
+    includes the square in which their assined home is located. When performing the activity
+    Community_Activity, an agent will choose from these grid squares. The grid squares are assigned
+    to each agent and weighted in such a way that agents are more likely to visit squares close to
+    their home that squares far away. The weights are chosen according to the so-called gravity
+    model of human mobility. There are therefore two types of location in this model, namely
+    House and Square. Locations of type Square are assigned a location specific transmission
+    multiplier. This is a free parameter that modulates the intensity of community transmission. In
+    this model, travel between regions is based on air travel data.
+    """
 
     def __init__(self, config, clock, scale_factor):
-        """Create agents and locations according to the population density map given"""
 
         self.config = config
         self.clock = clock

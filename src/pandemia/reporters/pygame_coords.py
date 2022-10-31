@@ -14,7 +14,11 @@ import matplotlib.cm as cmx
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class PygameCoords(Reporter):
-    """Reporter that returns a plot at the end of the simulation."""
+    """Reporter that returns a plot at the end of the simulation. This reporter uses the coordinates
+    of each location to plot the number of people infected each day (daily prevalence) within the
+    geographical area corresponding to each pixel in a rectangular plot of the regions. The style of
+    the plot is that of a heat map, with pixel colour intensity corresponding to the prevalence for
+    that pixel."""
 
     def __init__(self, telemetry_bus, config):
         super().__init__(telemetry_bus)

@@ -261,18 +261,18 @@ reporters:
   #   display_height: 700
   #   points_per_polygon: 400
   #   cmap: "Oranges"
-  # pygame_coords.PygameCoords:
-  #   fullscreen: True
-  #   font_size: 20
-  #   plot_prevalence: False
-  #   max_prev_to_plot: 1.0
-  #   plot_num_infected: True
-  #   max_num_inf_to_plot: 10
-  #   refresh_rate: 60
-  #   display_width: 1500
-  #   display_height: 700
-  #   square_width: 0.0416666666667
-  #   cmap: "Oranges"
+  pygame_coords.PygameCoords:
+    fullscreen: True
+    font_size: 20
+    plot_prevalence: False
+    max_prev_to_plot: 1.0
+    plot_num_infected: True
+    max_num_inf_to_plot: 10
+    refresh_rate: 60
+    display_width: 1500
+    display_height: 700
+    square_width: 0.0416666666667
+    cmap: "Oranges"
 
 # ######################################### Logging ################################################
 

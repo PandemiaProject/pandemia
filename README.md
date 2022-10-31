@@ -29,6 +29,10 @@ To install and run:
     pip install .
     pandemia Scenarios/Global/global_config.yaml
 
+To run the Global_Grid scenario, additional .asc data files are required.
+
+To run the ABMlux scenario, a .abm file is required.
+
 ## Testing
 To test:
 

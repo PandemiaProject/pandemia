@@ -14,7 +14,9 @@ import os
 #pylint: disable=attribute-defined-outside-init
 
 class PlotDeaths(Reporter):
-    """Reporter that returns a plot at the end of the simulation."""
+    """Reporter that returns a plot at the end of the simulation. This reporter plots the number of
+    deaths (both daily deaths and cumulative deaths) each day. If a filepath is given to historical
+    data, this reporter will plot that too, for comparison."""
 
     def __init__(self, telemetry_bus, config):
         super().__init__(telemetry_bus)
@@ -193,7 +195,8 @@ class PlotDeaths(Reporter):
             fig.savefig(self.cumulative_deaths_filename, bbox_inches='tight')
 
 class PlotInfected(Reporter):
-    """Reporter that returns a plot at the end of the simulation."""
+    """Reporter that returns a plot at the end of the simulation. This reporter plots the number of
+    people infected each day (daily prevalence)."""
 
     def __init__(self, telemetry_bus, config):
         super().__init__(telemetry_bus)
@@ -235,19 +238,6 @@ class PlotInfected(Reporter):
         font = {'size' : 10}
 
         plt.rc('font', **font)
-
-        # plt.plot(list(range(len(self.days))),
-        #          self.infected, 'black', linewidth=1, alpha=1.0, label=plot_label)
-
-        # vector_region = vector_world.vector_regions[0]
-        # pop_by_age_group = np.zeros((17,), dtype=np.uint64)
-        # initial_cases_by_age_group = np.zeros((17,), dtype=int)
-        # for n in range(vector_region.number_of_agents):
-        #     pop_by_age_group[vector_region.age_group[n]] += 1
-        #     initial_cases_by_age_group[vector_region.age_group[n]] += vector_region.initial_cases[n]
-        # self.plot_sir_age(pop_by_age_group, initial_cases_by_age_group)
-        # num_initial_cases = np.sum(initial_cases_by_age_group)
-        # self.infected.insert(0, num_initial_cases)
 
         plt.bar(list(range(len(self.days))), self.infected, label='Infected - Simulation')
 
@@ -327,7 +317,9 @@ class PlotInfected(Reporter):
 
         step_size = 1
         gamma = 1/ (8 + (23/24))
-        beta = [1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 0.5 * 0.27, 0.5 * 0.27, 0.5 * 0.27, 0.5 * 0.27]
+        beta = [1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27,
+                1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 1.5 * 0.27, 0.5 * 0.27,
+                0.5 * 0.27, 0.5 * 0.27, 0.5 * 0.27]
 
         T = len(self.days)
         N = pop_by_age_group

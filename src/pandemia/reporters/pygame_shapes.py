@@ -17,7 +17,10 @@ from shapely.geometry.multipolygon import MultiPolygon
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class PygameShapes(Reporter):
-    """Reporter that returns a plot at the end of the simulation."""
+    """Reporter that returns a plot at the end of the simulation. This reporter uses the shapefiles
+    of each region to plot the number of people infected each day (daily prevalence) in each region.
+    The style of the plot is that of a heat map, with region colour intensity corresponding to the
+    prevalence for that region."""
 
     def __init__(self, telemetry_bus, config):
         super().__init__(telemetry_bus)

@@ -30,7 +30,7 @@ epoch: 23rd February 2020
 # ######################################### World ##################################################
 
 world_factory:
-  __type__: colombia_world_factory.ColombiaWorldFactory
+  __type__: default_world_factory.DefaultWorldFactory
   regions_shape_path: Scenarios/Colombia/data/col_admbnda_adm1_mgn_20200416.shp
   regions_data_path: Scenarios/Colombia/data/country_data.csv
   local_travel_prob_per_day: 0.1
@@ -131,15 +131,15 @@ reporters:
     savefig: True
     filename: /tmp/infected_colombia.png
     historical_data: null
-  # pygame_shapes.PygameShapes:
-  #   fullscreen: False
-  #   font_size: 20
-  #   max_norm_prev: 1.0
-  #   refresh_rate: 60
-  #   display_width: 800
-  #   display_height: 800
-  #   points_per_polygon: 1000
-  #   cmap: "Oranges"
+  pygame_shapes.PygameShapes:
+    fullscreen: False
+    font_size: 20
+    max_norm_prev: 1.0
+    refresh_rate: 60
+    display_width: 800
+    display_height: 800
+    points_per_polygon: 1000
+    cmap: "Oranges"
 
 # ######################################### Logging ################################################
 

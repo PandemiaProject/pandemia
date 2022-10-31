@@ -1,5 +1,5 @@
 """Represents an individual, assigning to each an age, weekly routine and for each activity a list
-of locations at which they can perform that activity"""
+of locations at which they can perform that activity and corresponding weights"""
 
 import logging
 import uuid

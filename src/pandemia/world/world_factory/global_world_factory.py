@@ -1,4 +1,4 @@
-"""This file creates the world, adding the map and a population of agents."""
+"""This file creates a world."""
 
 import logging
 import csv
@@ -15,10 +15,12 @@ from pandemia.world.world_factory import WorldFactory
 log = logging.getLogger('world_factory')
 
 class GlobalWorldFactory(WorldFactory):
-    """Generates a world"""
+    """In this model, in each region there is only one activity, namely Default. There is only one
+    location in each region. Agents mix within regions all within the same location. Using the
+    sir_rescaling option in the default health model, agents in this world will mix homogeneously
+    within each region. Travel between regions is determined using air travel data."""
 
     def __init__(self, config, clock, scale_factor):
-        """Create agents and locations"""
 
         self.config = config
         self.clock = clock
@@ -125,12 +127,13 @@ class GlobalWorldFactory(WorldFactory):
                         coordinates = None
                     region.coordinates = coordinates
 
-    def get_travel_matrix(self, world, airport_path, air_travel_path,
+    def get_travel_matrix(self, world, airport_data_file, air_travel_data_file,
                           local_travel_prob_per_day, distance_threshold):
         """Constructs matrix of mixing between regions, constructed via a combination of
         air travel and local travel. Since the air travel data used for these simulaitons also
         records the month of travel, we additionally calculate an air travel matrix for each month,
-        for later use."""
+        for later use. Note that the matrix gets rescaled, using a scale_factor, not here but in
+        the regional mixing model."""
 
         regions = world.regions
 
@@ -139,7 +142,7 @@ class GlobalWorldFactory(WorldFactory):
 
         # This will be the matrix returned by the function
         baseline_agents_travelling_matrix =\
-            np.zeros((num_of_regions, num_of_regions), dtype=int)
+            np.zeros((num_of_regions, num_of_regions), dtype=float)
 
         # It will be constructed by obtaining air travel with local travel, the latter meaning
         # travel to neighbouring regions
@@ -150,7 +153,7 @@ class GlobalWorldFactory(WorldFactory):
 
         # Map airports to region isos
         airports_to_region_iso = {}
-        with open(airport_path, newline='') as csvfile:
+        with open(airport_data_file, newline='') as csvfile:
             airport_data = csv.reader(csvfile, delimiter=',')
             next(airport_data, None)
             for row in airport_data:
@@ -165,7 +168,7 @@ class GlobalWorldFactory(WorldFactory):
         air_travel_matrix_by_month =\
             np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=int)
         air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=int)
-        with open(air_travel_path, newline='') as csvfile:
+        with open(air_travel_data_file, newline='') as csvfile:
             travel_data = csv.reader(csvfile, delimiter=',')
             next(travel_data, None)
             for row in travel_data:
@@ -199,7 +202,7 @@ class GlobalWorldFactory(WorldFactory):
         for i in range(num_of_regions):
             for j in range(num_of_regions):
                 air_travel_per_day = air_travel_matrix[i][j] / days_in_year_2010
-                daily_air_travel_matrix[i][j] = int(air_travel_per_day)
+                daily_air_travel_matrix[i][j] = air_travel_per_day
         np.fill_diagonal(daily_air_travel_matrix, 0)
 
         # Get adjacency matrix, recording which regions border which others
@@ -223,7 +226,7 @@ class GlobalWorldFactory(WorldFactory):
         # Calculate local travel, rescaled according to step size
         share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
         ids_to_population_sizes =\
-            {region.id: int(len(region.agents) * (1 / self.scale_factor))\
+            {region.id: len(region.agents) * (1 / self.scale_factor)\
                         for region in regions}
         for region in regions:
             for other_region in regions:

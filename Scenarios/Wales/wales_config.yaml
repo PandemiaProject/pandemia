@@ -30,7 +30,7 @@ epoch: 23rd February 2020
 # ######################################### World ##################################################
 
 world_factory:
-  __type__: colombia_world_factory.ColombiaWorldFactory
+  __type__: default_world_factory.DefaultWorldFactory
   regions_shape_path: Scenarios/Wales/data/localauthorities_lwm.shp
   regions_data_path: Scenarios/Wales/data/country_data.csv
   contacts: 5

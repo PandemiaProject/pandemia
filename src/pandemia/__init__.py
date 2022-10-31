@@ -1,4 +1,4 @@
-"""Pandemia is an individual-based multi-region epidemic simulator."""
+"""Pandemia is an individual-based pandemic simulator."""
 
 import os.path as osp
 import sys

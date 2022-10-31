@@ -1,4 +1,4 @@
-"""This file creates the world, adding the map and a population of agents."""
+"""This file creates a world."""
 
 import logging
 import csv
@@ -16,7 +16,9 @@ from pandemia.world.world_factory import WorldFactory
 log = logging.getLogger('world_factory')
 
 class SIRWorldFactory(WorldFactory):
-    """Reads a DensityMap and generates a world based on the densities indicated therein."""
+    """Creates a simple world consisting of a single region, with one activity and one location.
+    Using the sir_rescaling option in the default health model, agents in this world will mix
+    homogeneously, as in the SIR model."""
 
     def __init__(self, config, clock, scale_factor):
         """Create agents and locations according to the population density map given"""

@@ -1,3 +1,4 @@
+"""Model validation tool based on grid search (work in progress)"""
 
 from copy import deepcopy
 import logging

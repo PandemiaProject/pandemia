@@ -20,8 +20,8 @@ class DefaultHealthModel(HealthModel):
     """Default model of agent health. This model abandons the compartmental description of health
     often applied in epidemic models. Instead, an agent's health is determined by five parameters:
     
-        - sigma immunity
-        - rho immunity
+        - sigma immunity (protection against infection)
+        - rho immunity (protection against severe outcomes)
         - infectiousness
         - disease
         - strain

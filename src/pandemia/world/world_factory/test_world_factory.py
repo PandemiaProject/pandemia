@@ -1,4 +1,4 @@
-"""This file creates the world, adding the map and a population of agents."""
+"""This file creates a test world."""
 
 import logging
 import random
@@ -14,10 +14,9 @@ from pandemia.world.world_factory import WorldFactory
 log = logging.getLogger('test_world_factory')
 
 class TestWorldFactory(WorldFactory):
-    """Reads a DensityMap and generates a world based on the densities indicated therein."""
+    """Creates a test world."""
 
     def __init__(self, config, clock, scale_factor):
-        """Create agents and locations according to the population density map given"""
 
         self.config = config
         self.clock = clock

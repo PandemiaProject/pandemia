@@ -1,3 +1,4 @@
+"""Model validation tool based on genetic algorithms (work in progress)"""
 
 import pygad
 import logging

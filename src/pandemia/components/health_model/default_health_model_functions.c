@@ -357,22 +357,22 @@ void infect
 
             infectiousness_lengths[n] =
                 preset_infectiousness_lengths[(q * R * S) +
-                                                (r1 * S) +
-                                                s1];
+                                              (r1 * S) +
+                                               s1];
 
             for(int i=0; i<infectiousness_lengths[n]; i++){
 
                 infectiousness_values[(n * H) + i] =
                     preset_infectiousness_values[(q * R * S * H) +
-                                                    (r1 * S * H) +
-                                                    (s1 * H) +
-                                                    i];
+                                                 (r1 * S * H) +
+                                                 (s1 * H) +
+                                                  i];
 
                 infectiousness_partitions[(n * H) + i] =
                     preset_infectiousness_partitions[(q * R * S * H) +
-                                                        (r1 * S * H) +
-                                                        (s1 * H) +
-                                                        i] + t;
+                                                     (r1 * S * H) +
+                                                     (s1 * H) +
+                                                      i] + t;
 
             }
 
@@ -382,22 +382,22 @@ void infect
 
             disease_lengths[n] =
                 preset_disease_lengths[(q * R * S) +
-                                        (r1 * S) +
+                                       (r1 * S) +
                                         s1];
 
             for(int i=0; i<disease_lengths[n]; i++){
 
                 disease_values[(n * H) + i] =
                     preset_disease_values[(q * R * S * H) +
-                                            (r1 * S * H) +
-                                            (s1 * H) +
-                                            i];
+                                          (r1 * S * H) +
+                                          (s1 * H) +
+                                           i];
 
                 disease_partitions[(n * H) + i] =
                     preset_disease_partitions[(q * R * S * H) +
-                                                (r1 * S * H) +
-                                                (s1 * H) +
-                                                i] + t;
+                                              (r1 * S * H) +
+                                              (s1 * H) +
+                                               i] + t;
 
             }
 
@@ -414,15 +414,15 @@ void infect
 
                 strain_values[(n * H) + i] =
                     preset_strain_values[(q * R * S * H) +
-                                            (r1 * S * H) +
-                                            (s1 * H) +
-                                            i];
+                                         (r1 * S * H) +
+                                         (s1 * H) +
+                                          i];
 
                 strain_partitions[(n * H) + i] =
                     preset_strain_partitions[(q * R * S * H) +
-                                                (r1 * S * H) +
-                                                (s1 * H) +
-                                                i] + t;
+                                             (r1 * S * H) +
+                                             (s1 * H) +
+                                              i] + t;
             }
 
             strain_partitions[(n * H) + 0] = -1;
@@ -440,19 +440,19 @@ void infect
 
                         rho_values[(i * R) + r] =
                             preset_rho_immunity_failure_values[(q * R * S * S * G * R) +
-                                                                (r1 * S * S * G * R) +
-                                                                (s1 * S * G * R) +
-                                                                (s2 * G * R) +
-                                                                (i * R) +
+                                                               (r1 * S * S * G * R) +
+                                                               (s1 * S * G * R) +
+                                                               (s2 * G * R) +
+                                                               (i * R) +
                                                                 r];
 
                     }
 
                     rho_part[i] =
                         preset_rho_immunity_failure_partitions[(q * R * S * S * G) +
-                                                                (r1 * S * S * G) +
-                                                                (s1 * S * G) +
-                                                                (s2 * G) +
+                                                               (r1 * S * S * G) +
+                                                               (s1 * S * G) +
+                                                               (s2 * G) +
                                                                 i] + t;
                     rho_part[0] = -1;
 
@@ -462,7 +462,7 @@ void infect
                     preset_rho_immunity_failure_lengths[(q * R * S * S) +
                                                         (r1 * S * S) +
                                                         (s1 * S) +
-                                                        s2];
+                                                         s2];
 
                 for(int i=0; i<I; i++){
                     for(int r=0; r<R; r++){
@@ -470,12 +470,12 @@ void infect
                         rho_immunity_failure_values[(n * S * I * R) +
                                                     (s2 * I * R) +
                                                     (i * R) +
-                                                    r] =
+                                                     r] =
 
                             rho_immunity_failure_values[(n * S * I * R) +
                                                         (s2 * I * R) +
                                                         (i * R) +
-                                                        r] *
+                                                         r] *
 
                             rho_evaluate(rho_part, rho_values, rho_length, r, R,
                                             (i + 1) * immunity_period_ticks);
@@ -498,36 +498,36 @@ void infect
 
                     sigma_values[i] =
                         preset_sigma_immunity_failure_values[(q * R * S * S * G) +
-                                                                (r1 * S * S * G) +
-                                                                (s1 * S * G) +
-                                                                (s2 * G) +
-                                                                i];
+                                                             (r1 * S * S * G) +
+                                                             (s1 * S * G) +
+                                                             (s2 * G) +
+                                                              i];
 
                     sigma_part[i] =
                         preset_sigma_immunity_failure_partitions[(q * R * S * S * G) +
-                                                                    (r1 * S * S * G) +
-                                                                    (s1 * S * G) +
-                                                                    (s2 * G) +
-                                                                    i] + t;
+                                                                 (r1 * S * S * G) +
+                                                                 (s1 * S * G) +
+                                                                 (s2 * G) +
+                                                                  i] + t;
                     sigma_part[0] = -1;
 
                 }
 
                 sigma_length =
                     preset_sigma_immunity_failure_lengths[(q * R * S * S) +
-                                                            (r1 * S * S) +
-                                                            (s1 * S) +
-                                                            s2];
+                                                          (r1 * S * S) +
+                                                          (s1 * S) +
+                                                           s2];
 
                 for(int i=0; i<I; i++){
 
                     sigma_immunity_failure_values[(n * S * I) +
-                                                    (s2 * I) +
-                                                    i] =
+                                                  (s2 * I) +
+                                                   i] =
 
                         sigma_immunity_failure_values[(n * S * I) +
-                                                        (s2 * I) +
-                                                        i] *
+                                                      (s2 * I) +
+                                                       i] *
 
                         sigma_evaluate(&sigma_part[0], &sigma_values[0], sigma_length,
                                         (i + 1) * immunity_period_ticks);

@@ -1,4 +1,4 @@
-"""Manages health model"""
+"""Manages individual health"""
 
 from pandemia.component import Component
 
