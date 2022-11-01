@@ -3,7 +3,6 @@
 *.wld
 *.wld.bak
 *.abm
-*.asc
 
 .vscode/
 

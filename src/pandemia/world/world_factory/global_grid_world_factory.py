@@ -52,6 +52,7 @@ class GlobalGridWorldFactory(WorldFactory):
         self.regions_data_file           = self.config['regions_data_file']
         self.regions_shape_data_file     = self.config['regions_shape_data_file']
         self.population_dist_data_folder = self.config['population_dist_data_folder']
+        self.population_id_data_folder   = self.config['population_id_data_folder']
         self.airport_data_file           = self.config['airport_data_file']
         self.air_travel_data_file        = self.config['air_travel_data_file']
 
@@ -127,9 +128,9 @@ class GlobalGridWorldFactory(WorldFactory):
         # Extract coordinates of top left corner
         for filename in os.listdir(self.population_dist_data_folder):
             if iso3 == filename[0:3].upper():
-                filepath = os.path.join(self.population_dist_data_folder, filename)
-                if os.path.isfile(filepath):
-                    with open(filepath, newline='') as csvfile:
+                filepath_dist = os.path.join(self.population_dist_data_folder, filename)
+                if os.path.isfile(filepath_dist):
+                    with open(filepath_dist, newline='') as csvfile:
                         region_data = csv.reader(csvfile, delimiter=' ')
                         ncols = int(next(region_data)[-1])
                         nrows = int(next(region_data)[-1])
@@ -138,20 +139,24 @@ class GlobalGridWorldFactory(WorldFactory):
                         square_size = float(next(region_data)[-1])
                         xtl = xll
                         ytl = yll + (square_size * nrows)
+        for filename in os.listdir(self.population_id_data_folder):
+            if iso3 == filename[0:3].upper():
+                filepath_id = os.path.join(self.population_id_data_folder, filename)
 
         # Load population distribution map
-        map_dist = np.genfromtxt(filepath, delimiter=' ', skip_header=6, dtype=float)
+        map_dist = np.genfromtxt(filepath_dist, delimiter=' ', skip_header=6, dtype=float)
         map_dist /= np.sum(map_dist)
+        map_id = np.genfromtxt(filepath_id, delimiter=' ', skip_header=6, dtype=float)
 
-        # Determine which squares are in reality populated, for plotting purposes
-        populated_x_coords = []
-        populated_y_coords = []
-        for y in range(map_dist.shape[0]):
-            for x in range(map_dist.shape[1]):
-                if map_dist[y][x] > 0:
-                    populated_x_coords.append(xtl + (square_size * x))
-                    populated_y_coords.append(ytl - (square_size * y))
-        populated_coordinates = zip(populated_x_coords, populated_y_coords)
+        # Determine which squares belong to each region, for plotting purposes
+        region_x_coords = []
+        region_y_coords = []
+        for y in range(map_id.shape[0]):
+            for x in range(map_id.shape[1]):
+                if map_id[y][x] > 0:
+                    region_x_coords.append(xtl + (square_size * x))
+                    region_y_coords.append(ytl - (square_size * y))
+        region_coordinates = zip(region_x_coords, region_y_coords)
 
         # The ideal (float) and rounded (int) distributions of population
         map_floats = number_of_agents * map_dist
@@ -278,7 +283,7 @@ class GlobalGridWorldFactory(WorldFactory):
         new_region.other_name = iso3
         new_region.super_region = super_region
 
-        new_region.populated_coordinates = populated_coordinates
+        new_region.region_coordinates = region_coordinates
 
         return new_region
 

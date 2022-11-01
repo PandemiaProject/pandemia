@@ -27,14 +27,34 @@ Output data are stored in a configured output directory.
  * python 3.10
 
 ## Usage
-To install and run:
+To install:
 
     pip install .
+
+To run the homogeneous mixing example:
+
     pandemia Scenarios/Global/global_config.yaml
 
-To run the Global_Grid scenario, additional .asc data files are required.
+To run the heterogeneous mixing example:
 
-To run the ABMlux scenario, a .abm file is required.
+    pandemia Scenarios/Global_Grid/global_grid_config.yaml
+
+To run the heterogeneous mixing example and save the world file:
+
+    pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+
+To run the heterogeneous mixing example and using the saved world file, thereby skipping the build phase:
+
+    pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+
+The heterogeneous mixing example uses the following population grid data, available under a CC BY 4.0 license:
+
+Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
+Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
+New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.org/10.7927/H49C6VHW.
+Accessed 31 OCTOBER 2022.
+
+To run the ABMlux scenario, an additional .abm file is required.
 
 ## Testing
 To test:

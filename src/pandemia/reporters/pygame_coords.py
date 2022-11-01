@@ -106,7 +106,7 @@ class PygameCoords(Reporter):
                 np.zeros((vector_region.number_of_locations, ), dtype=int)
         max_x_display = 0
         max_y_display = 0
-        self.populated_coordinates = []
+        self.region_coordinates = []
         for vector_region in world.vector_regions:
             for m in range(vector_region.number_of_locations):
                 x_spatial = vector_region.location_x_coords[m]
@@ -121,15 +121,15 @@ class PygameCoords(Reporter):
                     max_x_display = x_display
                 if y_display > max_y_display:
                     max_y_display = y_display
-            if vector_region.populated_coordinates is not None:
-                for coord in vector_region.populated_coordinates:
+            if vector_region.region_coordinates is not None:
+                for coord in vector_region.region_coordinates:
                     x_spatial = coord[0]
                     y_spatial = coord[1]
                     x_display =\
                         int((self.width - 1) * (x_spatial - min_x) / (max_x - min_x))
                     y_display =\
                         int((self.height - 1) * (1 - (y_spatial - min_y) / (max_y - min_y)))
-                    self.populated_coordinates.append((x_display, y_display))
+                    self.region_coordinates.append((x_display, y_display))
                     if x_display > max_x_display:
                         max_x_display = x_display
                     if y_display > max_y_display:
@@ -147,8 +147,8 @@ class PygameCoords(Reporter):
 
         # Create background surface
         self.screen.fill("white")
-        if len(self.populated_coordinates) > 0:
-            for coord in self.populated_coordinates:
+        if len(self.region_coordinates) > 0:
+            for coord in self.region_coordinates:
                 colour = self.prevalence_to_colour[0]
                 pygame.draw.rect(self.screen, colour, pygame.Rect(coord[0] + self.x_offset,
                                  coord[1] + self.y_offset, self.square_width,

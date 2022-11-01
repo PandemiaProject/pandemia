@@ -47,7 +47,7 @@ class VectorRegion:
         self.location_x_coords = np.zeros((number_of_locations), dtype=float)
         self.location_y_coords = np.zeros((number_of_locations), dtype=float)
         self.coordinates = None
-        self.populated_coordinates = None
+        self.region_coordinates = None
 
 class Region:
     """Represents a region"""
@@ -63,7 +63,7 @@ class Region:
         self.agents = agents
         self.locations = locations
         self.coordinates = None
-        self.populated_coordinates = None
+        self.region_coordinates = None
 
     def vectorize_region(self):
         """Converts object of type Region to object of type VectorRegion"""
@@ -130,6 +130,6 @@ class Region:
 
         # Determine shape data
         vector_region.coordinates = self.coordinates
-        vector_region.populated_coordinates = self.populated_coordinates
+        vector_region.region_coordinates = self.region_coordinates
 
         return vector_region
