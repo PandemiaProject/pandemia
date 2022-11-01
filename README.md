@@ -43,7 +43,7 @@ To run the heterogeneous mixing example and save the world file:
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
-To run the heterogeneous mixing example and using the saved world file, thereby skipping the build phase:
+To run the heterogeneous mixing example using the saved world file, thereby skipping the build phase:
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
