@@ -41,7 +41,7 @@ world_factory:
   population_id_data_folder:
     Scenarios/Global_Grid/data/country_data_population_distribution/processed/id_grids
   # Regions to simulate. If list empty, simulates all regions.
-  regions_to_simulate: ['CN'] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
+  regions_to_simulate: [] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
   # Locations
   house_location_type: House
   square_location_type: Square
