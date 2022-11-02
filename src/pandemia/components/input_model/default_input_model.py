@@ -120,16 +120,16 @@ class DefaultInputModel(InputModel):
 
         assert policy.lockdown_input.shape ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert policy.border_closure_input ==\
+        assert policy.border_closure_input.shape ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert policy.facemask_input ==\
+        assert policy.facemask_input.shape ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert policy.random_testing_input ==\
+        assert policy.random_testing_input.shape ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert policy.symptomatic_testing_input ==\
+        assert policy.symptomatic_testing_input.shape ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert policy.contact_testing_input ==\
+        assert policy.contact_testing_input.shape ==\
             (self.simulation_length_days, self.number_of_regions)
-        assert policy.vaccination_input ==\
+        assert policy.vaccination_input.shape ==\
             (self.simulation_length_days, self.number_of_regions,
              self.number_of_vaccination_age_groups, self.number_of_vaccines)
