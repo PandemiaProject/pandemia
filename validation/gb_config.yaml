@@ -9,7 +9,7 @@ profile: False
 pstats_records: 100
 
 # Random seeds for each region
-random_seed: 1
+random_seed: 131
 
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
@@ -75,7 +75,7 @@ seasonal_effects_model:
 
 health_model:
   __type__: default_health_model.DefaultHealthModel
-  beta: [0.035]                                                                                     # POSSIBLE FREE VARIABLE
+  beta: [0.065]                                                                                     # POSSIBLE FREE VARIABLE
   location_typ_multipliers:
     Square: 0.2                                                                                     # POSSIBLE FREE VARIABLE
     House: 1.0
@@ -219,9 +219,9 @@ vaccination_model:
   vaccines:
     vaccine_0:
       rho_immunity_failure:
-        [[[-1, 15, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+        [[[-1, 0, 30, 90, 180], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
       sigma_immunity_failure:
-        [[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]
+        [[[-1, 0, 30, 90, 180], [1.0, 0.5, 0.6, 0.75, 0.90]]]
 
 # ######################################### Regional Mixing ########################################
 
@@ -240,7 +240,7 @@ super_regions_omitted_from_deaths_counts: ['Africa', 'Asia']
 historical_data_filepath: Scenarios/Global_Grid/data/historical_data/WHO-COVID-19-global-data.csv
 
 # Output that should be rendered from the simulation:
-reporters: {}
+reporters:
   # cli.TimeReporter: {}
   # csv.StrainCounts:
   #   filename: /tmp/strain_counts.csv
@@ -249,13 +249,13 @@ reporters: {}
   #   savefig: True
   #   filename: /tmp/infected_global_grid.png
   #   historical_data: null
-  # plot.PlotDeaths:
-  #   show: False
-  #   savefig: True
-  #   daily_deaths_filename: /tmp/daily_deaths_global_grid.png
-  #   cumulative_deaths_filename: /tmp/cumulative_deaths_global_grid.png
-  #   deaths_by_country_filename: /tmp/deaths_by_region.csv
-  #   historical_data: Scenarios/Global_Grid/data/historical_data/who_data.csv
+  plot.PlotDeaths:
+    show: False
+    savefig: True
+    daily_deaths_filename: /tmp/daily_deaths_global_grid.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths_global_grid.png
+    deaths_by_country_filename: /tmp/deaths_by_region.csv
+    historical_data: null
   # pygame_shapes.PygameShapes:
   #   fullscreen: True
   #   font_size: 20

@@ -35,7 +35,7 @@ def fitness_func(solution, solution_idx):
 
     solution = np.divide(1, 1 + np.power(np.e, solution))
 
-    TOTAL_DOSES = 50000000 # The total number of doses available
+    TOTAL_DOSES = 10000000 # The total number of doses available
     VACCINATION_RATE = 0.006 # The maximum proportion of population a country can vaccinate each day
     LEN_SUPPLY_PERIOD = 30   # The time period is divided into supply periods of this length in days
 
@@ -65,8 +65,6 @@ def fitness_func(solution, solution_idx):
                             num_can_vaccinate_each_day)
         vaccination_sol[day] = (np.multiply(share[:, None], dist[supply_period])).astype(int)
 
-    print(np.sum(vaccination_sol, axis=0))
-
     policy.vaccination_input = vaccination_sol[:, :, :, np.newaxis]
 
     average_cost = 0
@@ -95,9 +93,12 @@ def fitness_func(solution, solution_idx):
             costs.append(cost)
             num_valid_runs += 1
     
-    average_cost /= num_valid_runs
+    if num_valid_runs != 0:
+        average_cost /= num_valid_runs
+    else:
+        average_cost = 9999999999
 
-    # print(costs, average_cost)
+    print(costs, average_cost)
 
     return 1 / average_cost
 
@@ -117,7 +118,10 @@ num_age_groups = sim.input_model.number_of_vaccination_age_groups
 
 assert num_vaccines == 1
 
-population_sizes = np.array([vr.number_of_agents for vr in sim.vector_regions], dtype=int)
+scale_factor = sim.vector_world.scale_factor
+rescale_factor = 1 / scale_factor
+population_sizes =\
+    np.array([vr.number_of_agents * rescale_factor for vr in sim.vector_regions], dtype=float)
 
 seeds = [0, 1, 2, 3, 4]
 
