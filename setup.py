@@ -102,7 +102,8 @@ setup(
                       'pyshp~=2.3',
                       'pygame~=2.1',
                       'Shapely~=1.8',
-                      'pygad~=2.17'
+                      'pygad~=2.17',
+                      'pyyaml'
                      ],
 
     # List additional groups of dependencies here (e.g. development
