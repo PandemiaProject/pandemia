@@ -30,7 +30,7 @@ Output data are stored in a configured output directory.
 ## Usage
 To install:
 ```
-pip install .
+pip install -e .[test]
 ```
 To run the homogeneous mixing example:
 ```
