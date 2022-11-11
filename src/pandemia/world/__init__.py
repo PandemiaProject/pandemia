@@ -2,16 +2,6 @@
 
 from pandemia.world.region import Region, VectorRegion
 
-class VectorWorld:
-    """Represents a world consisting of regions using numpy arrays"""
-
-    def __init__(self, scale_factor):
-
-        self.vector_regions: list[VectorRegion] = []
-        self.number_of_regions = None
-        self.scale_factor = scale_factor
-        self.travel_matrix = None
-
 class World:
     """Represents a world consisting of regions"""
 
@@ -36,3 +26,13 @@ class World:
         new_vector_world.travel_matrix = self.travel_matrix
 
         return new_vector_world
+
+class VectorWorld:
+    """Represents a world consisting of regions using numpy arrays"""
+
+    def __init__(self, scale_factor):
+
+        self.vector_regions: list[VectorRegion] = []
+        self.number_of_regions = None
+        self.scale_factor = scale_factor
+        self.travel_matrix = None
