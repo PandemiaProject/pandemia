@@ -16,14 +16,14 @@ class World:
                 1 million agents representing a real world with 100 million agents would have the
                 scale factor 0.01. This is stored as an attribute since the scale factor is needed
                 to scale quantities during input and output.
-            travel_matrix (Union[NoneType, numpy.ndarray]): An array of integers of dimension
+            travel_matrix (Union[None, np.ndarray]): An array of integers of dimension
                 number_of_regions x number_of_regions.
         """
 
         self.regions: list[Region] = []
-        self.number_of_regions = None
-        self.scale_factor = scale_factor
-        self.travel_matrix = None
+        self.number_of_regions: int = None
+        self.scale_factor: float = scale_factor
+        self.travel_matrix: Union[None, np.ndarray] = None
 
     def vectorize_world(self):
         """Converts an object of type World to an object of type VectorWorld. A VectorWorld contains
@@ -60,7 +60,7 @@ class VectorWorld:
                 1 million agents representing a real world with 100 million agents would have the
                 scale factor 0.01. This is stored as an attribute since the scale factor is needed
                 to scale quantities during input and output.
-            travel_matrix (Union[NoneType, numpy.ndarray]): An array of integers of dimension
+            travel_matrix (Union[None, np.ndarray]): An array of integers of dimension
                 number_of_regions x number_of_regions.
         """
 
