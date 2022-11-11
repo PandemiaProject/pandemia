@@ -3,9 +3,22 @@
 from .region import Region, VectorRegion
 
 class World:
-    """Represents a world consisting of regions"""
 
     def __init__(self, scale_factor):
+        """Represents a world consiting of regions, for example a country consisting of
+        administrative division, or the whole world consisting of countries.
+
+        Attributes:
+            regions (list[Region]): The list of regions in this world.
+            number_of_regions (int): How many regions are in this world.
+            scale_factor (float): Attached to each world is a scale factor, indicating that scaling
+                may have taken place in the creation of the world. For example, a world with
+                1 million agents representing a real world with 100 million agents would have the
+                scale factor 0.01. This is stored as an attribute since the scale factor is needed
+                to scale quantities during input and output.
+            travel_matrix (Union[NoneType, numpy.ndarray]): An array of integers of dimension
+                number_of_regions x number_of_regions.
+        """
 
         self.regions: list[Region] = []
         self.number_of_regions = None
@@ -13,6 +26,12 @@ class World:
         self.travel_matrix = None
 
     def vectorize_world(self):
+        """Converts an object of type World to an object of type VectorWorld. A VectorWorld contains
+        a list of objects of type VectorRegion, as opposed to objects of type Region, as in a World.
+
+        Returns:
+          out (VectorWorld): A vector representation of the world.
+        """
 
         new_vector_world = VectorWorld(self.scale_factor)
 
@@ -28,9 +47,22 @@ class World:
         return new_vector_world
 
 class VectorWorld:
-    """Represents a world consisting of regions using numpy arrays"""
 
     def __init__(self, scale_factor):
+        """Represents a world consiting of vectorized regions.
+
+        Attributes:
+            vector_regions (list[VectorRegion]): The list of vectorized regions in this vectorized
+                world.
+            number_of_regions (int): How many regions are in this world.
+            scale_factor (float): Attached to each world is a scale factor, indicating that scaling
+                may have taken place in the creation of the world. For example, a world with
+                1 million agents representing a real world with 100 million agents would have the
+                scale factor 0.01. This is stored as an attribute since the scale factor is needed
+                to scale quantities during input and output.
+            travel_matrix (Union[NoneType, numpy.ndarray]): An array of integers of dimension
+                number_of_regions x number_of_regions.
+        """
 
         self.vector_regions: list[VectorRegion] = []
         self.number_of_regions = None

@@ -16,12 +16,9 @@ class Location:
         """Represents a location, for example an area of land or a building.
 
         Attributes:
-          uuid (UUID):
-            A universally unique identifier for this location.
-          typ (str):
-            The type of location, as a string. For example "House" or "Restaurant".
-          coord (tuple):
-            2-tuple of floats representing x, y coordinates.
+            uuid (UUID): A universally unique identifier for this location.
+            typ (str): The type of location, as a string. For example "House" or "Restaurant".
+            coord (tuple): 2-tuple of floats representing x, y coordinates.
         """
 
         self.uuid = uuid.uuid4().hex
