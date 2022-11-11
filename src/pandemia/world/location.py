@@ -1,4 +1,4 @@
-"""Represents locations with a type and coordinates in space."""
+"""Represents a location"""
 
 # Allows classes to return their own type, e.g. from_file below
 from __future__ import annotations
@@ -15,9 +15,13 @@ class Location:
     def __init__(self, typ: str, coord: LocationTuple):
         """Represents a location, for example an area of land or a building.
 
-        Parameters:
-          typ (str): The type of location, as a string, for example House, Restaurant etc
-          coord (tuple): 2-tuple with x, y grid coordinates
+        Attributes:
+          uuid (UUID):
+            A universally unique identifier for this location.
+          typ (str):
+            The type of location, as a string. For example "House" or "Restaurant".
+          coord (tuple):
+            2-tuple of floats representing x, y coordinates.
         """
 
         self.uuid = uuid.uuid4().hex
@@ -25,7 +29,7 @@ class Location:
         self.coord = coord
 
     def distance_euclidean(self, other: Location) -> float:
-        """Return the distance between the two locations."""
+        """Return the Euclidean distance between two locations."""
 
         return sqrt(((self.coord[0]-other.coord[0])**2)\
                   + ((self.coord[1]-other.coord[1])**2))

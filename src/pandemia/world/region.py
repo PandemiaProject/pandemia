@@ -1,4 +1,4 @@
-"""Represents a region consisting of activities, agents and locations"""
+"""Represents a region"""
 
 import logging
 import numpy as np
@@ -8,52 +8,42 @@ from .location import Location
 
 log = logging.getLogger("region")
 
-class VectorRegion:
-    """Contains vector representations of agents, locations and other objects. Additional
-    attributes are initialized by the simulation components, for example the health model,
-    inside their vectorize_component function."""
-
-    def __init__(self, id: int,
-                       name: str,
-                       ticks_in_week: int,
-                       number_of_activities: int,
-                       number_of_agents: int,
-                       number_of_locations: int,
-                       max_num_activity_locations: int):
-
-        self.id = id
-        self.name = name
-        self.other_name = None
-        self.super_region = None
-        self.random_state = None
-        self.prng = None
-        self.number_of_agents = number_of_agents
-        self.age = np.zeros((number_of_agents), dtype=int)
-        self.number_of_locations = number_of_locations
-
-        assert number_of_activities <= 255
-        self.number_of_activities = number_of_activities
-        self.weekly_routines = np.zeros((number_of_agents, ticks_in_week), dtype=np.uint8)
-
-        self.num_activity_locations =\
-            np.zeros((number_of_agents, number_of_activities), dtype=int)
-        self.activity_locations = np.zeros((number_of_agents, number_of_activities,
-                                            max_num_activity_locations), dtype=int)
-        self.activity_location_weights = np.zeros((number_of_agents, number_of_activities,
-                                                   max_num_activity_locations), dtype=float)
-        self.max_num_activity_locations = max_num_activity_locations
-        self.activity_strings = [None for _ in range(number_of_activities)]
-        self.location_typ_strings = [None for _ in range(number_of_locations)]
-        self.location_x_coords = np.zeros((number_of_locations), dtype=float)
-        self.location_y_coords = np.zeros((number_of_locations), dtype=float)
-        self.coordinates = None
-        self.region_coordinates = None
-
 class Region:
-    """Represents a region"""
 
     def __init__(self, id: int, name: str, activities: list[str],
                  agents: list[Agent], locations: list[Location]):
+        """Represents a region, for example a country or an administrative division.
+
+        Attributes:
+          id (int):
+            An integer identifier for this region.
+          name (str):
+            The name of the region. For example, if the region represents a country, this could be
+            the country code in ISO 3166-1 alpha-2 format.
+          other_name (Union[NoneType, str]):
+            Another name of the region. For example, if the region represents a country, this could
+            be the country code in ISO 3166-1 alpha-3 format. Optional.
+          super_region (Union[NoneType, str]):
+            The group of regions to which this region belongs. For example, if the regions
+            represents a country, its super region might be the continent to which it belongs.
+            Optional.
+          activities (activities: list[str]):
+            A list of all activities performed by agents in this region.
+          agents (list[Agent]):
+            A list of all agents in this region.
+          locations (list[Location]):
+            A list of all locations in this region.
+          coordinates Union[NoneType, list]:
+            Used to render the region as polygons. If provided, the list should be of the format
+            
+                [[points_0], [points_1], ..., [points_N]]
+
+            with each points_n a list of 2-tuples of floats. A list points_n represents the x, y
+            coordinates of each point along the border of a connected piece of the region.
+          region_coordinates Union[NoneType, list]:
+            Used to render the region as grid squares. If provided, the list should be a list
+            of 2-tuples of floats, representing the x, y coordinates of each grid square.
+        """
 
         self.id = id
         self.name = name
@@ -133,3 +123,44 @@ class Region:
         vector_region.region_coordinates = self.region_coordinates
 
         return vector_region
+
+class VectorRegion:
+    """Contains vector representations of agents, locations and other objects. Additional
+    attributes are initialized by the simulation components, for example the health model,
+    inside their vectorize_component function."""
+
+    def __init__(self, id: int,
+                       name: str,
+                       ticks_in_week: int,
+                       number_of_activities: int,
+                       number_of_agents: int,
+                       number_of_locations: int,
+                       max_num_activity_locations: int):
+
+        self.id = id
+        self.name = name
+        self.other_name = None
+        self.super_region = None
+        self.random_state = None
+        self.prng = None
+        self.number_of_agents = number_of_agents
+        self.age = np.zeros((number_of_agents), dtype=int)
+        self.number_of_locations = number_of_locations
+
+        assert number_of_activities <= 255
+        self.number_of_activities = number_of_activities
+        self.weekly_routines = np.zeros((number_of_agents, ticks_in_week), dtype=np.uint8)
+
+        self.num_activity_locations =\
+            np.zeros((number_of_agents, number_of_activities), dtype=int)
+        self.activity_locations = np.zeros((number_of_agents, number_of_activities,
+                                            max_num_activity_locations), dtype=int)
+        self.activity_location_weights = np.zeros((number_of_agents, number_of_activities,
+                                                   max_num_activity_locations), dtype=float)
+        self.max_num_activity_locations = max_num_activity_locations
+        self.activity_strings = [None for _ in range(number_of_activities)]
+        self.location_typ_strings = [None for _ in range(number_of_locations)]
+        self.location_x_coords = np.zeros((number_of_locations), dtype=float)
+        self.location_y_coords = np.zeros((number_of_locations), dtype=float)
+        self.coordinates = None
+        self.region_coordinates = None
