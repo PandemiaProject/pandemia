@@ -68,6 +68,7 @@ class GlobalWorldFactory(WorldFactory):
         total_number_of_agents = 0
         id = 0
         with open(regions_data_path, newline='') as csvfile:
+            print(regions_data_path)
             next(csvfile)
             region_data = csv.reader(csvfile, delimiter=',')
             for row in region_data:
