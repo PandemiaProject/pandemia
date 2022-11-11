@@ -5,7 +5,7 @@ import numpy as np
 import csv
 from datetime import timedelta
 
-from .components.seasonal_effects_model import SeasonalEffectsModel
+from ..seasonal_effects_model import SeasonalEffectsModel
 
 log = logging.getLogger("default_seasonal_effects_model")
 

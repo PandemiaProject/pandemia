@@ -13,7 +13,7 @@ from .utils import instantiate_class
 from .config import Config
 from .clock import Clock
 from .version import VERSION
-from .world.world import VectorWorld
+from .world import VectorWorld
 from .simulator import Simulator
 from .components.seasonal_effects_model import SeasonalEffectsModel
 from .components.health_model import HealthModel
@@ -138,7 +138,7 @@ class SimulationFactory:
         # Create seasonal effects model
         seasonal_effects_class = config['seasonal_effects_model.__type__']
         seasonal_effects_config = config.subconfig('seasonal_effects_model')
-        seasonal_effects = instantiate_class(".seasonal_effects_model",
+        seasonal_effects = instantiate_class("pandemia.components.seasonal_effects_model",
                                             seasonal_effects_class, seasonal_effects_config,
                                             self.vector_world,
                                             self.clock)
@@ -147,7 +147,7 @@ class SimulationFactory:
         # Create health model
         health_model_class = config['health_model.__type__']
         health_model_config = config.subconfig('health_model')
-        health_model = instantiate_class(".health_model",
+        health_model = instantiate_class("health_model",
                                         health_model_class, health_model_config, scale_factor,
                                         self.clock)
         self.set_health_model(health_model)
@@ -155,7 +155,7 @@ class SimulationFactory:
         # Create movement model
         movement_model_class = config['movement_model.__type__']
         movement_model_config = config.subconfig('movement_model')
-        movement_model = instantiate_class(".movement_model",
+        movement_model = instantiate_class("movement_model",
                                         movement_model_class, movement_model_config)
         self.set_movement_model(movement_model)
 
@@ -163,7 +163,7 @@ class SimulationFactory:
         hospitalization_and_death_model_class = config['hospitalization_and_death_model.__type__']
         hospitalization_and_death_model_config = config.subconfig('hospitalization_and_death_model')
         hospitalization_and_death_model =\
-            instantiate_class(".hospitalization_and_death_model",
+            instantiate_class("hospitalization_and_death_model",
                             hospitalization_and_death_model_class,
                             hospitalization_and_death_model_config)
         self.set_hospitalization_and_death_model(hospitalization_and_death_model)
