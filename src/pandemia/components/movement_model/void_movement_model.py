@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 
-from pandemia.components.movement_model import MovementModel
+from .components.movement_model import MovementModel
 
 log = logging.getLogger("void_movement_model")
 

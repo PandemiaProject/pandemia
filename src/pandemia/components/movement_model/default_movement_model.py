@@ -5,7 +5,7 @@ import numpy as np
 
 from ctypes import c_void_p, c_int, cdll
 
-from pandemia.components.movement_model import MovementModel
+from .components.movement_model import MovementModel
 
 log = logging.getLogger("default_movement_model")
 

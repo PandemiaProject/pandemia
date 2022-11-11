@@ -3,8 +3,8 @@
 import logging
 import numpy as np
 
-from pandemia.world.agent import Agent
-from pandemia.world.location import Location
+from .agent import Agent
+from .location import Location
 
 log = logging.getLogger("region")
 

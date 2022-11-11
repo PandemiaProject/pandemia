@@ -1,6 +1,6 @@
 """Manages regional mixing"""
 
-from pandemia.component import Component
+from ...component import Component
 
 class TravelModel(Component):
     """Defines the regional mixing model"""

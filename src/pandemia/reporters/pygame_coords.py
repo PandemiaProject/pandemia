@@ -5,7 +5,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import numpy as np
 import matplotlib.pyplot as plt
-from pandemia.reporters import Reporter
+from .reporters import Reporter
 import pygame
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors

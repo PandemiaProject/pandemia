@@ -1,7 +1,7 @@
 """Manages location choice within the model, that is, where agents perform the activities
 they are assigned."""
 
-from pandemia.component import Component
+from ...component import Component
 
 class MovementModel(Component):
     """Defines the location finding behaviour of agents.

@@ -11,12 +11,12 @@ from scipy.spatial import KDTree
 import shapefile as shp
 from scipy.spatial import distance
 
-from pandemia.world.agent import Agent
-from pandemia.world.location import Location
-from pandemia.world.region import Region
-from pandemia.world import World
-from pandemia.world.world_factory import WorldFactory
-from pandemia.random_tools import Random
+from ..agent import Agent 
+from ..location import Location
+from ..region import Region
+from .. import World
+from . import WorldFactory
+from .random_tools import Random
 
 log = logging.getLogger('global_grid_world_factory')
 

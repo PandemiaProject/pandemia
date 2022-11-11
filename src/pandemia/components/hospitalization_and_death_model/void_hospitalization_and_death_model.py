@@ -2,7 +2,7 @@
 
 import logging
 
-from pandemia.components.hospitalization_and_death_model import HospitalizationAndDeathModel
+from .components.hospitalization_and_death_model import HospitalizationAndDeathModel
 
 log = logging.getLogger("void_hospitalization_and_death_model")
 

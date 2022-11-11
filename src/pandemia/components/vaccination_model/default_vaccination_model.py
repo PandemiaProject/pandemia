@@ -6,7 +6,7 @@ import numpy as np
 
 from ctypes import c_void_p, c_int, cdll
 
-from pandemia.components.vaccination_model import VaccinationModel
+from .components.vaccination_model import VaccinationModel
 
 log = logging.getLogger("default_vaccination_model")
 

@@ -5,11 +5,11 @@ import random
 import numpy as np
 from collections import defaultdict
 
-from pandemia.world.agent import Agent
-from pandemia.world.location import Location
-from pandemia.world.region import Region
-from pandemia.world import World
-from pandemia.world.world_factory import WorldFactory
+from ..agent import Agent 
+from ..location import Location
+from ..region import Region
+from .. import World
+from . import WorldFactory
 
 log = logging.getLogger('test_world_factory')
 

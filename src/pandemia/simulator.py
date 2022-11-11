@@ -9,11 +9,11 @@ from datetime import datetime
 from ctypes import c_int, c_void_p, cdll
 from joblib import Parallel, delayed
 
-from pandemia.random_tools import Random
+from .random_tools import Random
 
 import uuid
 
-from pandemia.version import VERSION
+from .version import VERSION
 
 log = logging.getLogger('sim')
 

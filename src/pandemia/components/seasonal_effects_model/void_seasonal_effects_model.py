@@ -2,7 +2,7 @@
 
 import logging
 
-from pandemia.components.seasonal_effects_model import SeasonalEffectsModel
+from .components.seasonal_effects_model import SeasonalEffectsModel
 
 log = logging.getLogger("void_seasonal_effects_model")
 

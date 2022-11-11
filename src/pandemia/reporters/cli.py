@@ -2,7 +2,7 @@
 
 from tqdm import tqdm
 
-from pandemia.reporters import Reporter
+from .reporters import Reporter
 
 #pylint: disable=unused-argument
 class TimeReporter(Reporter):

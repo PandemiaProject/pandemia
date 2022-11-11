@@ -2,7 +2,7 @@
 
 import logging
 
-from pandemia.components.input_model import InputModel
+from .components.input_model import InputModel
 
 log = logging.getLogger("void_input_model")
 #pylint: disable=unused-argument

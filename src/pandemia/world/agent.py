@@ -4,7 +4,7 @@ of locations at which they can perform that activity and corresponding weights""
 import logging
 import uuid
 
-from pandemia.world.location import Location
+from .location import Location
 
 log = logging.getLogger("agent")
 
