@@ -13,7 +13,7 @@ LocationTuple = tuple[float, float]
 class Location:
 
     def __init__(self, typ: str, coord: LocationTuple):
-        """Represents a location.
+        """Represents a location, for example an area of land or a building.
 
         Parameters:
           typ (str): The type of location, as a string, for example House, Restaurant etc
