@@ -13,7 +13,7 @@ class Agent:
         """Represents a location, for example an area of land or a building.
 
         Attributes:
-           uuid (UUID): A universally unique identifier for this agent.
+           uuid (str): A universally unique identifier for this agent.
            age (int): The age of the individual, in years.
            weekly_routine (list[str]): A list of activites, representing a weekly routine. This
               specifies which activities this agent performs and in which order. For example,
@@ -40,7 +40,7 @@ class Agent:
               need not sum to 1.
         """
 
-        self.uuid = uuid.uuid4().hex
+        self.uuid: str = uuid.uuid4().hex
         self.age: int = age
         self.weekly_routine: list[str] = []
         self.activity_locations: dict[str, list[Location]] = {}
