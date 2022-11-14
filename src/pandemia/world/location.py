@@ -1,6 +1,8 @@
 
+# Allows classes to return their own type
+from __future__ import annotations
+
 import uuid
-from __future__ import annotations # Allows classes to return their own type
 from math import sqrt
 from pyproj import Transformer
 
