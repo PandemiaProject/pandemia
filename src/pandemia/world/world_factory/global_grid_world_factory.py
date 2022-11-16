@@ -17,6 +17,7 @@ from ..region import Region
 from .. import World
 from . import WorldFactory
 from ...random_tools import Random
+from os import cpu_count
 
 log = logging.getLogger('global_grid_world_factory')
 
@@ -72,6 +73,23 @@ class GlobalGridWorldFactory(WorldFactory):
         self.local_travel_prob_per_day   = self.config['local_travel_prob_per_day']
         self.distance_threshold          = self.config['distance_threshold']
 
+
+
+    def _parallel_create_region(self, row_id):
+        row, id = row_id
+        iso2 = str(row[1])
+        if (len(self.regions_to_simulate) == 0) or (iso2 in self.regions_to_simulate):
+            iso3 = str(row[2])
+            super_region = str(row[3])
+            household_size = round(float(row[4]))
+            population_size = int(row[5])
+            age_distribution = [float(row[6 + r]) for r in range(101)]
+            number_of_agents = max(int(population_size * self.scale_factor), 1)
+            new_region = self._create_region(id, iso2, iso3, super_region, number_of_agents,
+                                                age_distribution, household_size)
+            #world.regions.append(new_region)
+            return new_region
+
     def get_world(self) -> World:
 
         log.info("Creating world...")
@@ -84,19 +102,11 @@ class GlobalGridWorldFactory(WorldFactory):
         with open(self.regions_data_file, newline='') as csvfile:
             next(csvfile)
             region_data = csv.reader(csvfile, delimiter=',')
-            for row in region_data:
-                iso2 = str(row[1])
-                if (len(self.regions_to_simulate) == 0) or (iso2 in self.regions_to_simulate):
-                    iso3 = str(row[2])
-                    super_region = str(row[3])
-                    household_size = round(float(row[4]))
-                    population_size = int(row[5])
-                    age_distribution = [float(row[6 + r]) for r in range(101)]
-                    number_of_agents = max(int(population_size * self.scale_factor), 1)
-                    new_region = self._create_region(id, iso2, iso3, super_region, number_of_agents,
-                                                        age_distribution, household_size)
-                    world.regions.append(new_region)
-                    id += 1
+            row_ids = [(r, idx) for idx, r in enumerate(region_data) ]
+            with multiprocessing.Pool(processes=cpu_count()-1) as pool:
+                res = list(tqdm(pool.imap(self._parallel_create_region, row_ids), total=len(row_ids)))
+            world.regions = res
+
 
         world.number_of_regions = len(world.regions)
 
@@ -119,7 +129,7 @@ class GlobalGridWorldFactory(WorldFactory):
 
         assert self.clock.ticks_in_day == 3
 
-        log.info("Creating region: " + iso2 + "...")
+        #log.info("Creating region: " + iso2 + "...")
 
         prng = Random(self.random_seed)
 
@@ -164,7 +174,7 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # We must account for the rounding error in order to generate the correct number of agents.
         # The first step in accounting for this error involves adding on multiples of the map_dist.
-        log.debug("Distributing population (approximate)...")
+        #log.debug("Distributing population (approximate)...")
         old_sum = -1
         converged = False
         while ((np.sum(map_ints) < number_of_agents) and not converged):
@@ -178,7 +188,7 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # The second step involves adding on single agents in such a way that minimizes the error.
         # Doing this step alone is far too slow, hence the previous step.
-        log.debug("Distributing population (exact)...")
+        #log.debug("Distributing population (exact)...")
         while (np.sum(map_ints) < number_of_agents):
             err = np.square(map_ints - map_floats)
             map_ints[np.unravel_index(np.argmax(err), err.shape)] += 1
@@ -194,7 +204,7 @@ class GlobalGridWorldFactory(WorldFactory):
         # Create grid squares and houses and populate the houses with agents, assigning them a
         # location for the home activity
 
-        log.debug("Creating locations and agents...")
+        #log.debug("Creating locations and agents...")
 
         locations = []
         agents = []
@@ -235,13 +245,13 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # Assign agents locations for the community activity based on weighted proximity
 
-        log.debug("Assigning community locations...")
+        #log.debug("Assigning community locations...")
 
         kdtree = KDTree([square.coord for square in squares])
         local_sample_size = min(self.local_sample_size, len(squares))
         nonlocal_sample_size = min(self.nonlocal_sample_size, len(squares))
 
-        for square in tqdm(squares):
+        for square in squares:
 
             if local_sample_size > 1:
                 _, nearest_indices = kdtree.query(square.coord, local_sample_size)
