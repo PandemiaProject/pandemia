@@ -4,7 +4,8 @@ import logging
 import numpy as np
 
 from ctypes import c_void_p, c_int, cdll
-
+import platform
+ext=".dll" if platform.system == 'Windows' else ".so"
 from ..movement_model import MovementModel
 
 log = logging.getLogger("default_movement_model")
@@ -25,7 +26,7 @@ class DefaultMovementModel(MovementModel):
         super().__init__(config)
 
         lib = cdll.LoadLibrary("./src/pandemia/components/movement_model/"
-                                "default_movement_model_functions")
+                                "default_movement_model_functions"+ext)
 
         self.update_movement   = lib.update_movement
         self.dynamics_movement = lib.dynamics_movement
