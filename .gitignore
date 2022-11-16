@@ -139,3 +139,6 @@ dmypy.json
 
 # misc files
 *.DS_Store
+
+# Ignore binaries
+!*.*

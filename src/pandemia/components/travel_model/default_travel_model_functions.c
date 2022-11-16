@@ -2,6 +2,7 @@
 #include <math.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <limits.h>
 
 // gcc -fPIC -shared -o default_travel_model_functions.dll default_travel_model_functions.c
 
