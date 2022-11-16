@@ -16,7 +16,7 @@ from ..location import Location
 from ..region import Region
 from .. import World
 from . import WorldFactory
-from .random_tools import Random
+from ...random_tools import Random
 
 log = logging.getLogger('global_grid_world_factory')
 

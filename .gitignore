@@ -142,3 +142,7 @@ dmypy.json
 
 # Ignore binaries
 !*.*
+*.so
+*.dll 
+
+*.egg-info/
