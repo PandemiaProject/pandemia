@@ -98,16 +98,12 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # Create regions using population data
         self.region_data = {}
-        id = 0
         with open(self.regions_data_file, newline='') as csvfile:
             next(csvfile)
             region_data = csv.reader(csvfile, delimiter=',')
             row_ids = [(r, idx) for idx, r in enumerate(region_data) ]
             with multiprocessing.Pool(processes=cpu_count()-1) as pool:
-                res = list(tqdm(pool.imap(self._parallel_create_region, row_ids), total=len(row_ids)))
-            world.regions = res
-
-
+                world.regions = list(tqdm(pool.imap_unordered(self._parallel_create_region, row_ids), total=len(row_ids)))
         world.number_of_regions = len(world.regions)
 
         number_of_agents = sum([len(region.agents) for region in world.regions])
