@@ -7,7 +7,7 @@ import numpy as np
 import csv
 import datetime
 
-from .components.input_model import InputModel
+from ..input_model import InputModel
 
 log = logging.getLogger("validation_input_model")
 #pylint: disable=unused-argument

@@ -5,7 +5,7 @@ import numpy as np
 
 from ctypes import c_void_p, c_int, c_double, cdll
 
-from .components.hospitalization_and_death_model import HospitalizationAndDeathModel
+from ..hospitalization_and_death_model import HospitalizationAndDeathModel
 
 log = logging.getLogger("default_hospitalization_and_death_model")
 

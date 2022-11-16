@@ -6,7 +6,7 @@ import numpy as np
 
 from ctypes import c_void_p, c_double, c_int, cdll
 
-from .components.testing_and_contact_tracing_model import TestingAndContactTracingModel
+from ..testing_and_contact_tracing_model import TestingAndContactTracingModel
 
 log = logging.getLogger("default_testing_and_contact_tracing_model")
 

@@ -7,7 +7,7 @@ from joblib import Parallel, delayed
 
 from ctypes import c_void_p, c_double, c_int, cdll
 
-from .components.travel_model import TravelModel
+from ..travel_model import TravelModel
 
 log = logging.getLogger("default_travel_model")
 

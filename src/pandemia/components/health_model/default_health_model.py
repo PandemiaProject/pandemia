@@ -10,7 +10,7 @@ from numpy import genfromtxt
 
 from ctypes import c_void_p, c_double, c_int, cdll
 
-from .components.health_model import HealthModel
+from ..health_model import HealthModel
 
 log = logging.getLogger("default_health_model")
 

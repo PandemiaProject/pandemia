@@ -2,7 +2,7 @@
 
 import logging
 
-from .components.vaccination_model import VaccinationModel
+from ..vaccination_model import VaccinationModel
 
 log = logging.getLogger("void_vaccination_model")
 

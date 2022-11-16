@@ -5,7 +5,7 @@ import numpy as np
 
 from ctypes import c_void_p, c_int, cdll
 
-from .components.movement_model import MovementModel
+from ..movement_model import MovementModel
 
 log = logging.getLogger("default_movement_model")
 

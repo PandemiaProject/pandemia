@@ -2,7 +2,7 @@
 
 import logging
 
-from .components.testing_and_contact_tracing_model import TestingAndContactTracingModel
+from ..testing_and_contact_tracing_model import TestingAndContactTracingModel
 
 log = logging.getLogger("void_testing_and_contact tracing_model")
 
