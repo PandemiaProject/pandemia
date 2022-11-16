@@ -5,7 +5,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 from collections import defaultdict
 import matplotlib.pyplot as plt
-from .reporters import Reporter
+from . import Reporter
 import random
 import pygame
 import matplotlib.pyplot as plt

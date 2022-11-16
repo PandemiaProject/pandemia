@@ -172,9 +172,9 @@ class SimulationFactory:
         testing_and_contact_tracing_model_class =\
             config['testing_and_contact_tracing_model.__type__']
         testing_and_contact_tracing_model_config =\
-            config.subconfig('pandemia.components.testing_and_contact_tracing_model')
+            config.subconfig('testing_and_contact_tracing_model')
         testing_and_contact_tracing_model =\
-            instantiate_class(".testing_and_contact_tracing_model",
+            instantiate_class("pandemia.components.testing_and_contact_tracing_model",
                             testing_and_contact_tracing_model_class,
                             testing_and_contact_tracing_model_config)
         self.set_testing_and_contact_tracing_model(testing_and_contact_tracing_model)
