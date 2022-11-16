@@ -2,6 +2,7 @@
 #include <math.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <limits.h>
 
 // gcc -fPIC -shared -o default_movement_model_functions default_movement_model_functions.c
 
