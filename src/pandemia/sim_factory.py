@@ -147,7 +147,7 @@ class SimulationFactory:
         # Create health model
         health_model_class = config['health_model.__type__']
         health_model_config = config.subconfig('health_model')
-        health_model = instantiate_class("health_model",
+        health_model = instantiate_class("pandemia.components.health_model",
                                         health_model_class, health_model_config, scale_factor,
                                         self.clock)
         self.set_health_model(health_model)
@@ -155,7 +155,7 @@ class SimulationFactory:
         # Create movement model
         movement_model_class = config['movement_model.__type__']
         movement_model_config = config.subconfig('movement_model')
-        movement_model = instantiate_class("movement_model",
+        movement_model = instantiate_class("pandemia.components.movement_model",
                                         movement_model_class, movement_model_config)
         self.set_movement_model(movement_model)
 
@@ -163,7 +163,7 @@ class SimulationFactory:
         hospitalization_and_death_model_class = config['hospitalization_and_death_model.__type__']
         hospitalization_and_death_model_config = config.subconfig('hospitalization_and_death_model')
         hospitalization_and_death_model =\
-            instantiate_class("hospitalization_and_death_model",
+            instantiate_class("pandemia.components.hospitalization_and_death_model",
                             hospitalization_and_death_model_class,
                             hospitalization_and_death_model_config)
         self.set_hospitalization_and_death_model(hospitalization_and_death_model)
@@ -172,7 +172,7 @@ class SimulationFactory:
         testing_and_contact_tracing_model_class =\
             config['testing_and_contact_tracing_model.__type__']
         testing_and_contact_tracing_model_config =\
-            config.subconfig('testing_and_contact_tracing_model')
+            config.subconfig('pandemia.components.testing_and_contact_tracing_model')
         testing_and_contact_tracing_model =\
             instantiate_class(".testing_and_contact_tracing_model",
                             testing_and_contact_tracing_model_class,
@@ -182,7 +182,7 @@ class SimulationFactory:
         # Create vaccination model
         vaccination_model_class = config['vaccination_model.__type__']
         vaccination_model_config = config.subconfig('vaccination_model')
-        vaccination_model = instantiate_class(".vaccination_model",
+        vaccination_model = instantiate_class("pandemia.components.vaccination_model",
                                             vaccination_model_class, vaccination_model_config,
                                             self.clock,
                                             health_model.number_of_strains,
@@ -193,7 +193,7 @@ class SimulationFactory:
         # Create regional mixing model
         travel_model_class = config['travel_model.__type__']
         travel_config = config.subconfig('travel_model')
-        travel = instantiate_class(".travel_model",
+        travel = instantiate_class("pandemia.components.travel_model",
                                             travel_model_class, travel_config,
                                             scale_factor,
                                             health_model.number_of_strains,
@@ -203,7 +203,7 @@ class SimulationFactory:
         # Create input model
         input_class = config['input_model.__type__']
         input_config = config.subconfig('input_model')
-        input = instantiate_class(".input_model",
+        input = instantiate_class("pandemia.components.input_model",
                                 input_class, input_config, scale_factor,
                                 self.clock,
                                 self.vector_world.number_of_regions,
