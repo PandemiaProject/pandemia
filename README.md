@@ -24,13 +24,20 @@ Output data are stored in a configured output directory.
 
 ## Requirements
 
-- python 3.10
+- Python 3.10
   - Python version other than 3.10 may produce errors. 
+- A GCC complier 
 
 ## Usage
-To install:
+
+To build C libraries
 ```
-pip install -e .
+make
+```
+
+To install pandemia python package:
+```
+pip install .
 ```
 To run the homogeneous mixing example:
 ```
