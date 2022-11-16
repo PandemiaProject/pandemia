@@ -8,6 +8,8 @@ import csv
 from datetime import datetime
 from ctypes import c_int, c_void_p, cdll
 from joblib import Parallel, delayed
+import platform
+ext=".dll" if platform.system == 'Windows' else ".so"
 
 from .random_tools import Random
 
@@ -69,7 +71,7 @@ class Simulator:
         self.number_of_vaccines = self.vaccination_model.number_of_vaccines
         self.number_of_regions = vector_world.number_of_regions
 
-        lib = cdll.LoadLibrary("./src/pandemia/simulator_functions")
+        lib = cdll.LoadLibrary("./src/pandemia/simulator_functions"+ext)
 
         self.collect_telemetry_data = lib.collect_telemetry_data
         self.count_dead             = lib.count_dead
