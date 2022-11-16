@@ -22,7 +22,7 @@ class DefaultVaccinationModel(VaccinationModel):
         super().__init__(config)
 
         lib = cdll.LoadLibrary("./src/pandemia/components/vaccination_model/"
-                                "default_vaccination_model_functions.dll")
+                                "default_vaccination_model_functions")
 
         self.dynamics_vaccination = lib.dynamics_vaccination
 

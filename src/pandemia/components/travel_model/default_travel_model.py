@@ -29,7 +29,7 @@ class DefaultTravelModel(TravelModel):
         super().__init__(config, scale_factor)
 
         lib = cdll.LoadLibrary("./src/pandemia/components/travel_model/"
-                                "default_travel_model_functions.dll")
+                                "default_travel_model_functions")
 
         self.transmission_out = lib.transmission_out
         self.transmission_in = lib.transmission_in

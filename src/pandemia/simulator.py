@@ -69,7 +69,7 @@ class Simulator:
         self.number_of_vaccines = self.vaccination_model.number_of_vaccines
         self.number_of_regions = vector_world.number_of_regions
 
-        lib = cdll.LoadLibrary("./src/pandemia/simulator_functions.dll")
+        lib = cdll.LoadLibrary("./src/pandemia/simulator_functions")
 
         self.collect_telemetry_data = lib.collect_telemetry_data
         self.count_dead             = lib.count_dead

@@ -23,7 +23,7 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
         super().__init__(config)
 
         lib = cdll.LoadLibrary("./src/pandemia/components/hospitalization_and_death_model/"
-                                "default_hospitalization_and_death_model_functions.dll")
+                                "default_hospitalization_and_death_model_functions")
 
         self.dynamics_hospitalization_and_death = lib.dynamics_hospitalization_and_death
 

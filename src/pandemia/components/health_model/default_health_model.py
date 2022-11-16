@@ -37,7 +37,7 @@ class DefaultHealthModel(HealthModel):
         self.clock = clock
 
         lib = cdll.LoadLibrary("./src/pandemia/components/health_model/"
-                                "default_health_model_functions.dll")
+                                "default_health_model_functions")
 
         self.update_health = lib.update_health
         self.transmission  = lib.transmission

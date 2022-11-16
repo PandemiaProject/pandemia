@@ -25,7 +25,7 @@ class DefaultMovementModel(MovementModel):
         super().__init__(config)
 
         lib = cdll.LoadLibrary("./src/pandemia/components/movement_model/"
-                                "default_movement_model_functions.dll")
+                                "default_movement_model_functions")
 
         self.update_movement   = lib.update_movement
         self.dynamics_movement = lib.dynamics_movement

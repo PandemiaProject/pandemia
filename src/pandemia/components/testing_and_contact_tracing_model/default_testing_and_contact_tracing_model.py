@@ -25,7 +25,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         super().__init__(config)
 
         lib = cdll.LoadLibrary("./src/pandemia/components/testing_and_contact_tracing_model/"
-                                "default_testing_and_contact_tracing_model_functions.dll")
+                                "default_testing_and_contact_tracing_model_functions")
 
         self.default_testing_and_contact_tracing_dynamics =\
             lib.default_testing_and_contact_tracing_dynamics
