@@ -10,7 +10,7 @@ from tqdm import tqdm
 from scipy.spatial import KDTree
 import shapefile as shp
 from scipy.spatial import distance
-
+import multiprocessing
 from ..agent import Agent 
 from ..location import Location
 from ..region import Region
