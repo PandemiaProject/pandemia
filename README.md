@@ -94,7 +94,7 @@ To run the heterogeneous mixing example using the save, thereby skipping the wor
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
-To run the ABMlux scenario, an additional .abm file is required.
+To configure a new scenario, the user can simply edit one of the configs already provided.
 
 ## Testing
 To test:
