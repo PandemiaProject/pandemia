@@ -28,14 +28,14 @@ Python lists and dictionaries. This facilitates interface with libraries of func
 
 Building the **Clock** and **World** are the first steps in building a **Simulator**. Once these objects are
 built, Pandemia builds a number of objects of type **Component**. These components include models of:
-* health
-* movement
-* hospitalization
-* travel
-* vaccination
-* diagnostics
-* seasonality
-* input
+* Health
+* Movement
+* Hospitalization
+* Travel
+* Vaccination
+* Diagnostics
+* Seasonality
+* Input
 
 The input component allows the user to specify a **Policy**, consisting of interventions. Featured
 interventions include vaccination, border closure, lockdown, testing and contact tracing,
