@@ -19,45 +19,45 @@ The code is mixed Python and C.
 The Pandemia simulator acts upon a **World**. A **World** consists of regions and a **TravelMatrix**. The
 travel matrix represents the number of individuals travelling from each region to each other region
 each day. Each region consists of individuals (referred to as agents), locations and activities. A
-World is built using a WorldFactory.
+**World** is built using a **WorldFactory**.
 
-The World is then converted into a VectorWorld. This is done by converting each Region into a 
-VectorRegion. A VectorRegion is a vectorized version of a Region, in which data is formatted as
+The **World** is then converted into a **VectorWorld**. This is done by converting each **Region** into a 
+**VectorRegion**. A **VectorRegion** is a vectorized version of a **Region**, in which data is formatted as
 arrays of integers and floats, as opposed to Python lists and dictionaries. This facilitates
 interface with libraries of functions written in C.
 
-Building the World and Clock is the first step in building a Simulator. Once these objects are
-built, Pandemia builds the simulation components. Each Component represents a pandemic submodel.
+Building the **World** and **Clock** is the first step in building a **Simulator**. Once these objects are
+built, Pandemia builds the simulation components. Each **Component** represents a pandemic submodel.
 These include models of health, movement, hospitalization, travel, vaccination, diagnostics,
 seasonality and input.
 
-The Input component allows the user to specify a Policy, consisting of interventions. Featured
+The input component allows the user to specify a **Policy**, consisting of interventions. Featured
 interventions include vaccination, border closure, lockdown, testing and contact tracing,
 quarantine and face masks.
 
 Reporters collect output data for visualization and analysis.
 
-A number of WorldFactory and Component examples are provided for the user. In particular, for each
-Component, a default model is provided, as well as a void model in case the user does not wish for
-this component to be active during a simulation. Among the WorldFactory examples are Global and
-GlobalGrid. Both factories model all the countries in the world, using air travel data to
-configure travel between countries. Whereas Global implements homogeneous mixing within each
-country, GlobalGrid implements a simple model of hetergeneous mixing, based on average household
-size and population density grids. GlobalGrid also allows the user to limit the simulation to a
+A number of **WorldFactory** and **Component** examples are provided for the user. In particular, for each
+**Component**, a default model is provided, as well as a void model in case the user does not wish for
+this component to be active during a simulation. Among the **WorldFactory** examples are **Global** and
+**GlobalGrid**. Both factories model all the countries in the world, using air travel data to
+configure travel between countries. Whereas **Global** implements homogeneous mixing within each
+country, **GlobalGrid** implements a simple model of hetergeneous mixing, based on average household
+size and population density grids. **GlobalGrid** also allows the user to limit the simulation to a
 subset of countries. For both of these world factories, the recommended scale factor is
 0.0005.
 
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
 selected objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
-directory. The homogeneous mixing scenerio Global uses the Global world factory, while the
-heterogeneous mixing scenario GlobalGrid uses the GlobalGrid world factory.
+directory. The homogeneous mixing scenerio **Global** uses the **Global** world factory, while the
+heterogeneous mixing scenario **GlobalGrid** uses the **GlobalGrid** world factory.
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
-input data for the Global scenario is found in the [Scenarios/Global/data](Scenarios/Global/data).
+input data for the **Global** scenario is found in the [Scenarios/Global/data](Scenarios/Global/data).
 
-The GlobalGrid factory uses the following grid data, available under a CC BY 4.0 license:
+The **GlobalGrid** factory uses the following grid data, available under a CC BY 4.0 license:
 
 Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
 Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
