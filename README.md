@@ -38,8 +38,13 @@ built, Pandemia builds a number of objects of type **Component**. These componen
 * Input
 
 The input component allows the user to specify a **Policy**, consisting of interventions. Featured
-interventions include vaccination, border closure, lockdown, testing and contact tracing,
-quarantine and face masks.
+interventions include:
+* Vaccination
+* Border Closure
+* Lockdown
+* Testing and Contact Tracing
+* Quarantine
+* Face Masks
 
 Reporters collect output data for visualization and analysis.
 
