@@ -45,8 +45,9 @@ epoch: 1st January 2020
 # ######################################### World ##################################################
 
 # The Pandemia simulator acts on a world. The world consists of regions, with each region consisting
-# of agents, locations and activities. The world is built using a world factory. The choice of
-# world factory, and its configuration, are made here.
+# of agents, locations and activities. The world additionally consists of a travel matrix,
+# indicating how many agents should travel from each region to each other region each day. The world
+# is built using a world factory. The choice of world factory, and its configuration, are made here.
 
 world_factory:
   # The GlobalWorldFactory builds a world consisting of approximately two hundred regions, with each
