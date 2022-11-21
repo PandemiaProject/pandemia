@@ -79,8 +79,8 @@ world_factory:
   local_travel_prob_per_day: 0.0
 
   # The parameter distance_threshold is used to determine which countries are adjacent to one
-  # another. If the coordinates of two regions, as recorded in the shape file, are at their closest
-  # within this distance of another then the two regions are considered adjacent.
+  # another. If the coordinates of two regions, as recorded in the shape file, are  within this
+  # distance of another then the two regions are considered adjacent.
   distance_threshold: 10
 
   # The numbers of agents travelling by air between each country each day is configured using data,
