@@ -6,14 +6,14 @@
 
 Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
 
+![pandemia Logo](pandemia_logo.jpg)
+
 Pandemia is able to simulate the spread of an infectious disease across multiple regions. These
 regions might, for example, represent all the countries of the world, or the administrative
 divisions of a single country. The model is fast and scalable, able to simulate extremely large
 numbers of individuals while supporting a wide range of features.
 
 The code is mixed Python and C.
-
-![pandemia Logo](pandemia_logo.jpg)
 
 ## Overview
 The Pandemia simulator acts upon a World. A World consists of regions and a travel matrix. The
@@ -37,12 +37,19 @@ quarantine and face masks.
 
 Reporters collect output data for visualization and analysis.
 
-A number of WorldFactory and Component examples are provided for the user. For each Component, a
-default model is provided, as well as a void model in case the user does not wish for this component
-to be active during a simulation. Two world factories...
+A number of WorldFactory and Component examples are provided for the user. In particular, for each
+Component, a default model is provided, as well as a void model in case the user does not wish for
+this component to be active during a simulation. Among the WorldFactory examples are Global and
+GlobalGrid. Both factories model all the countries in the world, using air travel data to
+configure travel between countries. Whereas Global implements homogeneous mixing within each
+country, GlobalGrid implements a simple model of hetergeneous mixing, based on average household
+size and population density grids. GlobalGrid also allows the user to limit the simulation to a
+subset of countries. For both of these world factories, the recommended scale factor is
+0.0005.
 
-Scenarios are configured using YAML.
-
+Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
+of submodel for each of the simulation components, together with configurations for each of these
+selected objects and the reporters.
 
 ### Input Data
 Input data are defined in the [Scenarios](Scenarios/) directory.
@@ -58,10 +65,7 @@ Output data are stored in a configured output directory.
 
 ## Usage
 
-To build C libraries
-```
-make
-```
+    pip install -e .[test]
 
 To install pandemia python package:
 ```
