@@ -63,7 +63,9 @@ of submodel for each of the simulation components, together with configurations 
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
 directory. The homogeneous mixing scenerio **Global** uses the **Global** world factory, while the
 heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. For each
-scenario, all parameter values are set in the corresponding .yaml file.
+scenario, all parameter values are set in the corresponding YAML file. For example, the **Global**
+config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid** config can
+be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
@@ -88,7 +90,7 @@ scenario configuration.
 ## Usage
 To install:
 
-    pip install -e .[test]
+    pip install -e .
 
 To run the homogeneous mixing scenario:
 
