@@ -8,10 +8,10 @@ Pandemia is an individual-based stochastic pandemic simulator. It is currently a
 
 ![pandemia Logo](pandemia_logo.jpg)
 
-Pandemia is able to simulate the spread of an infectious disease across multiple regions. These
-regions might, for example, represent all the countries of the world, or the administrative
-divisions of a single country. The model is fast and scalable, able to simulate extremely large
-numbers of individuals while supporting a wide range of features.
+Pandemia is able to simulate and visualize the spread of an infectious disease across multiple
+regions. These regions might, for example, represent all the countries of the world, or the
+administrative divisions of a single country. The model is fast and scalable, able to simulate
+extremely large numbers of individuals while supporting a wide range of features.
 
 The code is mixed Python and C.
 
