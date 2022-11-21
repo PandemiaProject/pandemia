@@ -16,20 +16,26 @@ extremely large numbers of individuals while supporting a wide range of features
 The code is mixed Python and C.
 
 ## Overview
-The Pandemia simulator acts upon a **World**. A **World** consists of regions and a **Travel Matrix**. The
-travel matrix represents the number of individuals travelling from each region to each other region
-each day. Each region consists of individuals (referred to as agents), locations and activities. A
-**World** is built using a **World Factory**.
+The Pandemia simulator acts upon a **World**. A **World** consists of a number of objects of type
+**Region** and a **Travel Matrix**. The travel matrix represents the number of individuals travelling
+from each region to each other region each day. Each **Region** consists of individuals (referred to
+as agents), locations and activities. A **World** is built using a **World Factory**.
 
-The **World** is then converted into a **Vector World**. This is done by converting each **Region** into a 
-**Vector Region**. A **Vector Region** is a vectorized version of a **Region**, in which data is formatted as
-arrays of integers and floats, as opposed to Python lists and dictionaries. This facilitates
-interface with libraries of functions written in C.
+After the building of the **World**, the **World** is then converted into a **Vector World**. This
+is done by converting each **Region** into a **Vector Region**. A **Vector Region** is a vectorized
+version of a **Region**, in which data is formatted as arrays of integers and floats, as opposed to
+Python lists and dictionaries. This facilitates interface with libraries of functions written in C.
 
-Building the **World** and **Clock** is the first step in building a **Simulator**. Once these objects are
-built, Pandemia builds the simulation components. Each **Component** represents a pandemic submodel.
-These include models of health, movement, hospitalization, travel, vaccination, diagnostics,
-seasonality and input.
+Building the **Clock** and **World** are the first steps in building a **Simulator**. Once these objects are
+built, Pandemia builds the remaining simulation components. These include models of:
+* health
+* movement
+* hospitalization
+* travel
+* vaccination
+* diagnostics
+* seasonality
+* input
 
 The input component allows the user to specify a **Policy**, consisting of interventions. Featured
 interventions include vaccination, border closure, lockdown, testing and contact tracing,
