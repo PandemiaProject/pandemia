@@ -16,13 +16,13 @@ numbers of individuals while supporting a wide range of features.
 The code is mixed Python and C.
 
 ## Overview
-The Pandemia simulator acts upon a **World**. A **World** consists of regions and a **TravelMatrix**. The
+The Pandemia simulator acts upon a **World**. A **World** consists of regions and a **Travel Matrix**. The
 travel matrix represents the number of individuals travelling from each region to each other region
 each day. Each region consists of individuals (referred to as agents), locations and activities. A
-**World** is built using a **WorldFactory**.
+**World** is built using a **World Factory**.
 
-The **World** is then converted into a **VectorWorld**. This is done by converting each **Region** into a 
-**VectorRegion**. A **VectorRegion** is a vectorized version of a **Region**, in which data is formatted as
+The **World** is then converted into a **Vector World**. This is done by converting each **Region** into a 
+**Vector Region**. A **Vector Region** is a vectorized version of a **Region**, in which data is formatted as
 arrays of integers and floats, as opposed to Python lists and dictionaries. This facilitates
 interface with libraries of functions written in C.
 
@@ -37,13 +37,13 @@ quarantine and face masks.
 
 Reporters collect output data for visualization and analysis.
 
-A number of **WorldFactory** and **Component** examples are provided for the user. In particular, for each
+A number of **World Factory** and **Component** examples are provided for the user. In particular, for each
 **Component**, a default model is provided, as well as a void model in case the user does not wish for
-this component to be active during a simulation. Among the **WorldFactory** examples are **Global** and
-**GlobalGrid**. Both factories model all the countries in the world, using air travel data to
+this component to be active during a simulation. Among the **World Factory** examples are **Global** and
+**Global Grid**. Both factories model all the countries in the world, using air travel data to
 configure travel between countries. Whereas **Global** implements homogeneous mixing within each
-country, **GlobalGrid** implements a simple model of hetergeneous mixing, based on average household
-size and population density grids. **GlobalGrid** also allows the user to limit the simulation to a
+country, **Global Grid** implements a simple model of hetergeneous mixing, based on average household
+size and population density grids. **Global Grid** also allows the user to limit the simulation to a
 subset of countries. For both of these world factories, the recommended scale factor is
 0.0005.
 
@@ -51,13 +51,14 @@ Scenarios are configured using YAML. A scenario consists of a choice of world fa
 of submodel for each of the simulation components, together with configurations for each of these
 selected objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
 directory. The homogeneous mixing scenerio **Global** uses the **Global** world factory, while the
-heterogeneous mixing scenario **GlobalGrid** uses the **GlobalGrid** world factory.
+heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory.
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
 input data for the **Global** scenario is found in the [Scenarios/Global/data](Scenarios/Global/data).
+All input data for the **Global Grid** scenario is found in the [Scenarios/Global_Grid/data](Scenarios/Global_Grid/data).
 
-The **GlobalGrid** factory uses the following grid data, available under a CC BY 4.0 license:
+The **Global Grid** factory uses the following grid data, available under a CC BY 4.0 license:
 
 Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
 Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
@@ -65,7 +66,8 @@ New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.o
 Accessed 31 OCTOBER 2022.
 
 ### Output Data
-Output data are stored in a configured output directory.
+Output data are stored in a output directory, configured by the user in the reporters section of the
+scenario configuration.
 
 ## Requirements
 
