@@ -91,10 +91,9 @@ world_factory:
   # The data is sourced from:
   # https://www.worldpop.org/geodata/summary?id=1287
   # The airport_path parameter is a filepath to a data file which records which airports are in each
-  # country:
+  # country. The air_travel_path parameter is a filepath to a data file which esimated the number of
+  # people travelling from each airport to each other airport each month:
   airport_path: Scenarios/Global/data/airport_data.csv
-  # The air_travel_path parameter is a filepath to a data file which esimated the number of people
-  # travelling from each airport to each other airport each month:
   air_travel_path: Scenarios/Global/data/air_travel_data.csv
 
 # ######################################### Seasonal Effects #######################################
