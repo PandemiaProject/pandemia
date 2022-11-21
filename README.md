@@ -39,35 +39,36 @@ built, Pandemia builds a number of objects of type **Component**. These componen
 
 The input component allows the user to specify a **Policy**, consisting of interventions. Featured
 interventions include:
-* Vaccination
 * Border Closure
 * Lockdown
 * Testing and Contact Tracing
 * Quarantine
 * Face Masks
+* Vaccination
 
-Reporters collect output data for visualization and analysis.
+Objects of type **Reporter** collect output data for visualization and analysis.
 
 A number of **World Factory** and **Component** examples are provided for the user. In particular, for each
 **Component**, a default model is provided, as well as a void model in case the user does not wish for
 this component to be active during a simulation. Among the **World Factory** examples are **Global** and
-**Global Grid**. Both factories model all the countries in the world, using air travel data to
+**Global Grid**. Both these factories model all the countries in the world, using air travel data to
 configure travel between countries. Whereas **Global** implements homogeneous mixing within each
 country, **Global Grid** implements a simple model of hetergeneous mixing, based on average household
 size and population density grids. **Global Grid** also allows the user to limit the simulation to a
-subset of countries. For both of these world factories, the recommended scale factor is
-0.0005.
+only subset of countries, or even only one. For both of these world factories, the recommended scale
+factor is 0.0005.
 
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
-selected objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
+objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
 directory. The homogeneous mixing scenerio **Global** uses the **Global** world factory, while the
-heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory.
+heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. For each
+scenario, all parameter values are set in the corresponding .yaml file.
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
-input data for the **Global** scenario is found in the [Scenarios/Global/data](Scenarios/Global/data).
-All input data for the **Global Grid** scenario is found in the [Scenarios/Global_Grid/data](Scenarios/Global_Grid/data).
+input data for the **Global** scenario is found in [Scenarios/Global/data](Scenarios/Global/data).
+All input data for the **Global Grid** scenario is found in [Scenarios/Global_Grid/data](Scenarios/Global_Grid/data).
 
 The **Global Grid** factory uses the following grid data, available under a CC BY 4.0 license:
 
@@ -105,7 +106,7 @@ To run the heterogeneous mixing scenario using the save, thereby skipping the wo
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
-To configure a new scenario, the user can simply edit one of the configs already provided.
+To configure a new scenario, the user can edit one of the configs already provided.
 
 ## Testing
 To test:
