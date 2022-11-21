@@ -18,7 +18,7 @@ The code is mixed Python and C.
 ## Overview
 The Pandemia simulator acts upon a World. A World consists of regions and a travel matrix. The
 travel matrix represents the number of individuals travelling from each region to each other region
-each day. Each region consists of individuals (referred to as agents), locations and activities. The
+each day. Each region consists of individuals (referred to as agents), locations and activities. A
 World is built using a WorldFactory.
 
 The World is then converted into a VectorWorld. This is done by converting each Region into a 
@@ -27,9 +27,19 @@ arrays of integers and floats, as opposed to Python lists and dictionaries. This
 interface with libraries of functions written in C.
 
 Building the World and Clock is the first step in building a Simulator. Once these objects are
-built, Pandemia builds the simulation components. Each Component represents a submodel. These
-include models of health, movement, hospitalization, travel, vaccination, diagnostics, seasonality
-and input.
+built, Pandemia builds the simulation components. Each Component represents a pandemic submodel.
+These include models of health, movement, hospitalization, travel, vaccination, diagnostics,
+seasonality and input.
+
+The Input component allows the user to specify a Policy, consisting of interventions. Featured
+interventions include vaccination, border closure, lockdown, testing and contact tracing,
+quarantine and face masks.
+
+Reporters collect output data for visualization and analysis.
+
+A number of WorldFactory and Component examples are provided for the user. For each Component, a
+default model is provided, as well as a void model in case the user does not wish for this component
+to be active during a simulation. Two world factories...
 
 Scenarios are configured using YAML.
 
