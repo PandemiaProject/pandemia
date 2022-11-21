@@ -4,17 +4,35 @@
 ![Pylint](https://github.com/?/workflows/Pylint/badge.svg)
 [![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
-Pandemia is an individual-based stochastic pandemic simulator, currently a work in progress. It is
-able to simulate the spread of an infectious disease over multiple regions, for example the entire
-world. The model is fast and scalable, able to simulate extremely large numbers of individuals, and
-supports a wide range of features.
+Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
+
+Pandemia is able to simulate the spread of an infectious disease across multiple regions. These
+regions might, for example, represent all the countries of the world, or the administrative
+divisions of a single country. The model is fast and scalable, able to simulate extremely large
+numbers of individuals while supporting a wide range of features.
+
+The code is mixed Python and C.
 
 ![pandemia Logo](pandemia_logo.jpg)
 
 ## Overview
+The Pandemia simulator acts upon a World. A World consists of regions and a travel matrix. The
+travel matrix represents the number of individuals travelling from each region to each other region
+each day. Each region consists of individuals (referred to as agents), locations and activities. The
+World is built using a WorldFactory.
+
+The World is then converted into a VectorWorld. This is done by converting each Region into a 
+VectorRegion. A VectorRegion is a vectorized version of a Region, in which data is formatted as
+arrays of integers and floats, as opposed to Python lists and dictionaries. This facilitates
+interface with libraries of functions written in C.
+
+Building the World and Clock is the first step in building a Simulator. Once these objects are
+built, Pandemia builds the simulation components. Each Component represents a submodel. These
+include models of health, movement, hospitalization, travel, vaccination, diagnostics, seasonality
+and input.
+
 Scenarios are configured using YAML.
 
-The code is mixed Python and C.
 
 ### Input Data
 Input data are defined in the [Scenarios](Scenarios/) directory.
