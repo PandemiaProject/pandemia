@@ -15,6 +15,10 @@ extremely large numbers of individuals while supporting a wide range of features
 
 The code is mixed Python and C.
 
+## Requirements
+
+ * Python 3.10
+
 ## Overview
 The Pandemia simulator acts upon a **World**. A **World** consists of a number of objects of type
 **Region** and a **Travel Matrix**. The **Travel Matrix** represents the number of individuals travelling
@@ -82,12 +86,6 @@ Accessed 31 OCTOBER 2022.
 ### Output Data
 Output data are stored in a output directory, configured by the user in the reporters section of the
 scenario configuration.
-
-## Requirements
-
-- Python 3.10
-  - Python version other than 3.10 may produce errors. 
-- A GCC complier 
 
 ## Usage
 
