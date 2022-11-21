@@ -78,19 +78,19 @@ To install:
 
     pip install -e .[test]
 
-To run the homogeneous mixing example:
+To run the homogeneous mixing scenario:
 
     pandemia Scenarios/Global/global_config.yaml
 
-To run the heterogeneous mixing example:
+To run the heterogeneous mixing scenario:
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml
 
-To run the heterogeneous mixing example and save after the world building phase:
+To run the heterogeneous mixing scenario and save after the world building phase:
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
-To run the heterogeneous mixing example using the save, thereby skipping the world building phase:
+To run the heterogeneous mixing scenario using the save, thereby skipping the world building phase:
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
