@@ -16,7 +16,7 @@ numbers of individuals while supporting a wide range of features.
 The code is mixed Python and C.
 
 ## Overview
-The Pandemia simulator acts upon a *World*. A *World* consists of regions and a *TravelMatrix*. The
+The Pandemia simulator acts upon a **World**. A **World** consists of regions and a **TravelMatrix**. The
 travel matrix represents the number of individuals travelling from each region to each other region
 each day. Each region consists of individuals (referred to as agents), locations and activities. A
 World is built using a WorldFactory.
