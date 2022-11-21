@@ -54,8 +54,8 @@ directory. The homogeneous mixing scenerio Global uses the Global world factory,
 heterogeneous mixing scenario GlobalGrid uses the GlobalGrid world factory.
 
 ### Input Data
-Input data for each scenario are found in the [Scenarios](Scenarios/) directory. For example, all
-input data for the Global scenario is found in the [Scenarios](Scenarios/Global/data).
+Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
+input data for the Global scenario is found in the [Scenarios/Global/data](Scenarios/Global/data).
 
 The GlobalGrid factory uses the following grid data, available under a CC BY 4.0 license:
 
