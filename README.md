@@ -27,7 +27,7 @@ version of a **Region**, in which data is formatted as arrays of integers and fl
 Python lists and dictionaries. This facilitates interface with libraries of functions written in C.
 
 Building the **Clock** and **World** are the first steps in building a **Simulator**. Once these objects are
-built, Pandemia builds the remaining simulation components. These include models of:
+built, Pandemia builds a number of objects of type **Component**. These components include models of:
 * health
 * movement
 * hospitalization
