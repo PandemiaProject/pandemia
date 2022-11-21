@@ -17,8 +17,8 @@ The code is mixed Python and C.
 
 ## Overview
 The Pandemia simulator acts upon a **World**. A **World** consists of a number of objects of type
-**Region** and a **Travel Matrix**. The travel matrix represents the number of individuals travelling
-from each region to each other region each day. Each **Region** consists of individuals (referred to
+**Region** and a **Travel Matrix**. The **Travel Matrix** represents the number of individuals travelling
+from each **Region** to each other **Region** each day. Each **Region** consists of individuals (referred to
 as agents), locations and activities. A **World** is built using a **World Factory**.
 
 After the building of the **World**, the **World** is then converted into a **Vector World**. This
