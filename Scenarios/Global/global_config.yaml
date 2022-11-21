@@ -1,41 +1,99 @@
 ---
 # ######################################### Basic Parameters #######################################
 
-# Scale factor
+# Scale factor. The world factory takes this parameter as input, building a scale model of the
+# world. For example, if with scale_factor = 1 the world factory builds a model consisting of
+# 1 million agents, then with scale_factor = 0.001 it builds a model consisting of only 1 thousand
+# agents. All relevant quantities in the world, components and output are scaled using this
+# universal scale factor.
 scale_factor: 0.0005
 
-# Profiler
+# Profiler. If profile: True then the simulator runs with a profiler, recording information on
+# runtime and performance in a file called profiler_output. The parameter pstats_records determines
+# how many lines to print in the profiler report. For example, if pstats_records: 100 then only the
+# most significant 100 lines are printed.
 profile: False
 pstats_records: 100
 
-# Random seeds for each region
+# Random seeds for each region. The Pandemia model is stochastic, and therefore a seed for the
+# pseudo random number generators is needed. This seed is used by the world factor, which builds the
+# world, and also by the simulator, which simulates the pandemic.
 random_seed: 1
 
-# Enable or disable the use of parallel processing. Note that the number of jobs is automatically
-# reset according to the number of regions and population ratio between regions:
+# Enable or disable the use of parallel processing. In Pandemia, a world consists of regions and
+# parts of the simulation can be parallelized across these regions. The num_jobs parameter sets a
+# maximum for the number of CPUs used by the simulator. If num_jobs < 1 then this maximum is
+# os.cpu_count(). If num_jobs >= 1 then this maximum is min(num_jobs, os.cpu_count()). The actual
+# number of CPUs used may be less than this maximum. In particular, the simulator takes into account
+# the number of regions and the ratios of populations sizes between regions to calculate the optimal
+# number of CPUs.
 enable_parallel: True
-num_jobs: -2
+num_jobs: -1
 
 # ######################################### Clock ##################################################
 
-# Time length of each tick in the simulation. The day length (86400) should be divisible by the
-# following tick length:
+# Time length of each tick (or time step) in the simulation. The day length (86400 seconds) should
+# be divisible by the following tick length.
 tick_length_s: 28800 # 3600 # 7200 # 10800 # 21600 # 43200 # 86400
-# How long the simulation should run for, in days. Note the number of iterations will be computed
-# from the tick length above:
+
+# How long the simulation should run for, in days.
 simulation_length_days: 365 # 730
-# the date at which the simulation starts:
-epoch: 1st January 2020                                                                             # POSSIBLE FREE VARIABLE
+
+# The date on which the simulation starts.
+epoch: 1st January 2020
 
 # ######################################### World ##################################################
 
+# The Pandemia simulator acts on a world. The world consists of regions, with each region consisting
+# of agents, locations and activities. The world is built using a world factory. The choice of
+# world factory, and its configuration, are made here.
+
 world_factory:
+  # The GlobalWorldFactory builds a world consisting of approximately two hundred regions, with each
+  # region representing a real-world country. The number of agents in a region is, by default, given
+  # by the true population size of the corresponding country. The scale_factor should therefore be
+  # used appropriately, to produce a scale model of the world. The age structure of a region i
+  # determined similarly. The GlobalWorldFactory builds regions consiting of only one location and
+  # one activity. Mixing within regions is therefore homogeneous.
   __type__: global_world_factory.GlobalWorldFactory
+
+  # A filepath to the shapefile for the countries, used for rendering and also for calculating which
+  # regions are adjacent to one another. The shapefile is sourced from:
+  # https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data
   regions_shape_path: Scenarios/Global/data/country_data_shapefiles/CNTR_RG_60M_2020_4326.shp
+
+  # A filepath to country data. For each country, this includes the corresponding name, iso2, iso3,
+  # continent, average household size and total population size, together with the proportion of the
+  # population in each age group. This data was sourced from:
+  # https://population.un.org/wpp/Download/Standard/CSV/
+  # https://www.un.org/development/desa/pd/data/household-size-and-composition
   regions_data_path: Scenarios/Global/data/country_data.csv
+
+  # Travel between regions is either by air or not. If not, then travel must be between adjacent
+  # regions. The GlobalWorldFactory implements a simple theoretical model of such travel, in which a
+  # proportion of the population of each region travels to adjacent regions each day. This
+  # proportion, which must be between 0.0 and 1.0, is determined by local_travel_prob_per_day. The
+  # travelling population is then divided between the adjacent regions according to their population
+  # size.
   local_travel_prob_per_day: 0.0
+
+  # The parameter distance_threshold is used to determine which countries are adjacent to one
+  # another. If the coordinates of two regions, as recorded in the shape file, are at their closest
+  # within this distance of another then the two regions are considered adjacent.
   distance_threshold: 10
+
+  # The numbers of agents travelling by air between each country each day is configured using data,
+  # generated by a model developed by Huang et al:
+  # https://doi.org/10.1371/journal.pone.0064317
+  # and later refined by Mao et al. to provide monthly estimates in:
+  # https://doi.org/10.1016/j.jtrangeo.2015.08.017
+  # The data is sourced from:
+  # https://www.worldpop.org/geodata/summary?id=1287
+  # The airport_path parameter is a filepath to a data file which records which airports are in each
+  # country:
   airport_path: Scenarios/Global/data/airport_data.csv
+  # The air_travel_path parameter is a filepath to a data file which esimated the number of people
+  # travelling from each airport to each other airport each month:
   air_travel_path: Scenarios/Global/data/air_travel_data.csv
 
 # ######################################### Seasonal Effects #######################################
@@ -44,18 +102,18 @@ seasonal_effects_model:
   __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
   seasonal_multiplier_by_region_by_month: Scenarios/Global/data/country_data_seasonality.csv
-  out_of_season_multiplier: 0.75                                                                    # POSSIBLE FREE VARIABLE
+  out_of_season_multiplier: 0.75
 
 # ######################################### Health #################################################
 
 health_model:
   __type__: default_health_model.DefaultHealthModel
-  beta: [0.42]                                                                                      # POSSIBLE FREE VARIABLE
+  beta: [0.42]
   location_typ_multipliers: null
   facemask_transmission_multiplier: 1.0
   immunity_period_days: 30
   num_initial_infections_by_region_by_strain:
-    'CN': [100000]                                                                                  # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
+    'CN': [100000]
   mutation_matrix: [[1.0]]
   number_of_strains: 1
   preexisting_sigma_multiplier: 0.5
@@ -181,8 +239,8 @@ vaccination_model:
 
 travel_model:
   __type__: default_travel_model.DefaultTravelModel
-  travel_transmission_multiplier: 100.0                                                             # POSSIBLE FREE VARIABLE
-  interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
+  travel_transmission_multiplier: 100.0
+  interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel
 
 # ######################################### Input ##################################################
 
