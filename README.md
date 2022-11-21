@@ -49,10 +49,20 @@ subset of countries. For both of these world factories, the recommended scale fa
 
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
-selected objects and the reporters.
+selected objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
+directory. The homogeneous mixing scenerio Global uses the Global world factory, while the
+heterogeneous mixing scenario GlobalGrid uses the GlobalGrid world factory.
 
 ### Input Data
-Input data are defined in the [Scenarios](Scenarios/) directory.
+Input data for each scenario are found in the [Scenarios](Scenarios/) directory. For example, all
+input data for the Global scenario is found in the [Scenarios](Scenarios/Global/data).
+
+The GlobalGrid factory uses the following grid data, available under a CC BY 4.0 license:
+
+Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
+Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
+New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.org/10.7927/H49C6VHW.
+Accessed 31 OCTOBER 2022.
 
 ### Output Data
 Output data are stored in a configured output directory.
@@ -76,23 +86,16 @@ To run the homogeneous mixing example:
 pandemia Scenarios/Global/global_config.yaml
 ```
 To run the heterogeneous mixing example:
-```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml
-```
-To run the heterogeneous mixing example and save the world file:
-```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
-```
-To run the heterogeneous mixing example using the saved world file, thereby skipping the build phase:
-```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
-```
-The heterogeneous mixing example uses the following population grid data, available under a CC BY 4.0 license:
 
-Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
-Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
-New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.org/10.7927/H49C6VHW.
-Accessed 31 OCTOBER 2022.
+    pandemia Scenarios/Global_Grid/global_grid_config.yaml
+
+To run the heterogeneous mixing example and save after the world building phase:
+
+    pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+
+To run the heterogeneous mixing example using the save, thereby skipping the world building phase:
+
+    pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
 To run the ABMlux scenario, an additional .abm file is required.
 
