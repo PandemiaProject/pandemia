@@ -120,3 +120,6 @@ def main():
     # ############## Output ##############
 
     sim.calculate_cost(policy)
+
+if __name__ == "__main__":
+    main()
