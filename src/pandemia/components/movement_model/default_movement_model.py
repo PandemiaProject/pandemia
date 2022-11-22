@@ -5,7 +5,7 @@ import numpy as np
 
 from ctypes import c_void_p, c_int, cdll
 import platform
-ext=".dll" if platform.system == 'Windows' else ".so"
+ext=".dll" if platform.system() == 'Windows' else ".so"
 from ..movement_model import MovementModel
 
 log = logging.getLogger("default_movement_model")

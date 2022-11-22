@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 import platform
-ext=".dll" if platform.system == 'Windows' else ".so"
+ext=".dll" if platform.system() == 'Windows' else ".so"
 from ctypes import c_void_p, c_int, c_double, cdll
 
 from ..hospitalization_and_death_model import HospitalizationAndDeathModel

@@ -8,7 +8,7 @@ import numpy as np
 from collections import defaultdict
 from numpy import genfromtxt
 import platform
-ext=".dll" if platform.system == 'Windows' else ".so"
+ext=".dll" if platform.system() == 'Windows' else ".so"
 from ctypes import c_void_p, c_double, c_int, cdll
 
 from ..health_model import HealthModel
