@@ -9,7 +9,7 @@ from ctypes import c_void_p, c_double, c_int, cdll
 
 from ..travel_model import TravelModel
 import platform
-ext=".dll" if platform.system == 'Windows' else ".so"
+ext=".dll" if platform.system() == 'Windows' else ".so"
 log = logging.getLogger("default_travel_model")
 
 #pylint: disable=unused-argument

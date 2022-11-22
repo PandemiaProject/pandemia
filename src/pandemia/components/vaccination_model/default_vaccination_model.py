@@ -8,7 +8,7 @@ from ctypes import c_void_p, c_int, cdll
 
 from ..vaccination_model import VaccinationModel
 import platform
-ext=".dll" if platform.system == 'Windows' else ".so"
+ext=".dll" if platform.system() == 'Windows' else ".so"
 log = logging.getLogger("default_vaccination_model")
 
 #pylint: disable=unused-argument
