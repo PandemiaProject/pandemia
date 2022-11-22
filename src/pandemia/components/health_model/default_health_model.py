@@ -52,7 +52,6 @@ class DefaultHealthModel(HealthModel):
 
         self.number_of_strains                = config['number_of_strains']
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
-
         self.sir_rescaling                    = config['sir_rescaling']
         self.sir_rescaling_int                = int(self.sir_rescaling == True)
 
