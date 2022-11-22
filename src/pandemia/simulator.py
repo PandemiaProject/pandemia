@@ -88,6 +88,7 @@ class Simulator:
         self.error = 0
         self.historical_data_filepath = self.config['historical_data_filepath']
         self.average_deaths_dict_historical = None
+
    
     def _set_telemetry_bus(self):
         """Assigns telemetry bus to each component"""
