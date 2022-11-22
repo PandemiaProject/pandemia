@@ -27,7 +27,7 @@ class GlobalGridWorldFactory(WorldFactory):
     periods, each period lasting eight hours. Each agent is assigned a home, at which they perform
     the activity Home_Activity, with the homes spatially distributed within each region using
     population grid data for that region. Each agent is also assigned a set of grid squares, which
-    includes the square in which their assined home is located. When performing the activity
+    includes the square in which their assigned home is located. When performing the activity
     Community_Activity, an agent will choose from these grid squares. The grid squares are assigned
     to each agent and weighted in such a way that agents are more likely to visit squares close to
     their home that squares far away. The weights are chosen according to the so-called gravity
