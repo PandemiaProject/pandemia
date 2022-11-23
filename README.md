@@ -105,7 +105,7 @@ scenario configuration.
 ## Quickstart
 To install:
 
-    pip install -e .
+    pip install .
 
 To run the homogeneous mixing scenario:
 
@@ -127,11 +127,11 @@ To configure a new scenario, the user can edit one of the configs already provid
 
 ## Testing
 To test:
-```
-pip install .[test]
-pytest
-```
-## Docs
+
+    pip install .[test]
+    pytest
+
+## Documentation
 To generate documentation:
 ```
 pip install pdoc
