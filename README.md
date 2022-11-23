@@ -9,15 +9,20 @@ Pandemia is an individual-based stochastic pandemic simulator. It is currently a
 ![pandemia Logo](pandemia_logo.jpg)
 
 Pandemia is able to simulate and visualize the spread of an infectious disease across multiple
-regions. These regions might, for example, represent all the countries of the world, or the
-administrative divisions of a single country. The model is fast and scalable, able to simulate
-extremely large numbers of individuals while supporting a wide range of features.
+geographical regions, for example the countries of the world or the administrative divisions of
+a country. The model is fast and scalable, able to simulate extremely large numbers of individuals
+while supporting a wide range of highly adaptable features.
+
+This software can be used by researchers looking to assess the impact of policy in the context of a
+public health emergency caused by an infection disease. The disease could, for example, be a
+respiratory infectious disease spread by a coronavirus or an influenza virus. The emergence and
+re-emergence of infectious diseases threatens the health and wellbeing of people all over the world,
+and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
+
+This document contains an overview of the model, a quickstart guide and information for
+contributors.
 
 The code is mixed Python and C.
-
-## Requirements
-
- * Python 3.10
 
 ## Overview
 The Pandemia simulator acts upon a **World**. A **World** consists of a number of objects of type
@@ -25,13 +30,15 @@ The Pandemia simulator acts upon a **World**. A **World** consists of a number o
 from each **Region** to each other **Region** each day. Each **Region** consists of individuals (referred to
 as agents), locations and activities. A **World** is built using a **World Factory**.
 
-After the building of the **World**, the **World** is then converted into a **Vector World**. This
-is done by converting each **Region** into a **Vector Region**. A **Vector Region** is a vectorized
-version of a **Region**, in which data is formatted as arrays of integers and floats, as opposed to
-Python lists and dictionaries. This facilitates interface with libraries of functions written in C.
+After the building, the **World** is then converted into a **Vector World**. This is done by
+converting each **Region** into a **Vector Region**. A **Vector Region** is a vectorized version of
+a **Region**, in which data is formatted as arrays of integers and floats, as opposed to Python
+lists and dictionaries. This facilitates interface with libraries of functions written in C.
 
-Building the **Clock** and **World** are the first steps in building a **Simulator**. Once these objects are
-built, Pandemia builds a number of objects of type **Component**. These components include models of:
+Building the **Clock** and **World** are the first steps in building a **Simulator**. Once these
+objects are built, Pandemia then builds a number of objects of type **Component**. These components
+include models of:
+
 * Health
 * Movement
 * Hospitalization
@@ -41,10 +48,13 @@ built, Pandemia builds a number of objects of type **Component**. These componen
 * Seasonality
 * Input
 
-The input component allows the user to specify a **Policy**, consisting of interventions. Featured
-interventions include:
-* Border Closure
-* Lockdown
+The models provided support, for example, multiple strains, multiple vaccines, a novel approach to
+modelling the health of individuals and a complex representation of immunity. The input component
+allows the user to specify a **Policy**, consisting of interventions. Featured interventions
+include:
+
+* Border Closures
+* Lockdowns
 * Testing and Contact Tracing
 * Quarantine
 * Face Masks
@@ -52,20 +62,21 @@ interventions include:
 
 Objects of type **Reporter** collect output data for visualization and analysis.
 
-A number of **World Factory** and **Component** examples are provided for the user. In particular, for each
-**Component**, a default model is provided, as well as a void model in case the user does not wish for
-this component to be active during a simulation. Among the **World Factory** examples are **Global** and
-**Global Grid**. Both these factories model all the countries in the world, using air travel data to
-configure travel between countries. Whereas **Global** implements homogeneous mixing within each
-country, **Global Grid** implements a simple model of hetergeneous mixing, based on average household
-size and population density grids. **Global Grid** also allows the user to limit the simulation to a
-only subset of countries, or even only one. For both of these world factories, the recommended scale
-factor is 0.0005.
+A number of **World Factory** and **Component** examples are provided for the user. In particular,
+for each **Component**, a default model is provided, as well as a void model in case the user does
+not wish for this component to be active during a simulation. Among the **World Factory** examples
+are **Global** and **Global Grid**. Both these factories build all the countries in the world, using
+air travel data to configure travel between countries. However, whereas **Global** implements
+homogeneous mixing within each country, **Global Grid** implements a simple model of hetergeneous
+mixing, based on average household size and population density grids. **Global Grid** also allows
+the user to limit the simulation to a chosen subset of countries. In particular, the user can run
+**Global Grid** on only a single country, if the user wishes. For both of these world factories,
+the recommended scale factor is 0.0005.
 
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
-directory. The homogeneous mixing scenerio **Global** uses the **Global** world factory, while the
+directory. The homogeneous mixing scenario **Global** uses the **Global** world factory, while the
 heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. For each
 scenario, all parameter values are set in the corresponding YAML file. For example, the **Global**
 config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid** config can
@@ -73,10 +84,10 @@ be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
-input data for the **Global** scenario is found in [Scenarios/Global/data](Scenarios/Global/data).
-All input data for the **Global Grid** scenario is found in [Scenarios/Global_Grid/data](Scenarios/Global_Grid/data).
+input data for the **Global** scenario are found in [Scenarios/Global/data](Scenarios/Global/data).
+All input data for the **Global Grid** scenario are found in [Scenarios/Global_Grid/data](Scenarios/Global_Grid/data).
 
-The **Global Grid** factory uses the following grid data, available under a CC BY 4.0 license:
+The **Global Grid** world factory uses the following grid data, available under a CC BY 4.0 license:
 
 Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
 Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
@@ -87,7 +98,12 @@ Accessed 31 OCTOBER 2022.
 Output data are stored in a output directory, configured by the user in the reporters section of the
 scenario configuration.
 
-## Usage
+## Requirements
+
+ * Python 3.10
+
+## Quickstart
+To install:
 
     pip install -e .
 
