@@ -69,24 +69,6 @@ def main():
     policy = None
     sim.input_model.new_input(policy)
 
-    # ############## Manual Parameter Adjustment ##############
-
-    # import numpy as np
-    # sim.enable_parallel = False
-    # sim.random_seed = 1
-    # sim.seasonal_effects_model.out_of_season_multiplier = 0.75
-    # sim.health_model.beta = [0.035]
-    # mutation_matrix = [[1.0]]
-    # sim.health_model.mutation_matrix = np.asarray(mutation_matrix, dtype=float).flatten()
-    # sim.health_model.location_typ_multipliers['Square'] = 0.2
-    # sim.health_model.num_initial_infections_by_region['CN'] = [500000]
-    # sim.health_model.preexisting_sigma_multiplier = 0.5
-    # sim.health_model.preexisting_rho_multiplier = 0.5
-    # sim.travel_model.travel_multiplier = 600
-    # sim.input_model.max_transmission_control = 0.9
-    # sim.input_model.max_travel_control = 0.9
-    # sim.travel_model.interpolation = 0.00
-
     # ############## Setup ##############
 
     sim.setup()
