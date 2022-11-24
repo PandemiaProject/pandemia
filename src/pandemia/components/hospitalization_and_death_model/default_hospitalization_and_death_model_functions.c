@@ -30,7 +30,7 @@ void dynamics_hospitalization_and_death
     const int * current_location,
     const int * current_region,
     const double * current_disease,
-    int * requesting_location_update,
+    const int * requesting_location_update,
     int * requested_location_update,
     int * requesting_facemask_update,
     int * requested_facemask_update,
@@ -80,5 +80,4 @@ void dynamics_hospitalization_and_death
             }
         }
     }
-    return;
-}
+    }

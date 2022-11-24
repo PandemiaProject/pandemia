@@ -83,7 +83,7 @@ class DefaultWorldFactory(WorldFactory):
         log.info("Created world with %d agents", total_number_of_agents)
 
     def add_shape_data(self, regions_shape_path, world):
-        """Add polgonal shapes to regions for rendering"""
+        """Add polygonal shapes to regions for rendering"""
 
         sf = shp.Reader(regions_shape_path)
         shape_recs = sf.shapeRecords()

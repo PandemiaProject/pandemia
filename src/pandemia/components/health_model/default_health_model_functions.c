@@ -1,7 +1,5 @@
 #include <stdlib.h>
-#include <math.h>
 #include <inttypes.h>
-#include <stdio.h>
 #include <limits.h>
 // gcc -fPIC -shared -o default_health_model_functions default_health_model_functions.c
 
@@ -20,33 +18,33 @@ uint64_t next(uint64_t * s) {
 	return result;
 }
 
-int randrange(uint64_t * s, int num) {
+uint64_t randrange(uint64_t * s, int num) {
     // Returns an int in the range [0, num)
     return next(s) % num;
 }
 
 int bernoulli(uint64_t * s,double prob_success) {
     // Returns the value 1 if success, 0 otherwise
-    int rnd = randrange(s, INT_MAX);
+    uint64_t rnd = randrange(s, INT_MAX);
     int result = 0;
-    if(rnd < (int) (prob_success * INT_MAX)){
+    if(rnd < (uint64_t) (prob_success * INT_MAX)){
         result = 1;
     }
     return result;
 }
 
-int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
+int random_choice(uint64_t * s, const double * weights, double sum_of_weights) {
     // Returns an int in the range [0,l) where l is the length of weights
-    int rnd = randrange(s, INT_MAX);
+    uint64_t rnd = randrange(s, INT_MAX);
     int index = 0;
-    while (rnd >= (int) ((weights[index] / sum_of_weights) * INT_MAX)){
-        rnd -= (weights[index] / sum_of_weights) * INT_MAX;
+    while (rnd >= (uint64_t) ((weights[index] / sum_of_weights) * INT_MAX)){
+        rnd -=  weights[index] / sum_of_weights * INT_MAX;
         ++index;
     }
     return index;
 }
 
-double rho_evaluate(int * partition, double * values, int length, int r, int R, int t){
+double rho_evaluate(const int * partition, const double * values, int length, int r, int R, int t){
     // Evaluates a rho immunity preset on rho immunity outcome r at time t, where R denotes the
     // total number of rho immunity outcomes
     double result;
@@ -63,7 +61,7 @@ double rho_evaluate(int * partition, double * values, int length, int r, int R, 
     return result;
 }
 
-double sigma_evaluate(int * partition, double * values, int length, int t){
+double sigma_evaluate(const int * partition, const double * values, int length, int t){
     // Evaluates a sigma immunity preset at time t
     double result;
     if(t < partition[1]){
@@ -157,8 +155,7 @@ void update_health
             requesting_immunity_update[n] = 0;
         }
     }
-    return;
-}
+    }
 
 void transmission
 (
@@ -282,7 +279,6 @@ void transmission
     free(sum_by_strain_by_age_group);
     free(num_agents_by_location_by_age_group);
     free(weights);
-    return;
 }
 
 void infect
@@ -352,7 +348,6 @@ void infect
                 r2 += 1;
             }
             r1 = r2;
-
             // Determine new infectiousness
 
             infectiousness_lengths[n] =
@@ -542,5 +537,4 @@ void infect
             requesting_immunity_update[n] = 1;
         }
     }
-    return;
-}
+    }

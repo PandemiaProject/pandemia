@@ -5,7 +5,7 @@ import os.path
 import csv
 import numpy as np
 
-from .reporters import Reporter
+from ..reporters import Reporter
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
