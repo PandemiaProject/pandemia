@@ -6,10 +6,14 @@ import csv
 import numpy as np
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 from ..reporters import Reporter
 =======
 from . import Reporter
 >>>>>>> a5b8f16 (Create test scenario)
+=======
+from . import Reporter
+>>>>>>> d389c1dddb13f1aa88ece50ae7b156ebeac19309
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
