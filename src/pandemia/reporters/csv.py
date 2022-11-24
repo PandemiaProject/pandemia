@@ -5,11 +5,8 @@ import os.path
 import csv
 import numpy as np
 
-<<<<<<< HEAD
 from ..reporters import Reporter
-=======
-from . import Reporter
->>>>>>> a5b8f16 (Create test scenario)
+
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
