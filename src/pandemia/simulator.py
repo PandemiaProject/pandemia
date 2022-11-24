@@ -344,14 +344,21 @@ class Simulator:
 
             infections =\
                 np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.uint64)
+
+
+            # for vector_region in self.vector_regions:
+            #     self.collect_telemetry_data(
+            #         c_int(vector_region.number_of_agents),
+            #         c_int(self.number_of_strains),
+            #         c_int(vector_region.id),
+            #         c_void_p(vector_region.current_strain.ctypes.data),
+            #         c_void_p(infections.ctypes.data)
+            #     )
             for vector_region in self.vector_regions:
-                self.collect_telemetry_data(
-                    c_int(vector_region.number_of_agents),
-                    c_int(self.number_of_strains),
-                    c_int(vector_region.id),
-                    c_void_p(vector_region.current_strain.ctypes.data),
-                    c_void_p(infections.ctypes.data)
-                )
+                for n in range(vector_region.number_of_agents):
+                    if vector_region.current_strain[n] != -1:
+                        infections[(vector_region.id * self.number_of_strains) + vector_region.current_strain[n]] += 1
+
             infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.uint64)
             self.telemetry_bus.publish("strain_counts.update", self.clock, infections)
 
