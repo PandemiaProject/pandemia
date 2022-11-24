@@ -1,6 +1,6 @@
 """Represents a world consisting of regions"""
 
-from pandemia.world.region import Region, VectorRegion
+from .region import Region, VectorRegion
 
 class VectorWorld:
     """Represents a world consisting of regions using numpy arrays"""

@@ -1,6 +1,6 @@
 """Manages vaccination"""
 
-from pandemia.component import Component
+from ...component import Component
 
 class VaccinationModel(Component):
     """Defines the vaccination model"""

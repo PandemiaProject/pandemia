@@ -136,3 +136,14 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .vscode/settings.json
+
+# misc files
+*.DS_Store
+
+# Ignore binaries
+!*.*
+*.so
+*.dll 
+
+*.egg-info/
+.vscode/launch.json

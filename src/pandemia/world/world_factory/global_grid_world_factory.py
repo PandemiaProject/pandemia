@@ -10,13 +10,14 @@ from tqdm import tqdm
 from scipy.spatial import KDTree
 import shapefile as shp
 from scipy.spatial import distance
-
-from pandemia.world.agent import Agent
-from pandemia.world.location import Location
-from pandemia.world.region import Region
-from pandemia.world import World
-from pandemia.world.world_factory import WorldFactory
-from pandemia.random_tools import Random
+import multiprocessing
+from ..agent import Agent 
+from ..location import Location
+from ..region import Region
+from .. import World
+from . import WorldFactory
+from ...random_tools import Random
+from os import cpu_count
 
 log = logging.getLogger('global_grid_world_factory')
 
@@ -26,7 +27,7 @@ class GlobalGridWorldFactory(WorldFactory):
     periods, each period lasting eight hours. Each agent is assigned a home, at which they perform
     the activity Home_Activity, with the homes spatially distributed within each region using
     population grid data for that region. Each agent is also assigned a set of grid squares, which
-    includes the square in which their assined home is located. When performing the activity
+    includes the square in which their assigned home is located. When performing the activity
     Community_Activity, an agent will choose from these grid squares. The grid squares are assigned
     to each agent and weighted in such a way that agents are more likely to visit squares close to
     their home that squares far away. The weights are chosen according to the so-called gravity
@@ -72,6 +73,23 @@ class GlobalGridWorldFactory(WorldFactory):
         self.local_travel_prob_per_day   = self.config['local_travel_prob_per_day']
         self.distance_threshold          = self.config['distance_threshold']
 
+
+
+    def _parallel_create_region(self, row_id):
+        row, id = row_id
+        iso2 = str(row[1])
+        if (len(self.regions_to_simulate) == 0) or (iso2 in self.regions_to_simulate):
+            iso3 = str(row[2])
+            super_region = str(row[3])
+            household_size = round(float(row[4]))
+            population_size = int(row[5])
+            age_distribution = [float(row[6 + r]) for r in range(101)]
+            number_of_agents = max(int(population_size * self.scale_factor), 1)
+            new_region = self._create_region(id, iso2, iso3, super_region, number_of_agents,
+                                                age_distribution, household_size)
+            #world.regions.append(new_region)
+            return new_region
+
     def get_world(self) -> World:
 
         log.info("Creating world...")
@@ -80,24 +98,12 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # Create regions using population data
         self.region_data = {}
-        id = 0
         with open(self.regions_data_file, newline='') as csvfile:
             next(csvfile)
             region_data = csv.reader(csvfile, delimiter=',')
-            for row in region_data:
-                iso2 = str(row[1])
-                if (len(self.regions_to_simulate) == 0) or (iso2 in self.regions_to_simulate):
-                    iso3 = str(row[2])
-                    super_region = str(row[3])
-                    household_size = round(float(row[4]))
-                    population_size = int(row[5])
-                    age_distribution = [float(row[6 + r]) for r in range(101)]
-                    number_of_agents = max(int(population_size * self.scale_factor), 1)
-                    new_region = self._create_region(id, iso2, iso3, super_region, number_of_agents,
-                                                        age_distribution, household_size)
-                    world.regions.append(new_region)
-                    id += 1
-
+            row_ids = [(r, idx) for idx, r in enumerate(region_data) ]
+            with multiprocessing.Pool(processes=cpu_count()-1) as pool:
+                world.regions = list(tqdm(pool.imap_unordered(self._parallel_create_region, row_ids), total=len(row_ids)))
         world.number_of_regions = len(world.regions)
 
         number_of_agents = sum([len(region.agents) for region in world.regions])
@@ -119,7 +125,7 @@ class GlobalGridWorldFactory(WorldFactory):
 
         assert self.clock.ticks_in_day == 3
 
-        log.info("Creating region: " + iso2 + "...")
+        #log.info("Creating region: " + iso2 + "...")
 
         prng = Random(self.random_seed)
 
@@ -164,7 +170,7 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # We must account for the rounding error in order to generate the correct number of agents.
         # The first step in accounting for this error involves adding on multiples of the map_dist.
-        log.debug("Distributing population (approximate)...")
+        #log.debug("Distributing population (approximate)...")
         old_sum = -1
         converged = False
         while ((np.sum(map_ints) < number_of_agents) and not converged):
@@ -178,7 +184,7 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # The second step involves adding on single agents in such a way that minimizes the error.
         # Doing this step alone is far too slow, hence the previous step.
-        log.debug("Distributing population (exact)...")
+        #log.debug("Distributing population (exact)...")
         while (np.sum(map_ints) < number_of_agents):
             err = np.square(map_ints - map_floats)
             map_ints[np.unravel_index(np.argmax(err), err.shape)] += 1
@@ -194,7 +200,7 @@ class GlobalGridWorldFactory(WorldFactory):
         # Create grid squares and houses and populate the houses with agents, assigning them a
         # location for the home activity
 
-        log.debug("Creating locations and agents...")
+        #log.debug("Creating locations and agents...")
 
         locations = []
         agents = []
@@ -235,13 +241,13 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # Assign agents locations for the community activity based on weighted proximity
 
-        log.debug("Assigning community locations...")
+        #log.debug("Assigning community locations...")
 
         kdtree = KDTree([square.coord for square in squares])
         local_sample_size = min(self.local_sample_size, len(squares))
         nonlocal_sample_size = min(self.nonlocal_sample_size, len(squares))
 
-        for square in tqdm(squares):
+        for square in squares:
 
             if local_sample_size > 1:
                 _, nearest_indices = kdtree.query(square.coord, local_sample_size)

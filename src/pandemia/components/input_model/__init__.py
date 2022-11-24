@@ -1,6 +1,6 @@
 """Manages input to the model"""
 
-from pandemia.component import Component
+from ...component import Component
 
 class InputModel(Component):
     """Defines the input to the model"""

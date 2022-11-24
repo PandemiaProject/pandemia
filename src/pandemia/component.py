@@ -3,8 +3,8 @@
 import logging
 from typing import Optional
 
-from pandemia.config import Config
-from pandemia.messagebus import MessageBus
+from .config import Config
+from .messagebus import MessageBus
 
 log = logging.getLogger("component")
 

@@ -1,6 +1,6 @@
 """Manages testing and contact tracing"""
 
-from pandemia.component import Component
+from ...component import Component
 
 class TestingAndContactTracingModel(Component):
     """Defines the testing and contact tracing model"""

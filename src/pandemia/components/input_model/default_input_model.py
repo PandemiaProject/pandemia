@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 
-from pandemia.components.input_model import InputModel
+from ..input_model import InputModel
 
 log = logging.getLogger("default_input_model")
 #pylint: disable=unused-argument

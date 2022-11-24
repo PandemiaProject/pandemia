@@ -4,7 +4,7 @@ import logging
 import copy
 import numpy as np
 
-from pandemia.components.health_model import HealthModel
+from ..health_model import HealthModel
 
 log = logging.getLogger("void_health_model")
 

@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 
-from pandemia.components.travel_model import TravelModel
+from ..travel_model import TravelModel
 
 log = logging.getLogger("void_travel_model")
 

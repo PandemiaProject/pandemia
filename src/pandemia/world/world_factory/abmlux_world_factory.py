@@ -5,11 +5,11 @@ import csv
 import numpy as np
 import pickle
 
-from pandemia.world.agent import Agent
-from pandemia.world.location import Location
-from pandemia.world.region import Region
-from pandemia.world import World
-from pandemia.world.world_factory import WorldFactory
+from ..agent import Agent 
+from ..location import Location
+from ..region import Region
+from .. import World
+from . import WorldFactory
 
 log = logging.getLogger('world_factory')
 

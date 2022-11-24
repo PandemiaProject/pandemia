@@ -8,21 +8,21 @@ import logging
 import uuid
 import pickle
 from datetime import datetime
-from pandemia.utils import instantiate_class
+from .utils import instantiate_class
 
-from pandemia.config import Config
-from pandemia.clock import Clock
-from pandemia.version import VERSION
-from pandemia.world import VectorWorld
-from pandemia.simulator import Simulator
-from pandemia.components.seasonal_effects_model import SeasonalEffectsModel
-from pandemia.components.health_model import HealthModel
-from pandemia.components.movement_model import MovementModel
-from pandemia.components.hospitalization_and_death_model import HospitalizationAndDeathModel
-from pandemia.components.testing_and_contact_tracing_model import TestingAndContactTracingModel
-from pandemia.components.vaccination_model import VaccinationModel
-from pandemia.components.travel_model import TravelModel
-from pandemia.components.input_model import InputModel
+from .config import Config
+from .clock import Clock
+from .version import VERSION
+from .world import VectorWorld
+from .simulator import Simulator
+from .components.seasonal_effects_model import SeasonalEffectsModel
+from .components.health_model import HealthModel
+from .components.movement_model import MovementModel
+from .components.hospitalization_and_death_model import HospitalizationAndDeathModel
+from .components.testing_and_contact_tracing_model import TestingAndContactTracingModel
+from .components.vaccination_model import VaccinationModel
+from .components.travel_model import TravelModel
+from .components.input_model import InputModel
 
 log = logging.getLogger("sim_state")
 

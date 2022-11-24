@@ -3,7 +3,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// gcc -fPIC -shared -o simulator_functions.dll simulator_functions.c
+// gcc -fPIC -shared -o simulator_functions simulator_functions.c
 
 void collect_telemetry_data
 (

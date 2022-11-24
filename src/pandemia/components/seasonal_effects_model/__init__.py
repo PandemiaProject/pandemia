@@ -1,6 +1,6 @@
 """Manages seasonal effects"""
 
-from pandemia.component import Component
+from ...component import Component
 
 class SeasonalEffectsModel(Component):
     """Defines the seasonal effects model"""

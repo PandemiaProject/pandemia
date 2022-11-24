@@ -1,6 +1,6 @@
 """Manages individual health"""
 
-from pandemia.component import Component
+from ...component import Component
 
 class HealthModel(Component):
     """Defines the health of agents"""

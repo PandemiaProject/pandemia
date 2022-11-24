@@ -1,4 +1,3 @@
-"""Pandemia is an individual-based pandemic simulator."""
 
 import os.path as osp
 import sys
@@ -7,11 +6,11 @@ import logging.config
 import time
 import cProfile, pstats
 
-from pandemia.messagebus import MessageBus
-from pandemia.sim_factory import SimulationFactory
+from .messagebus import MessageBus
+from .sim_factory import SimulationFactory
 
-from pandemia.version import VERSION
-from pandemia.config import Config
+from .version import VERSION
+from .config import Config
 
 # Global module log
 log = logging.getLogger()
@@ -120,3 +119,6 @@ def main():
     # ############## Output ##############
 
     sim.calculate_cost(policy)
+
+if __name__ == "__main__":
+    main()

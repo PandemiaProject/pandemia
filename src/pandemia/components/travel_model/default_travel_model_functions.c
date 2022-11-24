@@ -2,8 +2,9 @@
 #include <math.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <limits.h>
 
-// gcc -fPIC -shared -o default_travel_model_functions.dll default_travel_model_functions.c
+// gcc -fPIC -shared -o default_travel_model_functions default_travel_model_functions.c
 
 static inline uint64_t rotl(const uint64_t x, int k) {
 	return (x << k) | (x >> (64 - k));

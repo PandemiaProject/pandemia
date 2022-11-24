@@ -7,10 +7,11 @@ import csv
 import numpy as np
 from collections import defaultdict
 from numpy import genfromtxt
-
+import platform
+ext=".dll" if platform.system() == 'Windows' else ".so"
 from ctypes import c_void_p, c_double, c_int, cdll
 
-from pandemia.components.health_model import HealthModel
+from ..health_model import HealthModel
 
 log = logging.getLogger("default_health_model")
 
@@ -37,7 +38,7 @@ class DefaultHealthModel(HealthModel):
         self.clock = clock
 
         lib = cdll.LoadLibrary("./src/pandemia/components/health_model/"
-                                "default_health_model_functions.dll")
+                                "default_health_model_functions"+ext)
 
         self.update_health = lib.update_health
         self.transmission  = lib.transmission
@@ -51,7 +52,6 @@ class DefaultHealthModel(HealthModel):
 
         self.number_of_strains                = config['number_of_strains']
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
-
         self.sir_rescaling                    = config['sir_rescaling']
         self.sir_rescaling_int                = int(self.sir_rescaling == True)
 

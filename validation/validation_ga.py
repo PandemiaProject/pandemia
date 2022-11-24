@@ -8,8 +8,8 @@ import csv
 from multiprocessing import Pool
 import numpy as np
 
-from pandemia.messagebus import MessageBus
-from pandemia.sim_factory import SimulationFactory
+from .messagebus import MessageBus
+from .sim_factory import SimulationFactory
 
 # Global module log
 log = logging.getLogger()
