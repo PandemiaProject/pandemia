@@ -234,7 +234,6 @@ reporters:
     show: False
     savefig: True
     filename: /tmp/infected_luxembourg.png
-    historical_data: null
   plot.PlotDeaths:
     show: False
     savefig: True
