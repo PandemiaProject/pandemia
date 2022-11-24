@@ -258,7 +258,6 @@ reporters:
     show: True
     savefig: False
     filename: /tmp/infected_test.png
-    historical_data: null
   # pygame_shapes.PygameShapes:
   #   fullscreen: True
   #   font_size: 20

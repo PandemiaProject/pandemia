@@ -246,7 +246,6 @@ reporters:
     show: False
     savefig: True
     filename: /tmp/infected_global_grid.png
-    historical_data: null
   plot.PlotDeaths:
     show: False
     savefig: True
