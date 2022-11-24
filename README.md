@@ -123,7 +123,13 @@ To run the heterogeneous mixing scenario using the save, thereby skipping the wo
 
     pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
 
-To configure a new scenario, the user can edit one of the configs already provided.
+To configure a new scenario, the user should choose one of the configs already provided, as a
+template, which they should then edit as necessary. These configs are annotated with comments
+briefly explaining the meaning of each of the parameters. For more information, consult the user
+manual.
+
+The advanced user might even wish to write their own models, to be used instead of the default
+models provided.
 
 ## Testing
 To test:
