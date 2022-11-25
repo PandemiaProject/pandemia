@@ -420,6 +420,8 @@ class DefaultHealthModel(HealthModel):
 
         self.update(vector_region, 0)
 
+
+
     def update(self, vector_region, t):
         """Updates health functions"""
 

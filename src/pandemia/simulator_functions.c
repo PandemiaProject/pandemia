@@ -1,7 +1,4 @@
-#include <stdlib.h>
-#include <math.h>
 #include <inttypes.h>
-#include <stdio.h>
 
 // gcc -fPIC -shared -o simulator_functions simulator_functions.c
 
@@ -19,8 +16,7 @@ void collect_telemetry_data
             strain_counts[(id * S) + current_strain[n]] += 1;
         }
     }
-    return;
-}
+    }
 
 int count_dead
 (
