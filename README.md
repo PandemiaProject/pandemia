@@ -65,11 +65,36 @@ Accessed 31 OCTOBER 2022.
 To run the ABMlux scenario, an additional .abm file is required.
 
 ## Testing
-To test:
+To install additional dependencies required for testing:
 ```
 pip install .[test]
+```
+
+### Unit tests (Future)
+
+**Currently there are no unit tests**. When they've been written, they will be run using pytest:
+
+```
 pytest
 ```
+
+### Integration tests
+
+Integration tests (and other tests which take a long time to execute) should be marked with the `@pytest.mark.slow` decorator, eg:
+
+```
+@pytest.mark.slow
+def test_long_processing_time():
+    sleep(500)
+```
+
+These tests will **not** be run when `pytest` is called without arguments. (See [pytest.ini](pytest.ini) for details). To execute these tests, use the `-m slow` argument. eg:
+
+```
+pytest -m slow
+```
+
+
 ## Docs
 To generate documentation:
 ```
