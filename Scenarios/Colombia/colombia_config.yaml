@@ -130,7 +130,6 @@ reporters:
     show: False
     savefig: True
     filename: /tmp/infected_colombia.png
-    historical_data: null
   pygame_shapes.PygameShapes:
     fullscreen: False
     font_size: 20

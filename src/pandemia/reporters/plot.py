@@ -204,7 +204,6 @@ class PlotInfected(Reporter):
         self.show               = config['show']
         self.savefig            = config['savefig']
         self.filename           = config['filename']
-        self.historical_data_fp = config['historical_data']
 
         self.num_x_ticks = 20
 
