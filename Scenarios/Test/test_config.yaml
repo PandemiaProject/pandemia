@@ -253,7 +253,7 @@ historical_data_filepath: null
 reporters:
   cli.TimeReporter: {}
   csv.StrainCounts:
-    filename: /tmp/strain_counts_test.csv
+    filename: tests/strain_counts_test_config.csv
   plot.PlotInfected:
     show: True
     savefig: False
