@@ -19,8 +19,8 @@
 \onehalfspacing
 
 % Bibliography
-\usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
-\addbibresource{bibliography.bib}
+% \usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
+% \addbibresource{bibliography.bib}
 
 % C++ symbol
 \newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
@@ -35,6 +35,7 @@
 \fancyfootoffset[L]{2.25in}
 
 \begin{document}
+\bibliographystyle{plain}
 
 \vspace*{0.2in}
 
@@ -159,8 +160,6 @@ Upon changing activity, individuals may also put on or take off a face mask, dep
 
 If the change of location is prohibited by policy interventions, then the individual is directed to their home location. In particular, each individual must for the default movement model be assigned a home location.
 
-\section{Travel}
-
 \section{Health}
 Epidemic models typically represent health using discrete states. In a typical compartmental model, the population is partitioned into subsets, labelled \textit{Susceptible}, \textit{Infected}, \textit{Recovered} and \textit{Dead}. These compartments can then be subdivided, and new compartments added, to produce increasingly complicated models.
 
@@ -185,7 +184,7 @@ The value of an attribute at time $\texttt{t}$ is given by evaluating the corres
 \item \texttt{current{\_}sigma{\_}immunity{\_}failure}
 \item \texttt{current{\_}rho{\_}immunity{\_}failure}
 \end{itemize}
-The prefix \texttt{sigma{\_}} refers to the outer layer, while the prefix \texttt{rho{\_}} refers to the inner layers.
+The prefix \texttt{sigma{\_}} refers to the outer layer, while the prefix \texttt{rho{\_}} refers to the inner layers. Each vectorized region has a set of such variables.
 
 \subsection*{\texttt{current{\_}strain}}
 For individual $\texttt{n}$, the variable $$\texttt{current{\_}strain[n]}$$ indicates whether or not individual $\texttt{n}$ is infected, and if so with which strain. The variable is an integer, taking values in the range $$\texttt{\{-1, 0, 1, 2, \ldots, S - 1\}}$$ where $\texttt{S}$ denotes the number of strains. If the individual is not infected, then $$\texttt{current{\_}strain[n] = -1}.$$ We assume that individuals can only be infected with one strain at a time.
@@ -296,8 +295,39 @@ With the option $\texttt{sir{\_}rescaling}$ set to $\texttt{True}$, the default 
 
 \section{Seasonality}
 
+The seasonal effects component of the Pandemia simulator can be used to configure monthly updates to the regional transmission multipliers. The default seasonal effects model calculates a transmission multiplier for each country each month. The default value of the multiplier is $\texttt{1.0}$, meaning no reduction in transmission. The alternative value is a float taking values in the range $\texttt{[0,1]}$. The months during which transmission is reduced to this value are configured in a data file.
+
+\section{Travel}
+
+The travel model describes mixing between regions. Each day, a number of uninfected agents are randomly selected to travel from each region to each other region. In the absence of border closures, the numbers travelling between regions are given by the \textbf{Travel Matrix}. To each region is associated a variable $$\texttt{current{\_}border{\_}closure{\_}multiplier}.$$ This variable is a float taking values in the range $\texttt{[0,1]}.$ It represents the extent to which travel \textit{out} of the region is reduced, with the value $\texttt{0}$ representing total suppression of travel out of the country. Each day, the number of agents travelling between region $i$ and $j$ is given by the corresponding entry in the \textbf{Travel Matrix} multiplied by the border closure multiplier of region $i$. Travellers mix homogeneously with the entire population of the destination region, with transmission probabilities divided by the number of agents in that region. In particular, for each region $j$, an aggregated level of infectiousness is calculated, with this probability, $p_j$, being calculated as:
+\begin{equation*}
+p_j := \left(1 - \prod_{m \in j} (1 - g_m)\right)
+\end{equation*}
+where $m \in j$ means all individuals $m$ currently in location $j$, with
+\begin{equation*}
+g_m  := \omega_m \nu_m \mu(j) \beta(s_m) \tau / N_j.
+\end{equation*}
+where these parameters are defined as in the default health model with
+\begin{itemize}
+\item $N_j$ the number of agents in region $j$;
+\item $\tau$ is a control parameter.
+\end{itemize}
+For each uninfected agent $n$ travelling to region $j$, with current face mask multiplier $\omega_n$, the probability that they are exposed at this time is then assumed to be $\omega_n p_j$. If such an individual is exposed, then to determine which strain they are exposed to, we assume the expression
+\begin{equation*}
+\frac{\sum_{\{m \in j: s_m = s\}} g_m}{\sum_{\{m \in l\}} g_m}
+\end{equation*}
+gives the probability that they are exposed to strain $s$. Given this exposure, the probability that they are actually infected with strain $s$ is then $\sigma_{ns}$, the current sigma immunity of individual $n$ against strain $s$. The outcome of this infection is then determined by the rho immunity of the individual, according the procedure outlined in the section of the health model.
+
+The current region of an agent is recorded by the variable $$\texttt{current{\_}region}.$$ Agents whose current region is not their home region are travellers, and are ignored by other components where appropriate.
+
 \section{Input}
 
+\section{Examples: World Factories}
+
+\section{Examples: Scenarios}
+
 \section{Optimization}
+
+% \bibliography{bibliography}
 
 \end{document}

@@ -58,7 +58,7 @@ world_factory:
 
 seasonal_effects_model:
   # The DefaultSeasonalEffectsModel calculates a transmission multiplier for each country for each
-  # month. The default value of the multiplier is 1.0, meaning no reduction in tranmission. The
+  # month. The default value of the multiplier is 1.0, meaning no reduction in transmission. The
   # alternative value is set by the parameter out_of_season_multiplier.
   __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # Filepath to seasonal influenza data for each country.
@@ -176,8 +176,9 @@ travel_model:
   # travellers is given by the world travel matrix. Transmission is determined by the average
   # infectiousness of the destination region.
   __type__: default_travel_model.DefaultTravelModel
-  # This parameter multiplies transmission among travellers, representing the increased risk when
-  # travelling internationally, for example inside an airplane or train.
+  # Travellers mix homogeneously with the entire population of the destination region, with
+  # transmission probabilities divided by the number of agents in that region. This parameter is a
+  # control parameter which multiplies that ratio.
   travel_transmission_multiplier: 100.0
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels
