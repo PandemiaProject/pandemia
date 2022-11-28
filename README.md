@@ -100,29 +100,36 @@ scenario configuration.
 
 ## Requirements
 
- * Python 3.10
+- Python 3.10
+  - Python version other than 3.10 may produce errors. 
+- A GCC complier 
 
 ## Quickstart
-To install:
 
-    pip install .
-
+To build C libraries
+```
+make
+```
+To install pandemia python package:
+```
+pip install .
+```
 To run the homogeneous mixing scenario:
-
-    pandemia Scenarios/Global/global_config.yaml
-
+```
+pandemia Scenarios/Global/global_config.yaml
+```
 To run the heterogeneous mixing scenario:
-
-    pandemia Scenarios/Global_Grid/global_grid_config.yaml
-
+```
+pandemia Scenarios/Global_Grid/global_grid_config.yaml
+```
 To run the heterogeneous mixing scenario and save after the world building phase:
-
-    pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
-
+```
+pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+```
 To run the heterogeneous mixing scenario using the save, thereby skipping the world building phase:
-
-    pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
-
+```
+pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+```
 To configure a new scenario, the user should choose one of the configs already provided, as a
 template, which they should then edit as necessary. These configs are annotated with comments
 briefly explaining the meaning of each of the parameters. For more information, consult the user
@@ -133,34 +140,34 @@ models provided.
 
 ## Testing
 To test:
-
-    pip install .[test]
-    pytest
-
+```
+pip install .[test]
+pytest
+```
 ## Documentation
 To generate documentation:
-
-    pip install pdoc
-    pdoc --html --overwrite --html-dir docs pandemia
-
+```
+pip install pdoc
+pdoc --html --overwrite --html-dir docs pandemia
+```
 ## Citing This Work
 Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), an epidemic model which was used in the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330.
 
 If you publish using technology from this repository, please cite the above article using this BibTeX:
-
-    @article{10.1371/journal.pone.0261330,
-        doi = {10.1371/journal.pone.0261330},
-        author = {Thompson, James AND Wattam, Stephen},
-        journal = {PLOS ONE},
-        publisher = {Public Library of Science},
-        title = {Estimating the impact of interventions against COVID-19: From lockdown to vaccination},
-        year = {2021},
-        month = {12},
-        volume = {16},
-        url = {https://doi.org/10.1371/journal.pone.0261330},
-        pages = {1-51},
-        number = {12},
-    }
-
+```
+@article{10.1371/journal.pone.0261330,
+    doi = {10.1371/journal.pone.0261330},
+    author = {Thompson, James AND Wattam, Stephen},
+    journal = {PLOS ONE},
+    publisher = {Public Library of Science},
+    title = {Estimating the impact of interventions against COVID-19: From lockdown to vaccination},
+    year = {2021},
+    month = {12},
+    volume = {16},
+    url = {https://doi.org/10.1371/journal.pone.0261330},
+    pages = {1-51},
+    number = {12},
+}
+```
 ## License
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

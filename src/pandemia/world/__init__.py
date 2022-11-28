@@ -1,4 +1,7 @@
 
+import numpy as np
+from typing import Union
+
 from .region import Region, VectorRegion
 
 class World:
