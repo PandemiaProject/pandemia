@@ -10,7 +10,7 @@ static inline uint64_t rotl(const uint64_t x, int k) {
 }
 
 // https://prng.di.unimi.it/xoroshiro128plus.c
-uint64_t next(u_int64_t * s) {
+uint64_t next(uint64_t * s) {
 	const uint64_t s0 = s[0];
 	uint64_t s1 = s[1];
 	const uint64_t result = s0 + s1;
@@ -27,18 +27,18 @@ void dynamics_hospitalization_and_death
     int number_of_cemeteries,
     int id,
     double hospital_threshold,
-    const u_int64_t * current_location,
-    const u_int64_t * current_region,
+    const uint64_t * current_location,
+    const uint64_t * current_region,
     const double * current_disease,
-    const u_int64_t * requesting_location_update,
-    u_int64_t * requested_location_update,
-    u_int64_t * requesting_facemask_update,
-    u_int64_t * requested_facemask_update,
-    u_int64_t * in_hospital,
-    const u_int64_t * hospitals,
-    u_int64_t * in_cemetery,
-    const u_int64_t * cemeteries,
-    u_int64_t * random_state
+    const uint64_t * requesting_location_update,
+    uint64_t * requested_location_update,
+    uint64_t * requesting_facemask_update,
+    uint64_t * requested_facemask_update,
+    uint64_t * in_hospital,
+    const uint64_t * hospitals,
+    uint64_t * in_cemetery,
+    const uint64_t * cemeteries,
+    uint64_t * random_state
 )
 {
     // Hospitals

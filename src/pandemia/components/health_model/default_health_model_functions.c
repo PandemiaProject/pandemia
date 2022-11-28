@@ -8,7 +8,7 @@ static inline uint64_t rotl(const uint64_t x, int k) {
 }
 
 // https://prng.di.unimi.it/xoroshiro128plus.c
-uint64_t next(u_int64_t * s) {
+uint64_t next(uint64_t * s) {
 	const uint64_t s0 = s[0];
 	uint64_t s1 = s[1];
 	const uint64_t result = s0 + s1;
@@ -18,12 +18,12 @@ uint64_t next(u_int64_t * s) {
 	return result;
 }
 
-uint64_t randrange(u_int64_t * s, int num) {
+uint64_t randrange(uint64_t * s, int num) {
     // Returns an int in the range [0, num)
     return next(s) % num;
 }
 
-int bernoulli(u_int64_t * s,double prob_success) {
+int bernoulli(uint64_t * s,double prob_success) {
     // Returns the value 1 if success, 0 otherwise
     uint64_t rnd = randrange(s, INT_MAX);
     int result = 0;
@@ -33,7 +33,7 @@ int bernoulli(u_int64_t * s,double prob_success) {
     return result;
 }
 
-int random_choice(u_int64_t * s, const double * weights, double sum_of_weights) {
+int random_choice(uint64_t * s, const double * weights, double sum_of_weights) {
     // Returns an int in the range [0,l) where l is the length of weights
     uint64_t rnd = randrange(s, INT_MAX);
     int index = 0;
@@ -44,7 +44,7 @@ int random_choice(u_int64_t * s, const double * weights, double sum_of_weights) 
     return index;
 }
 
-double rho_evaluate(const u_int64_t * partition, const double * values, int length, int r, int R, int t){
+double rho_evaluate(const uint64_t * partition, const double * values, int length, int r, int R, int t){
     // Evaluates a rho immunity preset on rho immunity outcome r at time t, where R denotes the
     // total number of rho immunity outcomes
     double result;
@@ -61,7 +61,7 @@ double rho_evaluate(const u_int64_t * partition, const double * values, int leng
     return result;
 }
 
-double sigma_evaluate(const u_int64_t * partition, const double * values, int length, int t){
+double sigma_evaluate(const uint64_t * partition, const double * values, int length, int t){
     // Evaluates a sigma immunity preset at time t
     double result;
     if(t < partition[1]){
@@ -86,26 +86,26 @@ void update_health
     int R, // number_of_rho_immunity_outcomes
     int H, // max_preset_length_health
     int immunity_period_ticks,
-    const u_int64_t * i_partitions,
-    u_int64_t * i_indexes,
+    const uint64_t * i_partitions,
+    uint64_t * i_indexes,
     const double * i_values,
-    const u_int64_t * i_lengths,
+    const uint64_t * i_lengths,
     double * i_current,
-    const u_int64_t * d_partitions,
-    u_int64_t * d_indexes,
+    const uint64_t * d_partitions,
+    uint64_t * d_indexes,
     const double * d_values,
-    const u_int64_t * d_lengths,
+    const uint64_t * d_lengths,
     double * d_current,
-    const u_int64_t * s_partitions,
-    u_int64_t * s_indexes,
-    const u_int64_t * s_values,
-    const u_int64_t * s_lengths,
-    u_int64_t * s_current,
+    const uint64_t * s_partitions,
+    uint64_t * s_indexes,
+    const uint64_t * s_values,
+    const uint64_t * s_lengths,
+    uint64_t * s_current,
     const double * rho_immunity_failure_values,
     double * current_rho_immunity_failure,
     const double * sigma_immunity_failure_values,
     double * current_sigma_immunity_failure,
-    u_int64_t * requesting_immunity_update
+    uint64_t * requesting_immunity_update
 )
 {
     if(t % immunity_period_ticks == 0){for(int n=0; n<N; n++){requesting_immunity_update[n] = 1;}}
@@ -167,26 +167,26 @@ void transmission
     int ticks_in_day,
     int A, // number of age groups
     const double * beta,
-    const u_int64_t * subpopulation_index,
+    const uint64_t * subpopulation_index,
     const double * subpopulation_mixing_matrix,
     double facemask_transmission_multiplier,
     double current_region_transmission_multiplier,
-    const u_int64_t * current_strain,
+    const uint64_t * current_strain,
     const double * current_disease,
-    const u_int64_t * current_facemask,
-    const u_int64_t * current_location,
-    const u_int64_t * current_region,
+    const uint64_t * current_facemask,
+    const uint64_t * current_location,
+    const uint64_t * current_region,
     const double * current_infectiousness,
     const double * location_transmission_multiplier,
     const double * mutation_matrix,
     const double * current_sigma_immunity_failure,
-    u_int64_t * infection_event,
-    u_int64_t * random_state
+    uint64_t * infection_event,
+    uint64_t * random_state
 )
 {
     double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
     double * sum_by_strain_by_age_group = (double *)malloc(sizeof(double) * L * S * A);
-    u_int64_t * num_agents_by_location_by_age_group = (u_int64_t *)malloc(sizeof(u_int64_t) * L * A);
+    uint64_t * num_agents_by_location_by_age_group = (uint64_t *)malloc(sizeof(uint64_t) * L * A);
     for(int m=0; m<L; m++){
         for(int a=0; a<A; a++){
             transmission_force_by_age_group[(m * A) + a] = 1.0;
@@ -292,39 +292,39 @@ void infect
     int I, // immunity_length
     int immunity_period_ticks,
     const double * current_rho_immunity_failure,
-    u_int64_t * infection_event,
-    u_int64_t * infectiousness_partitions,
+    uint64_t * infection_event,
+    uint64_t * infectiousness_partitions,
     double * infectiousness_values,
-    u_int64_t * infectiousness_lengths,
-    u_int64_t * infectiousness_indexes,
-    u_int64_t * disease_partitions,
+    uint64_t * infectiousness_lengths,
+    uint64_t * infectiousness_indexes,
+    uint64_t * disease_partitions,
     double * disease_values,
-    u_int64_t * disease_lengths,
-    u_int64_t * disease_indexes,
-    u_int64_t * strain_partitions,
-    u_int64_t * strain_values,
-    u_int64_t * strain_lengths,
-    u_int64_t * strain_indexes,
+    uint64_t * disease_lengths,
+    uint64_t * disease_indexes,
+    uint64_t * strain_partitions,
+    uint64_t * strain_values,
+    uint64_t * strain_lengths,
+    uint64_t * strain_indexes,
     double * rho_immunity_failure_values,
     double * sigma_immunity_failure_values,
-    u_int64_t * requesting_immunity_update,
-    const u_int64_t * preset_infectiousness_partitions,
+    uint64_t * requesting_immunity_update,
+    const uint64_t * preset_infectiousness_partitions,
     const double * preset_infectiousness_values,
-    const u_int64_t * preset_infectiousness_lengths,
-    const u_int64_t * preset_disease_partitions,
+    const uint64_t * preset_infectiousness_lengths,
+    const uint64_t * preset_disease_partitions,
     const double * preset_disease_values,
-    const u_int64_t * preset_disease_lengths,
-    const u_int64_t * preset_strain_partitions,
-    const u_int64_t * preset_strain_values,
-    const u_int64_t * preset_strain_lengths,
-    const u_int64_t * preset_rho_immunity_failure_partitions,
+    const uint64_t * preset_disease_lengths,
+    const uint64_t * preset_strain_partitions,
+    const uint64_t * preset_strain_values,
+    const uint64_t * preset_strain_lengths,
+    const uint64_t * preset_rho_immunity_failure_partitions,
     const double * preset_rho_immunity_failure_values,
-    const u_int64_t * preset_rho_immunity_failure_lengths,
-    const u_int64_t * preset_sigma_immunity_failure_partitions,
+    const uint64_t * preset_rho_immunity_failure_lengths,
+    const uint64_t * preset_sigma_immunity_failure_partitions,
     const double * preset_sigma_immunity_failure_values,
-    const u_int64_t * preset_sigma_immunity_failure_lengths,
-    const u_int64_t * presets,
-    u_int64_t * random_state
+    const uint64_t * preset_sigma_immunity_failure_lengths,
+    const uint64_t * presets,
+    uint64_t * random_state
 )
 {
     for(int n=0; n<N; n++){
@@ -424,7 +424,7 @@ void infect
 
             // Determine new rho immunity
 
-            u_int64_t * rho_part = (u_int64_t *)malloc(sizeof(u_int64_t) * G);
+            uint64_t * rho_part = (uint64_t *)malloc(sizeof(uint64_t) * G);
             double * rho_values = (double *)malloc(sizeof(double) * G * R);
             int rho_length;
 
@@ -483,7 +483,7 @@ void infect
 
             // Determine new sigma immunity
 
-            u_int64_t * sigma_part = (u_int64_t *)malloc(sizeof(u_int64_t) * G);
+            uint64_t * sigma_part = (uint64_t *)malloc(sizeof(uint64_t) * G);
             double * sigma_values = (double *)malloc(sizeof(double) * G);
             int sigma_length;
 
