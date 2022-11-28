@@ -7,7 +7,7 @@ void collect_telemetry_data
     int N, // number_of_agents
     int S, // number_of_strains
     int id,
-    const int * current_strain,
+    const uint64_t * current_strain,
     uint64_t * strain_counts
 )
 {
