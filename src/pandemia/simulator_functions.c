@@ -7,8 +7,8 @@ void collect_telemetry_data
     int N, // number_of_agents
     int S, // number_of_strains
     int id,
-    const int * current_strain,
-    uint64_t * strain_counts
+    const u_int64_t * current_strain,
+    u_int64_t * strain_counts
 )
 {
     for(int n=0; n<N; n++){

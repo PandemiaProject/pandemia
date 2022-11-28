@@ -11,7 +11,7 @@ static inline uint64_t rotl(const uint64_t x, int k) {
 }
 
 // https://prng.di.unimi.it/xoroshiro128plus.c
-uint64_t next(uint64_t * s) {
+uint64_t next(u_int64_t * s) {
 	const uint64_t s0 = s[0];
 	uint64_t s1 = s[1];
 	const uint64_t result = s0 + s1;
@@ -21,12 +21,12 @@ uint64_t next(uint64_t * s) {
 	return result;
 }
 
-int randrange(uint64_t * s,int num) {
+int randrange(u_int64_t * s,int num) {
     // Returns an int in the range [0, num)
     return next(s) % num;
 }
 
-int bernoulli(uint64_t * s, double prob_success) {
+int bernoulli(u_int64_t * s, double prob_success) {
     // Returns the value 1 if success, 0 otherwise
     int rnd = randrange(s, INT_MAX);
     int result = 0;
@@ -36,7 +36,7 @@ int bernoulli(uint64_t * s, double prob_success) {
     return result;
 }
 
-void random_shuffle(uint64_t * s, int * array, int n) {
+void random_shuffle(u_int64_t * s, u_int64_t * array, int n) {
     int i, j, tmp;
     for (i = n - 1; i > 0; i--){
         j = randrange(s, i + 1);
@@ -46,7 +46,7 @@ void random_shuffle(uint64_t * s, int * array, int n) {
     }
 }
 
-void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
+void random_sample(u_int64_t * s, u_int64_t * sample, int n, u_int64_t * population, int N) {
     int t = 0; // total input records dealt with
     int m = 0; // number of items selected so far
     int u;
@@ -67,7 +67,7 @@ void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
 
 int test
 (
-    uint64_t * s,
+    u_int64_t * s,
     double infectiousness,
     double test_threshold,
     double test_false_negative
@@ -96,15 +96,15 @@ void default_testing_and_contact_tracing_dynamics
     double test_false_negative,
     double prob_quarantine_with_symptoms_without_test,
     double prob_quarantine_with_contact_without_test,
-    const int * num_regular_contacts_to_test,
-    const int * regular_contacts_to_test,
-    const int * current_region,
+    const u_int64_t * num_regular_contacts_to_test,
+    const u_int64_t * regular_contacts_to_test,
+    const u_int64_t * current_region,
     const double * current_infectiousness,
     const double * current_disease,
     double * yesterdays_disease,
-    int * end_of_quarantine_days,
-    int * current_quarantine,
-    uint64_t * random_state
+    u_int64_t * end_of_quarantine_days,
+    u_int64_t * current_quarantine,
+    u_int64_t * random_state
 )
 {
     // End quarantine if necessary
@@ -115,7 +115,7 @@ void default_testing_and_contact_tracing_dynamics
     }
 
     // Population eligible to be tested today
-    int * eligible = (int *)malloc(sizeof(int) * N);
+    u_int64_t * eligible = (u_int64_t *)malloc(sizeof(u_int64_t) * N);
     for(int n=0; n<N; n++){
         if(current_region[n] == id && current_disease[n] < 1.0){
             eligible[n] = 1;
@@ -125,19 +125,19 @@ void default_testing_and_contact_tracing_dynamics
     }
 
     // A record of agents newly testing positive today
-    int * newly_testing_positive = (int *)malloc(sizeof(int) * N);
+    u_int64_t * newly_testing_positive = (u_int64_t *)malloc(sizeof(u_int64_t) * N);
     for(int n=0; n<N; n++){newly_testing_positive[n] = 0;}
 
     // Random testing (test eligible agents at random)
     if(num_to_test_random > 0){
         int num_eligible_rand = 0;
         for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_rand += 1;}}
-        int * eligible_agents_rand = (int *)malloc(sizeof(int) * num_eligible_rand);
+        u_int64_t * eligible_agents_rand = (u_int64_t *)malloc(sizeof(u_int64_t) * num_eligible_rand);
         int j = 0;
         for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_rand[j] = n; j += 1;}}
         int num_agents_to_test_random;
         num_agents_to_test_random = fmin(num_to_test_random, num_eligible_rand);
-        int * agents_to_test_random = (int *)malloc(sizeof(int) * num_agents_to_test_random);
+        u_int64_t * agents_to_test_random = (u_int64_t *)malloc(sizeof(u_int64_t) * num_agents_to_test_random);
         random_sample(random_state, agents_to_test_random, num_agents_to_test_random,
                       eligible_agents_rand, num_eligible_rand);
         for(int j=0; j<num_agents_to_test_random; j++){
@@ -158,7 +158,7 @@ void default_testing_and_contact_tracing_dynamics
 
     // Symptomatic testing (test eligible agents who have just become symptomatic)
     int num_eligible_symp = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_symp += 1;}}
-    int * eligible_agents_symp = (int *)malloc(sizeof(int) * num_eligible_symp);
+    u_int64_t * eligible_agents_symp = (u_int64_t *)malloc(sizeof(u_int64_t) * num_eligible_symp);
     int j = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_symp[j] = n; j += 1;}}
     random_shuffle(random_state, eligible_agents_symp, num_eligible_symp);
     for(int j=0; j<num_eligible_symp; j++){
@@ -190,7 +190,7 @@ void default_testing_and_contact_tracing_dynamics
     int num_newly_testing_positive = 0;
     for(int n=0; n<N; n++){if(newly_testing_positive[n] == 1){num_newly_testing_positive += 1;}}
     if(num_newly_testing_positive > 0 && num_to_test_contact > 0){
-        int * at_risk = (int *)malloc(sizeof(int) * N);
+        u_int64_t * at_risk = (u_int64_t *)malloc(sizeof(u_int64_t) * N);
         for(int n=0; n<N; n++){at_risk[n] = 0;}
         for(int n1=0; n1<N; n1++){
             if(newly_testing_positive[n1] == 1){
@@ -206,7 +206,7 @@ void default_testing_and_contact_tracing_dynamics
         for(int n=0; n<N; n++){if(newly_testing_positive[n] == 1){at_risk[n] = 0;}}
         int num_agents_at_risk = 0;
         for(int n=0; n<N; n++){if(at_risk[n] == 1){num_agents_at_risk += 1;}}
-        int * agents_at_risk = (int *)malloc(sizeof(int) * num_agents_at_risk);
+        u_int64_t * agents_at_risk = (u_int64_t *)malloc(sizeof(u_int64_t) * num_agents_at_risk);
         int j = 0; for(int n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
         random_shuffle(random_state, agents_at_risk, num_agents_at_risk);
         for(int j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){

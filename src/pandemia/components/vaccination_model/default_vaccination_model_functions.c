@@ -10,7 +10,7 @@ static inline uint64_t rotl(const uint64_t x, int k) {
 }
 
 // https://prng.di.unimi.it/xoroshiro128plus.c
-uint64_t next(uint64_t * s) {
+uint64_t next(u_int64_t * s) {
 	const uint64_t s0 = s[0];
 	uint64_t s1 = s[1];
 	const uint64_t result = s0 + s1;
@@ -20,12 +20,12 @@ uint64_t next(uint64_t * s) {
 	return result;
 }
 
-int randrange(uint64_t * s, int num) {
+int randrange(u_int64_t * s, int num) {
     // Returns an int in the range [0, num)
     return next(s) % num;
 }
 
-void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
+void random_sample(u_int64_t * s, u_int64_t * sample, int n, u_int64_t * population, int N) {
     int t = 0; // total input records dealt with
     int m = 0; // number of items selected so far
     int u;
@@ -44,7 +44,7 @@ void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
     }
 }
 
-double rho_evaluate(int * partition, double * values, int length, int r, int R, int t){
+double rho_evaluate(u_int64_t * partition, double * values, int length, int r, int R, int t){
 
     double result;
 
@@ -61,7 +61,7 @@ double rho_evaluate(int * partition, double * values, int length, int r, int R, 
     return result;
 }
 
-double sigma_evaluate(int * partition, double * values, int length, int t){
+double sigma_evaluate(u_int64_t * partition, double * values, int length, int t){
 
     double result;
 
@@ -93,21 +93,21 @@ void dynamics_vaccination
     int immunity_period_ticks,
     int id,
     const double * vaccine_rho_immunity_failure_values,
-    const int * vaccine_rho_immunity_failure_partitions,
-    const int * vaccine_rho_immunity_failure_lengths,
+    const u_int64_t * vaccine_rho_immunity_failure_partitions,
+    const u_int64_t * vaccine_rho_immunity_failure_lengths,
     const double * vaccine_sigma_immunity_failure_values,
-    const int * vaccine_sigma_immunity_failure_partitions,
-    const int * vaccine_sigma_immunity_failure_lengths,
-    const int * num_to_vaccinate,
+    const u_int64_t * vaccine_sigma_immunity_failure_partitions,
+    const u_int64_t * vaccine_sigma_immunity_failure_lengths,
+    const u_int64_t * num_to_vaccinate,
     double * rho_immunity_failure_values,
     double * sigma_immunity_failure_values,
-    const int * current_region,
+    const u_int64_t * current_region,
     const double * current_disease,
-    const int * current_strain,
-    int * requesting_immunity_update,
-    int * most_recent_first_dose,
-    int * vaccine_hesitant,
-    uint64_t * random_state
+    const u_int64_t * current_strain,
+    u_int64_t * requesting_immunity_update,
+    u_int64_t * most_recent_first_dose,
+    u_int64_t * vaccine_hesitant,
+    u_int64_t * random_state
 )
 {
 
@@ -115,7 +115,7 @@ void dynamics_vaccination
 
         // Determine who is eligible to be vaccinated today for this age group
         int num_eligible = 0;
-        int * eligible = (int *)malloc(sizeof(int) * N);
+        u_int64_t * eligible = (u_int64_t *)malloc(sizeof(u_int64_t) * N);
         for(int n=0; n<N; n++){
             if(current_region[n] == id &&
                 current_disease[n] < 1.0 &&
@@ -128,7 +128,7 @@ void dynamics_vaccination
                 eligible[n] = 0;
             }
         }
-        int * eligible_agents = (int *)malloc(sizeof(int) * num_eligible);
+        u_int64_t * eligible_agents = (u_int64_t *)malloc(sizeof(u_int64_t) * num_eligible);
         int j = 0;
         for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents[j] = n; j += 1;}}
 
@@ -139,7 +139,7 @@ void dynamics_vaccination
             num_agents_to_vaccinate += num_to_vaccinate[(age_group_index * A) + v];
         }
         num_agents_to_vaccinate = fmin(num_eligible, num_agents_to_vaccinate);
-        int * agents_to_vaccinate = (int *)malloc(sizeof(int) * num_agents_to_vaccinate);
+        u_int64_t * agents_to_vaccinate = (u_int64_t *)malloc(sizeof(u_int64_t) * num_agents_to_vaccinate);
         random_sample(random_state, agents_to_vaccinate, num_agents_to_vaccinate, eligible_agents,
                       num_eligible);
         int v = 0;
@@ -151,7 +151,7 @@ void dynamics_vaccination
 
                 // Determine new rho immunity
 
-                int * rho_part = (int *)malloc(sizeof(int) * W);
+                u_int64_t * rho_part = (u_int64_t *)malloc(sizeof(u_int64_t) * W);
                 double * rho_values = (double *)malloc(sizeof(double) * W * R);
                 int rho_length;
 
@@ -203,7 +203,7 @@ void dynamics_vaccination
 
                 // Determine new sigma immunity
 
-                int * sigma_part = (int *)malloc(sizeof(int) * W);
+                u_int64_t * sigma_part = (u_int64_t *)malloc(sizeof(u_int64_t) * W);
                 double * sigma_values = (double *)malloc(sizeof(double) * W);
                 int sigma_length;
 

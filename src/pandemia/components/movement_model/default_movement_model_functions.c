@@ -11,7 +11,7 @@ static inline uint64_t rotl(const uint64_t x, int k) {
 }
 
 // https://prng.di.unimi.it/xoroshiro128plus.c
-uint64_t next(uint64_t * s) {
+uint64_t next(u_int64_t * s) {
 	const uint64_t s0 = s[0];
 	uint64_t s1 = s[1];
 	const uint64_t result = s0 + s1;
@@ -21,12 +21,12 @@ uint64_t next(uint64_t * s) {
 	return result;
 }
 
-int randrange(uint64_t * s, int num) {
+int randrange(u_int64_t * s, int num) {
     // Returns an int in the range [0, num)
     return next(s) % num;
 }
 
-int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
+int random_choice(u_int64_t * s, double * weights, double sum_of_weights) {
     // Returns an int in the range [0,l) where l is the length of weights
     int rnd = randrange(s, INT_MAX);
     int index = 0;
@@ -40,12 +40,12 @@ int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
 void update_movement
 (
     int N, // number_of_agents
-    int * requesting_location_update,
-    const int * requested_location_update,
-    int * current_location,
-    int * requesting_facemask_update,
-    const int * requested_facemask_update,
-    int * current_facemask
+    u_int64_t * requesting_location_update,
+    const u_int64_t * requested_location_update,
+    u_int64_t * current_location,
+    u_int64_t * requesting_facemask_update,
+    const u_int64_t * requested_facemask_update,
+    u_int64_t * current_facemask
 )
 {
     for(int n=0; n<N; n++){
@@ -73,21 +73,21 @@ void dynamics_movement
     int offset,
     int ticks_in_week,
     int max_num_activity_locations,
-    const int * current_region,
+    const u_int64_t * current_region,
     const uint8_t * weekly_routines,
-    const int * current_facemask,
-    const int * wears_facemask,
-    int * requested_facemask_update,
-    int * requesting_facemask_update,
-    const int * activity_locations,
+    const u_int64_t * current_facemask,
+    const u_int64_t * wears_facemask,
+    u_int64_t * requested_facemask_update,
+    u_int64_t * requesting_facemask_update,
+    const u_int64_t * activity_locations,
     const double * activity_location_weights,
-    const int * num_activity_locations,
-    const int * location_closure,
-    int * requested_location_update,
-    const int * home_location,
-    const int * current_quarantine,
-    int * requesting_location_update,
-    uint64_t * random_state
+    const u_int64_t * num_activity_locations,
+    const u_int64_t * location_closure,
+    u_int64_t * requested_location_update,
+    const u_int64_t * home_location,
+    const u_int64_t * current_quarantine,
+    u_int64_t * requesting_location_update,
+    u_int64_t * random_state
 )
 {
     int t_now = (t + offset) % ticks_in_week;
