@@ -14,9 +14,9 @@ a country. The model is fast and scalable, able to simulate extremely large numb
 while supporting a wide range of highly adaptable features.
 
 This software can be used by researchers looking to assess the impact of policy in the context of a
-public health emergency caused by an infection disease. The disease could, for example, be a
+public health emergency caused by an infectious disease of humans. The disease could, for example, be a
 respiratory infectious disease spread by a coronavirus or an influenza virus. The emergence and
-re-emergence of infectious diseases threatens the health and wellbeing of people all over the world,
+re-emergence of infectious diseases threatens the health and well-being of people all over the world,
 and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
 
 This document contains an overview of the model, a quickstart guide and information for

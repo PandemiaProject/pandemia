@@ -39,7 +39,7 @@
 \vspace*{0.2in}
 
 \begin{centering}
-{\huge\textbf\newline{Pandemia: Default Health Model}}
+{\Huge\textbf\newline{Pandemia: User Guide}}
 \\
 \bigskip
 \includegraphics[width=0.2\textwidth]{pandemia_logo}
@@ -49,7 +49,119 @@
 \\
 \end{centering}
 
-\subsection*{Introduction}
+\tableofcontents
+
+\section{Introduction}
+
+Pandemia is an individual-based stochastic pandemic simulator. It if able to simulate and visualize the spread of an infectious disease across multiple geographical regions. These regions could represent the countries of the world, or the administrative divisions of a single country. The model is fast and scalable, able to simulate extremely large numbers of individuals, while supporting a wide range of highly adaptable features.
+
+This software can be used by researchers looking to assess the impact of policy in the context of a public health emergency caused by an infectious disease of humans. The disease could, for example, be a respiratory infectious disease spread by a coronavirus or an influenza virus.
+
+The emergence and re-emergence of infectious diseases threatens the health and well-being of people all over the world, and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
+
+This user guide presents an introduction to the software and its various components.
+
+- parallel processing
+- scale factor
+- random seed
+
+\section{World}
+
+The Pandemia simulator acts upon a \textbf{World}. A \textbf{World} consists of \textbf{Regions}, with each \textbf{Region} consisting of \textbf{Agents}, \textbf{Locations} and \textbf{Activities}. Each agent performs a sequence of activities, and performs these activities in particular locations. A \textbf{World} additionally consists of a \textbf{Travel Matrix}, representing how many agents travel from each region to each other region each day. Here is the simplest possible \textbf{World} structure:
+\begin{itemize}
+\item One \textbf{Region}, one \textbf{Activity}, one \textbf{Location} and any number of \textbf{Agents}.
+\end{itemize}
+Here is the most complicated:
+\begin{itemize}
+\item Several \textbf{Regions}, with each \textbf{Region} consisting of several \textbf{Activities}, any number of \textbf{Locations} and any number of \textbf{Agents}, with a \textbf{Travel Matrix} describing the mixing between regions.
+\end{itemize}
+
+\subsection{Agents}
+An individual human being is referred to as an \textbf{Agent}. Each agent is described by their age, a weekly routine of activities, locations at which the agent might perform these activities, and weights indicating the probabilities of these locations being chosen.
+
+\subsection{Locations}
+A \textbf{Location} represents, for example, an area of land or a building, such as a house, restaurant, shop or school classroom. A location is described by its type, and a pair of spatial coordinates.
+
+\subsection{Activities}
+An \textbf{Activity} is something an agent does, for example cooking, driving to work, or shopping. Activities are simply labels, with no deeper structure.
+
+\subsection{Regions}
+A \textbf{Region} represents, for example, a country or administrative division. A region consists of a set of activities, a set of agents, and a set of locations.
+
+\subsection{World Factory}
+A World is built by a \textbf{World Factory}. Different worlds are built either by changing the configuration of a world factory, or by using a different world factory entirely.
+
+\subsection{Vectorization}
+Once a \textbf{World} has been built, it is then converted into a \textbf{Vector World}. This is done by converting each \textbf{Region} into a \textbf{Vector Region}. A \textbf{Vector Region} is a vectorized version of a \textbf{Region}, in which data is formatted as arrays of integers and floats, as opposed to Python lists and dictionaries. This facilitates interface with libraries of functions written in C.
+
+\section{Simulator}
+
+The model features of a number of components, most of which are optional:
+\begin{itemize}
+\item \textbf{Movement}
+\item \textbf{Travel}
+\item \textbf{Health}
+\item \textbf{Hospitalization}
+\item \textbf{Testing and Contact Tracing}
+\item \textbf{Vaccination}
+\item \textbf{Seasonality}
+\end{itemize}
+Additional or alternative components are easily added. Pandemia provides a default model for each component. The details of these default models are described in separate documents. The main Pandemia loop looks approximately as follows:
+\begin{center}
+\includegraphics[width=0.65\textwidth]{psuedo}
+\end{center}
+Note that some components update each day, while others update each tick. At the beginning of each day, Pandemia decides who is travelling from each region to each other region, and infects these travellers based on the average infectiousness of their destination region. These travellers are then set aside for the remainder of the day. Pandemia then loops over all the regions, performing independent individual-based simulations on a finer timescale. Since these simulations are independent, the loop over the regions can be parallelized. In this way, Pandemia is both fast and scalable. Even on a laptop computer, using 15 CPUs and 24GB of RAM, it has been able to perform a 100 day simulation, with a 1 hour tick length, of over 100 million individuals, in under 1.5 hours.
+
+
+The \textbf{Input} component allows the user to specify a \textbf{Policy}, consisting of interventions. Possible interventions include the following:
+\begin{itemize}
+\item \textbf{Lockdown}
+\item \textbf{Border Closure}
+\item \textbf{Vaccination}
+\item \textbf{Testing and Contact Tracing}
+\item \textbf{Quarantine}
+\item \textbf{Face Masks}
+\end{itemize}
+Additional or alternative interventions are easily added. \textbf{Reporters} collect output data for visualization and analysis.
+
+
+The \textbf{World} object, having been built, can be saved and thus it is not necessary to complete the build phase each time a simulation is run. The \textbf{World} object is fed into the simulator.
+
+\subsection{Clock}
+
+\subsection{World}
+
+\subsection{Components}
+
+\subsection{Simulator Factory}
+
+\subsection{Reporters}
+
+\section{Movement}
+
+The Pandemia model acts on a \textbf{World}, with each \textbf{World} consisting of \textbf{Regions}, with each \textbf{Region} consisting of \textbf{Individuals}, \textbf{Locations} and \textbf{Activities}. Each individual performs a sequence of activities and performs these activities at particular locations. During the building of the \textbf{World}, each individual is assigned a weekly routine, starting on a Sunday, consisting of a sequence of activities.
+
+For example, suppose in a given region there are three activities, \textbf{Home}, \textbf{Work} and \textbf{School}, and that tick length is set equal to 8 hours, meaning that there are 3 ticks of the simulation clock per day. Then a possible weekly routine could be:
+\begin{center}
+[\textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}]
+\end{center}
+representing a typical working week, or alternatively 
+\begin{center}
+[\textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}]
+\end{center}
+representing a typical school week.
+
+During the building of the \textbf{World}, each individual is assigned a weighted set of locations for each activity. These are the locations at which an individual can perform each activity. During the simulation, whenever an individual switches from one activity to another, the individual randomly selects a new location from the set of allowed locations, according to the weights.
+
+For example, suppose in a given region there are two activities, \textbf{Home} and \textbf{Other}. Then, a given individual might be assigned a single location for the activity \textbf{Home}, with weight $1.0$, and several other locations for the activity \textbf{Other}, with weights chosen according to the distance of each location from the home, so that locations further from home are less likely to be visited, and so on.
+
+Upon changing activity, individuals may also put on or take off a face mask, depending on the activity and the current policy on face masks.
+
+If the change of location is prohibited by policy interventions, then the individual is directed to their home location. In particular, each individual must for the default movement model be assigned a home location.
+
+\section{Travel}
+
+\section{Health}
 Epidemic models typically represent health using discrete states. In a typical compartmental model, the population is partitioned into subsets, labelled \textit{Susceptible}, \textit{Infected}, \textit{Recovered} and \textit{Dead}. These compartments can then be subdivided, and new compartments added, to produce increasingly complicated models.
 
 This approach runs into difficulties once partial immunity is introduced, since the compartmental label \textit{Recovered} then becomes ambiguous. It runs into further difficulties once multiple strains of the pathogen are introduced, since then the label \textit{Susceptible} becomes ambiguous.
@@ -175,5 +287,17 @@ In particular, with only one population subgroup we have $M = 1 / N$, therefore 
 of the SIR model. With exponentially distributed recovery times, and no reinfection, we recover the remaining equations, and therefore arrive at a stochastic approximation of the SIR model.
 
 With the option $\texttt{sir{\_}rescaling}$ set to $\texttt{True}$, the default health model is therefore a stochastic individual-based generalization of the SIR model. On the other hand, with the option $\texttt{sir{\_}rescaling}$ set to $\texttt{False}$, the transmission probabilities are not divided by the number of individuals in each location, meaning that adding susceptible individuals to the location of an infected individual does not dilute the infectiousness of that individual, as it does under the SIR rescaling. For example, if Alice and Bob are riding a bus, and Bob is infectious, then under the SIR rescaling the probability that Alice is infected by Bob decreases if more susceptible people get on the bus. This may not be realistic, so by default the rescaling is set to $\texttt{False}$.
+
+\section{Hospitalization}
+
+\section{Testing and Contact Tracing}
+
+\section{Vaccination}
+
+\section{Seasonality}
+
+\section{Input}
+
+\section{Optimization}
 
 \end{document}
