@@ -30,7 +30,7 @@ epoch: 23rd February 2020
 # ######################################### World ##################################################
 
 world_factory:
-  __type__: test_world_factory.TestWorldFactory
+  __type__: control_world_factory.ControlWorldFactory
   random_seed: 1
   # The order in which the region names are listed here determines the index of that region referred
   # to in vectors and matrices appearing in other components:
@@ -255,8 +255,8 @@ reporters:
   csv.StrainCounts:
     filename: tests/strain_counts_test_config.csv
   plot.PlotInfected:
-    show: True
-    savefig: False
+    show: False
+    savefig: True
     filename: /tmp/infected_test.png
     historical_data: null
   # pygame_shapes.PygameShapes:
