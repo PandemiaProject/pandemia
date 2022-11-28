@@ -39,7 +39,8 @@ world_factory:
   __type__: global_world_factory.GlobalWorldFactory
   # Filepath to shapefiles for the regions, used for rendering and calculating country adjacency.
   regions_shape_path: Scenarios/Global/data/country_data_shapefiles/CNTR_RG_60M_2020_4326.shp
-  # Filepath to country data, for example age structure and population sizes.
+  # Filepath to country data, including age structure and population sizes. The actual number of
+  # agents is given by multiplying this data by the scale_factor.
   regions_data_path: Scenarios/Global/data/country_data.csv
   # Individuals travel between regions either by air or not. If not, then travel is between adjacent
   # regions, with this parameter determining the proportion of each population travelling to
