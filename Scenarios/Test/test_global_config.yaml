@@ -191,8 +191,8 @@ input_model:
 
 # ######################################### Output #################################################
 
-regions_omitted_from_death_counts: ['CN', 'KP']
-super_regions_omitted_from_deaths_counts: ['Africa', 'Asia']
+regions_omitted_from_death_counts: []
+super_regions_omitted_from_deaths_counts: []
 historical_data_filepath: Scenarios/Global_Grid/data/historical_data/WHO-COVID-19-global-data.csv
 
 # Output that should be rendered from the simulation:
@@ -200,7 +200,7 @@ reporters:
   cli.TimeReporter:
   # Gives outputs as numbers
   csv.StrainCounts:
-    filename: /REPLACE_ME/strain_counts_test_global_config.csv
+    filename: tests/strain_counts_test_global_config.csv
   # plot.PlotInfected:
   #   show: False
   #   savefig: True

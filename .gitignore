@@ -148,5 +148,6 @@ dmypy.json
 *.egg-info/
 .vscode/launch.json
 .coverage
+.coverage*
 sync_windows_vm.sh
 .idea/*

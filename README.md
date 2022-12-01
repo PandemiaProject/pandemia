@@ -12,30 +12,35 @@ supports a wide range of features.
 ![pandemia Logo](pandemia_logo.jpg)
 
 ## Overview
+
 Scenarios are configured using YAML.
 
 The code is mixed Python and C.
 
 ### Input Data
+
 Input data are defined in the [Scenarios](Scenarios/) directory.
 
 ### Output Data
+
 Output data are stored in a configured output directory.
 
 ## Requirements
 
 - Python 3.10
-  - Python version other than 3.10 may produce errors. 
-- A GCC complier 
+  - Python version other than 3.10 may produce errors.
+- A GCC complier.
 
 ## Usage
 
 To build C libraries
+
 ```
 make
 ```
 
 To install pandemia python package:
+
 ```
 pip install .
 ```
@@ -65,7 +70,9 @@ Accessed 31 OCTOBER 2022.
 To run the ABMlux scenario, an additional .abm file is required.
 
 ## Testing
+
 To install additional dependencies required for testing:
+
 ```
 pip install .[test]
 ```
@@ -94,9 +101,13 @@ These tests will **not** be run when `pytest` is called without arguments. (See 
 pytest -m slow
 ```
 
+### Test Coverage
+
+To obtain a test
+
 
 ## Docs
-To generate documentation:
+To generate the documentation:
 ```
 pip install pdoc
 pdoc --html --overwrite --html-dir docs pandemia
