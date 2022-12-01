@@ -117,9 +117,12 @@ setup(
     # projects.
     extras_require={  # Optional
         # 'dev': ['check-manifest'],
-        'test': ['pytest',
-                 #'pdoc',
-                 'coverage'],
+        'test': ['pandas',
+                 'pdoc',
+                 'pytest',
+                 'pytest-cov',
+                 "icecream"
+                 ],
     },
 
     # If there are data files included in your packages that need to be
