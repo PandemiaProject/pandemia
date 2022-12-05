@@ -49,6 +49,9 @@ class VectorRegion:
         self.coordinates = None
         self.region_coordinates = None
 
+        self.current_disease = np.zeros((number_of_agents), dtype=float)
+        self.current_strain = np.full((number_of_agents), -1, dtype=int)
+
 class Region:
     """Represents a region"""
 
