@@ -5,7 +5,7 @@ name: End to End tests
 
 # We only run this manually
 on:
-  # workflow_dispatch
+  workflow_dispatch:
   push:
     branches:
       - feature/initial_e2e_testing
