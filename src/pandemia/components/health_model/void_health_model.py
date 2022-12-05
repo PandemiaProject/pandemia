@@ -24,7 +24,8 @@ class VoidHealthModel(HealthModel):
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
 
-        pass
+        # vector_region.current_disease = np.zeros((vector_region.number_of_agents), dtype=float)
+        # vector_region.current_strain = np.full((vector_region.number_of_agents), -1, dtype=int)
 
     def initial_conditions(self, vector_region):
 
