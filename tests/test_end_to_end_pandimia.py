@@ -167,7 +167,7 @@ def test_e2e_hospitalization_and_death_model(tmp_path, request):
 def test_e2e_input_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_input_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
+    expect_results = "tests/e2e_expected_outputs/test_e2e_input_model.csv"
 
     delta_config = {
         "input_model": {"__type__": "default_input_model.DefaultInputModel"}
@@ -185,7 +185,7 @@ def test_e2e_input_model(tmp_path, request):
 def test_e2e_movement_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_movement_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
+    expect_results = "tests/e2e_expected_outputs/test_e2e_movement_model.csv"
 
     delta_config = {
         "movement_model": {
@@ -210,7 +210,7 @@ def test_e2e_seasonal_effects_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_health_seasonal_models.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = (
-        "tests/e2e_expected_outputs/strain_counts_test_e2e_health_seasonal_model.csv"
+        "tests/e2e_expected_outputs/test_e2e_seasonal_effects_model.csv"
     )
 
     delta_config = {
@@ -279,7 +279,7 @@ def test_e2e_travel_model(tmp_path, request):
 def test_e2e_vaccination_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_vaccination_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
+    expect_results = "tests/e2e_expected_outputs/test_e2e_vaccination_model.csv"
 
     delta_config = {
         "vaccination_model": {

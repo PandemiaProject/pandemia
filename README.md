@@ -4,6 +4,8 @@
 ![Pylint](https://github.com/?/workflows/Pylint/badge.svg)
 [![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
+[![End to End tests](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml/badge.svg)](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml)
+
 Pandemia is an individual-based stochastic pandemic simulator, currently a work in progress. It is
 able to simulate the spread of an infectious disease over multiple regions, for example the entire
 world. The model is fast and scalable, able to simulate extremely large numbers of individuals, and
@@ -100,6 +102,17 @@ These tests will **not** be run when `pytest` is called without arguments. (See 
 ```
 pytest -m slow
 ```
+
+### (Re)creating the "gold standard" outputs
+
+The integration tests launch complete runs of pandemia and then compare the resulting output file with a set of "gold standard" files for each scenario. Occasionally (depending on the development of the relevant module) it may be necessary to recreate these. To recreate the gold standard outputs, use `pytest`'s `basetemp` dir option. **This can overwrite all the existing gold standard output files**
+
+```
+pytest -m slow --basetemp=./tests/new_gold_standard
+```
+
+This command can be combined with selecting individual tests if required.
+
 
 ### Test Coverage
 
