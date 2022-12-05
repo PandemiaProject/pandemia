@@ -9,7 +9,7 @@ from typing import Union
 from icecream import ic
 
 
-def run_end_to_end_simulation(
+def _run_end_to_end_simulation(
     input_scenario_config, expected_results_csv, output_dir: Path, output_fname: str
 ):
     """
@@ -103,7 +103,9 @@ def test_end_to_end_global(tmp_path, request):
     # expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
     expect_results = "tests/e2e_expected_outputs/strain_counts_test_global_config.csv"
 
-    run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    _run_end_to_end_simulation(
+        input_scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
 @pytest.mark.slow
@@ -111,7 +113,9 @@ def test_end_to_end_all_components(tmp_path, request):
     input_scenario = "Scenarios/Test/test_all_components.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts_test_all_components.csv"
 
-    run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    _run_end_to_end_simulation(
+        input_scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
 @pytest.mark.slow
@@ -119,7 +123,9 @@ def test_end_to_end_all_void(tmp_path, request):
     input_scenario = "Scenarios/Test/test_void_all.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts_test_void_all.csv"
 
-    run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    _run_end_to_end_simulation(
+        input_scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
 @pytest.mark.slow
@@ -129,62 +135,144 @@ def test_e2e_health_model(tmp_path, request):
         "tests/e2e_expected_outputs/strain_counts_test_e2e_health_model.csv"
     )
 
-    run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    _run_end_to_end_simulation(
+        input_scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
-@pytest.mark.skip("Not implemented yet")
+# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
 def test_e2e_hospitalization_and_death_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_hospitalization_and_death_model.yaml"
+    input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
 
-    # run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    delta_config = {
+        "hospitalization_and_death_model": {
+            "__type__": "default_hospitalization_and_death_model.DefaultHospitalizationAndDeathModel",
+            "hospital_threshold": 0.5,
+            "hospital_location_type": "Hospital",
+            "cemetery_location_type": "Cemetery",
+        }
+    }
+
+    scenario = _update_config(input_scenario, delta_config)
+    _run_end_to_end_simulation(
+        scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
-@pytest.mark.skip("Not implemented yet")
+# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
-def test_e2e_input_model(tmp_path):
+def test_e2e_input_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_input_model.yaml"
+    input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
 
+    delta_config = {
+        "input_model": {"__type__": "default_input_model.DefaultInputModel"}
+    }
+
     # run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    scenario = _update_config(input_scenario, delta_config)
+    _run_end_to_end_simulation(
+        scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
-@pytest.mark.skip("Not implemented yet")
+# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
 def test_e2e_movement_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_movement_model.yaml"
+    input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
 
-    # run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    delta_config = {
+        "movement_model": {
+            "__type__": "default_movement_model.DefaultMovementModel",
+            "weighted_sampling": True,
+            "home_activity": "Home_Activity",
+            "location_closure_exemptions": {"House": ["Home_Activity"]},
+            "facemask_activities": ["Other_Activity"],
+            "age_groups": [0, 18, 65],
+            "facemask_hesitancy": [0.9, 0.5, 0.2],
+        }
+    }
+
+    scenario = _update_config(input_scenario, delta_config)
+    _run_end_to_end_simulation(
+        scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
 @pytest.mark.slow
 def test_e2e_seasonal_effects_model(tmp_path, request):
-    input_scenario = "Scenarios/Test/test_e2e_health_seasonal_models.yaml"
+    # input_scenario = "Scenarios/Test/test_e2e_health_seasonal_models.yaml"
+    input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = (
         "tests/e2e_expected_outputs/strain_counts_test_e2e_health_seasonal_model.csv"
     )
 
-    run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    delta_config = {
+        "seasonal_effects_model": {
+            "__type__": "default_seasonal_effects_model.DefaultSeasonalEffectsModel",
+            # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
+            "seasonal_multiplier_by_region_by_month": None,
+            "out_of_season_multiplier": 1.0,
+        }
+    }
+
+    scenario = _update_config(input_scenario, delta_config)
+    _run_end_to_end_simulation(
+        scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
-@pytest.mark.skip("Not implemented yet")
+# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
 def test_e2e_testing_and_contact_tracing_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_testing_and_contact_tracing_model.yaml"
+    input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
 
-    # run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    delta_config = {
+        "testing_and_contact_tracing_model": {
+            "__type__": "default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel",
+            "quarantine_period_days": 14,
+            "symptomatic_disease_treshold": 0.2,
+            "prob_quarantine_with_symptoms_without_test": 0.0,
+            "prob_quarantine_with_contact_without_test": 0.0,
+            "test_threshold": 0.4,
+            "test_false_negative": 0.01,
+            "max_regular_contacts_to_test": 10,
+        }
+    }
+
+    scenario = _update_config(input_scenario, delta_config)
+    _run_end_to_end_simulation(
+        scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
-@pytest.mark.skip("Not implemented yet")
+# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
 def test_e2e_travel_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_travel_model.yaml"
+    input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
 
-    # run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    delta_config = {
+        "travel_model": {
+            "__type__": "default_travel_model.DefaultTravelModel",
+            "travel_transmission_multiplier": 1.0,
+            "interpolation": 0.0,
+        }
+    }
+
+    scenario = _update_config(input_scenario, delta_config)
+    _run_end_to_end_simulation(
+        scenario, expect_results, tmp_path, request.node.originalname
+    )
 
 
 @pytest.mark.slow
@@ -193,4 +281,39 @@ def test_e2e_vaccination_model(tmp_path, request):
     input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
 
-    run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
+    delta_config = {
+        "vaccination_model": {
+            "__type__": "default_vaccination_model.DefaultVaccinationModel",
+            "number_of_vaccines": 2,
+            "age_groups": [0, 18, 65],
+            "vaccine_hesitancy": [0.8, 0.4, 0.1],
+            "booster_waiting_time_days": 50,
+            "vaccines": {
+                "vaccine_0": {
+                    "rho_immunity_failure": [
+                        [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+                        [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+                    ],
+                    "sigma_immunity_failure": [
+                        [[-1, 0, 14], [1.0, 0.5, 1.0]],
+                        [[-1, 0, 14], [1.0, 0.5, 1.0]],
+                    ],
+                },
+                "vaccine_1": {
+                    "rho_immunity_failure": [
+                        [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+                        [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
+                    ],
+                    "sigma_immunity_failure": [
+                        [[-1, 0, 14], [1.0, 0.5, 1.0]],
+                        [[-1, 0, 14], [1.0, 0.5, 1.0]],
+                    ],
+                },
+            },
+        }
+    }
+
+    scenario = _update_config(input_scenario, delta_config)
+    _run_end_to_end_simulation(
+        scenario, expect_results, tmp_path, request.node.originalname
+    )
