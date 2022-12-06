@@ -18,13 +18,13 @@ class Policy():
 
     def __init__(self, T, R, A, V):
 
-        self.lockdown_input            = np.full((T, R), -1, dtype=int)
-        self.border_closure_input      = np.full((T, R), 1.0, dtype=float)
-        self.facemask_input            = np.full((T, R), -1, dtype=int)
-        self.random_testing_input      = np.full((T, R), 0, dtype=int)
-        self.symptomatic_testing_input = np.full((T, R), 0, dtype=int)
-        self.contact_testing_input     = np.full((T, R), 0, dtype=int)
-        self.vaccination_input         = np.full((T, R, A, V), 0, dtype=int)
+        self.lockdown_input            = np.full((T, R), -1, dtype=np.int64)
+        self.border_closure_input      = np.full((T, R), 1.0, dtype=np.float64)
+        self.facemask_input            = np.full((T, R), -1, dtype=np.int64)
+        self.random_testing_input      = np.full((T, R), 0, dtype=np.int64)
+        self.symptomatic_testing_input = np.full((T, R), 0, dtype=np.int64)
+        self.contact_testing_input     = np.full((T, R), 0, dtype=np.int64)
+        self.vaccination_input         = np.full((T, R, A, V), 0, dtype=np.int64)
 
 def fitness_func(solution, solution_idx):
     """Builds simulator and runs"""
@@ -39,9 +39,9 @@ def fitness_func(solution, solution_idx):
     VACCINATION_RATE = 0.006 # The maximum proportion of population a country can vaccinate each day
     LEN_SUPPLY_PERIOD = 30   # The time period is divided into supply periods of this length in days
 
-    vaccination_rate = np.full((num_regions), VACCINATION_RATE, dtype=float)
+    vaccination_rate = np.full((num_regions), VACCINATION_RATE, dtype=np.float64)
     num_supply_periods = (num_days // LEN_SUPPLY_PERIOD) + 1
-    supply = np.full((num_supply_periods), int(TOTAL_DOSES / num_supply_periods), dtype=int)
+    supply = np.full((num_supply_periods), int(TOTAL_DOSES / num_supply_periods), dtype=np.int64)
 
     solution_part_1 = solution[0: num_regions * num_supply_periods]
     solution_part_2 = solution[num_regions * num_supply_periods:]
@@ -58,7 +58,7 @@ def fitness_func(solution, solution_idx):
 
     num_can_vaccinate_each_day = (np.multiply(vaccination_rate, population_sizes)).astype(int)
 
-    vaccination_sol = np.zeros((num_days, num_regions, num_age_groups), dtype=int)
+    vaccination_sol = np.zeros((num_days, num_regions, num_age_groups), dtype=np.int64)
     for day in range(num_days):
         supply_period = day // LEN_SUPPLY_PERIOD
         share = np.minimum((vac_sol[supply_period] / LEN_SUPPLY_PERIOD).astype(int),
@@ -121,7 +121,7 @@ assert num_vaccines == 1
 scale_factor = sim.vector_world.scale_factor
 rescale_factor = 1 / scale_factor
 population_sizes =\
-    np.array([vr.number_of_agents * rescale_factor for vr in sim.vector_regions], dtype=float)
+    np.array([vr.number_of_agents * rescale_factor for vr in sim.vector_regions], dtype=np.float64)
 
 seeds = [0, 1, 2, 3, 4]
 

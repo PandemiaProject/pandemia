@@ -45,9 +45,9 @@ class ValidationInputModel(InputModel):
                 (self.epoch + datetime.timedelta(days=day)).strftime('%d/%m/%Y%Z')
 
         self.transmission_control_input =\
-            np.ones((self.simulation_length_days, self.number_of_regions), dtype=float)
+            np.ones((self.simulation_length_days, self.number_of_regions), dtype=np.float64)
         self.border_closure_input =\
-            np.ones((self.simulation_length_days, self.number_of_regions), dtype=float)
+            np.ones((self.simulation_length_days, self.number_of_regions), dtype=np.float64)
 
         with open(self.stay_at_home_data_fp, newline='') as csvfile:
             next(csvfile)

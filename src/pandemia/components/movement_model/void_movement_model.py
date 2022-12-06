@@ -19,8 +19,8 @@ class VoidMovementModel(MovementModel):
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
 
-        vector_region.current_location = np.zeros((vector_region.number_of_agents), dtype=int)
-        vector_region.current_facemask = np.zeros((vector_region.number_of_agents), dtype=int)
+        vector_region.current_location = np.zeros((vector_region.number_of_agents), dtype=np.int64)
+        vector_region.current_facemask = np.zeros((vector_region.number_of_agents), dtype=np.int64)
 
     def initial_conditions(self, vector_region, offset):
 

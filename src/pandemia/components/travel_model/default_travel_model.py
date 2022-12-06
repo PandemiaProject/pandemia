@@ -58,7 +58,7 @@ class DefaultTravelModel(TravelModel):
 
         vector_region.current_border_closure_multiplier = 1.0
         vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                vector_region.id, dtype=int)
+                                                vector_region.id, dtype=np.int64)
 
     def initial_conditions(self, sim):
         """Initial regional mixing"""
@@ -137,12 +137,12 @@ class DefaultTravelModel(TravelModel):
         """Changes to regional mixing model"""
 
         agents_travelling_matrix =\
-            np.zeros((self.number_of_regions, self.number_of_regions), dtype=int)
+            np.zeros((self.number_of_regions, self.number_of_regions), dtype=np.int64)
 
         # Reset record of who is travelling abroad and apply border closure if necessary
         for vector_region in sim.vector_regions:
             vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                   vector_region.id, dtype=int)
+                                                   vector_region.id, dtype=np.int64)
             self.close_borders(
                 c_int(self.number_of_regions),
                 c_int(vector_region.id),
@@ -153,8 +153,8 @@ class DefaultTravelModel(TravelModel):
             )
 
         # Update record of who is travelling abroad and calculate transmission force for each region
-        sum_f_by_strain = np.zeros((self.number_of_regions * self.number_of_strains), dtype=float)
-        transmission_force = np.ones((self.number_of_regions), dtype=float)
+        sum_f_by_strain = np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.float64)
+        transmission_force = np.ones((self.number_of_regions), dtype=np.float64)
         if enable_parallel:
             Parallel(n_jobs=num_jobs, backend="threading",
                      verbose=0)(delayed(self._out)(vector_region_batch, agents_travelling_matrix,
