@@ -10,6 +10,8 @@
 \usepackage{amsfonts}
 \usepackage{hyperref}
 \usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 % Text layout
 \raggedright
@@ -54,17 +56,13 @@
 
 \section{Introduction}
 
-Pandemia is an individual-based stochastic pandemic simulator. It if able to simulate and visualize the spread of an infectious disease across multiple geographical regions. These regions could represent the countries of the world, or the administrative divisions of a single country. The model is fast and scalable, able to simulate extremely large numbers of individuals, while supporting a wide range of highly adaptable features.
+Pandemia is an individual-based stochastic pandemic simulator. It can simulate and visualize the spread of an infectious disease across multiple geographical regions. These regions might represent the countries of the world, or the administrative divisions of a single country.
 
-This software can be used by researchers looking to assess the impact of policy in the context of a public health emergency caused by an infectious disease of humans. The disease could, for example, be a respiratory infectious disease spread by a coronavirus or an influenza virus.
+The software parallelizes computation over the regions, calculating the interactions between regions on a coarser timescale than the one used to drive the agent-based simulations within each region. Moreover, the user can specify a scale factor, adjusting the number of individuals, locations, and other relevant quantities appearing in each region. Pandemia is therefore fast and scalable, able to simulate extremely large numbers of individuals, while supporting a wide range of highly adaptable features. All parameters, including the scale factor and random seed, are configured in a single file, called the \textbf{Configuration}.
 
-The emergence and re-emergence of infectious diseases threatens the health and well-being of people all over the world, and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
+This software will be of use to researchers looking to assess the impact of policy in the context of a public health emergency caused by an infectious disease of humans. The disease could, for example, be a respiratory infectious disease spread by a coronavirus or an influenza virus. The emergence and re-emergence of infectious diseases threatens the health and well-being of people all over the world, and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
 
-This user guide presents an introduction to the software and its various components.
-
-- parallel processing
-- scale factor
-- random seed
+This user guide presents an overview of the model and its various components.
 
 \section{World}
 
@@ -78,43 +76,88 @@ Here is the most complicated:
 \end{itemize}
 
 \subsection{Agents}
-An individual human being is referred to as an \textbf{Agent}. Each agent is described by their age, a weekly routine of activities, locations at which the agent might perform these activities, and weights indicating the probabilities of these locations being chosen.
+An individual human is referred to in the model as an \textbf{Agent}. Each agent is described by their age, a weekly routine of activities, locations at which the agent might perform these activities, and weights indicating the probabilities of these locations being chosen by that individual.
 
 \subsection{Locations}
-A \textbf{Location} represents, for example, an area of land or a building, such as a house, restaurant, shop or school classroom. A location is described by its type, and a pair of spatial coordinates.
+A \textbf{Location} represents, for example, an area of land or a building, such as a house, restaurant, shop or school classroom. A location is described by its type, for example House or Hospital, and a pair of spatial coordinates.
 
 \subsection{Activities}
-An \textbf{Activity} is something an agent does, for example cooking, driving to work, or shopping. Activities are simply labels, with no deeper structure.
+An \textbf{Activity} is something an agent does, for example cooking, driving to work, or shopping. Activities are simply labels, with no additional structure.
 
 \subsection{Regions}
-A \textbf{Region} represents, for example, a country or administrative division. A region consists of a set of activities, a set of agents, and a set of locations.
+A \textbf{Region} represents, for example, a country or an administrative division of a country. A region consists of a set of activities, a set of agents, and a set of locations.
 
 \subsection{World Factory}
-A World is built by a \textbf{World Factory}. Different worlds are built either by changing the configuration of a world factory, or by using a different world factory entirely.
+A World is built by a \textbf{World Factory}. Different worlds can be obtained either by changing the configuration of a world factory, or by using a different world factory entirely.
 
 \subsection{Vectorization}
 Once a \textbf{World} has been built, it is then converted into a \textbf{Vector World}. This is done by converting each \textbf{Region} into a \textbf{Vector Region}. A \textbf{Vector Region} is a vectorized version of a \textbf{Region}, in which data is formatted as arrays of integers and floats, as opposed to Python lists and dictionaries. This facilitates interface with libraries of functions written in C.
 
 \section{Simulator}
 
-The model features of a number of components, most of which are optional:
+The Pandemia \textbf{Simulator} is the object that performs the pandemic simulation. Global parameters include the aforementioned scale factor, a random seed and the option of whether or not to parallelize the computation. The \textbf{Simulator} consists of a \textbf{Clock}, which represents time, a \textbf{World} and a number of \textbf{Components} and \textbf{Reporters}.
+
+\subsection{Clock}
+
+The \textbf{Clock} keeps track of time. It is an iterator that counts forward in time by one day, with each day being subdivided into ticks. Some components update each tick, while others update only each day. Interactions between regions, for example, are calculated at the beginning of each day.
+
+\subsection{World}
+
+The \textbf{World} is an object of the type described in the previous section, consisting of regions, with the regions consisting of agents, locations and activities.
+
+\subsection{Components}
+
+The model features of a number of \textbf{Components}:
 \begin{itemize}
 \item \textbf{Movement}
-\item \textbf{Travel}
 \item \textbf{Health}
 \item \textbf{Hospitalization}
 \item \textbf{Testing and Contact Tracing}
 \item \textbf{Vaccination}
 \item \textbf{Seasonality}
+\item \textbf{Travel}
 \end{itemize}
-Additional or alternative components are easily added. Pandemia provides a default model for each component. The details of these default models are described in separate documents. The main Pandemia loop looks approximately as follows:
-\begin{center}
-\includegraphics[width=0.65\textwidth]{psuedo}
-\end{center}
-Note that some components update each day, while others update each tick. At the beginning of each day, Pandemia decides who is travelling from each region to each other region, and infects these travellers based on the average infectiousness of their destination region. These travellers are then set aside for the remainder of the day. Pandemia then loops over all the regions, performing independent individual-based simulations on a finer timescale. Since these simulations are independent, the loop over the regions can be parallelized. In this way, Pandemia is both fast and scalable. Even on a laptop computer, using 15 CPUs and 24GB of RAM, it has been able to perform a 100 day simulation, with a 1 hour tick length, of over 100 million individuals, in under 1.5 hours.
+Pandemia provides a default model for each component, and a void model in which the component is inactive. The details of these default models will be described in subsequent sections.
 
+\subsection{Reporters}
 
-The \textbf{Input} component allows the user to specify a \textbf{Policy}, consisting of interventions. Possible interventions include the following:
+A \textbf{Reporter} collects data from the simulation for output and visualization. The simulator contains a message bus that broadcasts data labelled by topic, for example on new infections and deaths, while reporters subscribed to these topics collect the data and organize it. Some reporters save CSV files, tabulating infections by country, strain and date. Others save PNG files, plotting infections and deaths. There are also reporters that provide real time visualization of the simulation, using shapefiles or grid data supplied for the regions in question. All relevant parameters, including the filepaths of the output data, are specified by the user in the configuration file.
+
+\subsection{Simulator Factory}
+
+The \textbf{Simulator Factory} builds the simulator. The first step is to build the clock and world. Having done so, the simulator factory can then be saved and reloaded. It is therefore not necessary to build a world every time a simulation is run. This is useful since building a world might be computationally intensive. The next step is to initialize the components and finally the reporters.
+
+\subsection{Run}
+
+Once the simulator has been built, it can then be run! The main Pandemia loop looks approximately as follows:
+
+\begin{algorithm}
+\caption{Main loop}\label{alg:mainloop}
+\begin{algorithmic}
+\Require clock, regions, travel{\_}matrix
+\For{day in clock}
+\State travel.dynamics(regions, travel{\_}matrix, day)
+\For{region in regions}
+\State seasonality.dynamics(region, day)
+\State input.dynamics(region, day)
+\For{tick in range(ticks{\_}in{\_}day)}
+\State $\text{t} \gets (\text{ticks{\_}in{\_}day} * \text{day}) + \text{tick}$
+\State health.dynamics(region, t)
+\State movement.dynamics(region, t)
+\State hospitalization.dynamics(region, t)
+\EndFor
+\State testing{\_}and{\_}contact{\_}tracing.dynamics(region, t)
+\State vaccination.dynamics(region, t)
+\EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+Note that some components update each day, while others update each tick. At the beginning of each day, Pandemia decides who is travelling from each region to each other region, and infects these travellers based on the average infectiousness of their destination region. These travellers are then set aside for the remainder of the day. Pandemia then loops over the regions, performing independent individual-based simulations. Since for the remainder of the day these simulations are independent, the loop over the regions can be parallelized. In this way, Pandemia is both fast and scalable. On a laptop computer, using 15 CPUs and 24GB of RAM, Pandemia has been able to perform a 100 day simulation with 24 ticks per day, of over 100 million individuals, in under 1.5 hours.
+
+\section{Input}
+
+The \textbf{Input} component allows the user to specify a \textbf{Policy}, consisting of interventions. A policy is encoded by arrays of integers and floats, indicating the availability or strength of various interventions in each region each day. Currently supported interventions include:
 \begin{itemize}
 \item \textbf{Lockdown}
 \item \textbf{Border Closure}
@@ -123,49 +166,32 @@ The \textbf{Input} component allows the user to specify a \textbf{Policy}, consi
 \item \textbf{Quarantine}
 \item \textbf{Face Masks}
 \end{itemize}
-Additional or alternative interventions are easily added. \textbf{Reporters} collect output data for visualization and analysis.
-
-
-The \textbf{World} object, having been built, can be saved and thus it is not necessary to complete the build phase each time a simulation is run. The \textbf{World} object is fed into the simulator.
-
-\subsection{Clock}
-
-\subsection{World}
-
-\subsection{Components}
-
-\subsection{Simulator Factory}
-
-\subsection{Reporters}
+The interventions are implemented inside the relevant components. For example, a lockdown is implemented within the movement component.
 
 \section{Movement}
 
-The Pandemia model acts on a \textbf{World}, with each \textbf{World} consisting of \textbf{Regions}, with each \textbf{Region} consisting of \textbf{Individuals}, \textbf{Locations} and \textbf{Activities}. Each individual performs a sequence of activities and performs these activities at particular locations. During the building of the \textbf{World}, each individual is assigned a weekly routine, starting on a Sunday, consisting of a sequence of activities.
+In the default movement model, each agent performs a sequence of activities and performs these activities at particular locations.
 
-For example, suppose in a given region there are three activities, \textbf{Home}, \textbf{Work} and \textbf{School}, and that tick length is set equal to 8 hours, meaning that there are 3 ticks of the simulation clock per day. Then a possible weekly routine could be:
+Recall that, during the building of the world, each agent is assigned a weekly routine consisting of a sequence of activities. It is assumed that these routines start on a Sunday. For example, suppose in a given region there are three activities, \textbf{Home}, \textbf{Work} and \textbf{School}, and that we wish to specify the routine of agents with an 8 hour time resolution. Then one weekly routine could be:
 \begin{center}
 [\textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Work}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}]
 \end{center}
-representing a typical working week, or alternatively 
+representing a typical working week, while another weekly routine could be:
 \begin{center}
 [\textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{School}, \textbf{Home}, \textbf{Home}, \textbf{Home}, \textbf{Home}]
 \end{center}
 representing a typical school week.
 
-During the building of the \textbf{World}, each individual is assigned a weighted set of locations for each activity. These are the locations at which an individual can perform each activity. During the simulation, whenever an individual switches from one activity to another, the individual randomly selects a new location from the set of allowed locations, according to the weights.
+Recall also, that during the building of the world, each individual is assigned a weighted set of locations for each activity. For example, suppose in a given region there are two activities, \textbf{Home} and \textbf{Other}. Then, a given individual might be assigned a single location for the activity \textbf{Home}, with weight $1.0$, and several other locations for the activity \textbf{Other}, with weights chosen according to the distance from home, so that locations further from home are less likely to be visited.
 
-For example, suppose in a given region there are two activities, \textbf{Home} and \textbf{Other}. Then, a given individual might be assigned a single location for the activity \textbf{Home}, with weight $1.0$, and several other locations for the activity \textbf{Other}, with weights chosen according to the distance of each location from the home, so that locations further from home are less likely to be visited, and so on.
-
-Upon changing activity, individuals may also put on or take off a face mask, depending on the activity and the current policy on face masks.
-
-If the change of location is prohibited by policy interventions, then the individual is directed to their home location. In particular, each individual must for the default movement model be assigned a home location.
+In the default movement model, whenever an individual switches from one activity to another, the individual randomly selects a new location from the corresponding set of locations, using the specified weights, at which they will then perform this new activity. Upon changing activity, individuals may also put on or take off a face mask, depending on the activity and the current policy on face masks, as specified in the \textbf{Configuration} and \textbf{Input}. If the change of location is prohibited by a policy intervention, for example a lockdown, then the choice of individual is overridden and they are instead directed to their home location. In particular, each individual must for the default movement model be assigned a home location.
 
 \section{Health}
 Epidemic models typically represent health using discrete states. In a typical compartmental model, the population is partitioned into subsets, labelled \textit{Susceptible}, \textit{Infected}, \textit{Recovered} and \textit{Dead}. These compartments can then be subdivided, and new compartments added, to produce increasingly complicated models.
 
 This approach runs into difficulties once partial immunity is introduced, since the compartmental label \textit{Recovered} then becomes ambiguous. It runs into further difficulties once multiple strains of the pathogen are introduced, since then the label \textit{Susceptible} becomes ambiguous.
 
-Pandemia therefore dispenses with the compartmental framework altogether, taking an entirely new approach to modelling individual health. In Pandemia, the health of an individual is described by five attributes:
+Pandemia therefore dispenses with the compartmental framework altogether, taking an entirely new approach to modelling individual health. In the default health model, the health of an individual is described by five attributes:
 \begin{itemize}
 \item \textbf{Strain}
 \item \textbf{Disease}
@@ -187,7 +213,7 @@ The value of an attribute at time $\texttt{t}$ is given by evaluating the corres
 The prefix \texttt{sigma{\_}} refers to the outer layer, while the prefix \texttt{rho{\_}} refers to the inner layers. Each vectorized region has a set of such variables.
 
 \subsection*{\texttt{current{\_}strain}}
-For individual $\texttt{n}$, the variable $$\texttt{current{\_}strain[n]}$$ indicates whether or not individual $\texttt{n}$ is infected, and if so with which strain. The variable is an integer, taking values in the range $$\texttt{\{-1, 0, 1, 2, \ldots, S - 1\}}$$ where $\texttt{S}$ denotes the number of strains. If the individual is not infected, then $$\texttt{current{\_}strain[n] = -1}.$$ We assume that individuals can only be infected with one strain at a time.
+For individual $\texttt{n}$, the variable $$\texttt{current{\_}strain[n]}$$ indicates whether or not individual $\texttt{n}$ is infected, and if so with which strain. The variable is an integer, taking values in the range $$\{\texttt{-1, 0, 1, 2, \ldots, S - 1}\}$$ where $\texttt{S}$ denotes the number of strains. If the individual is not infected, then $$\texttt{current{\_}strain[n] = -1}.$$ We assume that individuals can only be infected with one strain at a time.
 
 \subsection*{\texttt{current{\_}disease}}
 For individual $\texttt{n}$, the variable $$\texttt{current{\_}disease[n]}$$ indicates the extent to which individual $\texttt{n}$ is diseased. The variable is a float, taking values in the range $\texttt{[0,1]}.$ If the individual has no disease, then $$\texttt{current{\_}disease[n] = 0}.$$ If the individual is dead, then $$\texttt{current{\_}disease[n] = 1}.$$ Values close to $\texttt{1}$ represent severe illness, values close to $\texttt{0}$ represent mild illness. Values above a threshold represent symptomatic illness, values below the threshold represent asymptomatic illness. 
@@ -295,7 +321,7 @@ With the option $\texttt{sir{\_}rescaling}$ set to $\texttt{True}$, the default 
 
 \section{Seasonality}
 
-The seasonal effects component of the Pandemia simulator can be used to configure monthly updates to the regional transmission multipliers. The default seasonal effects model calculates a transmission multiplier for each country each month. The default value of the multiplier is $\texttt{1.0}$, meaning no reduction in transmission. The alternative value is a float taking values in the range $\texttt{[0,1]}$. The months during which transmission is reduced to this value are configured in a data file.
+The seasonal effects component of the Pandemia simulator can be used to configure monthly updates to the regional transmission multipliers. The default seasonal effects model calculates a transmission multiplier for each country each month. The default value of these multipliers is $\texttt{1.0}$, meaning no reduction in transmission. The alternative value is a float taking values in the range $\texttt{[0,1]}$. The months during which transmission is reduced to this value are configured in a data file.
 
 \section{Travel}
 
@@ -320,11 +346,7 @@ gives the probability that they are exposed to strain $s$. Given this exposure, 
 
 The current region of an agent is recorded by the variable $$\texttt{current{\_}region}.$$ Agents whose current region is not their home region are travellers, and are ignored by other components where appropriate.
 
-\section{Input}
-
-\section{Examples: World Factories}
-
-\section{Examples: Scenarios}
+\section{Examples: World Factories and Scenarios}
 
 \section{Optimization}
 
