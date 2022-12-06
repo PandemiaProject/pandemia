@@ -132,7 +132,7 @@ def test_end_to_end_all_void(tmp_path, request):
 def test_e2e_health_model(tmp_path, request):
     input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
     expect_results = (
-        "tests/e2e_expected_outputs/strain_counts_test_e2e_health_model.csv"
+        "tests/e2e_expected_outputs/test_e2e_health_model.csv"
     )
 
     _run_end_to_end_simulation(
