@@ -35,3 +35,9 @@ class VoidHealthModel(HealthModel):
         """Changes agent health"""
 
         pass
+
+
+    def update(self, vector_region, t):
+        """Updates health functions"""
+
+        pass

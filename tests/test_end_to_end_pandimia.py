@@ -233,7 +233,7 @@ def test_e2e_seasonal_effects_model(tmp_path, request):
 def test_e2e_testing_and_contact_tracing_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_testing_and_contact_tracing_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
+    expect_results = "tests/e2e_expected_outputs/test_e2e_testing_and_contact_tracing_model.csv"
 
     delta_config = {
         "testing_and_contact_tracing_model": {
