@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <limits.h>
+#include "stdio.h"
 // gcc -fPIC -shared -o default_health_model_functions default_health_model_functions.c
 
 static inline uint64_t rotl(const uint64_t x, int k) {
@@ -44,7 +45,7 @@ int random_choice(uint64_t * s, const double * weights, double sum_of_weights) {
     return index;
 }
 
-double rho_evaluate(const int * partition, const double * values, int length, int r, int R, int t){
+double rho_evaluate(const uint64_t * partition, const double * values, int length, int r, int R, int t){
     // Evaluates a rho immunity preset on rho immunity outcome r at time t, where R denotes the
     // total number of rho immunity outcomes
     double result;
@@ -61,7 +62,7 @@ double rho_evaluate(const int * partition, const double * values, int length, in
     return result;
 }
 
-double sigma_evaluate(const int * partition, const double * values, int length, int t){
+double sigma_evaluate(const uint64_t * partition, const double * values, int length, int t){
     // Evaluates a sigma immunity preset at time t
     double result;
     if(t < partition[1]){
@@ -86,29 +87,30 @@ void update_health
     int R, // number_of_rho_immunity_outcomes
     int H, // max_preset_length_health
     int immunity_period_ticks,
-    const int * i_partitions,
-    int * i_indexes,
+    const uint64_t * i_partitions,
+    uint64_t * i_indexes,
     const double * i_values,
-    const int * i_lengths,
+    const uint64_t * i_lengths,
     double * i_current,
-    const int * d_partitions,
-    int * d_indexes,
+    const uint64_t * d_partitions,
+    uint64_t * d_indexes,
     const double * d_values,
-    const int * d_lengths,
+    const uint64_t * d_lengths,
     double * d_current,
-    const int * s_partitions,
-    int * s_indexes,
-    const int * s_values,
-    const int * s_lengths,
-    int * s_current,
+    const uint64_t * s_partitions,
+    uint64_t * s_indexes,
+    const uint64_t * s_values,
+    const uint64_t * s_lengths,
+    uint64_t * s_current,
     const double * rho_immunity_failure_values,
     double * current_rho_immunity_failure,
     const double * sigma_immunity_failure_values,
     double * current_sigma_immunity_failure,
-    int * requesting_immunity_update
+    uint64_t * requesting_immunity_update
 )
 {
     if(t % immunity_period_ticks == 0){for(int n=0; n<N; n++){requesting_immunity_update[n] = 1;}}
+
     int i = t / immunity_period_ticks;
     for(int n=0; n<N; n++){
         // Update infectiousness
@@ -167,26 +169,26 @@ void transmission
     int ticks_in_day,
     int A, // number of age groups
     const double * beta,
-    const int * subpopulation_index,
+    const uint64_t * subpopulation_index,
     const double * subpopulation_mixing_matrix,
     double facemask_transmission_multiplier,
     double current_region_transmission_multiplier,
-    const int * current_strain,
+    const uint64_t * current_strain,
     const double * current_disease,
-    const int * current_facemask,
-    const int * current_location,
-    const int * current_region,
+    const uint64_t * current_facemask,
+    const uint64_t * current_location,
+    const uint64_t * current_region,
     const double * current_infectiousness,
     const double * location_transmission_multiplier,
     const double * mutation_matrix,
     const double * current_sigma_immunity_failure,
-    int * infection_event,
+    uint64_t * infection_event,
     uint64_t * random_state
 )
 {
     double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
     double * sum_by_strain_by_age_group = (double *)malloc(sizeof(double) * L * S * A);
-    int * num_agents_by_location_by_age_group = (int *)malloc(sizeof(int) * L * A);
+    uint64_t * num_agents_by_location_by_age_group = (uint64_t *)malloc(sizeof(uint64_t) * L * A);
     for(int m=0; m<L; m++){
         for(int a=0; a<A; a++){
             transmission_force_by_age_group[(m * A) + a] = 1.0;
@@ -292,38 +294,38 @@ void infect
     int I, // immunity_length
     int immunity_period_ticks,
     const double * current_rho_immunity_failure,
-    int * infection_event,
-    int * infectiousness_partitions,
+    uint64_t * infection_event,
+    uint64_t * infectiousness_partitions,
     double * infectiousness_values,
-    int * infectiousness_lengths,
-    int * infectiousness_indexes,
-    int * disease_partitions,
+    uint64_t * infectiousness_lengths,
+    uint64_t * infectiousness_indexes,
+    uint64_t * disease_partitions,
     double * disease_values,
-    int * disease_lengths,
-    int * disease_indexes,
-    int * strain_partitions,
-    int * strain_values,
-    int * strain_lengths,
-    int * strain_indexes,
+    uint64_t * disease_lengths,
+    uint64_t * disease_indexes,
+    uint64_t * strain_partitions,
+    uint64_t * strain_values,
+    uint64_t * strain_lengths,
+    uint64_t * strain_indexes,
     double * rho_immunity_failure_values,
     double * sigma_immunity_failure_values,
-    int * requesting_immunity_update,
-    const int * preset_infectiousness_partitions,
+    uint64_t * requesting_immunity_update,
+    const uint64_t * preset_infectiousness_partitions,
     const double * preset_infectiousness_values,
-    const int * preset_infectiousness_lengths,
-    const int * preset_disease_partitions,
+    const uint64_t * preset_infectiousness_lengths,
+    const uint64_t * preset_disease_partitions,
     const double * preset_disease_values,
-    const int * preset_disease_lengths,
-    const int * preset_strain_partitions,
-    const int * preset_strain_values,
-    const int * preset_strain_lengths,
-    const int * preset_rho_immunity_failure_partitions,
+    const uint64_t * preset_disease_lengths,
+    const uint64_t * preset_strain_partitions,
+    const uint64_t * preset_strain_values,
+    const uint64_t * preset_strain_lengths,
+    const uint64_t * preset_rho_immunity_failure_partitions,
     const double * preset_rho_immunity_failure_values,
-    const int * preset_rho_immunity_failure_lengths,
-    const int * preset_sigma_immunity_failure_partitions,
+    const uint64_t * preset_rho_immunity_failure_lengths,
+    const uint64_t * preset_sigma_immunity_failure_partitions,
     const double * preset_sigma_immunity_failure_values,
-    const int * preset_sigma_immunity_failure_lengths,
-    const int * presets,
+    const uint64_t * preset_sigma_immunity_failure_lengths,
+    const uint64_t * presets,
     uint64_t * random_state
 )
 {
@@ -424,7 +426,7 @@ void infect
 
             // Determine new rho immunity
 
-            int * rho_part = (int *)malloc(sizeof(int) * G);
+            uint64_t * rho_part = (uint64_t *)malloc(sizeof(uint64_t) * G);
             double * rho_values = (double *)malloc(sizeof(double) * G * R);
             int rho_length;
 
@@ -483,7 +485,7 @@ void infect
 
             // Determine new sigma immunity
 
-            int * sigma_part = (int *)malloc(sizeof(int) * G);
+            uint64_t * sigma_part = (uint64_t *)malloc(sizeof(uint64_t) * G);
             double * sigma_values = (double *)malloc(sizeof(double) * G);
             int sigma_length;
 
