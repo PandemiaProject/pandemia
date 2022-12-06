@@ -4,9 +4,7 @@ from collections import defaultdict
 import logging
 import numpy as np
 
-from ctypes import c_void_p, c_double, c_int, cdll
-import platform
-ext=".dll" if platform.system() == 'Windows' else ".so"
+from ctypes import c_void_p, c_double, c_int
 from ..testing_and_contact_tracing_model import TestingAndContactTracingModel
 
 log = logging.getLogger("default_testing_and_contact_tracing_model")
@@ -25,11 +23,8 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         """Initialize component"""
         super().__init__(config)
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/testing_and_contact_tracing_model/"
-                                "default_testing_and_contact_tracing_model_functions"+ext)
-
         self.default_testing_and_contact_tracing_dynamics =\
-            lib.default_testing_and_contact_tracing_dynamics
+            self.lib.default_testing_and_contact_tracing_dynamics
 
         self.default_testing_and_contact_tracing_dynamics.restype = None
 

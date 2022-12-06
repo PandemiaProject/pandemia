@@ -5,7 +5,11 @@ from typing import Optional
 
 from .config import Config
 from .messagebus import MessageBus
-
+from ctypes import cdll
+import sys
+import os
+import platform
+ext=".dll" if platform.system() == 'Windows' else ".so"
 log = logging.getLogger("component")
 
 #pylint: disable=attribute-defined-outside-init
@@ -16,6 +20,7 @@ class Component:
     def __init__(self, component_config: Config):
         """Initialize the component"""
 
+        self.lib = cdll.LoadLibrary(os.path.dirname(sys.modules['__main__'].__file__)+"C/build/default_model_functions"+ext)
         self.config = component_config
         self.telemetry_bus: Optional[MessageBus] = None
 

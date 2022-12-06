@@ -1,7 +1,8 @@
 CC :=gcc
 CFLAGS := -fPIC -shared -Wall -Wextra 
-SRC := src/C
-OBJ := src/C
+SRC := src/pandemia/C/src
+OBJ := src/pandemia/C/build
+
 ifeq ($(OS),Windows_NT)
 	EXT := .dll
 else
@@ -13,6 +14,8 @@ OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%$(EXT), $(SOURCES))
 all: $(OBJECTS)
 	
 $(OBJ)/%$(EXT): $(SRC)/%.c
+	mkdir -p $(OBJ)
+
 	$(CC) $(CFLAGS) -o $@  -c $<
 
 clean: 
