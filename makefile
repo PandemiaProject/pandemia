@@ -16,7 +16,7 @@ all: $(OBJECTS)
 $(OBJ)/%$(EXT): $(SRC)/%.c
 	mkdir -p $(OBJ)
 
-	$(CC) $(CFLAGS) -o $@  -c $<
+	$(CC) $(CFLAGS) -o $@  $<
 
 clean: 
 	rm -f $(OBJECTS)
