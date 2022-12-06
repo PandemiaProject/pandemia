@@ -108,7 +108,7 @@ pytest -m slow
 The integration tests launch complete runs of pandemia and then compare the resulting output file with a set of "gold standard" files for each scenario. Occasionally (depending on the development of the relevant module) it may be necessary to recreate these. To recreate the gold standard outputs, use `pytest`'s `basetemp` dir option. **This can overwrite all the existing gold standard output files**
 
 ```
-pytest -m slow --basetemp=./tests/new_gold_standard
+pytest -m slow --basetemp=./tests/recreate_gold_standard
 ```
 
 This command can be combined with selecting individual tests if required.

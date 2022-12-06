@@ -21,6 +21,9 @@ class VoidHealthModel(HealthModel):
         self.immunity_length = 1
         self.immunity_period_ticks = 1
 
+        # Copied from Default model
+        self.facemask_transmission_multiplier = 1.0
+
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
 
