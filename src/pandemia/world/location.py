@@ -27,6 +27,7 @@ class Location:
     def distance_euclidean(self, other: Location) -> float:
         """Return the distance between the two locations."""
 
+
         return sqrt(((self.coord[0]-other.coord[0])**2)\
                   + ((self.coord[1]-other.coord[1])**2))
 
