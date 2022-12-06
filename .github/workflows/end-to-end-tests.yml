@@ -12,6 +12,9 @@ on:
 
 jobs:
   build:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.allow-fail }}
+
     strategy:
       # We use `fail-fast: false` for teaching purposes. This ensure that all combinations of the matrix
       # will run even if one or more fail. 
@@ -30,9 +33,6 @@ jobs:
         # for now due to the high cost of MacOS usage:
         # os: [ubuntu-latest, windows-latest, macos-12]
     
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.allow-fail }}
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -54,7 +54,7 @@ jobs:
     # Now run the tests
     - name: Test with pytest with the "slow" marker (other tests will be excluded)
       run: |
-        pytest -v -m slow
+        pytest -v -m ${{ matrix.test-group }}
 
 
 
