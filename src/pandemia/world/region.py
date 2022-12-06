@@ -28,7 +28,7 @@ class VectorRegion:
         self.random_state = None
         self.prng = None
         self.number_of_agents = number_of_agents
-        self.age = np.zeros((number_of_agents), dtype=int)
+        self.age = np.zeros((number_of_agents), dtype=np.int64)
         self.number_of_locations = number_of_locations
 
         assert number_of_activities <= 255
@@ -36,16 +36,16 @@ class VectorRegion:
         self.weekly_routines = np.zeros((number_of_agents, ticks_in_week), dtype=np.uint8)
 
         self.num_activity_locations =\
-            np.zeros((number_of_agents, number_of_activities), dtype=int)
+            np.zeros((number_of_agents, number_of_activities), dtype=np.int64)
         self.activity_locations = np.zeros((number_of_agents, number_of_activities,
-                                            max_num_activity_locations), dtype=int)
+                                            max_num_activity_locations), dtype=np.int64)
         self.activity_location_weights = np.zeros((number_of_agents, number_of_activities,
-                                                   max_num_activity_locations), dtype=float)
+                                                   max_num_activity_locations), dtype=np.float64)
         self.max_num_activity_locations = max_num_activity_locations
         self.activity_strings = [None for _ in range(number_of_activities)]
         self.location_typ_strings = [None for _ in range(number_of_locations)]
-        self.location_x_coords = np.zeros((number_of_locations), dtype=float)
-        self.location_y_coords = np.zeros((number_of_locations), dtype=float)
+        self.location_x_coords = np.zeros((number_of_locations), dtype=np.float64)
+        self.location_y_coords = np.zeros((number_of_locations), dtype=np.float64)
         self.coordinates = None
         self.region_coordinates = None
 

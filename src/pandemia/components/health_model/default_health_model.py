@@ -48,7 +48,7 @@ class DefaultHealthModel(HealthModel):
         self.transmission.restype  = None
         self.infect.restype        = None
 
-        self.beta                             = np.array(config['beta'], dtype=float)
+        self.beta                             = np.array(config['beta'], dtype=np.float64)
 
         self.number_of_strains                = config['number_of_strains']
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
@@ -122,98 +122,98 @@ class DefaultHealthModel(HealthModel):
                       self.number_of_strains,
                       self.number_of_strains,
                       self.max_preset_length_immunity,
-                      self.number_of_rho_immunity_outcomes), dtype=float)
+                      self.number_of_rho_immunity_outcomes), dtype=np.float64)
 
         self.preset_rho_immunity_failure_partitions =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
                       self.number_of_strains,
-                      self.max_preset_length_immunity), dtype=int)
+                      self.max_preset_length_immunity), dtype=np.int64)
 
         self.preset_rho_immunity_failure_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int64)
 
         self.preset_sigma_immunity_failure_values =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
                       self.number_of_strains,
-                      self.max_preset_length_immunity), dtype=float)
+                      self.max_preset_length_immunity), dtype=np.float64)
 
         self.preset_sigma_immunity_failure_partitions =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
                       self.number_of_strains,
-                      self.max_preset_length_immunity), dtype=int)
+                      self.max_preset_length_immunity), dtype=np.int64)
 
         self.preset_sigma_immunity_failure_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int64)
 
         self.preset_infectiousness_values =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=float)
+                      self.max_preset_length_health), dtype=np.float64)
 
         self.preset_infectiousness_partitions =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int64)
 
         self.preset_infectiousness_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int64)
 
         self.preset_disease_values =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=float)
+                      self.max_preset_length_health), dtype=np.float64)
 
         self.preset_disease_partitions =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int64)
 
         self.preset_disease_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int64)
 
         self.preset_strain_values =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int64)
 
         self.preset_strain_partitions =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int64)
 
         self.preset_strain_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int64)
 
         # Create presets, thereby filling the above arrays, and validate them
         self._get_presets(self.clock.ticks_in_day)
         self._validate_presets()
 
         # Flatten arrays
-        self.mutation_matrix = np.asarray(self.mutation_matrix, dtype=float).flatten()
+        self.mutation_matrix = np.asarray(self.mutation_matrix, dtype=np.float64).flatten()
         self.preset_infectiousness_lengths =\
             self.preset_infectiousness_lengths.flatten()
         self.preset_infectiousness_values =\
@@ -255,52 +255,52 @@ class DefaultHealthModel(HealthModel):
         immunity_length                 = self.immunity_length
         max_preset_length_health        = self.max_preset_length_health
 
-        vector_region.health_age_group                 = np.zeros((number_of_agents), dtype=int)
-        vector_region.location_transmission_multiplier = np.ones((number_of_locations), dtype=float)
-        vector_region.infection_event                  = np.full((number_of_agents), -1, dtype=int)
-        vector_region.presets                          = np.zeros((number_of_agents), dtype=int)
-        vector_region.requesting_immunity_update       = np.zeros((number_of_agents), dtype=int)
+        vector_region.health_age_group                 = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.location_transmission_multiplier = np.ones((number_of_locations), dtype=np.float64)
+        vector_region.infection_event                  = np.full((number_of_agents), -1, dtype=np.int64)
+        vector_region.presets                          = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.requesting_immunity_update       = np.zeros((number_of_agents), dtype=np.int64)
 
         vector_region.current_rho_immunity_failure   = np.ones((number_of_agents,
                                                                 number_of_strains,
                                                                 number_of_rho_immunity_outcomes),
-                                                                dtype=float)
+                                                                dtype=np.float64)
         vector_region.current_sigma_immunity_failure = np.ones((number_of_agents,
                                                                 number_of_strains),
-                                                                dtype=float)
+                                                                dtype=np.float64)
 
-        vector_region.current_infectiousness = np.zeros((number_of_agents), dtype=float)
-        vector_region.current_disease        = np.zeros((number_of_agents), dtype=float)
-        vector_region.current_strain         = np.full((number_of_agents), -1, dtype=int)
+        vector_region.current_infectiousness = np.zeros((number_of_agents), dtype=np.float64)
+        vector_region.current_disease        = np.zeros((number_of_agents), dtype=np.float64)
+        vector_region.current_strain         = np.full((number_of_agents), -1, dtype=np.int64)
 
         vector_region.rho_immunity_failure_values   = np.ones((number_of_agents,
                                                                number_of_strains,
                                                                immunity_length,
                                                                number_of_rho_immunity_outcomes),
-                                                               dtype=float)
+                                                               dtype=np.float64)
         vector_region.sigma_immunity_failure_values = np.ones((number_of_agents,
                                                                number_of_strains,
                                                                immunity_length),
-                                                               dtype=float)
+                                                               dtype=np.float64)
 
         vector_region.infectiousness_values     = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=float)
+                                                            max_preset_length_health), dtype=np.float64)
         vector_region.infectiousness_partitions = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=int)
-        vector_region.infectiousness_lengths    = np.zeros((number_of_agents), dtype=int)
-        vector_region.infectiousness_indexes    = np.ones((number_of_agents), dtype=int)
+                                                            max_preset_length_health), dtype=np.int64)
+        vector_region.infectiousness_lengths    = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.infectiousness_indexes    = np.ones((number_of_agents), dtype=np.int64)
         vector_region.disease_values            = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=float)
+                                                            max_preset_length_health), dtype=np.float64)
         vector_region.disease_partitions        = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=int)
-        vector_region.disease_lengths           = np.zeros((number_of_agents), dtype=int)
-        vector_region.disease_indexes           = np.ones((number_of_agents), dtype=int)
+                                                            max_preset_length_health), dtype=np.int64)
+        vector_region.disease_lengths           = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.disease_indexes           = np.ones((number_of_agents), dtype=np.int64)
         vector_region.strain_values             = np.full((number_of_agents,
-                                                           max_preset_length_health), -1, dtype=int)
+                                                           max_preset_length_health), -1, dtype=np.int64)
         vector_region.strain_partitions         = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=int)
-        vector_region.strain_lengths            = np.zeros((number_of_agents), dtype=int)
-        vector_region.strain_indexes            = np.ones((number_of_agents), dtype=int)
+                                                            max_preset_length_health), dtype=np.int64)
+        vector_region.strain_lengths            = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.strain_indexes            = np.ones((number_of_agents), dtype=np.int64)
 
         self._get_age_mixing_matrix(vector_region)
 
@@ -709,7 +709,7 @@ class DefaultHealthModel(HealthModel):
                 if vector_region.name + ".csv" in files:
                     mat = genfromtxt(self.age_mixing_matrices_directory +\
                                      vector_region.name + ".csv", skip_header = 1,
-                                     delimiter=',', dtype=float)
+                                     delimiter=',', dtype=np.float64)
                     assert mat.shape[0] == mat.shape[1]
                     vector_region.number_of_subpopulations = mat.shape[0]
 
@@ -726,7 +726,7 @@ class DefaultHealthModel(HealthModel):
                     mat = mat * row_sums[:, np.newaxis]
 
                     # Calculate share of population in each age mixing group
-                    share_in_age_group = np.zeros((mat.shape[0]), dtype=float)
+                    share_in_age_group = np.zeros((mat.shape[0]), dtype=np.float64)
                     for n in range(vector_region.number_of_agents):
                         age_group = min(vector_region.age[n] // self.age_group_interval,
                                         mat.shape[0] - 1)
@@ -737,21 +737,21 @@ class DefaultHealthModel(HealthModel):
                     # share_in_age_group is equal to 1.0, that is, the same for each region
                     dim = vector_region.number_of_subpopulations
                     epsilon = (1.0 - np.inner(mat.sum(axis=1), share_in_age_group)) / dim
-                    mat += np.full((dim, dim), epsilon, dtype=float)
+                    mat += np.full((dim, dim), epsilon, dtype=np.float64)
                     vector_region.subpopulation_mixing_matrix = mat
 
                 else:
-                    vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=float)
+                    vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=np.float64)
                     vector_region.number_of_subpopulations = 1
-            vector_region.age_group = np.zeros((vector_region.number_of_agents), dtype=int)
+            vector_region.age_group = np.zeros((vector_region.number_of_agents), dtype=np.int64)
             for n in range(vector_region.number_of_agents):
                 age_group = min(vector_region.age[n] // self.age_group_interval,
                                 vector_region.number_of_subpopulations - 1)
                 vector_region.subpopulation_index[n] = age_group
         else:
-            vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=float)
+            vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=np.float64)
             vector_region.subpopulation_index =\
-                np.zeros((vector_region.number_of_agents), dtype=int)
+                np.zeros((vector_region.number_of_agents), dtype=np.int64)
             vector_region.number_of_subpopulations = 1
 
     def _generate_presets_and_weights(self, sir_beta, sir_gamma_inverse,

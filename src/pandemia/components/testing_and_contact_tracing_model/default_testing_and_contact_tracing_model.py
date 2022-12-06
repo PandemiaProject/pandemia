@@ -53,12 +53,12 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         vector_region.num_to_test_random = 0
         vector_region.num_to_test_symptomatic = 0
         vector_region.num_to_test_contact = 0
-        vector_region.end_of_quarantine_days = np.full((number_of_agents), -1, dtype=int)
+        vector_region.end_of_quarantine_days = np.full((number_of_agents), -1, dtype=np.int64)
         vector_region.max_regular_contacts_to_test = max_regular_contacts_to_test
-        vector_region.num_regular_contacts_to_test = np.zeros((number_of_agents), dtype=int)
+        vector_region.num_regular_contacts_to_test = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.regular_contacts_to_test = np.zeros((number_of_agents,
-                                                  max_regular_contacts_to_test), dtype=int)
-        vector_region.yesterdays_disease = np.zeros((number_of_agents), dtype=float)
+                                                  max_regular_contacts_to_test), dtype=np.int64)
+        vector_region.yesterdays_disease = np.zeros((number_of_agents), dtype=np.float64)
 
         # Flatten arrays
         vector_region.regular_contacts_to_test = vector_region.regular_contacts_to_test.flatten()

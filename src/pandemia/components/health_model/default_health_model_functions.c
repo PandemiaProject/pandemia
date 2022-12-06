@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <limits.h>
+#include "stdio.h"
 // gcc -fPIC -shared -o default_health_model_functions default_health_model_functions.c
 
 static inline uint64_t rotl(const uint64_t x, int k) {
@@ -109,6 +110,7 @@ void update_health
 )
 {
     if(t % immunity_period_ticks == 0){for(int n=0; n<N; n++){requesting_immunity_update[n] = 1;}}
+
     int i = t / immunity_period_ticks;
     for(int n=0; n<N; n++){
         // Update infectiousness

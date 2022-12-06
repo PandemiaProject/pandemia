@@ -1,5 +1,5 @@
 CC :=gcc
-CFLAGS := -fPIC -shared -Wall -Wextra 
+CFLAGS := -fPIC -shared #-Wall -Wextra 
 
 ifeq ($(OS),Windows_NT)
 	EXT := .dll

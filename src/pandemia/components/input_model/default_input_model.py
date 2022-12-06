@@ -48,21 +48,21 @@ class DefaultInputModel(InputModel):
             self.vaccination_input         = policy.vaccination_input
         else:
             self.lockdown_input =\
-                np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=int)
+                np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=np.int64)
             self.border_closure_input =\
-                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=float)
+                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=np.float64)
             self.facemask_input =\
-                np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=int)
+                np.full((self.simulation_length_days, self.number_of_regions), -1, dtype=np.int64)
             self.random_testing_input =\
-                np.full((self.simulation_length_days, self.number_of_regions), 100, dtype=int)
+                np.full((self.simulation_length_days, self.number_of_regions), 100, dtype=np.int64)
             self.symptomatic_testing_input =\
-                np.full((self.simulation_length_days, self.number_of_regions), 100, dtype=int)
+                np.full((self.simulation_length_days, self.number_of_regions), 100, dtype=np.int64)
             self.contact_testing_input =\
-                np.full((self.simulation_length_days, self.number_of_regions), 100, dtype=int)
+                np.full((self.simulation_length_days, self.number_of_regions), 100, dtype=np.int64)
             self.vaccination_input =\
                 np.full((self.simulation_length_days, self.number_of_regions,
                          self.number_of_vaccination_age_groups,
-                         self.number_of_vaccines), 100, dtype=int)
+                         self.number_of_vaccines), 100, dtype=np.int64)
 
         # Rescale
         self.random_testing_input =\
