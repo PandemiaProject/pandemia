@@ -7,8 +7,6 @@ import numpy as np
 from ctypes import c_void_p, c_int, cdll
 
 from ..vaccination_model import VaccinationModel
-import platform
-ext=".dll" if platform.system() == 'Windows' else ".so"
 log = logging.getLogger("default_vaccination_model")
 
 #pylint: disable=unused-argument
@@ -22,10 +20,7 @@ class DefaultVaccinationModel(VaccinationModel):
         """Initialize component"""
         super().__init__(config)
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/vaccination_model/"
-                                "default_vaccination_model_functions"+ext)
-
-        self.dynamics_vaccination = lib.dynamics_vaccination
+        self.dynamics_vaccination = self.lib.dynamics_vaccination
 
         self.dynamics_vaccination.restype = None
 

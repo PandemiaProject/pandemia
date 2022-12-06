@@ -8,7 +8,7 @@
             "name": "Python: Module",
             "type": "python",
             "request": "launch",
-            "python": "{your python binary}",
+            "python": "/usr/local/Caskroom/miniforge/base/envs/Pandemia310/bin/python",
             "module": "pandemia",
             "args": ["Scenarios/Global/global_config.yaml"],
             "justMyCode": false

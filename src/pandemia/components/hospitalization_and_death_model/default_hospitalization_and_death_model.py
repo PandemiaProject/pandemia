@@ -2,9 +2,7 @@
 
 import logging
 import numpy as np
-import platform
-ext=".dll" if platform.system() == 'Windows' else ".so"
-from ctypes import c_void_p, c_int, c_double, cdll
+from ctypes import c_void_p, c_int, c_double
 
 from ..hospitalization_and_death_model import HospitalizationAndDeathModel
 
@@ -23,10 +21,7 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
         """Initialize component"""
         super().__init__(config)
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/hospitalization_and_death_model/"
-                                "default_hospitalization_and_death_model_functions"+ext)
-
-        self.dynamics_hospitalization_and_death = lib.dynamics_hospitalization_and_death
+        self.dynamics_hospitalization_and_death = self.lib.dynamics_hospitalization_and_death
 
         self.dynamics_hospitalization_and_death.restype = None
 

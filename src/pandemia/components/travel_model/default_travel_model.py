@@ -8,8 +8,6 @@ from joblib import Parallel, delayed
 from ctypes import c_void_p, c_double, c_int, cdll
 
 from ..travel_model import TravelModel
-import platform
-ext=".dll" if platform.system() == 'Windows' else ".so"
 log = logging.getLogger("default_travel_model")
 
 #pylint: disable=unused-argument
@@ -29,13 +27,10 @@ class DefaultTravelModel(TravelModel):
         """Initialize component"""
         super().__init__(config, scale_factor)
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/travel_model/"
-                                "default_travel_model_functions"+ext)
-
-        self.transmission_out = lib.transmission_out
-        self.transmission_in = lib.transmission_in
-        self.close_borders = lib.close_borders
-        self.determine_travellers = lib.determine_travellers
+        self.transmission_out = self.lib.transmission_out
+        self.transmission_in = self.lib.transmission_in
+        self.close_borders = self.lib.close_borders
+        self.determine_travellers = self.lib.determine_travellers
 
         self.transmission_out.restype = None
         self.transmission_in.restype = None
