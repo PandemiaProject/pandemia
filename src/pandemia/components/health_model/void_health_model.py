@@ -20,9 +20,11 @@ class VoidHealthModel(HealthModel):
         self.number_of_strains = 0
         self.immunity_length = 1
         self.immunity_period_ticks = 1
-
+        self.mutation_matrix = [[1.0]]
+        
         # Copied from Default model
         self.facemask_transmission_multiplier = 1.0
+
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
