@@ -62,7 +62,7 @@ health_model:
   __type__: default_health_model.DefaultHealthModel
   beta: [1.0, 1.0, 1.0, 1.0]
   location_typ_multipliers: # Unless specified set to 1.0
-    Cemetery: 0.0
+    # Cemetery: 0.0
   facemask_transmission_multiplier: 0.1
   immunity_period_days: 7
   num_initial_infections_by_region_by_strain:

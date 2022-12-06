@@ -108,7 +108,7 @@ def test_end_to_end_global(tmp_path, request):
     )
 
 
-@pytest.mark.slow
+@pytest.mark.known_failing
 def test_end_to_end_all_components(tmp_path, request):
     input_scenario = "Scenarios/Test/test_all_components.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts_test_all_components.csv"

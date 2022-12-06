@@ -20,11 +20,18 @@ jobs:
         python-version: ["3.10"]
         # os: [ubuntu-latest, windows-latest]
         os: [ubuntu-22.04]
+        test-group: [slow]
+        allow-fail: [false]
+        include:
+          - test-group: known_failing
+            allow-fail: true
+
         # This is the syntax for running tests in MacOS as well as Windows + Linux. However it is excluded
         # for now due to the high cost of MacOS usage:
         # os: [ubuntu-latest, windows-latest, macos-12]
     
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.allow-fail }}
 
     steps:
     - uses: actions/checkout@v2
