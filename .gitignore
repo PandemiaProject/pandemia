@@ -152,3 +152,4 @@ dmypy.json
 sync_windows_vm.sh
 .idea/*.coverage
 tests/recreate_gold_standard/
+*.idea/
