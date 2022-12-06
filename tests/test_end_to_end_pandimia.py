@@ -1,6 +1,7 @@
 import sys
 import pandas as pd
 import pandemia
+from pandemia.__main__ import main as pandemia_main
 import pytest
 import yaml
 from pathlib import Path
@@ -65,7 +66,8 @@ def _run_end_to_end_simulation(
 
     # Fake the commandline args and call Pandemia.main()
     sys.argv = [pandemia.__file__, fname_altered_scenario]
-    pandemia.main()
+    # pandemia.__main__.main()
+    pandemia_main()
 
     # Actual results
     actual_df = pd.read_csv(fname_actual_results)
