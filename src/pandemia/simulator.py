@@ -4,7 +4,6 @@ from collections import defaultdict
 import logging
 import numpy as np
 import os
-import sys
 import csv
 from datetime import datetime
 from ctypes import c_int, c_void_p, cdll
@@ -42,7 +41,8 @@ class Simulator:
         self.pandemia_version = VERSION
         self.created_at       = datetime.now()
         self.run_id           = uuid.uuid4().hex
-        self.lib = cdll.LoadLibrary(os.path.dirname(sys.modules['__main__'].__file__)+"C/build/simulator_functions"+ext)
+        self.lib = cdll.LoadLibrary(os.path.split(__file__)[0]+"/C/build/simulator_functions"+ext)
+
         log.info("Simulation created at %s with ID=%s", self.created_at, self.run_id)
 
         # Config

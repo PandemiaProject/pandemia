@@ -42,7 +42,7 @@ setup(
         'test': ['pytest',
                  'coverage'],
     },
-    setup_requires=['setuptools_scm'],
+    package_data={'pandemia': ["C/build/*"]},
     include_dirs=True,
     entry_points={
         'console_scripts': [
