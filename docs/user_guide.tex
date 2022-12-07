@@ -186,7 +186,7 @@ Recall also, that during the building of the world, each agent is assigned a wei
 
 In the default movement model, whenever an agent switches from one activity to another, the agent randomly selects a new location from the corresponding set of locations, using the specified weights, at which they will then perform this new activity. Upon changing activity, agents may also put on or take off a face mask, depending on the activity and the current policy on face masks, as specified in the \textbf{Configuration} and \textbf{Input}. If the change of location is prohibited by a policy intervention, for example a lockdown, then the choice of agent is overridden and they are instead directed to their home location. In particular, each agent must for the default movement model be assigned a home location.
 
-\section{Health}
+\section{Health}\label{sec:health}
 
 Infectious disease models typically represent health using discrete states. In such a compartmental model, the population is partitioned into subsets, labelled \textit{Susceptible}, \textit{Infected}, \textit{Recovered} and \textit{Dead}. These compartments can then be subdivided, and new compartments added, to produce increasingly complicated models. This approach runs into difficulties once partial immunity is introduced, since the compartmental label \textit{Recovered} then becomes ambiguous. It runs into further difficulties once multiple strains of the pathogen are introduced, since then the label \textit{Susceptible} becomes ambiguous.
 
@@ -353,11 +353,13 @@ In the default model, a regular contact of an agent is any other agent who share
 
 The user might wish to expand the regular contacts to include workmates and classmates, should the user first implement a world with such features. The user is warned, however, that increasingly complex contact tracing systems can become computationally very intensive. The default model is therefore simple, but fast.
 
-\section{Vaccination [TO DO]}
+\section{Vaccination}
 
+The default vaccination model supports multiple vaccines. For each vaccine, the configuration specifies how the rho and sigma immunity of an agent should be updated, for each strain, after receiving a dose of the vaccine. Consider, for example, the following configuration:
 \begin{center}
 \includegraphics[width=0.5\textwidth]{codeexample2bw}
 \end{center}
+Here the vaccine \texttt{vaccine{\_0}} encodes updates to rho and sigma immunity for two strains of the pathogen. The updates follow the exact same multiplicative procedure as the immunity updates resulting from an infection, as described in Section \ref{sec:health}. The model also features age-dependent vaccine hesitancy, and a minimum time between doses. The input component specifies how many doses of each vaccine are available in each region each day, for each age group, with this number of doses being administered to a randomly selected subset of all eligible and willing agents.
 
 \section{Seasonality}
 
