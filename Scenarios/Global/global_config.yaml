@@ -248,7 +248,7 @@ reporters:
   # each day.
   csv.StrainCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/strain_counts.csv
+    filename: /tmp/strain_counts_global.csv
 
   # This reporter plots the number of individuals infected each day.
   plot.PlotInfected:
