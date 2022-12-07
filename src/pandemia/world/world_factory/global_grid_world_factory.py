@@ -259,10 +259,6 @@ class GlobalGridWorldFactory(WorldFactory):
 
             sample = local_sample + nonlocal_sample
 
-            # weights = []
-            # for other_square in sample:
-            #     weights.append(self._travel_weight(square, other_square))
-
             activity = self.community_activity
 
             for agent in self.squares_to_agents[square]:
