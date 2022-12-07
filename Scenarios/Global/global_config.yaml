@@ -277,6 +277,7 @@ reporters:
     # This parameter allows the user to rescale the colour map, by adjusting the maximum detected
     # prevalence. This can help visualize regions where prevalence is low.
     max_norm_prev: 1.0
+    # Refresh rate.
     refresh_rate: 60
     # If fullscreen is False, then this sets the resolution of the plot.
     display_width: 1500
