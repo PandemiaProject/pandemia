@@ -33,10 +33,8 @@ def _run_end_to_end_simulation(
     @output_fname the output filename. If the value does not end with the suffix ".csv" it will be appended automatically.
 
     """
-    # fname_input_scenario = "Scenarios/Test/test_global_config.yaml"
     fname_altered_scenario = str(output_dir / "test_altered_scenario.yaml")
 
-    # fname_expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
     if output_fname.endswith(".csv"):
         fname_actual_results = str(output_dir / output_fname)
     else:
@@ -45,11 +43,6 @@ def _run_end_to_end_simulation(
     ic(fname_altered_scenario)
     ic(fname_actual_results)
 
-    # # Update the config with temporary dir for the output files
-    # with open(input_scenario_config, "r") as scen:
-    #     scenario = yaml.safe_load(scen)
-
-    # scenario["reporters"]["csv.StrainCounts"]["filename"] = fname_actual_results
     output_location = {
         "reporters": {"csv.StrainCounts": {"filename": fname_actual_results}}
     }

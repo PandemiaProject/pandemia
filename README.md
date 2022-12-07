@@ -103,6 +103,20 @@ These tests will **not** be run when `pytest` is called without arguments. (See 
 pytest -m slow
 ```
 
+### What is being tested in the integration tests
+
+All the scenarios files for integration tests are in `./Scenarios/Tests`.
+
+
+| Test Scenario | Purpose |
+|---|---|
+| `test_global_config.yaml` | A general purpose global scenario |
+| `test_all_components.yaml` | A scenario that uses the "Default" version of every component |
+| `test_void_all.yaml` | A scenario that uses the "Void" version of every component |
+| `test_e2e_health_model.yaml` | Uses the "DefaultHealthModel" and the "Void" version of all other components |
+
+A number of other tests use the `test_e2e_health_model.yaml`. These tests use the "DefaultHealthModel" and the Default model for _one_ other component (the "Void" models are used for the remaining components). The scenario config is read and patched using literals hardcoded in the tests in `test_end_to_end_pandimia.py`.
+
 ### (Re)creating the "gold standard" outputs
 
 The integration tests launch complete runs of pandemia and then compare the resulting output file with a set of "gold standard" files for each scenario. Occasionally (depending on the development of the relevant module) it may be necessary to recreate these. To recreate the gold standard outputs, use `pytest`'s `basetemp` dir option. **This can overwrite all the existing gold standard output files**
@@ -116,7 +130,11 @@ This command can be combined with selecting individual tests if required.
 
 ### Test Coverage
 
-To obtain a test
+Test coverage is reported automatically on each run of pytest. To obtain the html coverage report use the `--cov-report` argument:
+
+```
+pytest --cov-report=html
+```
 
 
 ## Docs
