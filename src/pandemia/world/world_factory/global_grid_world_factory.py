@@ -259,9 +259,9 @@ class GlobalGridWorldFactory(WorldFactory):
 
             sample = local_sample + nonlocal_sample
 
-            weights = []
-            for other_square in sample:
-                weights.append(self._travel_weight(square, other_square))
+            # weights = []
+            # for other_square in sample:
+            #     weights.append(self._travel_weight(square, other_square))
 
             activity = self.community_activity
 
@@ -280,7 +280,7 @@ class GlobalGridWorldFactory(WorldFactory):
                     subsample_locations =\
                         [sample[index] for index in subsample_indexes]
                     subsample_weights =\
-                        [weights[index] for index in subsample_indexes]
+                        [self._travel_weight(square, sample[index]) for index in subsample_indexes]
                     agent.activity_locations[activity].extend(subsample_locations)
                     agent.activity_location_weights[activity].extend(subsample_weights)
 

@@ -26,39 +26,70 @@ epoch: 1st January 2020                                                         
 
 # ######################################### World ##################################################
 
+# The Pandemia simulator acts on a world. The world consists of regions, with each region consisting
+# of individuals, locations and activities. The world additionally consists of a travel matrix,
+# indicating how many individuals travel from each region to each other region each day. The world
+# is built using a world factory. The choice of world factory, and its configuration, are made here.
+
 world_factory:
+  # The GlobalGridWorldFactory builds a world consisting of, at most, around two hundred regions,
+  # with each region representing a real-world country. The recommended scale factor is therefore
+  # 0.0005. It implements a simple model of hetergeneous mixing, based on average household size and
+  # population density grids.
   __type__: global_grid_world_factory.GlobalGridWorldFactory
+  # This world factory is stochastic, and therefore gets its own random seed.
   random_seed: 1
+  # Filepath to country data, including age structure and population sizes. The actual number of
+  # agents is given by multiplying this data by the scale_factor.
   regions_data_file:
     Scenarios/Global_Grid/data/country_data.csv
+  # Filepath to shapefiles for the regions, used for rendering and calculating country adjacency.
   regions_shape_data_file:
     Scenarios/Global_Grid/data/country_data_shapefiles/CNTR_RG_60M_2020_4326.shp
+  # Filepath to population density grids for each country.
   population_dist_data_folder:
     Scenarios/Global_Grid/data/country_data_population_distribution/processed/density_grids
+  # Filepath to grids for each country indicating which grid squares belong to each country, even if
+  # not populated, for rendering purposes.
   population_id_data_folder:
     Scenarios/Global_Grid/data/country_data_population_distribution/processed/id_grids
   # Regions to simulate. If list empty, simulates all regions.
   regions_to_simulate: [] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
-  # Locations
+  # There are two locations types, House and Square. A Square refers to a square in the grid data.
   house_location_type: House
   square_location_type: Square
-  # Movement
-  local_sample_size: 500
-  nonlocal_sample_size: 500
-  num_locs_for_community_activity: 10
-  gravity_model_exponent: 0.5
-  # Activities
+  # There are two activities, Home_Activity and Community_Activity. Individuals perform the
+  # Home_Activity in their assigned House, while they perform the Community_Activity in randomly
+  # selected grid squares, with the random selection being weighted by distance. Individuals
+  # above or below certain ages do not perform the Community_Activity. Those who do perform the
+  # Community_Activity do so for 8 hours each weekday, between 8am and 4pm.
   home_activity: Home_Activity
   community_activity: Community_Activity
   min_age_community_activity: 4
   max_age_community_activity: 64
-  # Travel Matrix
+  # When performing Community_Activity, each individual gets this many grid squares to choose from.
+  # The grid square containing their House is always included in this list.
+  num_locs_for_community_activity: 10
+  # The list of grid square for each individual is obtained by sampling from a subset of all
+  # such squares. The subset contains the local_sample_size nearest squares, in addition to
+  # nonlocal_sample_size squares randomly sampled from all over the region. Then
+  # num_locs_for_community_activity square are randomly sampled from this subet.
+  local_sample_size: 500
+  nonlocal_sample_size: 500
+  # For an individual with House in Square1, the weight attached to a Square2 is given by the
+  # gravity model formula:
+  #   weight = population_size(Square2) / (1 + distance(Square1, Square2)^gamma)
+  # where gamma = gravity_model_exponent.
+  gravity_model_exponent: 0.5
+  # Individuals travel between regions either by air or not. If not, then travel is between adjacent
+  # regions, with this parameter determining the proportion of each population travelling to
+  # adjacent regions each day.
   local_travel_prob_per_day: 0.0
+  # This is used to determine region adjacency, in the units of the shape file.
   distance_threshold: 10
-  airport_data_file:
-    Scenarios/Global_Grid/data/airport_data.csv
-  air_travel_data_file:
-    Scenarios/Global_Grid/data/air_travel_data.csv
+  # The number of individuals travelling by air is configured using data. These are the filepaths:
+  airport_data_file: Scenarios/Global_Grid/data/airport_data.csv
+  air_travel_data_file: Scenarios/Global_Grid/data/air_travel_data.csv
 
 # ######################################### Seasonal Effects #######################################
 
