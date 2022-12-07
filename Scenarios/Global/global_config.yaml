@@ -2,9 +2,9 @@
 # ######################################### Basic Parameters #######################################
 
 # Scale factor. This rescales the number of individuals, locations, and other relevant quantities
-# appearing in the world, and in simulation components.
+# appearing in the world and simulation components.
 scale_factor: 0.0005
-# Profiler. If true then performance data is saved in a file called profiler_output. The parameter
+# Profiler. If True then performance data is saved in a file called profiler_output. The parameter
 # pstats_records determines how many lines to print in the profiler report.
 profile: False
 pstats_records: 100
@@ -73,35 +73,37 @@ seasonal_effects_model:
 
 health_model:
   # The DefaultHealthModel represents the health of an individual using five attributes:
-  #  - strain (-1 if uninfected, else the index of the strain)
+  #  - strain (-1 if uninfected, else equal to the index of the strain)
   #  - disease (between 0 and 1, with 1 being dead)
   #  - infectiousness (0 if not infectious, else > 0)
   #  - sigma immunity (protection against infection)
   #  - rho immunity (protection against severe outcomes)
   # The immune system is represented using layers, with the outer layer (sigma immunity) determining
   # whether or not an infection is blocked, and the inner layers (rho immunity) determining the
-  # outcome for infections that are not blocked.
+  # severity of the outcome for infections that are not blocked.
   __type__: default_health_model.DefaultHealthModel
-  # A list of length equal to the number of strains. These control parameters determine the
-  # transmission probability of each strain.
+  # The number of strains of the pathogen.
+  number_of_strains: 1
+  # Control parameters determining the transmission probability of each strain. This list should be
+  # of length equal to the number of strains.
   beta: [0.42]
-  # A dictionary of location types to location transmission multipliers.
-  location_typ_multipliers: null
-  # The proportion of infectious material able to pass through a face mask. For a perfect face mask,
-  # parameter would be 0.0. For a face masks with no effectiveness, it would be 1.0.
-  facemask_transmission_multiplier: 1.0
-  # The year is divided into periods of this length, with the immunity levels of each individual
-  # being calculated at this resolution. Reducing this parameter decreases performance.
-  immunity_period_days: 30
-  # A dictionary of region names to lists of length equal to the number of strains, indicating how
-  # many initial infections with each strain there should be in each region.
-  num_initial_infections_by_region_by_strain:
-    'CN': [100000]
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
   mutation_matrix: [[1.0]]
-  # The number of strains.
-  number_of_strains: 1
+  # A dictionary pairing region names to lists. These list should be of length equal to the number
+  # of strains. The numbers in these lists indicate how many initial infections there should for
+  # each strain in the indicated region.
+  num_initial_infections_by_region_by_strain:
+    'CN': [100000]
+  # A dictionary pairing location types to location transmission multipliers. Can be null, in which
+  # case all location transmission multiplier are 1.0.
+  location_typ_multipliers: null
+  # The proportion of infectious material able to pass through a face mask. For a perfect face mask,
+  # this parameter would be 0.0. For a face mask with zero effectiveness, it would be 1.0.
+  facemask_transmission_multiplier: 1.0
+  # Immunity is not updated daily, but on a cycle of this length. Reducing this parameter decreases
+  # performance.
+  immunity_period_days: 30
   # Filepaths to data recording, for each country and each strain, pre-existing levels of sigma and
   # rho immunity, and control parameters that multiply the numbers found in this data (if provided).
   country_data_sigma_immunity_fp: null
@@ -109,33 +111,14 @@ health_model:
   preexisting_sigma_multiplier: 0.5
   preexisting_rho_multiplier: 0.5
   # Each agent is assigned a health preset, describing how they will respond to an infection should
-  # one occur. The assignment is random and based on age.
-  preset_weights_by_age:
-    0:  {preset_0: 1.0000, preset_1: 0.0000}
-    5:  {preset_0: 0.9999, preset_1: 0.0001}
-    10: {preset_0: 0.9999, preset_1: 0.0001}
-    15: {preset_0: 0.9998, preset_1: 0.0002}
-    20: {preset_0: 0.9998, preset_1: 0.0002}
-    25: {preset_0: 0.9996, preset_1: 0.0004}
-    30: {preset_0: 0.9994, preset_1: 0.0006}
-    35: {preset_0: 0.9991, preset_1: 0.0009}
-    40: {preset_0: 0.9985, preset_1: 0.0015}
-    45: {preset_0: 0.9977, preset_1: 0.0023}
-    50: {preset_0: 0.9964, preset_1: 0.0036}
-    55: {preset_0: 0.9943, preset_1: 0.0057}
-    60: {preset_0: 0.9911, preset_1: 0.0089}
-    65: {preset_0: 0.9861, preset_1: 0.0139}
-    70: {preset_0: 0.9783, preset_1: 0.0217}
-    75: {preset_0: 0.9661, preset_1: 0.0339}
-    80: {preset_0: 0.9470, preset_1: 0.0530}
-    85: {preset_0: 0.9172, preset_1: 0.0828}
-    90: {preset_0: 0.8381, preset_1: 0.1619}
-  # A dictionary of the health presets.
+  # one occur. To each preset is associated a number of layers. Each layer encodes step functions
+  # describing how the five health attributes change over time following an infection. See the
+  # Health section of the User Guide for more details.
   health_presets:
-    preset_0:
-      0:
+    preset_0: # Preset name
+      0: # Preset layer
         rho_immunity_failure:
-          [[[[-1, 15, 30, 90, 180], [[0.0], [0.0], [0.0], [0.0], [0.0]]]]]
+          [[[[-1, 15, 30, 90, 180], [[0.0], [0.0], [0.0], [0.0], [0.0]]]]] 
         sigma_immunity_failure:
           [[[[-1, 15, 30, 90, 135, 180], [1.0, 0.0, 0.0, 0.35, 0.55, 0.90]]]]
         infectiousness:
@@ -164,16 +147,37 @@ health_model:
           [[[-1, 0, 15], [0.0, 0.15, 1.0]]]
         strain:
           [[[-1, 0, 15], [-1, 0, -1]]]
-  # Implements homogeneous mixing, as found in SIR models, by mutliplying all transmission
-  # probabilities by step size divided by the number of agents in a location.
+  # The assignment of presets is random and based on age.
+  preset_weights_by_age:
+    0:  {preset_0: 1.0000, preset_1: 0.0000}
+    5:  {preset_0: 0.9999, preset_1: 0.0001}
+    10: {preset_0: 0.9999, preset_1: 0.0001}
+    15: {preset_0: 0.9998, preset_1: 0.0002}
+    20: {preset_0: 0.9998, preset_1: 0.0002}
+    25: {preset_0: 0.9996, preset_1: 0.0004}
+    30: {preset_0: 0.9994, preset_1: 0.0006}
+    35: {preset_0: 0.9991, preset_1: 0.0009}
+    40: {preset_0: 0.9985, preset_1: 0.0015}
+    45: {preset_0: 0.9977, preset_1: 0.0023}
+    50: {preset_0: 0.9964, preset_1: 0.0036}
+    55: {preset_0: 0.9943, preset_1: 0.0057}
+    60: {preset_0: 0.9911, preset_1: 0.0089}
+    65: {preset_0: 0.9861, preset_1: 0.0139}
+    70: {preset_0: 0.9783, preset_1: 0.0217}
+    75: {preset_0: 0.9661, preset_1: 0.0339}
+    80: {preset_0: 0.9470, preset_1: 0.0530}
+    85: {preset_0: 0.9172, preset_1: 0.0828}
+    90: {preset_0: 0.8381, preset_1: 0.1619}
+  # This option implements homogeneous mixing, as found in SIR models, by mutliplying all
+  # transmission probabilities by the reciprocal of the tick length, in days, divided by the number
+  # of agents in each location.
   sir_rescaling: True
-  # Implements contact matrices for subpopulations, as in heterogeneous SIR models, in this case
-  # corresponding to age groups.
+  # Contact matrices for age groups. Can be null, otherwise provide a filepath to the matrices.
   age_mixing_matrices: null # Scenarios/Global/data/country_data_mixing_matrices/
   age_group_interval: 5
   # If auto_generate_presets = True, then the presets dict above is ignored, with the presets being
-  # instead generated systematically, using the distributions of the SIR model. At present, this
-  # only works if number_of_strains = 1.
+  # instead generated systematically, using the geometric distributions of the SIR model. This only
+  # works if number_of_strains = 1.
   auto_generate_presets: False
   sir_beta: null # Units: days^{-1}
   sir_gamma_inverse: null # Units: days
