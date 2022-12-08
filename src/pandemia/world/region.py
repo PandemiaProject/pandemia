@@ -319,11 +319,11 @@ class VectorRegion:
         self.number_of_locations: int = number_of_locations
         self.number_of_activities: int = number_of_activities
         assert self.number_of_activities <= 255
-        self.age = np.zeros((number_of_agents), dtype=int)
+        self.age = np.zeros((number_of_agents), dtype=np.int64)
         self.weekly_routines = np.zeros((number_of_agents, ticks_in_week), dtype=np.uint8)
-        self.num_activity_locations = np.zeros((number_of_agents, number_of_activities), dtype=int)
+        self.num_activity_locations = np.zeros((number_of_agents, number_of_activities), dtype=np.int64)
         self.activity_locations = np.zeros((number_of_agents, number_of_activities,
-                                            max_num_activity_locations), dtype=int)
+                                            max_num_activity_locations), dtype=np.int64)
         self.activity_location_weights = np.zeros((number_of_agents, number_of_activities,
                                                    max_num_activity_locations), dtype=float)
         self.max_num_activity_locations = max_num_activity_locations
