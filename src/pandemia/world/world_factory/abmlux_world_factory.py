@@ -39,7 +39,7 @@ class ABMluxWorldFactory(WorldFactory):
         assert number_of_regions == 1
 
         world.travel_matrix =\
-            np.zeros((number_of_regions, number_of_regions), dtype=int)
+            np.zeros((number_of_regions, number_of_regions), dtype=np.int64)
 
         return world
 

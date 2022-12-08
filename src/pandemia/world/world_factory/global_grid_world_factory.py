@@ -150,9 +150,9 @@ class GlobalGridWorldFactory(WorldFactory):
                 filepath_id = os.path.join(self.population_id_data_folder, filename)
 
         # Load population distribution map
-        map_dist = np.genfromtxt(filepath_dist, delimiter=' ', skip_header=6, dtype=float)
+        map_dist = np.genfromtxt(filepath_dist, delimiter=' ', skip_header=6, dtype=np.float64)
         map_dist /= np.sum(map_dist)
-        map_id = np.genfromtxt(filepath_id, delimiter=' ', skip_header=6, dtype=float)
+        map_id = np.genfromtxt(filepath_id, delimiter=' ', skip_header=6, dtype=np.float64)
 
         # Determine which squares belong to each region, for plotting purposes
         region_x_coords = []
@@ -353,14 +353,14 @@ class GlobalGridWorldFactory(WorldFactory):
 
         # This will be the matrix returned by the function
         baseline_agents_travelling_matrix =\
-            np.zeros((num_of_regions, num_of_regions), dtype=float)
+            np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
 
         # It will be constructed by obtaining air travel with local travel, the latter meaning
         # travel to neighbouring regions
-        daily_air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
+        daily_air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
         daily_air_travel_matrix_by_month =\
-            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=float)
-        daily_local_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
+            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=np.float64)
+        daily_local_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
 
         # Map airports to region isos
         airports_to_region_iso = {}
@@ -377,8 +377,8 @@ class GlobalGridWorldFactory(WorldFactory):
         region_isos = [region.name for region in regions]
         region_isos_to_ids = {region.name: region.id for region in regions}
         air_travel_matrix_by_month =\
-            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=int)
-        air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=int)
+            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=np.int64)
+        air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.int64)
         with open(air_travel_data_file, newline='') as csvfile:
             travel_data = csv.reader(csvfile, delimiter=',')
             next(travel_data, None)
@@ -417,7 +417,7 @@ class GlobalGridWorldFactory(WorldFactory):
         np.fill_diagonal(daily_air_travel_matrix, 0)
 
         # Get adjacency matrix, recording which regions border which others
-        adjacency_matrix = np.zeros((num_of_regions, num_of_regions), dtype=int)
+        adjacency_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.int64)
         for region in regions:
             for other_region in regions:
                 if (region.coordinates is not None) and (other_region.coordinates is not None):
@@ -435,7 +435,7 @@ class GlobalGridWorldFactory(WorldFactory):
         np.fill_diagonal(adjacency_matrix, 0)
 
         # Calculate local travel, rescaled according to step size
-        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
+        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
         ids_to_population_sizes =\
             {region.id: len(region.agents) * (1 / self.scale_factor)\
                         for region in regions}

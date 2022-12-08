@@ -51,9 +51,8 @@ class Location:
             The Euclidean distance to the other location.
         """
 
-        distance = sqrt(((self.coord[0]-other.coord[0])**2) + ((self.coord[1]-other.coord[1])**2))
-
-        return distance
+        return sqrt(((self.coord[0]-other.coord[0])**2)\
+                  + ((self.coord[1]-other.coord[1])**2))
 
 # pylint: disable=invalid-name
 def ETRS89_to_WGS84(coord: LocationTuple) -> LocationTuple:

@@ -277,9 +277,9 @@ class PlotInfected(Reporter):
 
         T = len(self.days)
         N = self.total_population
-        S = np.zeros((T,), dtype=float)
-        I = np.zeros((T,), dtype=float)
-        R = np.zeros((T,), dtype=float)
+        S = np.zeros((T,), dtype=np.float64)
+        I = np.zeros((T,), dtype=np.float64)
+        R = np.zeros((T,), dtype=np.float64)
 
         # Initial conditions
         R[0] = 0
@@ -309,7 +309,7 @@ class PlotInfected(Reporter):
         """Plots solution to an SIR model"""
 
         mat = genfromtxt("Scenarios/SIR/data/age_mixing_matrices/sir_region.csv",
-                         delimiter=',', dtype=float)
+                         delimiter=',', dtype=np.float64)
         row_sums = mat.sum(axis=1)
         mat = mat / row_sums[:, np.newaxis]
         A = 17
@@ -322,9 +322,9 @@ class PlotInfected(Reporter):
 
         T = len(self.days)
         N = pop_by_age_group
-        S = np.zeros((T, A), dtype=float)
-        I = np.zeros((T, A), dtype=float)
-        R = np.zeros((T, A), dtype=float)
+        S = np.zeros((T, A), dtype=np.float64)
+        I = np.zeros((T, A), dtype=np.float64)
+        R = np.zeros((T, A), dtype=np.float64)
 
         # Initial conditions
         for b in range(A):

@@ -114,10 +114,10 @@ class DefaultWorldFactory(WorldFactory):
 
         # This will be the matrix returned by the function
         baseline_agents_travelling_matrix =\
-            np.zeros((num_of_regions, num_of_regions), dtype=float)
+            np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
 
         # Calculate local travel, rescaled according to step size
-        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
+        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
         for region in regions:
             for other_region in regions:
                 if region.id != other_region.id:

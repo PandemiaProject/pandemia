@@ -47,7 +47,7 @@ int random_choice(uint64_t * s, double * weights, double sum_of_weights) {
     return index;
 }
 
-void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
+void random_sample(uint64_t * s, uint64_t * sample, int n, uint64_t * population, int N) {
     int t = 0; // total input records dealt with
     int m = 0; // number of items selected so far
     int u;
@@ -72,7 +72,7 @@ void close_borders
     int id,
     double scale_factor,
     double current_border_closure_multiplier,
-    int * agents_travelling_matrix,
+    uint64_t * agents_travelling_matrix,
     const double * baseline_agents_travelling_matrix
 )
 {
@@ -96,9 +96,9 @@ void determine_travellers
     int id,
     int R, // number_of_regions
     const double * current_disease,
-    const int * current_strain,
-    int * current_region,
-    const int * agents_travelling_matrix,
+    const uint64_t * current_strain,
+    uint64_t * current_region,
+    const uint64_t * agents_travelling_matrix,
     uint64_t * random_state
 )
 {
@@ -111,7 +111,7 @@ void determine_travellers
     if(total_num_to_travel > 0){
 
         // Determine who is eligible to travel from this region today and count how many
-        int * agents_eligible_to_travel = (int *)malloc(sizeof(int) * N);
+        uint64_t * agents_eligible_to_travel = (uint64_t *)malloc(sizeof(uint64_t) * N);
         int num_eligible_to_travel = 0;
         for(int n=0; n<N; n++){
             if(current_strain[n] == -1 && current_disease[n] < 1.0){
@@ -123,7 +123,7 @@ void determine_travellers
         // Among these eligible agents determine who actually travels today
         int num_agents_to_travel;
         num_agents_to_travel = fmin(total_num_to_travel, num_eligible_to_travel);
-        int * agents_to_travel = (int *)malloc(sizeof(int) * num_agents_to_travel);
+        uint64_t * agents_to_travel = (uint64_t *)malloc(sizeof(uint64_t) * num_agents_to_travel);
         random_sample(random_state, agents_to_travel, num_agents_to_travel,
                       agents_eligible_to_travel, num_eligible_to_travel);
 
@@ -156,10 +156,10 @@ void transmission_out
     double facemask_transmission_multiplier,
     double travel_multiplier,
     double current_region_transmission_multiplier,
-    const int * current_region,
+    const uint64_t * current_region,
     const double * current_infectiousness,
-    const int * current_strain,
-    const int * current_facemask,
+    const uint64_t * current_strain,
+    const uint64_t * current_facemask,
     double * sum_f_by_strain,
     double * transmission_force,
     uint64_t * random_state
@@ -187,12 +187,12 @@ void transmission_in
     int S, // number_of_strains
     int N, // number_of_agents
     int r1,
-    int * current_facemask,
-    int * current_region,
+    uint64_t * current_facemask,
+    uint64_t * current_region,
     double facemask_transmission_multiplier,
     double * sum_f_by_strain,
     double * current_sigma_immunity_failure,
-    int * infection_event,
+    uint64_t * infection_event,
     double * transmission_force,
     double * mutation_matrix,
     uint64_t * random_state
