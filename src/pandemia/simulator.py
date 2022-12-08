@@ -121,7 +121,7 @@ class Simulator:
         number_of_cpus = os.cpu_count()
 
         if self.num_jobs < 1:
-            self.num_jobs = min(max(number_of_cpus + 1 + self.num_jobs, 1), number_of_cpus)
+            self.num_jobs = number_of_cpus
         elif self.num_jobs >= 1:
             self.num_jobs = min(self.num_jobs, number_of_cpus)
         else:
