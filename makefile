@@ -14,7 +14,6 @@ OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%$(EXT), $(SOURCES))
 all: $(OBJECTS)
 	
 $(OBJ)/%$(EXT): $(SRC)/%.c
-	mkdir -p $(OBJ)
 
 	$(CC) $(CFLAGS) -o $@  $<
 
