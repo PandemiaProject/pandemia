@@ -46,7 +46,7 @@ int random_choice(uint64_t * s, const double * weights, double sum_of_weights) {
     return index;
 }
 
-double rho_evaluate(const int * partition, const double * values, int length, int r, int R, int t){
+double rho_evaluate(const uint64_t * partition, const double * values, int length, int r, int R, int t){
     // Evaluates a rho immunity preset on rho immunity outcome r at time t, where R denotes the
     // total number of rho immunity outcomes
     double result;
@@ -63,7 +63,7 @@ double rho_evaluate(const int * partition, const double * values, int length, in
     return result;
 }
 
-double sigma_evaluate(const int * partition, const double * values, int length, int t){
+double sigma_evaluate(const uint64_t * partition, const double * values, int length, int t){
     // Evaluates a sigma immunity preset at time t
     double result;
     if(t < partition[1]){
@@ -88,26 +88,26 @@ void update_health
                 int R, // number_of_rho_immunity_outcomes
                 int H, // max_preset_length_health
                 int immunity_period_ticks,
-                const int * i_partitions,
-                int * i_indexes,
+                const uint64_t * i_partitions,
+                uint64_t * i_indexes,
                 const double * i_values,
-                const int * i_lengths,
+                const uint64_t * i_lengths,
                 double * i_current,
-                const int * d_partitions,
-                int * d_indexes,
+                const uint64_t * d_partitions,
+                uint64_t * d_indexes,
                 const double * d_values,
-                const int * d_lengths,
+                const uint64_t * d_lengths,
                 double * d_current,
-                const int * s_partitions,
-                int * s_indexes,
-                const int * s_values,
-                const int * s_lengths,
-                int * s_current,
+                const uint64_t * s_partitions,
+                uint64_t * s_indexes,
+                const uint64_t * s_values,
+                const uint64_t * s_lengths,
+                uint64_t * s_current,
                 const double * rho_immunity_failure_values,
                 double * current_rho_immunity_failure,
                 const double * sigma_immunity_failure_values,
                 double * current_sigma_immunity_failure,
-                int * requesting_immunity_update
+                uint64_t * requesting_immunity_update
         )
 {
     if(t % immunity_period_ticks == 0){for(int n=0; n<N; n++){requesting_immunity_update[n] = 1;}}
@@ -169,26 +169,26 @@ void transmission
                 int ticks_in_day,
                 int A, // number of age groups
                 const double * beta,
-                const int * subpopulation_index,
+                const uint64_t * subpopulation_index,
                 const double * subpopulation_mixing_matrix,
                 double facemask_transmission_multiplier,
                 double current_region_transmission_multiplier,
-                const int * current_strain,
+                const uint64_t * current_strain,
                 const double * current_disease,
-                const int * current_facemask,
-                const int * current_location,
-                const int * current_region,
+                const uint64_t * current_facemask,
+                const uint64_t * current_location,
+                const uint64_t * current_region,
                 const double * current_infectiousness,
                 const double * location_transmission_multiplier,
                 const double * mutation_matrix,
                 const double * current_sigma_immunity_failure,
-                int * infection_event,
+                uint64_t * infection_event,
                 uint64_t * random_state
         )
 {
     double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
     double * sum_by_strain_by_age_group = (double *)malloc(sizeof(double) * L * S * A);
-    int * num_agents_by_location_by_age_group = (int *)malloc(sizeof(int) * L * A);
+    uint64_t * num_agents_by_location_by_age_group = (uint64_t *)malloc(sizeof(uint64_t) * L * A);
     for(int m=0; m<L; m++){
         for(int a=0; a<A; a++){
             transmission_force_by_age_group[(m * A) + a] = 1.0;
@@ -294,38 +294,38 @@ void infect
                 int I, // immunity_length
                 int immunity_period_ticks,
                 const double * current_rho_immunity_failure,
-                int * infection_event,
-                int * infectiousness_partitions,
+                uint64_t * infection_event,
+                uint64_t * infectiousness_partitions,
                 double * infectiousness_values,
-                int * infectiousness_lengths,
-                int * infectiousness_indexes,
-                int * disease_partitions,
+                uint64_t * infectiousness_lengths,
+                uint64_t * infectiousness_indexes,
+                uint64_t * disease_partitions,
                 double * disease_values,
-                int * disease_lengths,
-                int * disease_indexes,
-                int * strain_partitions,
-                int * strain_values,
-                int * strain_lengths,
-                int * strain_indexes,
+                uint64_t * disease_lengths,
+                uint64_t * disease_indexes,
+                uint64_t * strain_partitions,
+                uint64_t * strain_values,
+                uint64_t * strain_lengths,
+                uint64_t * strain_indexes,
                 double * rho_immunity_failure_values,
                 double * sigma_immunity_failure_values,
-                int * requesting_immunity_update,
-                const int * preset_infectiousness_partitions,
+                uint64_t * requesting_immunity_update,
+                const uint64_t * preset_infectiousness_partitions,
                 const double * preset_infectiousness_values,
-                const int * preset_infectiousness_lengths,
-                const int * preset_disease_partitions,
+                const uint64_t * preset_infectiousness_lengths,
+                const uint64_t * preset_disease_partitions,
                 const double * preset_disease_values,
-                const int * preset_disease_lengths,
-                const int * preset_strain_partitions,
-                const int * preset_strain_values,
-                const int * preset_strain_lengths,
-                const int * preset_rho_immunity_failure_partitions,
+                const uint64_t * preset_disease_lengths,
+                const uint64_t * preset_strain_partitions,
+                const uint64_t * preset_strain_values,
+                const uint64_t * preset_strain_lengths,
+                const uint64_t * preset_rho_immunity_failure_partitions,
                 const double * preset_rho_immunity_failure_values,
-                const int * preset_rho_immunity_failure_lengths,
-                const int * preset_sigma_immunity_failure_partitions,
+                const uint64_t * preset_rho_immunity_failure_lengths,
+                const uint64_t * preset_sigma_immunity_failure_partitions,
                 const double * preset_sigma_immunity_failure_values,
-                const int * preset_sigma_immunity_failure_lengths,
-                const int * presets,
+                const uint64_t * preset_sigma_immunity_failure_lengths,
+                const uint64_t * presets,
                 uint64_t * random_state
         )
 {
@@ -426,7 +426,7 @@ void infect
 
             // Determine new rho immunity
 
-            int * rho_part = (int *)malloc(sizeof(int) * G);
+            uint64_t * rho_part = (uint64_t *)malloc(sizeof(uint64_t) * G);
             double * rho_values = (double *)malloc(sizeof(double) * G * R);
             int rho_length;
 
@@ -485,7 +485,7 @@ void infect
 
             // Determine new sigma immunity
 
-            int * sigma_part = (int *)malloc(sizeof(int) * G);
+            uint64_t * sigma_part = (uint64_t *)malloc(sizeof(uint64_t) * G);
             double * sigma_values = (double *)malloc(sizeof(double) * G);
             int sigma_length;
 
@@ -548,17 +548,17 @@ void dynamics_hospitalization_and_death
                 int number_of_cemeteries,
                 int id,
                 double hospital_threshold,
-                const int * current_location,
-                const int * current_region,
+                const uint64_t * current_location,
+                const uint64_t * current_region,
                 const double * current_disease,
-                const int * requesting_location_update,
-                int * requested_location_update,
-                int * requesting_facemask_update,
-                int * requested_facemask_update,
-                int * in_hospital,
-                const int * hospitals,
-                int * in_cemetery,
-                const int * cemeteries,
+                const uint64_t * requesting_location_update,
+                uint64_t * requested_location_update,
+                uint64_t * requesting_facemask_update,
+                uint64_t * requested_facemask_update,
+                uint64_t * in_hospital,
+                const uint64_t * hospitals,
+                uint64_t * in_cemetery,
+                const uint64_t * cemeteries,
                 uint64_t * random_state
         )
 {
@@ -607,12 +607,12 @@ void dynamics_hospitalization_and_death
 void update_movement
         (
                 int N, // number_of_agents
-                int * requesting_location_update,
-                const int * requested_location_update,
-                int * current_location,
-                int * requesting_facemask_update,
-                const int * requested_facemask_update,
-                int * current_facemask
+                uint64_t * requesting_location_update,
+                const uint64_t * requested_location_update,
+                uint64_t * current_location,
+                uint64_t * requesting_facemask_update,
+                const uint64_t * requested_facemask_update,
+                uint64_t * current_facemask
         )
 {
     for(int n=0; n<N; n++){
@@ -640,20 +640,20 @@ void dynamics_movement
                 int offset,
                 int ticks_in_week,
                 int max_num_activity_locations,
-                const int * current_region,
+                const uint64_t * current_region,
                 const uint8_t * weekly_routines,
-                const int * current_facemask,
-                const int * wears_facemask,
-                int * requested_facemask_update,
-                int * requesting_facemask_update,
-                const int * activity_locations,
+                const uint64_t * current_facemask,
+                const uint64_t * wears_facemask,
+                uint64_t * requested_facemask_update,
+                uint64_t * requesting_facemask_update,
+                const uint64_t * activity_locations,
                 const double * activity_location_weights,
-                const int * num_activity_locations,
-                const int * location_closure,
-                int * requested_location_update,
-                const int * home_location,
-                const int * current_quarantine,
-                int * requesting_location_update,
+                const uint64_t * num_activity_locations,
+                const uint64_t * location_closure,
+                uint64_t * requested_location_update,
+                const uint64_t * home_location,
+                const uint64_t * current_quarantine,
+                uint64_t * requesting_location_update,
                 uint64_t * random_state
         )
 {
@@ -713,7 +713,7 @@ void dynamics_movement
     return;
 }
 
-void random_shuffle(uint64_t * s, int * array, int n) {
+void random_shuffle(uint64_t * s, uint64_t * array, int n) {
     int i, j, tmp;
     for (i = n - 1; i > 0; i--){
         j = randrange(s, i + 1);
@@ -723,7 +723,7 @@ void random_shuffle(uint64_t * s, int * array, int n) {
     }
 }
 
-void random_sample(uint64_t * s, int * sample, int n, int * population, int N) {
+void random_sample(uint64_t * s, uint64_t * sample, int n, uint64_t * population, int N) {
     int t = 0; // total input records dealt with
     int m = 0; // number of items selected so far
     int u;
@@ -773,14 +773,14 @@ void default_testing_and_contact_tracing_dynamics
                 double test_false_negative,
                 double prob_quarantine_with_symptoms_without_test,
                 double prob_quarantine_with_contact_without_test,
-                const int * num_regular_contacts_to_test,
-                const int * regular_contacts_to_test,
-                const int * current_region,
+                const uint64_t * num_regular_contacts_to_test,
+                const uint64_t * regular_contacts_to_test,
+                const uint64_t * current_region,
                 const double * current_infectiousness,
                 const double * current_disease,
                 double * yesterdays_disease,
-                int * end_of_quarantine_days,
-                int * current_quarantine,
+                uint64_t * end_of_quarantine_days,
+                uint64_t * current_quarantine,
                 uint64_t * random_state
         )
 {
@@ -792,7 +792,7 @@ void default_testing_and_contact_tracing_dynamics
     }
 
     // Population eligible to be tested today
-    int * eligible = (int *)malloc(sizeof(int) * N);
+    uint64_t * eligible = (uint64_t *)malloc(sizeof(uint64_t) * N);
     for(int n=0; n<N; n++){
         if(current_region[n] == id && current_disease[n] < 1.0){
             eligible[n] = 1;
@@ -802,19 +802,19 @@ void default_testing_and_contact_tracing_dynamics
     }
 
     // A record of agents newly testing positive today
-    int * newly_testing_positive = (int *)malloc(sizeof(int) * N);
+    uint64_t * newly_testing_positive = (uint64_t *)malloc(sizeof(uint64_t) * N);
     for(int n=0; n<N; n++){newly_testing_positive[n] = 0;}
 
     // Random testing (test eligible agents at random)
     if(num_to_test_random > 0){
         int num_eligible_rand = 0;
         for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_rand += 1;}}
-        int * eligible_agents_rand = (int *)malloc(sizeof(int) * num_eligible_rand);
+        uint64_t * eligible_agents_rand = (uint64_t *)malloc(sizeof(uint64_t) * num_eligible_rand);
         int j = 0;
         for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_rand[j] = n; j += 1;}}
         int num_agents_to_test_random;
         num_agents_to_test_random = fmin(num_to_test_random, num_eligible_rand);
-        int * agents_to_test_random = (int *)malloc(sizeof(int) * num_agents_to_test_random);
+        uint64_t * agents_to_test_random = (uint64_t *)malloc(sizeof(uint64_t) * num_agents_to_test_random);
         random_sample(random_state, agents_to_test_random, num_agents_to_test_random,
                       eligible_agents_rand, num_eligible_rand);
         for(int j=0; j<num_agents_to_test_random; j++){
@@ -835,7 +835,7 @@ void default_testing_and_contact_tracing_dynamics
 
     // Symptomatic testing (test eligible agents who have just become symptomatic)
     int num_eligible_symp = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_symp += 1;}}
-    int * eligible_agents_symp = (int *)malloc(sizeof(int) * num_eligible_symp);
+    uint64_t * eligible_agents_symp = (uint64_t *)malloc(sizeof(uint64_t) * num_eligible_symp);
     int j = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_symp[j] = n; j += 1;}}
     random_shuffle(random_state, eligible_agents_symp, num_eligible_symp);
     for(int j=0; j<num_eligible_symp; j++){
@@ -867,7 +867,7 @@ void default_testing_and_contact_tracing_dynamics
     int num_newly_testing_positive = 0;
     for(int n=0; n<N; n++){if(newly_testing_positive[n] == 1){num_newly_testing_positive += 1;}}
     if(num_newly_testing_positive > 0 && num_to_test_contact > 0){
-        int * at_risk = (int *)malloc(sizeof(int) * N);
+        uint64_t * at_risk = (uint64_t *)malloc(sizeof(uint64_t) * N);
         for(int n=0; n<N; n++){at_risk[n] = 0;}
         for(int n1=0; n1<N; n1++){
             if(newly_testing_positive[n1] == 1){
@@ -883,7 +883,7 @@ void default_testing_and_contact_tracing_dynamics
         for(int n=0; n<N; n++){if(newly_testing_positive[n] == 1){at_risk[n] = 0;}}
         int num_agents_at_risk = 0;
         for(int n=0; n<N; n++){if(at_risk[n] == 1){num_agents_at_risk += 1;}}
-        int * agents_at_risk = (int *)malloc(sizeof(int) * num_agents_at_risk);
+        uint64_t * agents_at_risk = (uint64_t *)malloc(sizeof(uint64_t) * num_agents_at_risk);
         int j = 0; for(int n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
         random_shuffle(random_state, agents_at_risk, num_agents_at_risk);
         for(int j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){
@@ -923,7 +923,7 @@ void close_borders
                 int id,
                 double scale_factor,
                 double current_border_closure_multiplier,
-                int * agents_travelling_matrix,
+                uint64_t * agents_travelling_matrix,
                 const double * baseline_agents_travelling_matrix
         )
 {
@@ -947,9 +947,9 @@ void determine_travellers
                 int id,
                 int R, // number_of_regions
                 const double * current_disease,
-                const int * current_strain,
-                int * current_region,
-                const int * agents_travelling_matrix,
+                const uint64_t * current_strain,
+                uint64_t * current_region,
+                const uint64_t * agents_travelling_matrix,
                 uint64_t * random_state
         )
 {
@@ -962,7 +962,7 @@ void determine_travellers
     if(total_num_to_travel > 0){
 
         // Determine who is eligible to travel from this region today and count how many
-        int * agents_eligible_to_travel = (int *)malloc(sizeof(int) * N);
+        uint64_t * agents_eligible_to_travel = (uint64_t *)malloc(sizeof(uint64_t) * N);
         int num_eligible_to_travel = 0;
         for(int n=0; n<N; n++){
             if(current_strain[n] == -1 && current_disease[n] < 1.0){
@@ -974,7 +974,7 @@ void determine_travellers
         // Among these eligible agents determine who actually travels today
         int num_agents_to_travel;
         num_agents_to_travel = fmin(total_num_to_travel, num_eligible_to_travel);
-        int * agents_to_travel = (int *)malloc(sizeof(int) * num_agents_to_travel);
+        uint64_t * agents_to_travel = (uint64_t *)malloc(sizeof(uint64_t) * num_agents_to_travel);
         random_sample(random_state, agents_to_travel, num_agents_to_travel,
                       agents_eligible_to_travel, num_eligible_to_travel);
 
@@ -1007,10 +1007,10 @@ void transmission_out
                 double facemask_transmission_multiplier,
                 double travel_multiplier,
                 double current_region_transmission_multiplier,
-                const int * current_region,
+                const uint64_t * current_region,
                 const double * current_infectiousness,
-                const int * current_strain,
-                const int * current_facemask,
+                const uint64_t * current_strain,
+                const uint64_t * current_facemask,
                 double * sum_f_by_strain,
                 double * transmission_force,
                 uint64_t * random_state
@@ -1038,12 +1038,12 @@ void transmission_in
                 int S, // number_of_strains
                 int N, // number_of_agents
                 int r1,
-                int * current_facemask,
-                int * current_region,
+                uint64_t * current_facemask,
+                uint64_t * current_region,
                 double facemask_transmission_multiplier,
                 double * sum_f_by_strain,
                 double * current_sigma_immunity_failure,
-                int * infection_event,
+                uint64_t * infection_event,
                 double * transmission_force,
                 double * mutation_matrix,
                 uint64_t * random_state
@@ -1111,20 +1111,20 @@ void dynamics_vaccination
                 int immunity_period_ticks,
                 int id,
                 const double * vaccine_rho_immunity_failure_values,
-                const int * vaccine_rho_immunity_failure_partitions,
-                const int * vaccine_rho_immunity_failure_lengths,
+                const uint64_t * vaccine_rho_immunity_failure_partitions,
+                const uint64_t * vaccine_rho_immunity_failure_lengths,
                 const double * vaccine_sigma_immunity_failure_values,
-                const int * vaccine_sigma_immunity_failure_partitions,
-                const int * vaccine_sigma_immunity_failure_lengths,
-                const int * num_to_vaccinate,
+                const uint64_t * vaccine_sigma_immunity_failure_partitions,
+                const uint64_t * vaccine_sigma_immunity_failure_lengths,
+                const uint64_t * num_to_vaccinate,
                 double * rho_immunity_failure_values,
                 double * sigma_immunity_failure_values,
-                const int * current_region,
+                const uint64_t * current_region,
                 const double * current_disease,
-                const int * current_strain,
-                int * requesting_immunity_update,
-                int * most_recent_first_dose,
-                int * vaccine_hesitant,
+                const uint64_t * current_strain,
+                uint64_t * requesting_immunity_update,
+                uint64_t * most_recent_first_dose,
+                uint64_t * vaccine_hesitant,
                 uint64_t * random_state
         )
 {
@@ -1133,7 +1133,7 @@ void dynamics_vaccination
 
         // Determine who is eligible to be vaccinated today for this age group
         int num_eligible = 0;
-        int * eligible = (int *)malloc(sizeof(int) * N);
+        uint64_t * eligible = (uint64_t *)malloc(sizeof(uint64_t) * N);
         for(int n=0; n<N; n++){
             if(current_region[n] == id &&
                current_disease[n] < 1.0 &&
@@ -1146,7 +1146,7 @@ void dynamics_vaccination
                 eligible[n] = 0;
             }
         }
-        int * eligible_agents = (int *)malloc(sizeof(int) * num_eligible);
+        uint64_t * eligible_agents = (uint64_t *)malloc(sizeof(uint64_t) * num_eligible);
         int j = 0;
         for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents[j] = n; j += 1;}}
 
@@ -1157,7 +1157,7 @@ void dynamics_vaccination
             num_agents_to_vaccinate += num_to_vaccinate[(age_group_index * A) + v];
         }
         num_agents_to_vaccinate = fmin(num_eligible, num_agents_to_vaccinate);
-        int * agents_to_vaccinate = (int *)malloc(sizeof(int) * num_agents_to_vaccinate);
+        uint64_t * agents_to_vaccinate = (uint64_t *)malloc(sizeof(uint64_t) * num_agents_to_vaccinate);
         random_sample(random_state, agents_to_vaccinate, num_agents_to_vaccinate, eligible_agents,
                       num_eligible);
         int v = 0;
@@ -1169,7 +1169,7 @@ void dynamics_vaccination
 
                 // Determine new rho immunity
 
-                int * rho_part = (int *)malloc(sizeof(int) * W);
+                uint64_t * rho_part = (uint64_t *)malloc(sizeof(uint64_t) * W);
                 double * rho_values = (double *)malloc(sizeof(double) * W * R);
                 int rho_length;
 
@@ -1221,7 +1221,7 @@ void dynamics_vaccination
 
                 // Determine new sigma immunity
 
-                int * sigma_part = (int *)malloc(sizeof(int) * W);
+                uint64_t * sigma_part = (uint64_t *)malloc(sizeof(uint64_t) * W);
                 double * sigma_values = (double *)malloc(sizeof(double) * W);
                 int sigma_length;
 
