@@ -124,11 +124,17 @@ def test_end_to_end_all_void(tmp_path, request):
 
 
 @pytest.mark.slow
-def test_e2e_health_model(tmp_path, request):
+def test_e2e_health_and_movement_model(tmp_path, request):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    expect_results = (
-        "tests/e2e_expected_outputs/test_e2e_health_and_movement_model.csv"
-    )
+    # expect_results = (
+    #     "tests/e2e_expected_outputs/test_e2e_health_and_movement_model.csv"
+    # )
+    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
+
+    # expect_results = (
+    #     "tests/e2e_expected_outputs/test_e2e_health_model.csv"
+    # )
+    
 
     _run_end_to_end_simulation(
         input_scenario, expect_results, tmp_path, request.node.originalname
@@ -140,7 +146,9 @@ def test_e2e_health_model(tmp_path, request):
 def test_e2e_hospitalization_and_death_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_hospitalization_and_death_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/test_e2e_hospitalization_and_death_model.csv"
+    # expect_results = "tests/e2e_expected_outputs/test_e2e_hospitalization_and_death_model.csv"
+    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
+
 
     delta_config = {
         "hospitalization_and_death_model": {
@@ -162,7 +170,8 @@ def test_e2e_hospitalization_and_death_model(tmp_path, request):
 def test_e2e_input_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_input_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/test_e2e_input_model.csv"
+    # expect_results = "tests/e2e_expected_outputs/test_e2e_input_model.csv"
+    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "input_model": {
@@ -182,9 +191,10 @@ def test_e2e_input_model(tmp_path, request):
 def test_e2e_seasonal_effects_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_health_seasonal_models.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    expect_results = (
-        "tests/e2e_expected_outputs/test_e2e_seasonal_effects_model.csv"
-    )
+    # expect_results = (
+    #     "tests/e2e_expected_outputs/test_e2e_seasonal_effects_model.csv"
+    # )
+    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "seasonal_effects_model": {
@@ -205,7 +215,9 @@ def test_e2e_seasonal_effects_model(tmp_path, request):
 def test_e2e_testing_and_contact_tracing_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_testing_and_contact_tracing_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/test_e2e_testing_and_contact_tracing_model.csv"
+    # expect_results = "tests/e2e_expected_outputs/test_e2e_testing_and_contact_tracing_model.csv"
+    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
+
 
     delta_config = {
         "testing_and_contact_tracing_model": {
@@ -241,7 +253,8 @@ def test_e2e_testing_and_contact_tracing_model(tmp_path, request):
 def test_e2e_travel_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_travel_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/test_e2e_travel_model.csv"
+    # expect_results = "tests/e2e_expected_outputs/test_e2e_travel_model.csv"
+    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "travel_model": {
@@ -261,7 +274,8 @@ def test_e2e_travel_model(tmp_path, request):
 def test_e2e_vaccination_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_vaccination_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    expect_results = "tests/e2e_expected_outputs/test_e2e_vaccination_model.csv"
+    # expect_results = "tests/e2e_expected_outputs/test_e2e_vaccination_model.csv"
+    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "vaccination_model": {

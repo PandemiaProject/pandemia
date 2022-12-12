@@ -113,13 +113,15 @@ All the scenarios files for integration tests are in `./Scenarios/Tests`.
 | `test_global_config.yaml` | A general purpose global scenario |
 | `test_all_components.yaml` | A scenario that uses the "Default" version of every component |
 | `test_void_all.yaml` | A scenario that uses the "Void" version of every component |
-| `test_e2e_health_model.yaml` | Uses the "DefaultHealthModel" and the "Void" version of all other components |
+| `test_e2e_health_and_movement_model.yaml` | Uses the "DefaultHealthModel", "DefaultMovementModel" and the "Void" version of all other components |
 
-A number of other tests use the `test_e2e_health_model.yaml`. These tests use the "DefaultHealthModel" and the Default model for _one_ other component (the "Void" models are used for the remaining components). The scenario config is read and patched using literals hardcoded in the tests in `test_end_to_end_pandimia.py`.
+A number of other tests use the `test_e2e_health_and_movement_model.yaml`. These tests use the "DefaultHealthModel", "DefaultMovementModel" and the Default model for _one_ other component (the "Void" models are used for the remaining components). The scenario config is read and patched using literals hardcoded in the tests in `test_end_to_end_pandimia.py`. In most cases the expected results are in `./tests/e2e_expected_outputs` in a csv file which takes its name from the test name (see `test_end_to_end_pandimia.py` for details).
+
+> **NOTE** In many cases, these tests are not designed to be realistic, but to demonstrate particular aspects of the model. For example in some tests, individuals lose their immunity improbably fast, to ensure that plenty of reinfections are simulated.
 
 ### (Re)creating the "gold standard" outputs
 
-The integration tests launch complete runs of pandemia and then compare the resulting output file with a set of "gold standard" files for each scenario. Occasionally (depending on the development of the relevant module) it may be necessary to recreate these. To recreate the gold standard outputs, use `pytest`'s `basetemp` dir option. **This can overwrite all the existing gold standard output files**
+The integration tests launch complete runs of pandemia and then compare the resulting output file with a set of "gold standard" files for each scenario. Occasionally (depending on the development of the relevant module) it may be necessary to recreate these. To recreate the gold standard outputs, use `pytest`'s `basetemp` dir option. **This can overwrite all the existing gold standard output files**. The files produced will be in a directory structure peculiar to pytest. They may need to be manually moved to the relevant location in `./tests/e2e_expected_outputs/`:
 
 ```
 pytest -m slow --basetemp=./tests/recreate_gold_standard

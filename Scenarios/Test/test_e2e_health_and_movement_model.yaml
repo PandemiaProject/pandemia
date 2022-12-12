@@ -20,7 +20,7 @@
     
     # Time length of each tick in the simulation. The day length (86400) should be divisible by the
     # following tick length:
-    tick_length_s: 600
+    tick_length_s: 28800 # 8*60*60 - eight hours in seconds
     # How long the simulation should run for, in days. Note the number of iterations will be computed
     # from the tick length above:
     simulation_length_days: 25
@@ -176,15 +176,15 @@
     
     # ######################################### Movement ###############################################
           
-      movement_model:
-        __type__: default_movement_model.DefaultMovementModel
-        weighted_sampling: True
-        home_activity: "Home_Activity"
-        location_closure_exemptions:
-          House: ["Home_Activity"]
-        facemask_activities: [Other_Activity]
-        age_groups:         [  0,  18,  65]
-        facemask_hesitancy: [0.9, 0.5, 0.2]
+    movement_model:
+      __type__: default_movement_model.DefaultMovementModel
+      weighted_sampling: True
+      home_activity: "Home_Activity"
+      location_closure_exemptions:
+        House: ["Home_Activity"]
+      facemask_activities: [Other_Activity]
+      age_groups:         [  0,  18,  65]
+      facemask_hesitancy: [0.9, 0.5, 0.2]
     
     # ######################################### Hospitalization and Death ##############################
     
