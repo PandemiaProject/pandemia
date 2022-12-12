@@ -150,6 +150,8 @@ dmypy.json
 .coverage
 .coverage*
 sync_windows_vm.sh
-.idea/*.coverage
+.idea/*
 tests/recreate_gold_standard/
 *.idea/
+sync_windows_vm.sh
+*.eggs/*

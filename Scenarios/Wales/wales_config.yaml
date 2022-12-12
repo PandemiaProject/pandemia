@@ -133,7 +133,6 @@ reporters:
     show: False
     savefig: True
     filename: /tmp/infected_wales.png
-    historical_data: null
   pygame_shapes.PygameShapes:
     fullscreen: False
     font_size: 20

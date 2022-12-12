@@ -7,9 +7,8 @@ import csv
 import numpy as np
 from collections import defaultdict
 from numpy import genfromtxt
-import platform
-ext=".dll" if platform.system() == 'Windows' else ".so"
-from ctypes import c_void_p, c_double, c_int, cdll, c_long
+
+from ctypes import c_void_p, c_double, c_int, cdll
 
 from ..health_model import HealthModel
 
@@ -37,12 +36,9 @@ class DefaultHealthModel(HealthModel):
 
         self.clock = clock
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/health_model/"
-                                "default_health_model_functions"+ext)
-
-        self.update_health = lib.update_health
-        self.transmission  = lib.transmission
-        self.infect        = lib.infect
+        self.update_health = self.lib.update_health
+        self.transmission  = self.lib.transmission
+        self.infect        = self.lib.infect
 
         self.update_health.restype = None
         self.transmission.restype  = None

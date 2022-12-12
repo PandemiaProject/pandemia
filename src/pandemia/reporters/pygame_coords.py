@@ -185,7 +185,7 @@ class PygameCoords(Reporter):
                                         self.max_num_inf_to_plot
             prevalence = (prevalence * 10).astype(int)
 
-            # # Refresh screen
+            # Refresh screen
             self.screen.blit(self.background_screen, (0,0))
 
             # Colour squares

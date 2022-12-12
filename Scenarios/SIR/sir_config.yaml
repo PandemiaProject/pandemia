@@ -114,7 +114,6 @@ reporters:
     show: False
     savefig: True
     filename: /tmp/infected_sir.png
-    historical_data: null
 
 # ######################################### Logging ################################################
 
