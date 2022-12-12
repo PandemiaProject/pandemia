@@ -53,8 +53,8 @@ world_factory:
 seasonal_effects_model:
   __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
-  seasonal_multiplier_by_region_by_month: null
-  out_of_season_multiplier: 1.0
+  seasonal_multiplier_by_region_by_month: Scenarios/Test/data/country_data_seasonality.csv
+  out_of_season_multiplier: 0.5
 
 # ######################################### Health #################################################
 
@@ -191,7 +191,7 @@ movement_model:
 
 hospitalization_and_death_model:
   __type__: default_hospitalization_and_death_model.DefaultHospitalizationAndDeathModel
-  hospital_threshold: 0.5
+  hospital_threshold: 0.4
   hospital_location_type: Hospital
   cemetery_location_type: Cemetery
 
@@ -201,9 +201,9 @@ testing_and_contact_tracing_model:
   __type__: default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel
   quarantine_period_days: 14
   symptomatic_disease_treshold: 0.2
-  prob_quarantine_with_symptoms_without_test: 0.0
-  prob_quarantine_with_contact_without_test: 0.0
-  test_threshold: 0.4
+  prob_quarantine_with_symptoms_without_test: 0.001
+  prob_quarantine_with_contact_without_test: 0.001
+  test_threshold: 0.005
   test_false_negative: 0.01
   max_regular_contacts_to_test: 10
 
@@ -235,13 +235,14 @@ vaccination_model:
 
 travel_model:
   __type__: default_travel_model.DefaultTravelModel
-  travel_transmission_multiplier: 1.0
-  interpolation: 0.0
+  travel_transmission_multiplier: 2.0
+  interpolation: 0.01
 
 # ######################################### Input ##################################################
 
 input_model:
-  __type__: default_input_model.DefaultInputModel
+  __type__: random_input_model.RandomInputModel
+  seed: 1
 
 # ######################################### Output #################################################
 
