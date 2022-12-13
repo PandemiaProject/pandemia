@@ -56,8 +56,8 @@ setup(
                  "icecream"
                  ],
     },
-    package_data={'pandemia': ["C/build/*"]},
-    include_dirs=True,
+    # package_data={'pandemia': ["C/build/*"]},
+    include_dirs=["C/build/"],
     entry_points={
         'console_scripts': [
             'pandemia=pandemia.__main__:main'
