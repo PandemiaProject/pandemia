@@ -45,11 +45,11 @@ jobs:
     # Install Pandemia itself from then source
     - name: Install Pandemia
       run: |
-        python -m pip install .
+        python -m pip install -e .
     # Install any packages require for testing
     - name: Install tests for Pandemia
       run: |
-        python -m pip install .[test]
+        python -m pip install -e .[test]
     - name: Compile the C code
       run: |
         make
