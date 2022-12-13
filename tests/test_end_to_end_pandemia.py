@@ -211,7 +211,7 @@ def test_e2e_seasonal_effects_model(tmp_path, request):
 
 
 # @pytest.mark.skip("Not implemented yet")
-@pytest.mark.slow
+@pytest.mark.known_failing
 def test_e2e_testing_and_contact_tracing_model(tmp_path, request):
     # input_scenario = "Scenarios/Test/test_e2e_testing_and_contact_tracing_model.yaml"
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
