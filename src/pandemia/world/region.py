@@ -379,11 +379,11 @@ class VectorRegion:
         self.activity_locations = np.zeros((number_of_agents, number_of_activities,
                                             max_num_activity_locations), dtype=np.int64)
         self.activity_location_weights = np.zeros((number_of_agents, number_of_activities,
-                                                   max_num_activity_locations), dtype=float)
+                                                   max_num_activity_locations), dtype=np.float64)
         self.max_num_activity_locations = max_num_activity_locations
         self.activity_strings = [None for _ in range(number_of_activities)]
         self.location_typ_strings = [None for _ in range(number_of_locations)]
-        self.location_x_coords = np.zeros((number_of_locations), dtype=float)
-        self.location_y_coords = np.zeros((number_of_locations), dtype=float)
+        self.location_x_coords = np.zeros((number_of_locations), dtype=np.float64)
+        self.location_y_coords = np.zeros((number_of_locations), dtype=np.float64)
         self.coordinates: Union[None, list] = None
         self.region_coordinates: Union[None, list] = None
