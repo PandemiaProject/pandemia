@@ -6,6 +6,7 @@ import pytest
 import yaml
 from pathlib import Path
 from typing import Union
+from numpy.testing import assert_allclose
 
 from icecream import ic
 
@@ -65,12 +66,45 @@ def _run_end_to_end_simulation(
     # Actual results
     actual_df = pd.read_csv(fname_actual_results)
 
+    if dataframe_exact_match(expected_df, actual_df):
+        assert True
+    else:
+        dataframe_approx_match(expected_df, actual_df,
+            ignore_cols = [],
+            rel_tol = 0.1,
+            abs_tol = 10
+        )
+
+    # # Check for differences in the results
+    # diff_df = expected_df.compare(actual_df)
+
+    # assert len(diff_df) == 0
+    # assert len(diff_df.index) == 0
+    # assert len(diff_df.columns) == 0
+
+def dataframe_exact_match(expected_df, actual_df):
     # Check for differences in the results
     diff_df = expected_df.compare(actual_df)
 
-    assert len(diff_df) == 0
-    assert len(diff_df.index) == 0
-    assert len(diff_df.columns) == 0
+    return ((len(diff_df) == 0) 
+        and (len(diff_df.index) == 0)
+        and (len(diff_df.columns) == 0)
+    )
+
+def dataframe_approx_match(expected_df, actual_df, ignore_cols, rel_tol, abs_tol):
+
+    # We don't require that the two dataframes have the columns in the same order,
+    # but we do compare the content of the columns 
+
+    expected_df2 = expected_df.iloc[:,2:]
+    ic(expected_df2.columns)
+    ic(len(expected_df2))
+
+    for col_name, expected_ser in expected_df2.items():
+    # for expected_ser, actual_ser in zip(expected_df)
+        ic(col_name)
+        actual_ser = actual_df[col_name]
+        assert_allclose(actual_ser, expected_ser, rtol=rel_tol, atol=abs_tol, verbose=True)
 
 
 def _update_config(input_scenario: Union[dict, str, Path], delta_config: dict) -> dict:
