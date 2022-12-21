@@ -76,7 +76,14 @@ the recommended scale factor is 0.0005.
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
-directory. The homogeneous mixing scenario **Global** uses the **Global** world factory, while the
+directory.
+
+
+![pandemia Logo](pandemia_homogeneous.jpg)
+
+![pandemia Logo](pandemia_heterogeneous.jpg)
+
+The homogeneous mixing scenario **Global** uses the **Global** world factory, while the
 heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. For each
 scenario, all parameter values are set in the corresponding YAML file. For example, the **Global**
 config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid** config can
