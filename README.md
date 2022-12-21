@@ -76,18 +76,23 @@ the recommended scale factor is 0.0005.
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
-directory.
-
+directory. The homogeneous mixing scenario **Global** uses the **Global** world factory. In this
+scenario, individuals mix homogeneously within each region, with mixing between regions being
+determined using air travel data. Colouring regions according to prevalance, the scenario can be
+visualized as follows:
 
 ![pandemia Logo](pandemia_homogeneous.jpg)
 
+The heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. In this
+scenario, individuals mix heterogeneously within each region. This uses data on average household
+size, population distribution and a simple gravity model of mobility. Colouring grid squares
+according to numbers infected, the scenario has the following visualization:
+
 ![pandemia Logo](pandemia_heterogeneous.jpg)
 
-The homogeneous mixing scenario **Global** uses the **Global** world factory, while the
-heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. For each
-scenario, all parameter values are set in the corresponding YAML file. For example, the **Global**
-config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid** config can
-be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
+For each scenario, all parameter values are set in the corresponding YAML file. For example, the
+**Global** config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid**
+config can be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
