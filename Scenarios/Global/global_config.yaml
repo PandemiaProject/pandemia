@@ -84,8 +84,8 @@ health_model:
   __type__: default_health_model.DefaultHealthModel
   # The number of strains of the pathogen.
   number_of_strains: 1
-  # Control parameters determining the transmission probability of each strain. This list should be
-  # of length equal to the number of strains.
+  # Control parameters determining the transmission probability of each strain each tick. This list
+  # should be of length equal to the number of strains.
   beta: [0.42]
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.

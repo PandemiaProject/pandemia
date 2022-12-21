@@ -4,9 +4,9 @@
 ![Pylint](https://github.com/?/workflows/Pylint/badge.svg)
 [![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
-Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
-
 ![pandemia Logo](pandemia_logo.jpg)
+
+Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
 
 Pandemia is able to simulate and visualize the spread of an infectious disease across multiple
 geographical regions, for example the countries of the world or the administrative divisions of
@@ -76,7 +76,9 @@ the recommended scale factor is 0.0005.
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
-directory. The homogeneous mixing scenario **Global** uses the **Global** world factory. In this
+directory.
+
+The homogeneous mixing scenario **Global** uses the **Global** world factory. In this
 scenario, individuals mix homogeneously within each region, with mixing between regions being
 determined using air travel data. Colouring regions according to prevalance, the scenario can be
 visualized as follows:
@@ -176,7 +178,7 @@ If you publish using technology from this repository, please cite the above arti
 @article{10.1371/journal.pone.0261330,
     doi = {10.1371/journal.pone.0261330},
     author = {Thompson, James AND Wattam, Stephen},
-    journal = {PLOS ONE},
+    journal = {PLoS One},
     publisher = {Public Library of Science},
     title = {Estimating the impact of interventions against COVID-19: From lockdown to vaccination},
     year = {2021},
