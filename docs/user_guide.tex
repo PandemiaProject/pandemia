@@ -12,6 +12,7 @@
 \usepackage{setspace}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{hyperref}
 
 % Text layout
 \raggedright
@@ -56,13 +57,29 @@
 
 \section{Introduction}
 
-Pandemia is an individual-based stochastic pandemic simulator. It can simulate and visualize the spread of an infectious disease across multiple geographical regions. These regions might represent the countries of the world, or the administrative divisions of a single country.
+Pandemia is an individual-based stochastic pandemic simulator. It simulates and visualizes the spread of an infectious disease across multiple geographical regions. These regions might represent the countries of the world, or the administrative divisions of a single country.
 
-The software parallelizes computation over the regions, calculating the interactions between regions on a coarser timescale than the one used to drive the agent-based simulations within each region. Moreover, the user can specify a scale factor, adjusting the number of individuals, locations, and other relevant quantities appearing in each region. Pandemia is therefore fast and scalable, able to simulate extremely large numbers of individuals, while supporting a wide range of highly adaptable features.
+The software parallelizes computation over the regions, calculating the interactions between regions on a coarser timescale than the one used to discretize the individual-based simulations within each region. The user can specify a scale factor, adjusting the number of individuals, locations, and other relevant quantities appearing in each region. Pandemia is therefore fast and scalable, able to simulate extremely large numbers of individuals, while supporting a wide range of highly adaptable features.
 
-This software will be of use to researchers looking to assess the impact of policy in the context of a public health emergency caused by an infectious disease of humans. The disease could, for example, be a respiratory infectious disease spread by a coronavirus or an influenza virus. The emergence and re-emergence of infectious diseases threatens the health and well-being of people all over the world, and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
+This software will be of use to researchers looking to assess the impact of policy in the context of a public health emergency caused by an infectious disease of humans. The disease could, for example, be a respiratory infectious disease spread by a coronavirus or an influenza virus. The emergence and re-emergence of infectious diseases threatens the health and well-being of people all over the world. Tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
 
 This user guide presents an overview of the model and its various components.
+
+\section{Quick start}
+
+Quick start / Install
+
+\section{Inputs and Outputs}
+
+Inputs and Outputs
+
+\section{ABMlux}
+
+Pandemia is based on the earlier ABMlux model, used for the article:
+\begin{itemize}
+\item[] J. Thompson and S. Wattam, \textit{Estimating the impact of interventions against COVID-19: From lockdown to vaccination}, PLOS ONE, 2021.
+\end{itemize}
+In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg, and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia is a far-reaching generalization of the ABMlux model. 
 
 \section{World}
 
@@ -155,7 +172,7 @@ Once the simulator has been built, it can then be run! The main Pandemia loop lo
 
 Note that some components update each day, while others update each tick. At the beginning of each day, Pandemia decides who is travelling from each region to each other region, and infects these travellers based on the average infectiousness of their destination region. These travellers are then set aside for the remainder of the day. Pandemia then loops over the regions, performing independent agent-based simulations. Since for the remainder of the day these simulations are independent, the loop over the regions can be parallelized. In this way, Pandemia is both fast and scalable. On a laptop computer, using 15 CPUs and 24GB of RAM, Pandemia has been able to perform a 100 day simulation with 24 ticks per day, of over 100 million agents, in under 1.5 hours.
 
-\section{Input}
+\section{Input}\label{sec:input}
 
 The \textbf{Input} component allows the user to specify a \textbf{Policy}, consisting of interventions. A policy is encoded by arrays of integers and floats, indicating the availability or strength of various interventions in each region each day. Currently supported interventions include:
 \begin{itemize}
@@ -396,7 +413,25 @@ The current region of an agent $\texttt{n}$ is recorded by the variable $$\textt
 
 All parameters, including the scale factor and random seed, are configured in a single file, called the \textbf{Configuration}.
 
-\section{Optimization [TO DO]}
+\section{Validation}
+
+The validation of any individual-based epidemic model can be challenging, due to the computational burden of such models. Pandemia is fast, facilitating validation methods that require rapid iteration of the model. Such validation tools can be found in the codebase, although they are currently a work in progress.
+
+\section{Optimization}
+
+A common approach in epidemic modelling is to propose a small number of potential control strategies, before simulating each of them to determine which is most effective. Pandemia supports a more systematic approach, based on optimization algorithms.
+
+Recall that the world and model components are specified using a \textbf{Configuration}. Given both a \textbf{Configuration} and a \textbf{Policy}, the simulation returns a \textbf{Cost}:
+
+$$\textbf{Cost} = \text{Sim}(\textbf{Configuration}, \textbf{Policy}).$$
+
+For a given \textbf{Configuration}, optimization algorithms can then be used to determine the \textbf{Policy} that minimizes the \textbf{Cost}. Recall that the \textbf{Policy} is the object referred to in Section \ref{sec:input}, consisting of arrays of integers and floats, that determines which interventions are active or available in each region each day.
+
+Such an optimization algorithm can be found in the Pandemia codebase. It uses a genetic algorithm to search for optimal policies. Much like the validation tools, this is also a work in progress.
+
+Once these optimization algorithms are able to establish a mapping from a sample of configurations to a set of optimal policies, then methods from machine learning could be used to learn the remainder of this function.
+
+Pandemia is able, via these optimization methods, to reveal potentially very effective control strategies that, due to the complexities of the system, may not be obvious to the modeller. Such strategies could save lives and reduce the cost of interventions. By inverting the cost function, Pandemia can also be used to determine which strategies are best avoided.
 
 % \bibliography{bibliography}
 

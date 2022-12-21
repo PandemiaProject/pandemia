@@ -20,7 +20,7 @@ re-emergence of infectious diseases threatens the health and well-being of peopl
 and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
 
 This document contains an overview of the model, a quickstart guide and information for
-contributors.
+contributors. The full user guide can be found [here](docs/user_guide.pdf).
 
 The code is mixed Python and C.
 
@@ -144,14 +144,20 @@ To test:
 pip install .[test]
 pytest
 ```
+
 ## Documentation
-To generate documentation:
+Consult the [User Guide](docs/user_guide.pdf), or generate documentation using:
 ```
 pip install pdoc
 pdoc --html --overwrite --html-dir docs pandemia
 ```
-## Citing This Work
-Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), an epidemic model which was used in the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330.
+
+## Contributors
+
+## Acknowledgements
+
+## Citing this work
+Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), an epidemic model used in the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330. In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg, and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia is a far-reaching generalization of the ABMlux model.
 
 If you publish using technology from this repository, please cite the above article using this BibTeX:
 ```
