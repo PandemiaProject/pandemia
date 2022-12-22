@@ -260,6 +260,8 @@ health_model:
 # ######################################### Movement ###############################################
 
 # The movement models keeps track of the location of individuals.
+#
+# The default movement model requires a world featuring a home location for each agent.
 
 movement_model:
   # In the default movement model, individuals perform sequences of activities and select locations
@@ -283,15 +285,23 @@ movement_model:
 
 # ######################################### Hospitalization and Death ##############################
 
+# The default hospitalization model requires the default health model and a world featuring at least
+# one hospital and one cemetery in each region.
+
 hospitalization_and_death_model:
   __type__: void_hospitalization_and_death_model.VoidHospitalizationAndDeathModel
 
 # ######################################### Testing and Contact Tracing ############################
 
+# The default testing and contact tracing model requires the default health model and a world
+# featuring a home location for each agent.
+
 testing_and_contact_tracing_model:
   __type__: void_testing_and_contact_tracing_model.VoidTestingAndContactTracingModel
 
 # ######################################### Vaccination ############################################
+
+# The default vaccination model requires the default health model.
 
 vaccination_model:
   __type__: void_vaccination_model.VoidVaccinationModel
@@ -299,6 +309,8 @@ vaccination_model:
 # ######################################### Regional Mixing ########################################
 
 # The travel component models the movement of individuals between regions each day.
+#
+# The default travel model requires the default health model.
 
 travel_model:
   # In the DefaultTravelModel, only uninfected individuals are eligible to travel. The numbers of

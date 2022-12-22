@@ -171,7 +171,7 @@ The interventions are implemented inside the relevant components. For example, a
 
 \section{Movement}
 
-In the default movement model, each agent performs a sequence of activities and performs these activities at particular locations.
+In the default movement model, each agent performs a sequence of activities and performs these activities at particular locations. The default movement model requires a world featuring a home location for each agent.
 
 Recall that, during the building of the world, each agent is assigned a weekly routine consisting of a sequence of activities. It is assumed that these routines start on a Sunday. For example, suppose in a given region there are three activities, \textbf{Home}, \textbf{Work} and \textbf{School}, and that we wish to specify the routine of agents with an 8 hour time resolution. Then one weekly routine could be:
 \begin{center}
@@ -330,7 +330,7 @@ If a region contains neither a hospital nor a cemetery, then the hospitalization
 
 \section{Testing and Contact Tracing}
 
-The default testing and contact tracing model implements diagnostic tests, contact tracing and self-isolation. Self-isolation directs an agent to remain at home for the duration of the self-isolation period. In particular, each agent must for the default testing and contact tracing model be assigned a home location.
+The default testing and contact tracing model requires the default health model and a world featuring a home location for each agent. The model implements diagnostic tests, contact tracing and self-isolation. Self-isolation directs an agent to remain at home for the duration of the self-isolation period. In particular, each agent must for the default testing and contact tracing model be assigned a home location.
 
 The input component specifies how many test are available in each region each day, for each of the following three systems:
 \begin{itemize}
@@ -356,7 +356,7 @@ The user might wish to expand the regular contacts to include workmates and clas
 
 \section{Vaccination}
 
-The default vaccination model supports multiple vaccines. For each vaccine, the configuration specifies how the rho and sigma immunity of an agent should be updated, for each strain, after receiving a dose of the vaccine. Consider, for example, the following configuration:
+The default vaccination model requires the default health model. The model supports multiple vaccines, and for each vaccine, the configuration specifies how the rho and sigma immunity of an agent should be updated, for each strain, after receiving a dose of the vaccine. Consider, for example, the following configuration:
 \begin{center}
 \includegraphics[width=0.5\textwidth]{codeexample2bw}
 \end{center}
@@ -368,7 +368,7 @@ The seasonal effects component of the Pandemia simulator can be used to configur
 
 \section{Travel}
 
-The travel model implements mixing between regions. At the beginning of each day, a number of uninfected agents are randomly selected to travel from each region to each other region.
+The travel model implements mixing between regions. It requires the default health model. At the beginning of each day, a number of uninfected agents are randomly selected to travel from each region to each other region.
 
 The input component associated to each region for each day a multiplier in the range $\texttt{[0,1]}.$ This multiplier represents the extent to which travel \textit{out} of the region is reduced by border restrictions that day, with the value $\texttt{0}$ representing total suppression of travel out of the country. The number of agents travelling between regions $i$ and $j$ is therefore given by the corresponding entry in the \textbf{Travel Matrix}, multiplied by the border closure multiplier of region $i$.
 
