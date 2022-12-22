@@ -69,7 +69,7 @@ class DefaultInputModel(InputModel):
             array = array.T
             assert array.shape[1] == self.simulation_length_days
             self.lockdown_input[:,id]            = array[1].astype(np.int64)
-            self.border_closure_input[:,id]      = array[2].astype(np.float64)
+            self.border_closure_input[:,id]      = (1 - array[2]).astype(np.float64)
             self.facemask_input[:,id]            = array[3].astype(np.int64)
             self.random_testing_input[:,id]      = (self.scale_factor * array[4]).astype(np.int64)
             self.symptomatic_testing_input[:,id] = (self.scale_factor * array[5]).astype(np.int64)
