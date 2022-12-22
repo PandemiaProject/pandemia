@@ -672,7 +672,7 @@ void dynamics_movement
                     requesting_facemask_update[n] = 1;
                 }
                 // If the agent is currently wearing a facemask but shouldn't be, take it off
-                if(current_facemask[n] == 1 && (facemask_intervention == -1 ||
+                if(current_facemask[n] == 1 && (facemask_intervention == 0 ||
                                                 wears_facemask[(n * A) + new_activity] == 0)){
                     requested_facemask_update[n] = 0;
                     requesting_facemask_update[n] = 1;

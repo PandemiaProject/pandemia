@@ -1,9 +1,7 @@
 """Default test input model, specifiying a predefined set of policy interventions"""
 
 import logging
-import csv
 import numpy as np
-from os.path import exists
 
 from ..input_model import InputModel
 
@@ -23,8 +21,6 @@ class DefaultInputModel(InputModel):
 
         self.scale_factor = scale_factor
 
-        self.input_data_filepath = config['input_data_filepath']
-
         self.simulation_length_days = clock.simulation_length_days
         self.number_of_regions = number_of_regions
         self.number_of_vaccines = number_of_vaccines
@@ -41,50 +37,46 @@ class DefaultInputModel(InputModel):
     def new_input(self, policy):
         """Set new input"""
 
-        self.lockdown_input =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
-        self.border_closure_input =\
-            np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=np.float64)
-        self.facemask_input =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+        if policy is not None:
+            self._validate_input(policy)
+            self.lockdown_input            = policy.lockdown_input
+            self.border_closure_input      = policy.border_closure_input
+            self.facemask_input            = policy.facemask_input
+            self.random_testing_input      = policy.random_testing_input
+            self.symptomatic_testing_input = policy.symptomatic_testing_input
+            self.contact_testing_input     = policy.contact_testing_input
+            self.vaccination_input         = policy.vaccination_input
+        else:
+            self.lockdown_input =\
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            self.border_closure_input =\
+                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=np.float64)
+            self.facemask_input =\
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            self.random_testing_input =\
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            self.symptomatic_testing_input =\
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            self.contact_testing_input =\
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            self.vaccination_input =\
+                np.full((self.simulation_length_days, self.number_of_regions,
+                         self.number_of_vaccination_age_groups,
+                         self.number_of_vaccines), 0, dtype=np.int64)
+
         self.random_testing_input =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            (self.scale_factor * self.random_testing_input).astype(int)
         self.symptomatic_testing_input =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            (self.scale_factor * self.symptomatic_testing_input).astype(int)
         self.contact_testing_input =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            (self.scale_factor * self.contact_testing_input).astype(int)
         self.vaccination_input =\
-            np.full((self.simulation_length_days, self.number_of_regions,
-                        self.number_of_vaccination_age_groups,
-                        self.number_of_vaccines), 0, dtype=np.int64)
+            (self.scale_factor * self.vaccination_input).astype(int)
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
 
-        iso2 = vector_region.name
-        id = vector_region.id
-        filepath = self.input_data_filepath + iso2 + ".csv"
-        if exists(filepath):
-            array = np.genfromtxt(filepath, skip_header = 1, delimiter=',', dtype=np.float64)
-            array = array.T
-            assert array.shape[1] == self.simulation_length_days
-            self.lockdown_input[:,id]            = array[1].astype(np.int64)
-            self.border_closure_input[:,id]      = array[2].astype(np.float64)
-            self.facemask_input[:,id]            = array[3].astype(np.int64)
-            self.random_testing_input[:,id]      = (self.scale_factor * array[4]).astype(np.int64)
-            self.symptomatic_testing_input[:,id] = (self.scale_factor * array[5]).astype(np.int64)
-            self.contact_testing_input[:,id]     = (self.scale_factor * array[6]).astype(np.int64)
-            if self.number_of_vaccines == 1:
-                self.vaccination_input[:,id,0,0] = (self.scale_factor * array[7]).astype(np.int64)
-                self.vaccination_input[:,id,1,0] = (self.scale_factor * array[8]).astype(np.int64)
-                self.vaccination_input[:,id,2,0] = (self.scale_factor * array[9]).astype(np.int64)
-            if self.number_of_vaccines == 2:
-                self.vaccination_input[:,id,0,0] = (self.scale_factor * array[7]).astype(np.int64)
-                self.vaccination_input[:,id,1,0] = (self.scale_factor * array[8]).astype(np.int64)
-                self.vaccination_input[:,id,2,0] = (self.scale_factor * array[9]).astype(np.int64)
-                self.vaccination_input[:,id,0,1] = (self.scale_factor * array[10]).astype(np.int64)
-                self.vaccination_input[:,id,1,1] = (self.scale_factor * array[11]).astype(np.int64)
-                self.vaccination_input[:,id,2,1] = (self.scale_factor * array[12]).astype(np.int64)
+        pass
 
     def initial_conditions(self, vector_region):
         """Initial input"""

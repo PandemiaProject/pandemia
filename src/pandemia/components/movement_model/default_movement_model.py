@@ -53,13 +53,13 @@ class DefaultMovementModel(MovementModel):
         vector_region.requesting_location_update = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.location_closure = np.ones((number_of_agents, number_of_activities,
                                           max_num_activity_locations), dtype=np.int64)
-        vector_region.lockdown_intervention = -1
+        vector_region.lockdown_intervention = 0
         vector_region.current_facemask = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.wears_facemask = np.zeros((number_of_agents, number_of_activities),
                                                 dtype=np.int64)
-        vector_region.facemask_intervention = -1
+        vector_region.facemask_intervention = 0
         vector_region.current_quarantine = np.zeros((number_of_agents), dtype=np.int64)
 
         vector_region.home_location = np.zeros((number_of_agents), dtype=np.int64)
