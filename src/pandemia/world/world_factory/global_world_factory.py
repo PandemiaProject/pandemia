@@ -14,7 +14,7 @@ from . import WorldFactory
 
 log = logging.getLogger('world_factory')
 
-class GlobalWorldFactory(WorldFactory):
+class HomogeneousWorldFactory(WorldFactory):
     """In this model, in each region there is only one activity, namely Default. There is only one
     location in each region. Agents mix within regions all within the same location. Using the
     sir_rescaling option in the default health model, agents in this world will mix homogeneously

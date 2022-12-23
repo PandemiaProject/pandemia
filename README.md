@@ -65,12 +65,12 @@ Objects of type **Reporter** collect output data for visualization and analysis.
 A number of **World Factory** and **Component** examples are provided for the user. In particular,
 for each **Component**, a default model is provided, as well as a void model in case the user does
 not wish for this component to be active during a simulation. Among the **World Factory** examples
-are **Global** and **Global Grid**. Both these factories build all the countries in the world, using
-air travel data to configure travel between countries. However, whereas **Global** implements
-homogeneous mixing within each country, **Global Grid** implements a simple model of hetergeneous
-mixing, based on average household size and population density grids. **Global Grid** also allows
+are **Homogeneous** and **Heterogeneous**. Both these factories build all the countries in the world, using
+air travel data to configure travel between countries. However, whereas **Homogeneous** implements
+homogeneous mixing within each country, **Heterogeneous** implements a simple model of hetergeneous
+mixing, based on average household size and population density grids. **Heterogeneous** also allows
 the user to limit the simulation to a chosen subset of countries. In particular, the user can run
-**Global Grid** on only a single country, if the user wishes. For both of these world factories,
+**Heterogeneous** on only a single country, if the user wishes. For both of these world factories,
 the recommended scale factor is 0.0005.
 
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
@@ -78,14 +78,14 @@ of submodel for each of the simulation components, together with configurations 
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
 directory.
 
-The homogeneous mixing scenario **Global** uses the **Global** world factory. In this
+The homogeneous mixing scenario **Homogeneous** uses the **Homogeneous** world factory. In this
 scenario, individuals mix homogeneously within each region, with mixing between regions being
 determined using air travel data. Colouring regions according to prevalance, the scenario can be
 visualized as follows:
 
 ![pandemia Logo](pandemia_homogeneous.jpg)
 
-The heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. In this
+The heterogeneous mixing scenario **Heterogeneous** uses the **Heterogeneous** world factory. In this
 scenario, individuals mix heterogeneously within each region. This uses data on average household
 size, population distribution and a simple gravity model of mobility. Colouring grid squares
 according to numbers infected, the scenario has the following visualization:
@@ -93,15 +93,15 @@ according to numbers infected, the scenario has the following visualization:
 ![pandemia Logo](pandemia_heterogeneous.jpg)
 
 For each scenario, all parameter values are set in the corresponding YAML file. For example, the
-**Global** config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid**
-config can be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
+**Homogeneous** config can be found [here](Scenarios/Homogeneous/homogeneous_config.yaml) while the **Heterogeneous**
+config can be found [here](Scenarios/Heterogeneous/heterogeneous_config.yaml).
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
-input data for the **Global** scenario are found in [Scenarios/Global/data](Scenarios/Global/data).
-All input data for the **Global Grid** scenario are found in [Scenarios/Global_Grid/data](Scenarios/Global_Grid/data).
+input data for the **Homogeneous** scenario are found in [Scenarios/Homogeneous/data](Scenarios/Homogeneous/data).
+All input data for the **Heterogeneous** scenario are found in [Scenarios/Heterogeneous/data](Scenarios/Heterogeneous/data).
 
-The **Global Grid** world factory uses the following grid data, available under a CC BY 4.0 license:
+The **Heterogeneous** world factory uses the following grid data, available under a CC BY 4.0 license:
 
 Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
 Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
@@ -130,19 +130,19 @@ pip install .
 ```
 To run the homogeneous mixing scenario:
 ```
-pandemia Scenarios/Global/global_config.yaml
+pandemia Scenarios/Homogeneous/homogeneous_config.yaml
 ```
 To run the heterogeneous mixing scenario:
 ```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml
+pandemia Scenarios/Heterogeneous/heterogeneous_config.yaml
 ```
 To run the heterogeneous mixing scenario and save after the world building phase:
 ```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+pandemia Scenarios/Heterogeneous/heterogeneous_config.yaml Scenarios/Heterogeneous/heterogeneous_world.wld
 ```
 To run the heterogeneous mixing scenario using the save, thereby skipping the world building phase:
 ```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+pandemia Scenarios/Heterogeneous/heterogeneous_config.yaml Scenarios/Heterogeneous/heterogeneous_world.wld
 ```
 To configure a new scenario, the user should choose one of the configs already provided, as a
 template, which they should then edit as necessary. These configs are annotated with comments
