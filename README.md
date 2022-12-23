@@ -78,17 +78,17 @@ of submodel for each of the simulation components, together with configurations 
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
 directory.
 
-The homogeneous mixing scenario **Homogeneous** uses the **Homogeneous** world factory. In this
-scenario, individuals mix homogeneously within each region, with mixing between regions being
-determined using air travel data. Colouring regions according to prevalance, the scenario can be
-visualized as follows:
+The homogeneous mixing scenario uses the **Homogeneous** world factory. In this scenario,
+individuals mix homogeneously within each region, with mixing between regions being determined using
+air travel data. Colouring regions according to prevalance, the scenario can be visualized as
+follows:
 
 ![pandemia Logo](pandemia_homogeneous.jpg)
 
-The heterogeneous mixing scenario **Heterogeneous** uses the **Heterogeneous** world factory. In this
-scenario, individuals mix heterogeneously within each region. This uses data on average household
-size, population distribution and a simple gravity model of mobility. Colouring grid squares
-according to numbers infected, the scenario has the following visualization:
+The heterogeneous mixing scenario uses the **Heterogeneous** world factory. In this scenario,
+individuals mix heterogeneously within each region. This uses data on average household size,
+population distribution and a simple gravity model of mobility. Colouring grid squares according to
+numbers infected, the scenario has the following visualization:
 
 ![pandemia Logo](pandemia_heterogeneous.jpg)
 
