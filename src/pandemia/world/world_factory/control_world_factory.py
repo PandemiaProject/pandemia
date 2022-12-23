@@ -11,9 +11,9 @@ from ..region import Region
 from .. import World
 from . import WorldFactory
 
-log = logging.getLogger('test_world_factory')
+log = logging.getLogger('control_world_factory')
 
-class TestWorldFactory(WorldFactory):
+class ControlWorldFactory(WorldFactory):
     """Creates a test world."""
 
     def __init__(self, config, clock, scale_factor):
