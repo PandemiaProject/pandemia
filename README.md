@@ -147,7 +147,7 @@ pandemia Scenarios/Heterogeneous/heterogeneous_config.yaml Scenarios/Heterogeneo
 To configure a new scenario, the user should choose one of the configs already provided, as a
 template, which they should then edit as necessary. These configs are annotated with comments
 briefly explaining the meaning of each of the parameters. For more information, consult the user
-manual.
+guide.
 
 The advanced user might even wish to write their own models, to be used instead of the default
 models provided.
