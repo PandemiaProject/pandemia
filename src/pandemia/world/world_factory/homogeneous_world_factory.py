@@ -26,7 +26,7 @@ class HomogeneousWorldFactory(WorldFactory):
         self.clock = clock
         self.scale_factor = scale_factor
 
-        self.regions_shape_data_file        = self.config['regions_shape_data_file']
+        self.regions_shape_data_file   = self.config['regions_shape_data_file']
         self.regions_data_path         = self.config['regions_data_path']
         self.airport_path              = self.config['airport_path']
         self.air_travel_path           = self.config['air_travel_path']
