@@ -768,7 +768,7 @@ void default_testing_and_contact_tracing_dynamics
                 int num_to_test_contact,
                 int max_regular_contacts_to_test,
                 int id,
-                double symptomatic_disease_treshold,
+                double symptomatic_disease_threshold,
                 double test_threshold,
                 double test_false_negative,
                 double prob_quarantine_with_symptoms_without_test,
@@ -841,8 +841,8 @@ void default_testing_and_contact_tracing_dynamics
     for(int j=0; j<num_eligible_symp; j++){
         int n, test_result;
         n = eligible_agents_symp[j];
-        if(current_disease[n] >= symptomatic_disease_treshold){
-            if(yesterdays_disease[n] < symptomatic_disease_treshold){
+        if(current_disease[n] >= symptomatic_disease_threshold){
+            if(yesterdays_disease[n] < symptomatic_disease_threshold){
                 if(num_to_test_symptomatic > 0){
                     test_result = test(random_state, current_infectiousness[n], test_threshold,
                                        test_false_negative);

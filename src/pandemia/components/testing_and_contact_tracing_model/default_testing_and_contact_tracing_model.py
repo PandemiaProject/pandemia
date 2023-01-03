@@ -29,7 +29,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         self.default_testing_and_contact_tracing_dynamics.restype = None
 
         self.quarantine_period_days       = config['quarantine_period_days']
-        self.symptomatic_disease_treshold = config['symptomatic_disease_treshold']
+        self.symptomatic_disease_threshold = config['symptomatic_disease_threshold']
         self.test_threshold               = config['test_threshold']
         self.test_false_negative          = config['test_false_negative']
         self.max_regular_contacts_to_test = config['max_regular_contacts_to_test']
@@ -99,7 +99,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
             c_int(vector_region.num_to_test_contact),
             c_int(self.max_regular_contacts_to_test),
             c_int(vector_region.id),
-            c_double(self.symptomatic_disease_treshold),
+            c_double(self.symptomatic_disease_threshold),
             c_double(self.test_threshold),
             c_double(self.test_false_negative),
             c_double(self.prob_quarantine_with_symptoms_without_test),

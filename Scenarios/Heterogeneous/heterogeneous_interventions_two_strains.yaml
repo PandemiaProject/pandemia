@@ -349,7 +349,7 @@ testing_and_contact_tracing_model:
   # The length of time to self-isolate at home.
   quarantine_period_days: 14
   # The level above which the disease of an individual is considered symptomatic
-  symptomatic_disease_treshold: 0.2
+  symptomatic_disease_threshold: 0.2
   # Probability that an individual with symptoms self-isolates without being tested.
   prob_quarantine_with_symptoms_without_test: 0.0
   # Probability that an individual self-isolates having been identified as at risk by the contact
