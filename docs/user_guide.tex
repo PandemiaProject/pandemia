@@ -485,7 +485,12 @@ In that article, the authors presented an agent-based model of the COVID-19 pand
 \url{https://github.com/abm-covid-lux/abmlux}
 \end{center}
 
-ABMlux brought together several datasets on the population in Luxembourg, describing households, places of work, care homes, schools, restaurants, shops and other locations, with over 2000 behavioural routines for agents defined on 10 minute time resolution using time use data. The ABMlux world factory outputs an abject which in the terminology of Pandemia would be called a region. This region features numerous activities and dozens of locations types. ABMlux allows this object to be saved as a $\texttt{.abm}$ file, which can then be read by Pandemia's $\texttt{abmlux}$ world factory. This world factory converts the Luxembourg model into a Pandemia world object, on which a Pandemia simulation can then be built.
+ABMlux brought together several datasets on the population in Luxembourg, describing households, places of work, care homes, schools, restaurants, shops and other locations, with over 2000 behavioural routines for agents defined on 10 minute time resolution using time use data. The ABMlux world factory outputs an abject which in the terminology of Pandemia would be called a region. This region features numerous activities and dozens of locations types. ABMlux allows this object to be saved as a $\texttt{.abm}$ file, which can then be read by Pandemia's $\texttt{abmlux}$ world factory. This world factory converts the Luxembourg model into a Pandemia world object, on which a Pandemia simulation can then be built. To do this, first clone the repository
+\begin{center}
+\url{https://github.com/abm-covid-lux/multi_strain_abmlux}
+\end{center}
+and install using $$\texttt{pip install -e .[test]}.$$ Then run the command
+$$\texttt{ms{\_}abmlux Scenarios/Luxembourg/config.yaml sim{\_}factory.abm}.$$ Once $\texttt{sim{\_}factory.abm}$ has been created, copy and paste this file into Pandemia's $\texttt{Scenarios/ABMlux/data}$ folder.
 
 While Pandemia regions are not required to have the complexity of the ABMlux region, such a level of detail is supported by Pandemia, and will generally produce the most realistic outputs, assuming such population data is available.
 
