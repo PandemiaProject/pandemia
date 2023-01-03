@@ -1,4 +1,8 @@
 ---
+# In this scenario, mixing within countries is homogeneous. Mixing between regions is determined
+# using air travel data. In this scenario, interventions are active. Since agents in this scenario
+# do not have houses in which to self-isolate, testing and contact tracing is irrelevant.
+
 # ######################################### Basic Parameters #######################################
 
 # Scale factor. This rescales the number of individuals, locations, and other relevant quantities
@@ -32,10 +36,10 @@ epoch: 1st January 2020
 # is built using a world factory. The choice of world factory, and its configuration, are made here.
 
 world_factory:
-  # The HomogeneousWorldFactory builds a world consisting of approximately two hundred regions, with each
-  # region representing a real-world country. The recommended scale factor is therefore 0.0005. This
-  # world factory builds regions consiting of only one location and one activity, the mixing within
-  # regions being therefore homogeneous.
+  # The HomogeneousWorldFactory builds a world consisting of approximately two hundred regions, with
+  # each region representing a real-world country. The recommended scale factor is therefore 0.0005.
+  # This world factory builds regions consiting of only one location and one activity, the mixing
+  # within regions being therefore homogeneous.
   __type__: homogeneous_world_factory.HomogeneousWorldFactory
   # Filepath to shapefiles for the regions, used for rendering and calculating country adjacency.
   regions_shape_path: Scenarios/Homogeneous/data/country_data_shapefiles/CNTR_RG_60M_2020_4326.shp
@@ -54,11 +58,10 @@ world_factory:
 
 # ######################################### Seasonal Effects #######################################
 
-# The seasonal effects component of the Pandemia simulator can be used to configure monthly updates
-# to parameter values, for example the regional transmission multipliers.
-
 seasonal_effects_model:
-  # The DefaultSeasonalEffectsModel calculates a transmission multiplier for each country for each
+  # The seasonal effects component of the Pandemia simulator can be used to configure monthly
+  # updates to parameter values, for example the regional transmission multipliers. The
+  # DefaultSeasonalEffectsModel calculates a transmission multiplier for each country for each
   # month. The default value of the multiplier is 1.0, meaning no reduction in transmission. The
   # alternative value is set by the parameter out_of_season_multiplier.
   __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
@@ -68,8 +71,6 @@ seasonal_effects_model:
   out_of_season_multiplier: 0.75
 
 # ######################################### Health #################################################
-
-# The health model keeps track of individual health.
 
 health_model:
   # The DefaultHealthModel represents the health of an individual using five attributes:
@@ -100,7 +101,7 @@ health_model:
   location_typ_multipliers: null
   # The proportion of infectious material able to pass through a face mask. For a perfect face mask,
   # this parameter would be 0.0. For a face mask with zero effectiveness, it would be 1.0.
-  facemask_transmission_multiplier: 1.0
+  facemask_transmission_multiplier: 0.1
   # Immunity is not updated daily, but on a cycle of this length. Reducing this parameter decreases
   # performance.
   immunity_period_days: 30
@@ -202,33 +203,34 @@ testing_and_contact_tracing_model:
 # ######################################### Vaccination ############################################
 
 vaccination_model:
+  # In the DefaultVaccinationModel, vaccination updates individual immunity following the exact same
+  # multiplicative procedure that results from an infection in the DefaultHealthModel.
   __type__: default_vaccination_model.DefaultVaccinationModel
+  # The number of vaccines.
   number_of_vaccines: 2
+  # Age groups and associated vaccine hesitancy. Lower hesitancy means greater coverage.
   age_groups:        [  0,  18,  65]
   vaccine_hesitancy: [0.8, 0.4, 0.1]
+  # The minimum time between doses.
   booster_waiting_time_days: 60
+  # The impact of the vaccines on the immune system for each strain.
   vaccines:
     vaccine_0:
       rho_immunity_failure:
-        [[[-1, 0, 180], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
-         [[-1, 0, 180], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]
+        [[[-1, 0, 180], [[0.0], [0.0], [0.0]]]]
       sigma_immunity_failure:
-        [[[-1, 0, 180], [1.0, 0.1, 1.0]],
-         [[-1, 0, 180], [1.0, 0.1, 1.0]]]
+        [[[-1, 0, 180], [1.0, 0.1, 1.0]]]
     vaccine_1:
       rho_immunity_failure:
-        [[[-1, 0, 180], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
-         [[-1, 0, 180], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]
+        [[[-1, 0, 180], [[0.0], [0.0], [0.0]]]]
       sigma_immunity_failure:
-        [[[-1, 0, 180], [1.0, 0.1, 1.0]],
-         [[-1, 0, 180], [1.0, 0.1, 1.0]]]
+        [[[-1, 0, 180], [1.0, 0.1, 1.0]]]
 
 # ######################################### Regional Mixing ########################################
 
-# The travel component models the movement of individuals between regions each day.
-
 travel_model:
-  # In the DefaultTravelModel, only uninfected individuals are eligible to travel. The numbers of
+  # The travel component models the movement of individuals between regions each day. In the
+  # DefaultTravelModel, only uninfected individuals are eligible to travel. The numbers of
   # travellers is given by the world travel matrix. Transmission is determined by the average
   # infectiousness of the destination region.
   __type__: default_travel_model.DefaultTravelModel
@@ -244,7 +246,11 @@ travel_model:
 # ######################################### Input ##################################################
 
 input_model:
+  # The input component determines the level of interventions in each region each day. In the
+  # DefaultInputModel, a data file for each country is used to determine the level of each
+  # intervention for that country each day.
   __type__: default_input_model.DefaultInputModel
+  # The data files are found in the following folder.
   input_data_filepath: Scenarios/Homogeneous/input_data
 
 # ######################################### Output #################################################
@@ -252,11 +258,11 @@ input_model:
 # Reporters collect simulation data and produce output.
 
 # The user can omit regions and groups of regions from the final counts.
-regions_omitted_from_death_counts: ['CN', 'KP']
-super_regions_omitted_from_deaths_counts: ['Africa', 'Asia']
+regions_omitted_from_death_counts: []
+super_regions_omitted_from_deaths_counts: []
 # Historical data used to calculate the difference (in l^2 norm) between simulation deaths and
 # historical deaths. Can be set to null.
-historical_data_filepath: Scenarios/Homogeneous/data/historical_data/WHO-COVID-19-global-data.csv
+historical_data_filepath: null
 
 # Items in this dictionary report on the simulation. To disable a reporter, simply comment out.
 reporters:
@@ -287,7 +293,7 @@ reporters:
     # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
     deaths_by_country_filename: null
     # If a filepath is provided here, the plots will include curves of historical deaths.
-    historical_data: Scenarios/Homogeneous/data/historical_data/who_data.csv
+    historical_data: null
 
   # This reporter plots a real-time visualization of prevalence in each region.
   pygame_shapes.PygameShapes:

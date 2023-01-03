@@ -1,33 +1,38 @@
 ---
+# This is the ABMlux scenario, based on a detailed model of Luxembourg. In this baseline scenario,
+# no interventions are active.
+
 # ######################################### Basic Parameters #######################################
 
-# Scale factor
+# Scale factor. This rescales the number of individuals, locations, and other relevant quantities
+# appearing in the world and simulation components.
 scale_factor: 0.25
-
-# Profiler
+# Profiler. If True then performance data is saved in a file called profiler_output. The parameter
+# pstats_records determines how many lines to print in the profiler report.
 profile: False
 pstats_records: 100
-
-# Random seeds for each region
+# Random seed. Pandemia is stochastic and therefore requires a random seed.
 random_seed: 1
-
-# Enable or disable the use of parallel processing. Note that the number of jobs is automatically
-# reset according to the number of regions and population ratio between regions:
+# Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
+# simulator. If num_jobs < 1 then this maximum is os.cpu_count().
 enable_parallel: False
 num_jobs: 1
 
 # ######################################### Clock ##################################################
 
-# Time length of each tick in the simulation. The day length (86400) should be divisible by the
-# following tick length:
+# Length of time step, in seconds. Must divide the day length (86400 seconds).
 tick_length_s: 600
-# How long the simulation should run for, in days. Note the number of iterations will be computed
-# from the tick length above:
-simulation_length_days: 100
-# the date at which the simulation starts:
+# Length of the simulation, in days.
+simulation_length_days: 365
+# The date on which the simulation starts.
 epoch: 23rd February 2020
 
 # ######################################### World ##################################################
+
+# The Pandemia simulator acts on a world. The world consists of regions, with each region consisting
+# of individuals, locations and activities. The world additionally consists of a travel matrix,
+# indicating how many individuals travel from each region to each other region each day. The world
+# is built using a world factory. The choice of world factory, and its configuration, are made here.
 
 world_factory:
   __type__: abmlux_world_factory.ABMluxWorldFactory
@@ -43,45 +48,54 @@ seasonal_effects_model:
 # ######################################### Health #################################################
 
 health_model:
+  # The DefaultHealthModel represents the health of an individual using five attributes:
+  #  - strain (-1 if uninfected, else equal to the index of the strain)
+  #  - disease (between 0 and 1, with 1 being dead)
+  #  - infectiousness (0 if not infectious, else > 0)
+  #  - sigma immunity (protection against infection)
+  #  - rho immunity (protection against severe outcomes)
+  # The immune system is represented using layers, with the outer layer (sigma immunity) determining
+  # whether or not an infection is blocked, and the inner layers (rho immunity) determining the
+  # severity of the outcome for infections that are not blocked.
   __type__: default_health_model.DefaultHealthModel
+  # The number of strains of the pathogen.
+  number_of_strains: 1
+  # Control parameters determining the transmission probability of each strain each tick. This list
+  # should be of length equal to the number of strains.
   beta: [1.0]
-  location_typ_multipliers: # Unless specfified set to 1.0
+  # A square matrix, whose rows should be probability vectors, indicating the probability of each
+  # strain mutating into each other strain at the moment of infection.
+  mutation_matrix: [[1.0]]
+  # A dictionary pairing region names to lists. These list should be of length equal to the number
+  # of strains. The numbers in these lists indicate how many initial infections there should for
+  # each strain in the indicated region.
+  num_initial_infections_by_region_by_strain:
+    'Luxembourg': [320]
+  # A dictionary pairing location types to location transmission multipliers. Can be null, in which
+  # case all location transmission multiplier are 1.0.
+  location_typ_multipliers:
     Outdoor: 0.0
     Belgium: 0.0
     France: 0.0
     Germany: 0.0
     Construction: 0.0
     Cemetery: 0.0
+  # The proportion of infectious material able to pass through a face mask. For a perfect face mask,
+  # this parameter would be 0.0. For a face mask with zero effectiveness, it would be 1.0.
   facemask_transmission_multiplier: 0.1
+  # Immunity is not updated daily, but on a cycle of this length. Reducing this parameter decreases
+  # performance.
   immunity_period_days: 7
-  num_initial_infections_by_region_by_strain:
-    'Luxembourg': [320]
-  mutation_matrix: [[1.0]]
-  number_of_strains: 1
-  preexisting_sigma_multiplier: 1.0
-  preexisting_rho_multiplier: 1.0
+  # Filepaths to data recording, for each country and each strain, pre-existing levels of sigma and
+  # rho immunity, and control parameters that multiply the numbers found in this data (if provided).
   country_data_sigma_immunity_fp: null
   country_data_rho_immunity_fp: null
-  preset_weights_by_age:
-    0:  {SEAS: 0.826, SEPIS: 0.161829614, SEPID: 0.00000000000, SEPIHS: 0.006085193, SEPIHD: 0.000000000, SEPIHVHS: 0.006085193, SEPIHVD: 0.000000000}
-    5:  {SEAS: 0.826, SEPIS: 0.167373901, SEPID: 0.00000000000, SEPIHS: 0.006626099, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
-    10: {SEAS: 0.874, SEPIS: 0.126000000, SEPID: 0.00000000000, SEPIHS: 0.000000000, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
-    15: {SEAS: 0.874, SEPIS: 0.123474626, SEPID: 0.00000000000, SEPIHS: 0.001262687, SEPIHD: 0.000000000, SEPIHVHS: 0.001262687, SEPIHVD: 0.000000000}
-    20: {SEAS: 0.838, SEPIS: 0.153501713, SEPID: 0.00000000000, SEPIHS: 0.008498287, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
-    25: {SEAS: 0.838, SEPIS: 0.157877069, SEPID: 0.00000000000, SEPIHS: 0.004122931, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
-    30: {SEAS: 0.802, SEPIS: 0.186385752, SEPID: 0.00000000000, SEPIHS: 0.010784659, SEPIHD: 0.000000000, SEPIHVHS: 0.000829589, SEPIHVD: 0.000000000}
-    35: {SEAS: 0.802, SEPIS: 0.185644466, SEPID: 0.00000000000, SEPIHS: 0.011405108, SEPIHD: 0.000000000, SEPIHVHS: 0.000950426, SEPIHVD: 0.000000000}
-    40: {SEAS: 0.760, SEPIS: 0.213013444, SEPID: 0.00000000000, SEPIHS: 0.020509782, SEPIHD: 0.000000000, SEPIHVHS: 0.006476773, SEPIHVD: 0.000000000}
-    45: {SEAS: 0.760, SEPIS: 0.207210413, SEPID: 0.00000000000, SEPIHS: 0.027168515, SEPIHD: 0.000000000, SEPIHVHS: 0.005621072, SEPIHVD: 0.000000000}
-    50: {SEAS: 0.706, SEPIS: 0.255245230, SEPID: 0.00000000000, SEPIHS: 0.034195385, SEPIHD: 0.000000000, SEPIHVHS: 0.004559384, SEPIHVD: 0.000000000}
-    55: {SEAS: 0.706, SEPIS: 0.222626632, SEPID: 0.00000000000, SEPIHS: 0.065775457, SEPIHD: 0.000000000, SEPIHVHS: 0.005597911, SEPIHVD: 0.000000000}
-    60: {SEAS: 0.622, SEPIS: 0.270040285, SEPID: 0.00000000000, SEPIHS: 0.086367772, SEPIHD: 0.000000000, SEPIHVHS: 0.017993286, SEPIHVD: 0.003598657}
-    65: {SEAS: 0.622, SEPIS: 0.225343587, SEPID: 0.00825169800, SEPIHS: 0.111397923, SEPIHD: 0.000000000, SEPIHVHS: 0.018861024, SEPIHVD: 0.014145768}
-    70: {SEAS: 0.586, SEPIS: 0.109950189, SEPID: 0.00000000000, SEPIHS: 0.219643826, SEPIHD: 0.018826614, SEPIHVHS: 0.032789686, SEPIHVD: 0.032789686}
-    75: {SEAS: 0.586, SEPIS: 0.072096598, SEPID: 0.02564275500, SEPIHS: 0.234401083, SEPIHD: 0.030574054, SEPIHVHS: 0.051285511, SEPIHVD: 0.000000000}
-    80: {SEAS: 0.586, SEPIS: 0.004095810, SEPID: 0.07094495600, SEPIHS: 0.213491765, SEPIHD: 0.093936377, SEPIHVHS: 0.010510364, SEPIHVD: 0.021020728}
-    85: {SEAS: 0.586, SEPIS: 0.048304351, SEPID: 0.08776695600, SEPIHS: 0.172892776, SEPIHD: 0.097722004, SEPIHVHS: 0.000000000, SEPIHVD: 0.007313913}
-    90: {SEAS: 0.586, SEPIS: 0.036140995, SEPID: 0.13109394100, SEPIHS: 0.138805349, SEPIHD: 0.107959715, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+  preexisting_sigma_multiplier: 1.0
+  preexisting_rho_multiplier: 1.0
+  # Each agent is assigned a health preset, describing how they will respond to an infection should
+  # one occur. To each preset is associated a number of layers. Each layer encodes step functions
+  # describing how the five health attributes change over time following an infection. See the
+  # Health section of the User Guide for more details.
   health_presets:
     SEAS:
       0:
@@ -167,35 +181,76 @@ health_model:
           [[[-1, 0, 3, 5.1, 12.1, 16.1, 24.6], [0.0, 0.0, 0.0, 0.2, 0.5, 0.8, 1.0]]]
         strain:
           [[[-1, 0, 24.6], [-1, 0, -1]]]
-  # Rescale by time and population in each location, deactivate by setting sir_rescaling = False
+  # The assignment of presets is random and based on age.
+  preset_weights_by_age:
+    0:  {SEAS: 0.826, SEPIS: 0.161829614, SEPID: 0.00000000000, SEPIHS: 0.006085193, SEPIHD: 0.000000000, SEPIHVHS: 0.006085193, SEPIHVD: 0.000000000}
+    5:  {SEAS: 0.826, SEPIS: 0.167373901, SEPID: 0.00000000000, SEPIHS: 0.006626099, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    10: {SEAS: 0.874, SEPIS: 0.126000000, SEPID: 0.00000000000, SEPIHS: 0.000000000, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    15: {SEAS: 0.874, SEPIS: 0.123474626, SEPID: 0.00000000000, SEPIHS: 0.001262687, SEPIHD: 0.000000000, SEPIHVHS: 0.001262687, SEPIHVD: 0.000000000}
+    20: {SEAS: 0.838, SEPIS: 0.153501713, SEPID: 0.00000000000, SEPIHS: 0.008498287, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    25: {SEAS: 0.838, SEPIS: 0.157877069, SEPID: 0.00000000000, SEPIHS: 0.004122931, SEPIHD: 0.000000000, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+    30: {SEAS: 0.802, SEPIS: 0.186385752, SEPID: 0.00000000000, SEPIHS: 0.010784659, SEPIHD: 0.000000000, SEPIHVHS: 0.000829589, SEPIHVD: 0.000000000}
+    35: {SEAS: 0.802, SEPIS: 0.185644466, SEPID: 0.00000000000, SEPIHS: 0.011405108, SEPIHD: 0.000000000, SEPIHVHS: 0.000950426, SEPIHVD: 0.000000000}
+    40: {SEAS: 0.760, SEPIS: 0.213013444, SEPID: 0.00000000000, SEPIHS: 0.020509782, SEPIHD: 0.000000000, SEPIHVHS: 0.006476773, SEPIHVD: 0.000000000}
+    45: {SEAS: 0.760, SEPIS: 0.207210413, SEPID: 0.00000000000, SEPIHS: 0.027168515, SEPIHD: 0.000000000, SEPIHVHS: 0.005621072, SEPIHVD: 0.000000000}
+    50: {SEAS: 0.706, SEPIS: 0.255245230, SEPID: 0.00000000000, SEPIHS: 0.034195385, SEPIHD: 0.000000000, SEPIHVHS: 0.004559384, SEPIHVD: 0.000000000}
+    55: {SEAS: 0.706, SEPIS: 0.222626632, SEPID: 0.00000000000, SEPIHS: 0.065775457, SEPIHD: 0.000000000, SEPIHVHS: 0.005597911, SEPIHVD: 0.000000000}
+    60: {SEAS: 0.622, SEPIS: 0.270040285, SEPID: 0.00000000000, SEPIHS: 0.086367772, SEPIHD: 0.000000000, SEPIHVHS: 0.017993286, SEPIHVD: 0.003598657}
+    65: {SEAS: 0.622, SEPIS: 0.225343587, SEPID: 0.00825169800, SEPIHS: 0.111397923, SEPIHD: 0.000000000, SEPIHVHS: 0.018861024, SEPIHVD: 0.014145768}
+    70: {SEAS: 0.586, SEPIS: 0.109950189, SEPID: 0.00000000000, SEPIHS: 0.219643826, SEPIHD: 0.018826614, SEPIHVHS: 0.032789686, SEPIHVD: 0.032789686}
+    75: {SEAS: 0.586, SEPIS: 0.072096598, SEPID: 0.02564275500, SEPIHS: 0.234401083, SEPIHD: 0.030574054, SEPIHVHS: 0.051285511, SEPIHVD: 0.000000000}
+    80: {SEAS: 0.586, SEPIS: 0.004095810, SEPID: 0.07094495600, SEPIHS: 0.213491765, SEPIHD: 0.093936377, SEPIHVHS: 0.010510364, SEPIHVD: 0.021020728}
+    85: {SEAS: 0.586, SEPIS: 0.048304351, SEPID: 0.08776695600, SEPIHS: 0.172892776, SEPIHD: 0.097722004, SEPIHVHS: 0.000000000, SEPIHVD: 0.007313913}
+    90: {SEAS: 0.586, SEPIS: 0.036140995, SEPID: 0.13109394100, SEPIHS: 0.138805349, SEPIHD: 0.107959715, SEPIHVHS: 0.000000000, SEPIHVD: 0.000000000}
+  # This option implements homogeneous mixing, as found in SIR models, by mutliplying all
+  # transmission probabilities by the reciprocal of the tick length, in days, divided by the number
+  # of agents in each location.
   sir_rescaling: False
-  # Deactivate by setting age_mixing_matrices = null
-  age_mixing_matrices: null
-  age_group_interval: null
-  # Deactivate by setting auto_generate_presets = False
+  # Contact matrices for age groups. Can be null, otherwise provide a filepath to the matrices.
+  age_mixing_matrices: null # Scenarios/Homogeneous/data/country_data_mixing_matrices/
+  age_group_interval: 5
+  # If auto_generate_presets = True, then the presets dict above is ignored, with the presets being
+  # instead generated systematically, using the geometric distributions of the SIR model. This only
+  # works if number_of_strains = 1.
   auto_generate_presets: False
   sir_beta: null # Units: days^{-1}
   sir_gamma_inverse: null # Units: days
-  sir_disease_level: null
-  sir_max_dist_days: null # Maximum infectiousness period, curtailing the geometric distribution 
+  sir_disease_level: null # The level of disease to be recorded for infected agents
+  sir_max_dist_days: null # Maximum infectiousness period, curtailing the geometric distribution
 
 # ######################################### Movement ###############################################
 
 movement_model:
+  # In the default movement model, individuals perform sequences of activities and select locations
+  # at random using the weights assigned to them by the world factory. The default movement model
+  # requires a world featuring a home location for each agent.
   __type__: default_movement_model.DefaultMovementModel
+  # Whether or not to use the weights.
   weighted_sampling: False
+  # The default home activity.
   home_activity: "House"
+  # If an individual is in a location of one of these types, performing one of the activities listed
+  # for the type, then the individual is except from interventions on movement, for example
+  # lockdowns.
   location_closure_exemptions:
     House: ["House"]
+  # For which activities might an individual wear a facemask.
   facemask_activities: ["Public Transport"]
+  # Facemask hesitancy by age group. A probability 1.0 means that nobody in that age group wears a
+  # mask, a probability 0.0 means that everyone does.
   age_groups:         [  0,  18,  65]
   facemask_hesitancy: [1.0, 1.0, 1.0]
 
 # ######################################### Hospitalization and Death ##############################
 
 hospitalization_and_death_model:
+  # The DefaultHospitalizationAndDeathModel moves individuals to hospitals and cemeteries, should
+  # such locations exist in each region.
   __type__: default_hospitalization_and_death_model.DefaultHospitalizationAndDeathModel
+  # If the disease of an individual is above this threshold, then that individual is moved to
+  # hospital.
   hospital_threshold: 0.5
+  # The location types for hospitals and cemeteries.
   hospital_location_type: Hospital
   cemetery_location_type: Cemetery
 
@@ -221,37 +276,69 @@ input_model:
 
 # ######################################### Output #################################################
 
+# Reporters collect simulation data and produce output.
+
+# The user can omit regions and groups of regions from the final counts.
 regions_omitted_from_death_counts: []
 super_regions_omitted_from_deaths_counts: []
+# Historical data used to calculate the difference (in l^2 norm) between simulation deaths and
+# historical deaths. Can be set to null.
 historical_data_filepath: null
 
-# Output that should be rendered from the simulation:
+# Items in this dictionary report on the simulation. To disable a reporter, simply comment out.
 reporters:
+
+  # The reporter outputs a command line progress bar.
   cli.TimeReporter: {}
+
+  # This reporter outputs a csv file, recording the numbers infected with each strain in each region
+  # each day.
   csv.StrainCounts:
+    # Where the user would like the csv saved.
     filename: /tmp/strain_counts_luxembourg.csv
+
+  # This reporter plots the number of individuals infected each day.
   plot.PlotInfected:
     show: False
     savefig: True
+    # Where the user would like the plot saved.
     filename: /tmp/infected_luxembourg.png
+
+  # This reporter plots the number of new deaths each day and also cumulative deaths each day.
   plot.PlotDeaths:
     show: False
     savefig: True
+    # Where the user would like the plots saved.
     daily_deaths_filename: /tmp/daily_deaths_luxembourg.png
     cumulative_deaths_filename: /tmp/cumulative_deaths_luxembourg.png
+    # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
     deaths_by_country_filename: null
+    # If a filepath is provided here, the plots will include curves of historical deaths.
     historical_data: null
+
+  # # This report plots a real-time visualization of either prevalence or the absolute number of
+  # # infections, using the coordinates of each location in each region.
   # pygame_coords.PygameCoords:
   #   fullscreen: True
   #   font_size: 20
+  #   # Prevalence is calculated as a number between 0.0 and 1.0, with regions coloured accordingly.
+  #   # The max_prev_to_plot parameter allows the user to rescale the colour map, by adjusting the
+  #   # maximum detected prevalence. This can help visualize regions where prevalence is low.
   #   plot_prevalence: False
   #   max_prev_to_plot: 1.0
+  #   # The max_num_inf_to_plot parameter allows the user to rescale the colour map, by adjusting the
+  #   # maximum detected number of infections. This can help visualize locations where the number of
+  #   # infections is low.
   #   plot_num_infected: True
   #   max_num_inf_to_plot: 10
+  #   # Refresh rate.
   #   refresh_rate: 60
+  #   # If fullscreen is False, then this sets the resolution of the plot.
   #   display_width: 1500
   #   display_height: 700
+  #   # The width of grid squares recorded in region_coordinates.
   #   square_width: null # 0.0416666666667
+  #   # The preferred colour map.
   #   cmap: "Oranges"
 
 # ######################################### Logging ################################################

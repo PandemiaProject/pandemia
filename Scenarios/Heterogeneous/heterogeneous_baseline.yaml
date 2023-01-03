@@ -1,4 +1,8 @@
 ---
+# In this scenario, mixing within countries is heterogeneous, using simple models of households and
+# individual mobility. Mixing between regions is determined using air travel data. In this baseline
+# scenario, no interventions are active.
+
 # ######################################### Basic Parameters #######################################
 
 # Scale factor. This rescales the number of individuals, locations, and other relevant quantities
@@ -13,7 +17,7 @@ random_seed: 1
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
 enable_parallel: True
-num_jobs: -2
+num_jobs: -1
 
 # ######################################### Clock ##################################################
 
@@ -22,7 +26,7 @@ tick_length_s: 28800
 # Length of the simulation, in days.
 simulation_length_days: 365
 # The date on which the simulation starts.
-epoch: 1st January 2020                                                                             # POSSIBLE FREE VARIABLE
+epoch: 1st January 2020
 
 # ######################################### World ##################################################
 
@@ -93,22 +97,19 @@ world_factory:
 
 # ######################################### Seasonal Effects #######################################
 
-# The seasonal effects component of the Pandemia simulator can be used to configure monthly updates
-# to parameter values, for example the regional transmission multipliers.
-
 seasonal_effects_model:
-  # The DefaultSeasonalEffectsModel calculates a transmission multiplier for each country for each
+  # The seasonal effects component of the Pandemia simulator can be used to configure monthly
+  # updates to parameter values, for example the regional transmission multipliers. The
+  # DefaultSeasonalEffectsModel calculates a transmission multiplier for each country for each
   # month. The default value of the multiplier is 1.0, meaning no reduction in transmission. The
   # alternative value is set by the parameter out_of_season_multiplier.
   __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # Filepath to seasonal influenza data for each country.
   seasonal_multiplier_by_region_by_month: Scenarios/Homogeneous/data/country_data_seasonality.csv
   # Outside of flu season, transmission probabilities are multiplied by this value.
-  out_of_season_multiplier: 0.75                                                                    # POSSIBLE FREE VARIABLE
+  out_of_season_multiplier: 0.75
 
 # ######################################### Health #################################################
-
-# The health model keeps track of individual health.
 
 health_model:
   # The DefaultHealthModel represents the health of an individual using five attributes:
@@ -125,7 +126,7 @@ health_model:
   number_of_strains: 1
   # Control parameters determining the transmission probability of each strain each tick. This list
   # should be of length equal to the number of strains.
-  beta: [0.035]                                                                                     # POSSIBLE FREE VARIABLE
+  beta: [0.035]
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
   mutation_matrix: [[1.0]]
@@ -133,11 +134,11 @@ health_model:
   # of strains. The numbers in these lists indicate how many initial infections there should for
   # each strain in the indicated region.
   num_initial_infections_by_region_by_strain:
-    'CN': [500000]                                                                                  # POSSIBLE FREE VARIABLE
+    'CN': [500000]
   # A dictionary pairing location types to location transmission multipliers. Can be null, in which
   # case all location transmission multiplier are 1.0.
   location_typ_multipliers:
-    Square: 0.2                                                                                     # POSSIBLE FREE VARIABLE
+    Square: 0.2
     House: 1.0
   # The proportion of infectious material able to pass through a face mask. For a perfect face mask,
   # this parameter would be 0.0. For a face mask with zero effectiveness, it would be 1.0.
@@ -151,8 +152,8 @@ health_model:
     Scenarios/Heterogeneous/data/immunity_data/country_data_sigma_immunity.csv
   country_data_rho_immunity_fp:
     Scenarios/Heterogeneous/data/immunity_data/country_data_rho_immunity.csv
-  preexisting_sigma_multiplier: 0.5                                                                 # POSSIBLE FREE VARIABLE
-  preexisting_rho_multiplier: 0.5                                                                   # POSSIBLE FREE VARIABLE
+  preexisting_sigma_multiplier: 0.5
+  preexisting_rho_multiplier: 0.5
   # Each agent is assigned a health preset, describing how they will respond to an infection should
   # one occur. To each preset is associated a number of layers. Each layer encodes step functions
   # describing how the five health attributes change over time following an infection. See the
@@ -167,9 +168,9 @@ health_model:
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
-              0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
-              0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
-              0.004466837, 0.000000000]]]
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
         disease:
           [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
         strain:
@@ -182,9 +183,9 @@ health_model:
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
-              0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
-              0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
-              0.004466837, 0.000000000]]]
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
         disease:
           [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
         strain:
@@ -198,9 +199,9 @@ health_model:
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
-              0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
-              0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
-              0.004466837, 0.000000000]]]
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
         disease:
           [[[-1, 0, 15], [0.0, 0.15, 0.0]]]
         strain:
@@ -213,9 +214,9 @@ health_model:
         infectiousness:
           [[[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             [0.000000000, 0.000000000, 0.000000000, 0.000177828, 0.007943284,
-              0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
-              0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
-              0.004466837, 0.000000000]]]
+             0.562341455, 1.000000000, 0.944061094, 0.794328418, 0.562341455,
+             0.316227839, 0.177827982, 0.079432842, 0.031622784, 0.010000002,
+             0.004466837, 0.000000000]]]
         disease:
           [[[-1, 0, 15], [0.0, 0.15, 1.0]]]
         strain:
@@ -259,13 +260,10 @@ health_model:
 
 # ######################################### Movement ###############################################
 
-# The movement models keeps track of the location of individuals.
-#
-# The default movement model requires a world featuring a home location for each agent.
-
 movement_model:
   # In the default movement model, individuals perform sequences of activities and select locations
-  # at random using the weights assigned to them by the world factory.
+  # at random using the weights assigned to them by the world factory. The default movement model
+  # requires a world featuring a home location for each agent.
   __type__: default_movement_model.DefaultMovementModel
   # Whether or not to use the weights.
   weighted_sampling: True
@@ -285,46 +283,35 @@ movement_model:
 
 # ######################################### Hospitalization and Death ##############################
 
-# The default hospitalization model requires the default health model and a world featuring at least
-# one hospital and one cemetery in each region.
-
 hospitalization_and_death_model:
   __type__: void_hospitalization_and_death_model.VoidHospitalizationAndDeathModel
 
 # ######################################### Testing and Contact Tracing ############################
-
-# The default testing and contact tracing model requires the default health model and a world
-# featuring a home location for each agent.
 
 testing_and_contact_tracing_model:
   __type__: void_testing_and_contact_tracing_model.VoidTestingAndContactTracingModel
 
 # ######################################### Vaccination ############################################
 
-# The default vaccination model requires the default health model.
-
 vaccination_model:
   __type__: void_vaccination_model.VoidVaccinationModel
 
 # ######################################### Regional Mixing ########################################
 
-# The travel component models the movement of individuals between regions each day.
-#
-# The default travel model requires the default health model.
-
 travel_model:
-  # In the DefaultTravelModel, only uninfected individuals are eligible to travel. The numbers of
+  # The travel component models the movement of individuals between regions each day. In the
+  # DefaultTravelModel, only uninfected individuals are eligible to travel. The numbers of
   # travellers is given by the world travel matrix. Transmission is determined by the average
   # infectiousness of the destination region.
   __type__: default_travel_model.DefaultTravelModel
   # Travellers mix homogeneously with the entire population of the destination region, with
   # transmission probabilities divided by the number of agents in that region. This parameter is a
   # control parameter which multiplies that ratio.
-  travel_transmission_multiplier: 600.0                                                             # POSSIBLE FREE VARIABLE
+  travel_transmission_multiplier: 600.0
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels
   # each day. Values in between interpolate between these numbers.
-  interpolation: 0.0                                                                                # POSSIBLE FREE VARIABLE
+  interpolation: 0.0
 
 # ######################################### Input ##################################################
 
@@ -336,20 +323,11 @@ input_model:
 # Reporters collect simulation data and produce output.
 
 # The user can omit regions and groups of regions from the final counts.
-regions_omitted_from_death_counts: ['CN', 'KP']
-super_regions_omitted_from_deaths_counts: ['Africa', 'Asia']
+regions_omitted_from_death_counts: []
+super_regions_omitted_from_deaths_counts: []
 # Historical data used to calculate the difference (in l^2 norm) between simulation deaths and
 # historical deaths. Can be set to null.
-historical_data_filepath: Scenarios/Heterogeneous/data/historical_data/WHO-COVID-19-global-data.csv
-
-# Reporters collect simulation data and produce output.
-
-# The user can omit regions and groups of regions from the final counts.
-regions_omitted_from_death_counts: ['CN', 'KP']
-super_regions_omitted_from_deaths_counts: ['Africa', 'Asia']
-# Historical data used to calculate the difference (in l^2 norm) between simulation deaths and
-# historical deaths. Can be set to null.
-historical_data_filepath: Scenarios/Homogeneous/data/historical_data/WHO-COVID-19-global-data.csv
+historical_data_filepath: null
 
 # Items in this dictionary report on the simulation. To disable a reporter, simply comment out.
 reporters:
@@ -380,25 +358,7 @@ reporters:
     # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
     deaths_by_country_filename: null
     # If a filepath is provided here, the plots will include curves of historical deaths.
-    historical_data: Scenarios/Homogeneous/data/historical_data/who_data.csv
-
-  # # This reporter plots a real-time visualization of prevalence in each region.
-  # pygame_shapes.PygameShapes:
-  #   fullscreen: True
-  #   font_size: 20
-  #   # Prevalence is calculated as a number between 0.0 and 1.0, with regions coloured accordingly.
-  #   # This parameter allows the user to rescale the colour map, by adjusting the maximum detected
-  #   # prevalence. This can help visualize regions where prevalence is low.
-  #   max_norm_prev: 1.0
-  #   # Refresh rate.
-  #   refresh_rate: 60
-  #   # If fullscreen is False, then this sets the resolution of the plot.
-  #   display_width: 1500
-  #   display_height: 700
-  #   # This determines how many coordinates are plotted of the border of each country.
-  #   points_per_polygon: 400
-  #   # The preferred colour map.
-  #   cmap: "Oranges"
+    historical_data: null
 
   # This report plots a real-time visualization of either prevalence or the absolute number of
   # infections, using the coordinates of each location in each region.
