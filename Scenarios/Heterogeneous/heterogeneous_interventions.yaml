@@ -5,14 +5,14 @@
 
 # ######################################### Basic Parameters #######################################
 
-# Scale factor. This rescales the number of individuals, locations, and other relevant quantities
-# appearing in the world and simulation components.
+# [KEY PARAMETER] Scale factor. This rescales the number of individuals, locations, and other
+# relevant quantities appearing in the world and simulation components.
 scale_factor: 0.0005
 # Profiler. If True then performance data is saved in a file called profiler_output. The parameter
 # pstats_records determines how many lines to print in the profiler report.
 profile: False
 pstats_records: 100
-# Random seed. Pandemia is stochastic and therefore requires a random seed.
+# [KEY PARAMETER] Random seed. Pandemia is stochastic and therefore requires a random seed.
 random_seed: 1
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
@@ -23,9 +23,9 @@ num_jobs: -1
 
 # Length of time step, in seconds. Must divide the day length (86400 seconds).
 tick_length_s: 28800
-# Length of the simulation, in days.
+# [KEY PARAMETER] Length of the simulation, in days.
 simulation_length_days: 365
-# The date on which the simulation starts.
+# [KEY PARAMETER] The date on which the simulation starts.
 epoch: 1st January 2020
 
 # ######################################### World ##################################################
@@ -41,7 +41,7 @@ world_factory:
   # 0.0005. It implements a simple model of hetergeneous mixing, based on average household size and
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
-  # This world factory is stochastic, and therefore gets its own random seed.
+  # [KEY PARAMETER] This world factory is stochastic, and therefore gets its own random seed.
   random_seed: 1
   # Filepath to country data, including age structure and population sizes. The actual number of
   # agents is given by multiplying this data by the scale_factor.
@@ -57,7 +57,7 @@ world_factory:
   # not populated, for rendering purposes.
   population_id_data_folder:
     Scenarios/Heterogeneous/data/country_data_population_distribution/processed/id_grids
-  # Regions to simulate. If list empty, simulates all regions.
+  # [KEY PARAMETER] Regions to simulate. If list empty, simulates all regions.
   regions_to_simulate: [] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
   # There are two locations types, House and Square. A Square refers to a square in the grid data.
   house_location_type: House
@@ -106,7 +106,7 @@ seasonal_effects_model:
   __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
   # Filepath to seasonal influenza data for each country.
   seasonal_multiplier_by_region_by_month: Scenarios/Homogeneous/data/country_data_seasonality.csv
-  # Outside of flu season, transmission probabilities are multiplied by this value.
+  # [KEY PARAMETER] Outside of flu season, transmission probabilities are multiplied by this value.
   out_of_season_multiplier: 0.75
 
 # ######################################### Health #################################################
@@ -124,15 +124,15 @@ health_model:
   __type__: default_health_model.DefaultHealthModel
   # The number of strains of the pathogen.
   number_of_strains: 1
-  # Control parameters determining the transmission probability of each strain each tick. This list
-  # should be of length equal to the number of strains.
+  # [KEY PARAMETER] Control parameters determining the transmission probability of each strain each
+  # tick. This list should be of length equal to the number of strains.
   beta: [0.035]
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
   mutation_matrix: [[1.0]]
-  # A dictionary pairing region names to lists. These list should be of length equal to the number
-  # of strains. The numbers in these lists indicate how many initial infections there should for
-  # each strain in the indicated region.
+  # [KEY PARAMETER] A dictionary pairing region names to lists. These list should be of length equal
+  # to the number of strains. The numbers in these lists indicate how many initial infections there
+  # should for each strain in the indicated region.
   num_initial_infections_by_region_by_strain:
     'CN': [500000]
   # A dictionary pairing location types to location transmission multipliers. Can be null, in which
@@ -146,8 +146,9 @@ health_model:
   # Immunity is not updated daily, but on a cycle of this length. Reducing this parameter decreases
   # performance.
   immunity_period_days: 30
-  # Filepaths to data recording, for each country and each strain, pre-existing levels of sigma and
-  # rho immunity, and control parameters that multiply the numbers found in this data (if provided).
+  # [KEY PARAMETER] Filepaths to data recording, for each country and each strain, pre-existing
+  # levels of sigma and rho immunity, and control parameters that multiply the numbers found in this
+  # data (if provided).
   country_data_sigma_immunity_fp:
     Scenarios/Heterogeneous/data/immunity_data/country_data_sigma_immunity.csv
   country_data_rho_immunity_fp:
@@ -344,9 +345,9 @@ travel_model:
   # travellers is given by the world travel matrix. Transmission is determined by the average
   # infectiousness of the destination region.
   __type__: default_travel_model.DefaultTravelModel
-  # Travellers mix homogeneously with the entire population of the destination region, with
-  # transmission probabilities divided by the number of agents in that region. This parameter is a
-  # control parameter which multiplies that ratio.
+  # [KEY PARAMETER] Travellers mix homogeneously with the entire population of the destination
+  # region, with transmission probabilities divided by the number of agents in that region. This
+  # parameter is a control parameter which multiplies that ratio.
   travel_transmission_multiplier: 600.0
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels

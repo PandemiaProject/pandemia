@@ -4,14 +4,14 @@
 
 # ######################################### Basic Parameters #######################################
 
-# Scale factor. This rescales the number of individuals, locations, and other relevant quantities
-# appearing in the world and simulation components.
+# [KEY PARAMETER] Scale factor. This rescales the number of individuals, locations, and other
+# relevant quantities appearing in the world and simulation components.
 scale_factor: 0.25
 # Profiler. If True then performance data is saved in a file called profiler_output. The parameter
 # pstats_records determines how many lines to print in the profiler report.
 profile: False
 pstats_records: 100
-# Random seed. Pandemia is stochastic and therefore requires a random seed.
+# [KEY PARAMETER] Random seed. Pandemia is stochastic and therefore requires a random seed.
 random_seed: 1
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
@@ -60,15 +60,15 @@ health_model:
   __type__: default_health_model.DefaultHealthModel
   # The number of strains of the pathogen.
   number_of_strains: 1
-  # Control parameters determining the transmission probability of each strain each tick. This list
-  # should be of length equal to the number of strains.
+  # [KEY PARAMETER] Control parameters determining the transmission probability of each strain each
+  # tick. This list should be of length equal to the number of strains.
   beta: [1.0]
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
   mutation_matrix: [[1.0]]
-  # A dictionary pairing region names to lists. These list should be of length equal to the number
-  # of strains. The numbers in these lists indicate how many initial infections there should for
-  # each strain in the indicated region.
+  # [KEY PARAMETER] A dictionary pairing region names to lists. These list should be of length equal
+  # to the number of strains. The numbers in these lists indicate how many initial infections there
+  # should for each strain in the indicated region.
   num_initial_infections_by_region_by_strain:
     'Luxembourg': [320]
   # A dictionary pairing location types to location transmission multipliers. Can be null, in which
@@ -86,8 +86,9 @@ health_model:
   # Immunity is not updated daily, but on a cycle of this length. Reducing this parameter decreases
   # performance.
   immunity_period_days: 7
-  # Filepaths to data recording, for each country and each strain, pre-existing levels of sigma and
-  # rho immunity, and control parameters that multiply the numbers found in this data (if provided).
+  # [KEY PARAMETER] Filepaths to data recording, for each country and each strain, pre-existing
+  # levels of sigma and rho immunity, and control parameters that multiply the numbers found in this
+  # data (if provided).
   country_data_sigma_immunity_fp: null
   country_data_rho_immunity_fp: null
   preexisting_sigma_multiplier: 1.0
