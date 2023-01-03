@@ -109,8 +109,9 @@ New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.o
 Accessed 31 OCTOBER 2022.
 
 ### Output Data
-Output data are stored in a output directory, configured by the user in the reporters section of the
-scenario configuration.
+Output data are stored in a output directory. This is configured by the user in the reporters
+section of the scenario configuration. Output can include a csv file of the numbers infected with
+each strain, in each region each day, and plots in png format of infections and deaths.
 
 ## Requirements
 
