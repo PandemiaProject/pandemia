@@ -111,7 +111,7 @@ Accessed 31 OCTOBER 2022.
 ### Output Data
 Output data are stored in a output directory. This is configured by the user in the reporters
 section of the scenario configuration. Output can include a csv file of the numbers infected with
-each strain, in each region each day, and plots in png format of infections and deaths.
+each strain, in each region each day, and plots in png format of infections and deaths over time.
 
 ## Requirements
 
