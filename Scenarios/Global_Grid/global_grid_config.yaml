@@ -70,10 +70,10 @@ world_factory:
   # When performing Community_Activity, each individual gets this many grid squares to choose from.
   # The grid square containing their House is always included in this list.
   num_locs_for_community_activity: 10
-  # The list of grid square for each individual is obtained by sampling from a subset of all
-  # such squares. The subset contains the local_sample_size nearest squares, in addition to
-  # nonlocal_sample_size squares randomly sampled from all over the region. Then
-  # num_locs_for_community_activity square are randomly sampled from this subet.
+  # The list of grid squares for each individual is obtained by sampling from a subset of all
+  # such squares in the region. The subset contains the local_sample_size squares nearest their
+  # House, in addition to nonlocal_sample_size squares randomly sampled from all over the region.
+  # Then num_locs_for_community_activity square are randomly sampled from this subet.
   local_sample_size: 500
   nonlocal_sample_size: 500
   # For an individual with House in Square1, the weight attached to a Square2 is given by the
@@ -123,8 +123,8 @@ health_model:
   __type__: default_health_model.DefaultHealthModel
   # The number of strains of the pathogen.
   number_of_strains: 1
-  # Control parameters determining the transmission probability of each strain. This list should be
-  # of length equal to the number of strains.
+  # Control parameters determining the transmission probability of each strain each tick. This list
+  # should be of length equal to the number of strains.
   beta: [0.035]                                                                                     # POSSIBLE FREE VARIABLE
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
@@ -260,6 +260,8 @@ health_model:
 # ######################################### Movement ###############################################
 
 # The movement models keeps track of the location of individuals.
+#
+# The default movement model requires a world featuring a home location for each agent.
 
 movement_model:
   # In the default movement model, individuals perform sequences of activities and select locations
@@ -283,15 +285,23 @@ movement_model:
 
 # ######################################### Hospitalization and Death ##############################
 
+# The default hospitalization model requires the default health model and a world featuring at least
+# one hospital and one cemetery in each region.
+
 hospitalization_and_death_model:
   __type__: void_hospitalization_and_death_model.VoidHospitalizationAndDeathModel
 
 # ######################################### Testing and Contact Tracing ############################
 
+# The default testing and contact tracing model requires the default health model and a world
+# featuring a home location for each agent.
+
 testing_and_contact_tracing_model:
   __type__: void_testing_and_contact_tracing_model.VoidTestingAndContactTracingModel
 
 # ######################################### Vaccination ############################################
+
+# The default vaccination model requires the default health model.
 
 vaccination_model:
   __type__: void_vaccination_model.VoidVaccinationModel
@@ -299,6 +309,8 @@ vaccination_model:
 # ######################################### Regional Mixing ########################################
 
 # The travel component models the movement of individuals between regions each day.
+#
+# The default travel model requires the default health model.
 
 travel_model:
   # In the DefaultTravelModel, only uninfected individuals are eligible to travel. The numbers of

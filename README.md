@@ -6,9 +6,9 @@
 
 [![End to End tests](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml/badge.svg)](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml)
 
-Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
-
 ![pandemia Logo](pandemia_logo.jpg)
+
+Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
 
 Pandemia is able to simulate and visualize the spread of an infectious disease across multiple
 geographical regions, for example the countries of the world or the administrative divisions of
@@ -22,7 +22,7 @@ re-emergence of infectious diseases threatens the health and well-being of peopl
 and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
 
 This document contains an overview of the model, a quickstart guide and information for
-contributors.
+contributors. The full user guide can be found [here](docs/user_guide.pdf).
 
 The code is mixed Python and C.
 
@@ -78,11 +78,25 @@ the recommended scale factor is 0.0005.
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
 of submodel for each of the simulation components, together with configurations for each of these
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
-directory. The homogeneous mixing scenario **Global** uses the **Global** world factory, while the
-heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. For each
-scenario, all parameter values are set in the corresponding YAML file. For example, the **Global**
-config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid** config can
-be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
+directory.
+
+The homogeneous mixing scenario **Global** uses the **Global** world factory. In this
+scenario, individuals mix homogeneously within each region, with mixing between regions being
+determined using air travel data. Colouring regions according to prevalance, the scenario can be
+visualized as follows:
+
+![pandemia Logo](pandemia_homogeneous.jpg)
+
+The heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. In this
+scenario, individuals mix heterogeneously within each region. This uses data on average household
+size, population distribution and a simple gravity model of mobility. Colouring grid squares
+according to numbers infected, the scenario has the following visualization:
+
+![pandemia Logo](pandemia_heterogeneous.jpg)
+
+For each scenario, all parameter values are set in the corresponding YAML file. For example, the
+**Global** config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid**
+config can be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
@@ -210,21 +224,27 @@ pytest --cov-report=html
 ```
 
 
-## Docs
-To generate the documentation:
+## Documentation
+Consult the [User Guide](docs/user_guide.pdf), or generate documentation using:
+
 ```
 pip install pdoc
 pdoc --html --overwrite --html-dir docs pandemia
 ```
-## Citing This Work
-Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), an epidemic model which was used in the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330.
+
+## Contributors
+
+## Acknowledgements
+
+## Citing this work
+Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), an epidemic model used in the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330. In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg, and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia is a far-reaching generalization of the ABMlux model.
 
 If you publish using technology from this repository, please cite the above article using this BibTeX:
 ```
 @article{10.1371/journal.pone.0261330,
     doi = {10.1371/journal.pone.0261330},
     author = {Thompson, James AND Wattam, Stephen},
-    journal = {PLOS ONE},
+    journal = {PLoS One},
     publisher = {Public Library of Science},
     title = {Estimating the impact of interventions against COVID-19: From lockdown to vaccination},
     year = {2021},
