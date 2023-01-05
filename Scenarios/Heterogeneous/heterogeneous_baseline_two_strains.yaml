@@ -150,9 +150,9 @@ health_model:
   # levels of sigma and rho immunity, and control parameters that multiply the numbers found in this
   # data (if provided).
   country_data_sigma_immunity_fp:
-    Scenarios/Heterogeneous/data/immunity_data/country_data_sigma_immunity.csv
+    Scenarios/Heterogeneous/data/immunity_data/country_data_sigma_immunity_two_strains.csv
   country_data_rho_immunity_fp:
-    Scenarios/Heterogeneous/data/immunity_data/country_data_rho_immunity.csv
+    Scenarios/Heterogeneous/data/immunity_data/country_data_rho_immunity_two_strains.csv
   preexisting_sigma_multiplier: 0.5
   preexisting_rho_multiplier: 0.5
   # Each agent is assigned a health preset, describing how they will respond to an infection should
