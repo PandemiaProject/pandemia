@@ -19,12 +19,15 @@ def get_default_expected_df(request):
     expected_results_csv = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
     return pd.read_csv(expected_results_csv)
 
+
 @pytest.fixture
 def run_end_to_end_simulation(tmp_path, request):
     output_dir = tmp_path
     output_fname = request.node.originalname
 
-    def _run_end_to_end_simulation(input_scenario_config, expected_results, rel_tol=None, abs_tol=None):
+    def _run_end_to_end_simulation(
+        input_scenario_config, expected_results, rel_tol=None, abs_tol=None
+    ):
         """
         This function will run a complete simulation. Most of the end to end test functions are a wrapper for
         this function.
@@ -86,42 +89,45 @@ def run_end_to_end_simulation(tmp_path, request):
         # Actual results
         actual_df = pd.read_csv(fname_actual_results)
 
+        # These helper functions do the actual comparison and assertions
         if rel_tol is None and abs_tol is None:
             dataframe_exact_match(expected_df, actual_df)
 
         else:
-            dataframe_approx_match(expected_df, actual_df,
-                ignore_cols = [],
-                rel_tol = rel_tol,
-                abs_tol = abs_tol
+            dataframe_approx_match(
+                expected_df, actual_df, ignore_cols=[], rel_tol=rel_tol, abs_tol=abs_tol
             )
 
     return _run_end_to_end_simulation
+
 
 def dataframe_exact_match(expected_df, actual_df):
     # Check for differences in the results
     diff_df = expected_df.compare(actual_df)
 
-    assert ((len(diff_df) == 0) 
+    assert (
+        (len(diff_df) == 0)
         and (len(diff_df.index) == 0)
         and (len(diff_df.columns) == 0)
     )
 
 
 def dataframe_approx_match(expected_df, actual_df, ignore_cols, rel_tol, abs_tol):
-
     # We don't require that the two dataframes have the columns in the same order,
-    # but we do compare the content of the columns 
+    # but we do compare the content of the individual series
 
-    expected_df2 = expected_df.iloc[:,2:]
-    ic(expected_df2.columns)
-    ic(len(expected_df2))
+    # Exclude the ID and datetime stamp columns
+    interesting_columns_df = expected_df.iloc[:, 2:]
+    ic(interesting_columns_df.columns)
+    ic(len(interesting_columns_df))
 
-    for col_name, expected_series in expected_df2.items():
-    # for expected_ser, actual_ser in zip(expected_df)
+    for col_name, expected_series in interesting_columns_df.items():
+        # for expected_ser, actual_ser in zip(expected_df)
         ic(col_name)
         actual_series = actual_df[col_name]
-        assert_allclose(actual_series, expected_series, rtol=rel_tol, atol=abs_tol, verbose=True)
+        assert_allclose(
+            actual_series, expected_series, rtol=rel_tol, atol=abs_tol, verbose=True
+        )
 
 
 def _update_config(input_scenario: Union[dict, str, Path], delta_config: dict) -> dict:
@@ -169,15 +175,21 @@ def test_end_to_end_all_void(run_end_to_end_simulation):
 
     run_end_to_end_simulation(input_scenario, expect_results)
 
+
 @pytest.mark.slow
-def test_e2e_health_and_movement_model(get_default_expected_df, run_end_to_end_simulation):
+def test_e2e_health_and_movement_model(
+    get_default_expected_df, run_end_to_end_simulation
+):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    
+
     run_end_to_end_simulation(input_scenario, get_default_expected_df)
+
 
 # @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
-def test_e2e_hospitalization_and_death_model(get_default_expected_df, run_end_to_end_simulation):
+def test_e2e_hospitalization_and_death_model(
+    get_default_expected_df, run_end_to_end_simulation
+):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
 
     delta_config = {
@@ -198,10 +210,7 @@ def test_e2e_input_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
 
     delta_config = {
-        "input_model": {
-            "__type__": "random_input_model.RandomInputModel",
-            "seed": 1
-        }
+        "input_model": {"__type__": "random_input_model.RandomInputModel", "seed": 1}
     }
 
     scenario = _update_config(input_scenario, delta_config)
@@ -227,7 +236,9 @@ def test_e2e_seasonal_effects_model(get_default_expected_df, run_end_to_end_simu
 @pytest.mark.slow
 @pytest.mark.approx_matching
 @pytest.mark.parametrize("rel_tol, abs_tol", [(0.5, 100)])
-def test_e2e_testing_and_contact_tracing_model(get_default_expected_df, run_end_to_end_simulation, rel_tol, abs_tol):
+def test_e2e_testing_and_contact_tracing_model(
+    get_default_expected_df, run_end_to_end_simulation, rel_tol, abs_tol
+):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
 
     delta_config = {
@@ -246,10 +257,7 @@ def test_e2e_testing_and_contact_tracing_model(get_default_expected_df, run_end_
     scenario = _update_config(input_scenario, delta_config)
 
     delta_config = {
-        "input_model": {
-            "__type__": "random_input_model.RandomInputModel",
-            "seed": 1
-        }
+        "input_model": {"__type__": "random_input_model.RandomInputModel", "seed": 1}
     }
 
     scenario = _update_config(scenario, delta_config)
@@ -312,10 +320,7 @@ def test_e2e_vaccination_model(get_default_expected_df, run_end_to_end_simulatio
     scenario = _update_config(input_scenario, delta_config)
 
     delta_config = {
-        "input_model": {
-            "__type__": "random_input_model.RandomInputModel",
-            "seed": 1
-        }
+        "input_model": {"__type__": "random_input_model.RandomInputModel", "seed": 1}
     }
 
     scenario = _update_config(scenario, delta_config)
