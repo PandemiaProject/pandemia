@@ -11,85 +11,102 @@ from numpy.testing import assert_allclose
 from icecream import ic
 
 
-def _run_end_to_end_simulation(
-    input_scenario_config, expected_results_csv, output_dir: Path, output_fname: str
-):
-    """
-    This function will run a complete simulation. Most of the end to end test functions are a wrapper for
-    this function.
+# pytestmark = pytest.mark.parametrize("rel_tol, abs_tol", [(0.5, 100)])
 
-    Because these tests are slow to run, it is possible that developer might wish to run tests separately.
-    (If these tests run quickly (eg <10sec) then it might be more appropriate to loop through all of the
-    possible scenarios in the single test function).
 
-    :params:
-    @input_scenario_config: The path to the scenario file. This can be absolute path, or relative to the
-    root of the repo.
-    @expected_results_csv: The path to a csv file containing the expected results. This can be absolute
-    path, or relative to the the root of the repo. The test passes or fails based on the comparison of
-    this csv file and the output of the simulation will be with this csv, using the
-    `pandas.DataFrame.compare` function.
-    @output_dir A `pathlib.Path` object, representing a directory to write outputs.
-    Typically this the `tmp_path` fixture (https://docs.pytest.org/en/latest/how-to/tmp_path.html#the-tmp-path-fixture)
-    @output_fname the output filename. If the value does not end with the suffix ".csv" it will be appended automatically.
+@pytest.fixture
+def get_default_expected_df(request):
+    expected_results_csv = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
+    return pd.read_csv(expected_results_csv)
 
-    """
-    fname_altered_scenario = str(output_dir / "test_altered_scenario.yaml")
+@pytest.fixture
+def run_end_to_end_simulation(tmp_path, request):
+    output_dir = tmp_path
+    output_fname = request.node.originalname
 
-    if output_fname.endswith(".csv"):
-        fname_actual_results = str(output_dir / output_fname)
-    else:
-        fname_actual_results = str(output_dir / f"{output_fname}.csv")
+    def _run_end_to_end_simulation(input_scenario_config, expected_results, rel_tol=None, abs_tol=None):
+        """
+        This function will run a complete simulation. Most of the end to end test functions are a wrapper for
+        this function.
 
-    ic(fname_altered_scenario)
-    ic(fname_actual_results)
+        Because these tests are slow to run, it is possible that developer might wish to run tests separately.
+        (If these tests run quickly (eg <10sec) then it might be more appropriate to loop through all of the
+        possible scenarios in the single test function).
 
-    output_location = {
-        "reporters": {"csv.StrainCounts": {"filename": fname_actual_results}}
-    }
+        :params:
+        @input_scenario_config: The path to the scenario file. This can be absolute path, or relative to the
+        root of the repo.
+        @expected_results: Either, tThe path to a csv file containing the expected results, or a dataframe containing the expected results. This can be absolute
+        path, or relative to the the root of the repo. The test passes or fails based on the comparison of
+        this csv file and the output of the simulation will be with this csv, using the
+        `pandas.DataFrame.compare` function.
+        @output_dir A `pathlib.Path` object, representing a directory to write outputs.
+        Typically this the `tmp_path` fixture (https://docs.pytest.org/en/latest/how-to/tmp_path.html#the-tmp-path-fixture)
+        @output_fname the output filename. If the value does not end with the suffix ".csv" it will be appended automatically.
+        @rel_tol (default None) Permitted relative tolerance for approximate matching (as used by `numpy.testing.assert_allclose`). If both `rel_tol` and `abs_tol` are None then no approximate matching is used and exact matching of the dataframes is required.
+        @abs_tol (default = None)
 
-    scenario = _update_config(input_scenario_config, output_location)
+        @returns: If the simulation runs correctly and exactly matches the expected results, then the function will return None
 
-    with open(fname_altered_scenario, "w") as out_yaml:
-        yaml.dump(scenario, out_yaml)
+        Else it will return a tuple of the expected_df and actual_df.
 
-    # Read the expected results
-    # Do this before the main simulation, so that the test fails quickly in the case of a
-    # missing/unreadable `expected_results_csv` file.
-    expected_df = pd.read_csv(expected_results_csv)
+        """
+        fname_altered_scenario = str(output_dir / "test_altered_scenario.yaml")
 
-    # Fake the commandline args and call Pandemia.main()
-    sys.argv = [pandemia.__file__, fname_altered_scenario]
-    # pandemia.__main__.main()
-    pandemia_main()
+        if output_fname.endswith(".csv"):
+            fname_actual_results = str(output_dir / output_fname)
+        else:
+            fname_actual_results = str(output_dir / f"{output_fname}.csv")
 
-    # Actual results
-    actual_df = pd.read_csv(fname_actual_results)
+        ic(fname_altered_scenario)
+        ic(fname_actual_results)
 
-    if dataframe_exact_match(expected_df, actual_df):
-        assert True
-    else:
-        dataframe_approx_match(expected_df, actual_df,
-            ignore_cols = [],
-            rel_tol = 0.1,
-            abs_tol = 10
-        )
+        output_location = {
+            "reporters": {"csv.StrainCounts": {"filename": fname_actual_results}}
+        }
 
-    # # Check for differences in the results
-    # diff_df = expected_df.compare(actual_df)
+        scenario = _update_config(input_scenario_config, output_location)
 
-    # assert len(diff_df) == 0
-    # assert len(diff_df.index) == 0
-    # assert len(diff_df.columns) == 0
+        with open(fname_altered_scenario, "w") as out_yaml:
+            yaml.dump(scenario, out_yaml)
+
+        # Read the expected results
+        # Do this before the main simulation, so that the test fails quickly in the case of a
+        # missing/unreadable `expected_results_csv` file.
+        if isinstance(expected_results, str):
+            expected_df = pd.read_csv(expected_results)
+        else:
+            expected_df = expected_results
+
+        # Fake the commandline args and call Pandemia.main()
+        sys.argv = [pandemia.__file__, fname_altered_scenario]
+        # pandemia.__main__.main()
+        pandemia_main()
+
+        # Actual results
+        actual_df = pd.read_csv(fname_actual_results)
+
+        if rel_tol is None and abs_tol is None:
+            dataframe_exact_match(expected_df, actual_df)
+
+        else:
+            dataframe_approx_match(expected_df, actual_df,
+                ignore_cols = [],
+                rel_tol = rel_tol,
+                abs_tol = abs_tol
+            )
+
+    return _run_end_to_end_simulation
 
 def dataframe_exact_match(expected_df, actual_df):
     # Check for differences in the results
     diff_df = expected_df.compare(actual_df)
 
-    return ((len(diff_df) == 0) 
+    assert ((len(diff_df) == 0) 
         and (len(diff_df.index) == 0)
         and (len(diff_df.columns) == 0)
     )
+
 
 def dataframe_approx_match(expected_df, actual_df, ignore_cols, rel_tol, abs_tol):
 
@@ -100,11 +117,11 @@ def dataframe_approx_match(expected_df, actual_df, ignore_cols, rel_tol, abs_tol
     ic(expected_df2.columns)
     ic(len(expected_df2))
 
-    for col_name, expected_ser in expected_df2.items():
+    for col_name, expected_series in expected_df2.items():
     # for expected_ser, actual_ser in zip(expected_df)
         ic(col_name)
-        actual_ser = actual_df[col_name]
-        assert_allclose(actual_ser, expected_ser, rtol=rel_tol, atol=abs_tol, verbose=True)
+        actual_series = actual_df[col_name]
+        assert_allclose(actual_series, expected_series, rtol=rel_tol, atol=abs_tol, verbose=True)
 
 
 def _update_config(input_scenario: Union[dict, str, Path], delta_config: dict) -> dict:
@@ -127,62 +144,41 @@ def _update_config(input_scenario: Union[dict, str, Path], delta_config: dict) -
 
 
 @pytest.mark.slow
-def test_end_to_end_global(tmp_path, request):
+def test_end_to_end_global(run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_global_config.yaml"
     # expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
     expect_results = "tests/e2e_expected_outputs/strain_counts_test_global_config.csv"
 
-    _run_end_to_end_simulation(
-        input_scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(input_scenario, expect_results)
 
 
-@pytest.mark.known_failing
-def test_end_to_end_all_components(tmp_path, request):
+@pytest.mark.slow
+@pytest.mark.approx_matching
+@pytest.mark.parametrize("rel_tol, abs_tol", [(0.5, 100)])
+def test_end_to_end_all_components(run_end_to_end_simulation, rel_tol, abs_tol):
     input_scenario = "Scenarios/Test/test_all_components.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts_test_all_components.csv"
 
-    _run_end_to_end_simulation(
-        input_scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(input_scenario, expect_results, rel_tol, abs_tol)
 
 
 @pytest.mark.slow
-def test_end_to_end_all_void(tmp_path, request):
+def test_end_to_end_all_void(run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_void_all.yaml"
     expect_results = "tests/e2e_expected_outputs/strain_counts_test_void_all.csv"
 
-    _run_end_to_end_simulation(
-        input_scenario, expect_results, tmp_path, request.node.originalname
-    )
-
+    run_end_to_end_simulation(input_scenario, expect_results)
 
 @pytest.mark.slow
-def test_e2e_health_and_movement_model(tmp_path, request):
+def test_e2e_health_and_movement_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    # expect_results = (
-    #     "tests/e2e_expected_outputs/test_e2e_health_and_movement_model.csv"
-    # )
-    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
-
-    # expect_results = (
-    #     "tests/e2e_expected_outputs/test_e2e_health_model.csv"
-    # )
     
-
-    _run_end_to_end_simulation(
-        input_scenario, expect_results, tmp_path, request.node.originalname
-    )
-
+    run_end_to_end_simulation(input_scenario, get_default_expected_df)
 
 # @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
-def test_e2e_hospitalization_and_death_model(tmp_path, request):
-    # input_scenario = "Scenarios/Test/test_e2e_hospitalization_and_death_model.yaml"
+def test_e2e_hospitalization_and_death_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    # expect_results = "tests/e2e_expected_outputs/test_e2e_hospitalization_and_death_model.csv"
-    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
-
 
     delta_config = {
         "hospitalization_and_death_model": {
@@ -194,18 +190,12 @@ def test_e2e_hospitalization_and_death_model(tmp_path, request):
     }
 
     scenario = _update_config(input_scenario, delta_config)
-    _run_end_to_end_simulation(
-        scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(scenario, get_default_expected_df)
 
 
-# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
-def test_e2e_input_model(tmp_path, request):
-    # input_scenario = "Scenarios/Test/test_e2e_input_model.yaml"
+def test_e2e_input_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    # expect_results = "tests/e2e_expected_outputs/test_e2e_input_model.csv"
-    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "input_model": {
@@ -214,21 +204,13 @@ def test_e2e_input_model(tmp_path, request):
         }
     }
 
-    # run_end_to_end_simulation(input_scenario, expect_results, tmp_path, request.node.originalname)
     scenario = _update_config(input_scenario, delta_config)
-    _run_end_to_end_simulation(
-        scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(scenario, get_default_expected_df)
 
 
 @pytest.mark.slow
-def test_e2e_seasonal_effects_model(tmp_path, request):
-    # input_scenario = "Scenarios/Test/test_e2e_health_seasonal_models.yaml"
+def test_e2e_seasonal_effects_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    # expect_results = (
-    #     "tests/e2e_expected_outputs/test_e2e_seasonal_effects_model.csv"
-    # )
-    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "seasonal_effects_model": {
@@ -239,19 +221,14 @@ def test_e2e_seasonal_effects_model(tmp_path, request):
     }
 
     scenario = _update_config(input_scenario, delta_config)
-    _run_end_to_end_simulation(
-        scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(scenario, get_default_expected_df)
 
 
-# @pytest.mark.skip("Not implemented yet")
-@pytest.mark.known_failing
-def test_e2e_testing_and_contact_tracing_model(tmp_path, request):
-    # input_scenario = "Scenarios/Test/test_e2e_testing_and_contact_tracing_model.yaml"
+@pytest.mark.slow
+@pytest.mark.approx_matching
+@pytest.mark.parametrize("rel_tol, abs_tol", [(0.5, 100)])
+def test_e2e_testing_and_contact_tracing_model(get_default_expected_df, run_end_to_end_simulation, rel_tol, abs_tol):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    # expect_results = "tests/e2e_expected_outputs/test_e2e_testing_and_contact_tracing_model.csv"
-    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
-
 
     delta_config = {
         "testing_and_contact_tracing_model": {
@@ -277,18 +254,12 @@ def test_e2e_testing_and_contact_tracing_model(tmp_path, request):
 
     scenario = _update_config(scenario, delta_config)
 
-    _run_end_to_end_simulation(
-        scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(scenario, get_default_expected_df, rel_tol, abs_tol)
 
 
-# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
-def test_e2e_travel_model(tmp_path, request):
-    # input_scenario = "Scenarios/Test/test_e2e_travel_model.yaml"
+def test_e2e_travel_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    # expect_results = "tests/e2e_expected_outputs/test_e2e_travel_model.csv"
-    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "travel_model": {
@@ -299,17 +270,12 @@ def test_e2e_travel_model(tmp_path, request):
     }
 
     scenario = _update_config(input_scenario, delta_config)
-    _run_end_to_end_simulation(
-        scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(scenario, get_default_expected_df)
 
 
 @pytest.mark.slow
-def test_e2e_vaccination_model(tmp_path, request):
-    # input_scenario = "Scenarios/Test/test_e2e_vaccination_model.yaml"
+def test_e2e_vaccination_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
-    # expect_results = "tests/e2e_expected_outputs/test_e2e_vaccination_model.csv"
-    expect_results = f"tests/e2e_expected_outputs/{request.node.originalname}.csv"
 
     delta_config = {
         "vaccination_model": {
@@ -354,6 +320,4 @@ def test_e2e_vaccination_model(tmp_path, request):
 
     scenario = _update_config(scenario, delta_config)
 
-    _run_end_to_end_simulation(
-        scenario, expect_results, tmp_path, request.node.originalname
-    )
+    run_end_to_end_simulation(scenario, get_default_expected_df)
