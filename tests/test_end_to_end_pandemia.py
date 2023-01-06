@@ -244,7 +244,7 @@ def test_e2e_testing_and_contact_tracing_model(
         "testing_and_contact_tracing_model": {
             "__type__": "default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel",
             "quarantine_period_days": 14,
-            "symptomatic_disease_treshold": 0.2,
+            "symptomatic_disease_threshold": 0.2,
             "prob_quarantine_with_symptoms_without_test": 0.001,
             "prob_quarantine_with_contact_without_test": 0.001,
             "test_threshold": 0.005,
