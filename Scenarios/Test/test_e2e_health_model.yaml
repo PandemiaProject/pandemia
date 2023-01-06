@@ -23,14 +23,14 @@ num_jobs: -2
 tick_length_s: 600
 # How long the simulation should run for, in days. Note the number of iterations will be computed
 # from the tick length above:
-simulation_length_days: 100
+simulation_length_days: 25
 # the date at which the simulation starts:
 epoch: 23rd February 2020
 
 # ######################################### World ##################################################
 
 world_factory:
-  __type__: test_world_factory.TestWorldFactory
+  __type__: control_world_factory.ControlWorldFactory
   random_seed: 1
   # The order in which the region names are listed here determines the index of that region referred
   # to in vectors and matrices appearing in other components:
@@ -51,10 +51,8 @@ world_factory:
 # ######################################### Seasonal Effects #######################################
 
 seasonal_effects_model:
-  __type__: default_seasonal_effects_model.DefaultSeasonalEffectsModel
+  __type__: void_seasonal_effects_model.VoidSeasonalEffectsModel
   # If the following is null, as opposed to a filepath, all multipliers are set equal to 1:
-  seasonal_multiplier_by_region_by_month: null
-  out_of_season_multiplier: 1.0
 
 # ######################################### Health #################################################
 
@@ -62,7 +60,8 @@ health_model:
   __type__: default_health_model.DefaultHealthModel
   beta: [1.0, 1.0, 1.0, 1.0]
   location_typ_multipliers: # Unless specfified set to 1.0
-    Cemetery: 0.0
+    # Cemetery: 0.0
+    null
   facemask_transmission_multiplier: 0.1
   immunity_period_days: 7
   num_initial_infections_by_region_by_strain:
@@ -178,70 +177,32 @@ health_model:
 # ######################################### Movement ###############################################
 
 movement_model:
-  __type__: default_movement_model.DefaultMovementModel
-  weighted_sampling: True
-  home_activity: "Home_Activity"
-  location_closure_exemptions:
-    House: ["Home_Activity"]
-  facemask_activities: [Other_Activity]
-  age_groups:         [  0,  18,  65]
-  facemask_hesitancy: [0.9, 0.5, 0.2]
+  __type__: void_movement_model.VoidMovementModel
 
 # ######################################### Hospitalization and Death ##############################
 
 hospitalization_and_death_model:
-  __type__: default_hospitalization_and_death_model.DefaultHospitalizationAndDeathModel
-  hospital_threshold: 0.5
-  hospital_location_type: Hospital
-  cemetery_location_type: Cemetery
+  __type__: void_hospitalization_and_death_model.VoidHospitalizationAndDeathModel
 
 # ######################################### Testing and Contact Tracing ############################
 
 testing_and_contact_tracing_model:
-  __type__: default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel
-  quarantine_period_days: 14
-  symptomatic_disease_treshold: 0.2
-  prob_quarantine_with_symptoms_without_test: 0.0
-  prob_quarantine_with_contact_without_test: 0.0
-  test_threshold: 0.4
-  test_false_negative: 0.01
-  max_regular_contacts_to_test: 10
+  __type__: void_testing_and_contact_tracing_model.VoidTestingAndContactTracingModel
 
 # ######################################### Vaccination ############################################
 
 vaccination_model:
-  __type__: default_vaccination_model.DefaultVaccinationModel
-  number_of_vaccines: 2
-  age_groups:        [  0,  18,  65]
-  vaccine_hesitancy: [0.8, 0.4, 0.1]
-  booster_waiting_time_days: 50
-  vaccines:
-    vaccine_0:
-      rho_immunity_failure:
-        [[[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
-         [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]
-      sigma_immunity_failure:
-        [[[-1, 0, 14], [1.0, 0.5, 1.0]],
-         [[-1, 0, 14], [1.0, 0.5, 1.0]]]
-    vaccine_1:
-      rho_immunity_failure:
-        [[[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]],
-         [[-1, 0, 14], [[1.0, 0.0], [0.5, 0.0], [1.0, 0.0]]]]
-      sigma_immunity_failure:
-        [[[-1, 0, 14], [1.0, 0.5, 1.0]],
-         [[-1, 0, 14], [1.0, 0.5, 1.0]]]
+  __type__: void_vaccination_model.VoidVaccinationModel
 
 # ######################################### Regional Mixing ########################################
 
 travel_model:
-  __type__: default_travel_model.DefaultTravelModel
-  travel_transmission_multiplier: 1.0
-  interpolation: 0.0
+  __type__: void_travel_model.VoidTravelModel
 
 # ######################################### Input ##################################################
 
 input_model:
-  __type__: default_input_model.DefaultInputModel
+  __type__: void_input_model.VoidInputModel
 
 # ######################################### Output #################################################
 
@@ -253,11 +214,12 @@ historical_data_filepath: null
 reporters:
   cli.TimeReporter: {}
   csv.StrainCounts:
-    filename: /tmp/strain_counts_test.csv
-  plot.PlotInfected:
-    show: True
-    savefig: False
-    filename: /tmp/infected_test.png
+    filename: tests/strain_counts_test_e2e_health_model.csv
+  # plot.PlotInfected:
+  #   show: False
+  #   savefig: True
+  #   filename: /tmp/infected_test.png
+  #   historical_data: null
   # pygame_shapes.PygameShapes:
   #   fullscreen: True
   #   font_size: 20

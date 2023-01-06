@@ -7,6 +7,7 @@ import numpy as np
 
 from ..reporters import Reporter
 
+
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class StrainCounts(Reporter):
