@@ -3,12 +3,15 @@
 
 name: End to End tests
 
-# We only run this manually
 on:
-  workflow_dispatch:
-  push:
+  pull_request:
     branches:
-      - feature/initial_e2e_testing
+      - "develop"
+    paths-ignore:
+      - '**/*md'
+      - '**/*tex'
+  workflow_dispatch:
+
 
 jobs:
   build:
@@ -39,7 +42,7 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
