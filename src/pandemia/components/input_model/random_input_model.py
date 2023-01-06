@@ -53,13 +53,13 @@ class RandomInputModel(InputModel):
 
         # Rescale
         self.random_testing_input =\
-            (self.scale_factor * self.random_testing_input).astype(int)
+            (self.scale_factor * self.random_testing_input).astype(np.int64)
         self.symptomatic_testing_input =\
-            (self.scale_factor * self.symptomatic_testing_input).astype(int)
+            (self.scale_factor * self.symptomatic_testing_input).astype(np.int64)
         self.contact_testing_input =\
-            (self.scale_factor * self.contact_testing_input).astype(int)
+            (self.scale_factor * self.contact_testing_input).astype(np.int64)
         self.vaccination_input =\
-            (self.scale_factor * self.vaccination_input).astype(int)
+            (self.scale_factor * self.vaccination_input).astype(np.int64)
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
