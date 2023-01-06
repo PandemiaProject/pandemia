@@ -53,6 +53,7 @@ setup(
                  'pdoc',
                  'pytest',
                  'pytest-cov',
+                 "pytest-flakefinder",
                  "icecream"
                  ],
     },

@@ -185,7 +185,6 @@ def test_e2e_health_and_movement_model(
     run_end_to_end_simulation(input_scenario, get_default_expected_df)
 
 
-# @pytest.mark.skip("Not implemented yet")
 @pytest.mark.slow
 def test_e2e_hospitalization_and_death_model(
     get_default_expected_df, run_end_to_end_simulation
