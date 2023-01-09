@@ -14,7 +14,7 @@ from . import WorldFactory
 log = logging.getLogger('control_world_factory')
 
 class ControlWorldFactory(WorldFactory):
-    """Creates a test world."""
+    """Creates a world which can be used for testing all components of the model (individually or collectively)."""
 
     def __init__(self, config, clock, scale_factor):
 

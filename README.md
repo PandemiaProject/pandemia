@@ -4,6 +4,8 @@
 ![Pylint](https://github.com/?/workflows/Pylint/badge.svg)
 [![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
+[![End to End tests](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml/badge.svg)](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml)
+
 ![pandemia Logo](pandemia_logo.jpg)
 
 Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
@@ -116,16 +118,18 @@ each strain, in each region each day, and plots in png format of infections and 
 ## Requirements
 
 - Python 3.10
-  - Python version other than 3.10 may produce errors. 
-- A GCC complier 
+  - Python version other than 3.10 may produce errors.
+- A GCC complier.
 
 ## Quickstart
 
 To build C libraries
+
 ```
 make
 ```
 To install pandemia python package:
+
 ```
 pip install .
 ```
@@ -154,14 +158,76 @@ The advanced user might even wish to write their own models, to be used instead 
 models provided.
 
 ## Testing
-To test:
+
+To install additional dependencies required for testing:
+
 ```
 pip install .[test]
+```
+
+### Unit tests (Future)
+
+**Currently there are no unit tests**. When they've been written, they will be run using pytest:
+
+```
 pytest
 ```
 
+### Integration tests
+
+Integration tests (and other tests which take a long time to execute) should be marked with the `@pytest.mark.slow` decorator, eg:
+
+```
+@pytest.mark.slow
+def test_long_processing_time():
+    sleep(500)
+```
+
+These tests will **not** be run when `pytest` is called without arguments. (See [pytest.ini](pytest.ini) for details). To execute these tests, use the `-m slow` argument. eg:
+
+```
+pytest -m slow
+```
+
+### What is being tested in the integration tests
+
+All the scenarios files for integration tests are in `./Scenarios/Tests`.
+
+
+| Test Scenario | Purpose |
+|---|---|
+| `test_global_config.yaml` | A general purpose global scenario |
+| `test_all_components.yaml` | A scenario that uses the "Default" version of every component |
+| `test_void_all.yaml` | A scenario that uses the "Void" version of every component |
+| `test_e2e_health_and_movement_model.yaml` | Uses the "DefaultHealthModel", "DefaultMovementModel" and the "Void" version of all other components |
+
+A number of other tests use the `test_e2e_health_and_movement_model.yaml`. These tests use the "DefaultHealthModel", "DefaultMovementModel" and the Default model for _one_ other component (the "Void" models are used for the remaining components). The scenario config is read and patched using literals hardcoded in the tests in `test_end_to_end_pandimia.py`. In most cases the expected results are in `./tests/e2e_expected_outputs` in a csv file which takes its name from the test name (see `test_end_to_end_pandimia.py` for details).
+
+> **NOTE** In many cases, these tests are not designed to be realistic, but to demonstrate particular aspects of the model. For example in some tests, individuals lose their immunity improbably fast, to ensure that plenty of reinfections are simulated.
+
+### (Re)creating the "gold standard" outputs
+
+The integration tests launch complete runs of pandemia and then compare the resulting output file with a set of "gold standard" files for each scenario. Occasionally (depending on the development of the relevant module) it may be necessary to recreate these. To recreate the gold standard outputs, use `pytest`'s `basetemp` dir option. **This can overwrite all the existing gold standard output files**. The files produced will be in a directory structure peculiar to pytest. They may need to be manually moved to the relevant location in `./tests/e2e_expected_outputs/`:
+
+```
+pytest -m slow --basetemp=./tests/recreate_gold_standard
+```
+
+This command can be combined with selecting individual tests if required.
+
+
+### Test Coverage
+
+Test coverage is reported automatically on each run of pytest. To obtain the html coverage report use the `--cov-report` argument:
+
+```
+pytest --cov-report=html
+```
+
+
 ## Documentation
 Consult the [User Guide](docs/user_guide.pdf), or generate documentation using:
+
 ```
 pip install pdoc
 pdoc --html --overwrite --html-dir docs pandemia

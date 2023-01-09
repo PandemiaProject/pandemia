@@ -104,7 +104,15 @@ class HeterogeneousWorldFactory(WorldFactory):
             row_ids = [(r, idx) for idx, r in enumerate(region_data) ]
             with multiprocessing.Pool(processes=cpu_count()-1) as pool:
                 world.regions = list(tqdm(pool.imap_unordered(self._parallel_create_region, row_ids), total=len(row_ids)))
+        
+        world.regions = [r for r in world.regions if r is not None]
         world.number_of_regions = len(world.regions)
+        world.regions.sort(key=lambda region : region.id)
+
+        id = 0
+        for region in world.regions:
+            region.id = id
+            id += 1
 
         number_of_agents = sum([len(region.agents) for region in world.regions])
 
