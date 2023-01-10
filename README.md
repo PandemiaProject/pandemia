@@ -103,7 +103,7 @@ Input data for each scenario are found in the [Scenarios/](Scenarios/) directory
 input data for the **Homogeneous** scenario are found in [Scenarios/Homogeneous/data](Scenarios/Homogeneous/data).
 All input data for the **Heterogeneous** scenario are found in [Scenarios/Heterogeneous/data](Scenarios/Heterogeneous/data).
 
-The **Global Grid** world factory uses the following grid data, available under a CC BY 4.0 license:
+The **Heterogeneous** world factory uses the following grid data, available under a CC BY 4.0 license:
 
 Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
 Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
@@ -196,7 +196,7 @@ All the scenarios files for integration tests are in `./Scenarios/Tests`.
 
 | Test Scenario | Purpose |
 |---|---|
-| `test_global_config.yaml` | A general purpose global scenario |
+| `test_homogeneous_config.yaml` | A general purpose homogeneous mixing scenario |
 | `test_all_components.yaml` | A scenario that uses the "Default" version of every component |
 | `test_void_all.yaml` | A scenario that uses the "Void" version of every component |
 | `test_e2e_health_and_movement_model.yaml` | Uses the "DefaultHealthModel", "DefaultMovementModel" and the "Void" version of all other components |

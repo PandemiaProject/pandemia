@@ -150,10 +150,10 @@ def _update_config(input_scenario: Union[dict, str, Path], delta_config: dict) -
 
 
 @pytest.mark.slow
-def test_end_to_end_global(run_end_to_end_simulation):
-    input_scenario = "Scenarios/Test/test_global_config.yaml"
+def test_end_to_end_homogeneous(run_end_to_end_simulation):
+    input_scenario = "Scenarios/Test/test_homogeneous_config.yaml"
     # expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
-    expect_results = "tests/e2e_expected_outputs/strain_counts_test_global_config.csv"
+    expect_results = "tests/e2e_expected_outputs/strain_counts_test_homogeneous_config.csv"
 
     run_end_to_end_simulation(input_scenario, expect_results)
 
