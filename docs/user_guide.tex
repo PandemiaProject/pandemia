@@ -395,17 +395,17 @@ The current region of an agent $\texttt{n}$ is recorded by the variable $$\textt
 
 \section{Examples: World Factories and Scenarios}
 
-All parameters, including the scale factor and random seed, are configured in a single file, called the \textbf{Configuration}. The choice of world factory is specified in the configuration. Several example world factories have been provided, in particular the homogeneous mixing example $\texttt{Global}$ and the heterogeneous mixing example $\texttt{Global{\_}Grid}$. File paths to input data are also specified in the configuration. 
+All parameters, including the scale factor and random seed, are configured in a single file, called the \textbf{Configuration}. The choice of world factory is specified in the configuration. Several example world factories have been provided, in particular the homogeneous mixing example $\texttt{Homogeneous}$ and the heterogeneous mixing example $\texttt{Heterogeneous}$. File paths to input data are also specified in the configuration.  
 
 Example configurations and input data are collected into \textbf{Scenarios}.
 
 \subsection{Homogeneous Mixing}
 
-The $\texttt{Global}$ world factory builds regions corresponding to the countries of the world, where for each region there is only one activity and one location, equivalent to the region itself. Mixing within each country is therefore homogeneous. Mixing between regions is determined using air travel data.
+The $\texttt{Homogeneous}$ world factory builds regions corresponding to the countries of the world, where for each region there is only one activity and one location, equivalent to the region itself. Mixing within each country is therefore homogeneous. Mixing between regions is determined using air travel data.
 
 In this homogeneous mixing scenario, agents are not assigned homes. Consequently, movement and testing and contact tracing models are void, the associated interventions and dynamics being irrelevant to this scenario.
 
-Using the default reporter to render prevalence within each region, the $\texttt{Global}$ scenario can be visualized as follows:
+Using the default reporter to render prevalence within each region, the $\texttt{Homogeneous}$ scenario can be visualized as follows:
 
 \begin{center}
 \includegraphics[width=0.9\textwidth]{homogeneous}
@@ -413,7 +413,7 @@ Using the default reporter to render prevalence within each region, the $\texttt
 
 \subsubsection*{Input data}
 
-The input data for the $\texttt{Global}$ scenario comes from a number of sources. The shape files come from Eurostat:
+The input data for the $\texttt{Homogeneous}$ scenario comes from a number of sources. The shape files come from Eurostat:
 
 \begin{center}
 \url{https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries}
@@ -445,7 +445,7 @@ The input data for the $\texttt{Global}$ scenario comes from a number of sources
 
 \subsection{Heterogeneous Mixing}
 
-The $\texttt{Global{\_}Grid}$ world factory groups agents together into households, and for each region there are two activities, $\texttt{Home{\_}Activity}$ and $\texttt{Community{\_}Activity}$. Individuals perform the
+The $\texttt{Heterogeneous}$ world factory groups agents together into households, and for each region there are two activities, $\texttt{Home{\_}Activity}$ and $\texttt{Community{\_}Activity}$. Individuals perform the
 $\texttt{Home{\_}Activity}$ in their assigned House, while they perform the $\texttt{Community{\_}Activity}$ in randomly selected grid squares, with the random selection being weighted by distance. Individuals above or below certain ages do not perform the $\texttt{Community{\_}Activity}$. Those who do perform the $\texttt{Community{\_}Activity}$ do so for 8 hours each weekday, between 8am and 4pm. When performing $\texttt{Community{\_}Activity}$, each individual gets a list of grid squares to choose from. The grid square containing their House is always included in this list.
 
 The list of grid squares for each individual is obtained by sampling from a subset of all such squares in the region. This subset contains a number of squares nearest to their home square, in addition to a number of squares randomly sampled from all over the region. A small number of squares are randomly sampled from this set, weighted according to a simple gravity model. In particular, for an individual whose House is in square $s_1$, the unnormalized weight $w$ attached to a square $s_2$ is given by the formula:
@@ -454,7 +454,7 @@ w = \frac{N(s_2)}{1 + d(s_1, s_2)^\gamma} \nonumber
 \end{equation}
 where $N(s_2)$ is the number of people living in square $s_2$, $d$ is the Euclidean distance, and $\gamma$ is the gravity model exponent.
 
-Using the default reporter to render prevalence within each region, the $\texttt{Global{\_}Grid}$ scenario can be visualized as follows:
+Using the default reporter to render prevalence within each region, the $\texttt{Heterogeneous}$ scenario can be visualized as follows:
 
 \begin{center}
 \includegraphics[width=0.9\textwidth]{heterogeneous}
@@ -462,7 +462,7 @@ Using the default reporter to render prevalence within each region, the $\texttt
 
 \subsubsection*{Input data}
 
-\noindent In addition to the datasets used for the $\texttt{Global}$ scenario, the $\texttt{Global{\_}Grid}$ scenario uses population grid data from NASA:
+\noindent In addition to the datasets used for the $\texttt{Homogeneous}$ scenario, the $\texttt{Heterogeneous}$ scenario uses population grid data from NASA:
 
 \begin{itemize}
 \item[] Center for International Earth Science Information Network - CIESIN - Columbia University. 2016. Gridded Population of the World, Version 4 (GPWv4): National Identifier Grid. Palisades, NY: NASA Socioeconomic Data and Applications Center (SEDAC). http://dx.doi.org/10.7927/H41V5BX1. Accessed 01 NOV 2022.
@@ -485,7 +485,12 @@ In that article, the authors presented an agent-based model of the COVID-19 pand
 \url{https://github.com/abm-covid-lux/abmlux}
 \end{center}
 
-ABMlux brought together several datasets on the population in Luxembourg, describing households, places of work, care homes, schools, restaurants, shops and other locations, with over 2000 behavioural routines for agents defined on 10 minute time resolution using time use data. The ABMlux world factory outputs an abject which in the terminology of Pandemia would be called a region. This region features numerous activities and dozens of locations types. ABMlux allows this object to be saved as a $\texttt{.abm}$ file, which can then be read by Pandemia's $\texttt{abmlux}$ world factory. This world factory converts the Luxembourg model into a Pandemia world object, on which a Pandemia simulation can then be built.
+ABMlux brought together several datasets on the population in Luxembourg, describing households, places of work, care homes, schools, restaurants, shops and other locations, with over 2000 behavioural routines for agents defined on 10 minute time resolution using time use data. The ABMlux world factory outputs an abject which in the terminology of Pandemia would be called a region. This region features numerous activities and dozens of locations types. ABMlux allows this object to be saved as a $\texttt{.abm}$ file, which can then be read by Pandemia's $\texttt{abmlux}$ world factory. This world factory converts the Luxembourg model into a Pandemia world object, on which a Pandemia simulation can then be built. To do this, first clone the repository
+\begin{center}
+\url{https://github.com/abm-covid-lux/multi_strain_abmlux}
+\end{center}
+and install using $$\texttt{pip install -e .[test]}.$$ Then run the command
+$$\texttt{ms{\_}abmlux Scenarios/Luxembourg/config.yaml sim{\_}factory.abm}.$$ Once $\texttt{sim{\_}factory.abm}$ has been created, copy and paste this file into Pandemia's $\texttt{Scenarios/ABMlux/data}$ folder.
 
 While Pandemia regions are not required to have the complexity of the ABMlux region, such a level of detail is supported by Pandemia, and will generally produce the most realistic outputs, assuming such population data is available.
 
