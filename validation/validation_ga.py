@@ -100,7 +100,7 @@ def tabulate_results(num_configs):
 
 seed = 0
 
-world_filepath = 'Scenarios\Global_Grid\global_grid_world.wld'
+world_filepath = 'Scenarios\Heterogeneous\heterogeneous_world.wld'
 
 # average_deaths_dict_historical = get_historial_data()
 
