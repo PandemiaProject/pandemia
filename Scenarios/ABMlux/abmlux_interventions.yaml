@@ -383,7 +383,7 @@ reporters:
   #   display_width: 1500
   #   display_height: 700
   #   # The width of grid squares recorded in region_coordinates.
-  #   square_width: null # 0.0416666666667
+  #   cellsize: null # 0.0416666666667
   #   # The preferred colour map.
   #   cmap: "Oranges"
 

@@ -275,7 +275,7 @@ reporters:
   #   refresh_rate: 60
   #   display_width: 1500
   #   display_height: 700
-  #   square_width: 0.0416666666667
+  #   cellsize: 0.0416666666667
   #   cmap: "Oranges"
 
 # ######################################### Logging ################################################

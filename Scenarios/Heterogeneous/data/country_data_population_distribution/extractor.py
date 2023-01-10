@@ -29,7 +29,7 @@ ncols = 8640
 nrows = 4320
 xllcorner = -180
 yllcorner = -90
-square_width = 0.041666666666667
+cellsize = 0.041666666666667
 NODATA_value = -9999
 
 def create_asc(iso3, values):
@@ -68,10 +68,10 @@ def create_asc(iso3, values):
         id_grid = id_grid[y_min: y_min + new_nrows, x_min: x_min + new_ncols]
 
         # Pad arrays so that lower left corner has integer coordinates
-        error_x = (xllcorner + (x_min * square_width)) % 1
-        error_y = (yllcorner + ((nrows - (y_max + 1)) * square_width)) % 1
-        pad_x = int(error_x / square_width)
-        pad_y = int(error_y / square_width)
+        error_x = (xllcorner + (x_min * cellsize)) % 1
+        error_y = (yllcorner + ((nrows - (y_max + 1)) * cellsize)) % 1
+        pad_x = int(error_x / cellsize)
+        pad_y = int(error_y / cellsize)
         density_grid = np.pad(density_grid, ((0, pad_y), (pad_x, 0)), 'constant',
                               constant_values=((0, 0), (0, 0)))
         id_grid = np.pad(id_grid, ((0, pad_y), (pad_x, 0)), 'constant',
@@ -79,8 +79,8 @@ def create_asc(iso3, values):
         id_grid = id_grid.astype(int)
 
         # Record the coordinates of the lower left corner
-        grid_xllcorner = int(xllcorner + ((x_min - pad_x) * square_width))
-        grid_yllcorner = int(yllcorner + ((nrows - (y_max + pad_y + 1)) * square_width))
+        grid_xllcorner = int(xllcorner + ((x_min - pad_x) * cellsize))
+        grid_yllcorner = int(yllcorner + ((nrows - (y_max + pad_y + 1)) * cellsize))
 
         # Save the density grid as an asc file with required header data
         fmt = " ".join(["%1.9g"] * (density_grid.shape[1]))
@@ -89,7 +89,7 @@ def create_asc(iso3, values):
             f.write(b'nrows ' + str(new_nrows + pad_y).encode() + b'\n')
             f.write(b'xllcorner ' + str(grid_xllcorner).encode() + b'\n')
             f.write(b'yllcorner ' + str(grid_yllcorner).encode() + b'\n')
-            f.write(b'square_width ' + str(square_width).encode() + b'\n')
+            f.write(b'cellsize ' + str(cellsize).encode() + b'\n')
             f.write(b'NODATA_value ' + str(NODATA_value).encode() + b'\n')
             np.savetxt(f, density_grid, fmt=fmt, delimiter=" ")
 
@@ -100,7 +100,7 @@ def create_asc(iso3, values):
             f.write(b'nrows ' + str(new_nrows + pad_y).encode() + b'\n')
             f.write(b'xllcorner ' + str(grid_xllcorner).encode() + b'\n')
             f.write(b'yllcorner ' + str(grid_yllcorner).encode() + b'\n')
-            f.write(b'square_width ' + str(square_width).encode() + b'\n')
+            f.write(b'cellsize ' + str(cellsize).encode() + b'\n')
             f.write(b'NODATA_value ' + str(NODATA_value).encode() + b'\n')
             np.savetxt(f, id_grid, fmt=fmt, delimiter=" ")
 
