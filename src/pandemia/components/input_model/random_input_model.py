@@ -43,9 +43,9 @@ class RandomInputModel(InputModel):
         shape_vac = (self.simulation_length_days, self.number_of_regions,
                      self.number_of_vaccination_age_groups, self.number_of_vaccines)
 
-        self.lockdown_input = np.random.randint(-1, 1, shape, dtype=np.int64)
+        self.lockdown_input = np.random.randint(0, 2, shape, dtype=np.int64)
         self.border_closure_input = np.random.random(shape).astype(np.float64)
-        self.facemask_input = np.random.randint(-1, 1, shape, dtype=np.int64)
+        self.facemask_input = np.random.randint(0, 2, shape, dtype=np.int64)
         self.random_testing_input = np.random.randint(0, 100000, shape, dtype=np.int64)
         self.symptomatic_testing_input = np.random.randint(0, 100000, shape, dtype=np.int64)
         self.contact_testing_input = np.random.randint(0, 100000, shape, dtype=np.int64)
