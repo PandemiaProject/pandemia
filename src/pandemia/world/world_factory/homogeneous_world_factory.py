@@ -12,9 +12,9 @@ from ..region import Region
 from .. import World
 from . import WorldFactory
 
-log = logging.getLogger('world_factory')
+log = logging.getLogger('homogeneous_world_factory')
 
-class GlobalWorldFactory(WorldFactory):
+class HomogeneousWorldFactory(WorldFactory):
     """In this model, in each region there is only one activity, namely Default. There is only one
     location in each region. Agents mix within regions all within the same location. Using the
     sir_rescaling option in the default health model, agents in this world will mix homogeneously
@@ -26,7 +26,7 @@ class GlobalWorldFactory(WorldFactory):
         self.clock = clock
         self.scale_factor = scale_factor
 
-        self.regions_shape_path        = self.config['regions_shape_path']
+        self.regions_shape_data_file   = self.config['regions_shape_data_file']
         self.regions_data_path         = self.config['regions_data_path']
         self.airport_path              = self.config['airport_path']
         self.air_travel_path           = self.config['air_travel_path']
@@ -57,7 +57,7 @@ class GlobalWorldFactory(WorldFactory):
         self.initialize_regions(self.regions_data_path, ticks_in_week, world)
 
         # Add shape data to regions
-        self.add_shape_data(self.regions_shape_path, world)
+        self.add_shape_data(self.regions_shape_data_file, world)
 
     def initialize_regions(self, regions_data_path, ticks_in_week, world):
         """Initialize regions"""
@@ -100,10 +100,10 @@ class GlobalWorldFactory(WorldFactory):
 
         log.info("Created world with %d agents", total_number_of_agents)
 
-    def add_shape_data(self, regions_shape_path, world):
+    def add_shape_data(self, regions_shape_data_file, world):
         """Add polgonal shapes to regions for rendering"""
 
-        sf = shp.Reader(regions_shape_path)
+        sf = shp.Reader(regions_shape_data_file)
         shape_recs = sf.shapeRecords()
 
         # Determine for which regions coordinate data can be found

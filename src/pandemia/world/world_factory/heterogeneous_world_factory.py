@@ -19,9 +19,9 @@ from . import WorldFactory
 from ...random_tools import Random
 from os import cpu_count
 
-log = logging.getLogger('global_grid_world_factory')
+log = logging.getLogger('heterogeneous_world_factory')
 
-class GlobalGridWorldFactory(WorldFactory):
+class HeterogeneousWorldFactory(WorldFactory):
     """In this World model, for each region there are two activities, namely Home_Activity and
     Community_Activity. Each agent in assigned a weekly routine, with days divided into three
     periods, each period lasting eight hours. Each agent is assigned a home, at which they perform
