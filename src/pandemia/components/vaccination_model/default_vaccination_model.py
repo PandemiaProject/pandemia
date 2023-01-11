@@ -16,7 +16,8 @@ class DefaultVaccinationModel(VaccinationModel):
     the pathogen. Vaccines update individual immunity according to the same mechanism used to update
     immunity in the default health model."""
 
-    def __init__(self, config, clock, number_of_strains, immunity_length, immunity_period_ticks):
+    def __init__(self, config, clock, number_of_strains, number_of_rho_immunity_outcomes,
+                 immunity_length, immunity_period_ticks):
         """Initialize component"""
         super().__init__(config)
 
@@ -37,7 +38,14 @@ class DefaultVaccinationModel(VaccinationModel):
         self.vaccine_names             = list(self.vaccines_config.keys())
         self.number_of_vaccines        = len(self.vaccines_config)
 
+        self.number_of_strains = self._get_number_of_strains()
+        assert self.number_of_strains == number_of_strains,\
+            "Number of strains in vaccination model must match health model"
+
         self.number_of_rho_immunity_outcomes = self._get_number_of_rho_immunity_outcomes()
+        assert self.number_of_rho_immunity_outcomes == number_of_rho_immunity_outcomes,\
+            "Number of rho immunity outcomes in vaccination model must match health model"
+
         self.max_vaccine_length_immunity     = self._get_max_vaccine_length_immunity()
 
         self.vaccine_rho_immunity_failure_values =\
@@ -148,12 +156,29 @@ class DefaultVaccinationModel(VaccinationModel):
                 c_void_p(vector_region.random_state.ctypes.data)
             )
 
+    def _get_number_of_strains(self):
+        """Determines number of strains in config"""
+
+        num_strains = len(self.vaccines_config[self.vaccine_names[0]]['rho_immunity_failure'])
+
+        for vaccine_name in self.vaccine_names:
+            assert len(self.vaccines_config[vaccine_name]['rho_immunity_failure']) == num_strains
+            assert len(self.vaccines_config[vaccine_name]['sigma_immunity_failure']) == num_strains
+
+        return num_strains
+
     def _get_number_of_rho_immunity_outcomes(self):
         """Determines number of rho immunity outcomes in config"""
 
-        num_rho_outcomes = len(self.vaccines_config[self.vaccine_names[0]])
-        for vaccine_name in self.vaccines_config:
-            assert len(self.vaccines_config[vaccine_name]) == num_rho_outcomes
+        num_rho_outcomes =\
+            len(self.vaccines_config[self.vaccine_names[0]]['rho_immunity_failure'][0][1][0])
+
+        for vaccine_name in self.vaccine_names:
+            for s in range(self.number_of_strains):
+                items = len(self.vaccines_config[vaccine_name]['rho_immunity_failure'][s][1])
+                for i in range(items):
+                    assert len(self.vaccines_config[vaccine_name]['rho_immunity_failure'][s][1][i])\
+                           == num_rho_outcomes
 
         return num_rho_outcomes
 

@@ -186,6 +186,7 @@ class SimulationFactory:
                                             vaccination_model_class, vaccination_model_config,
                                             self.clock,
                                             health_model.number_of_strains,
+                                            health_model.number_of_rho_immunity_outcomes,
                                             health_model.immunity_length,
                                             health_model.immunity_period_ticks)
         self.set_vaccination_model(vaccination_model)

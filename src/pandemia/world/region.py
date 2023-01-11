@@ -49,19 +49,6 @@ class VectorRegion:
         self.coordinates = None
         self.region_coordinates = None
 
-        # These members are not consistently applied between Void and Default components
-        self.current_disease = np.zeros((number_of_agents), dtype=np.float64)
-        self.current_strain = np.full((number_of_agents), -1, dtype=np.int64)
-        self.requested_location_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.requesting_location_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.home_location = np.zeros((number_of_agents), dtype=np.int64)
-        self.current_quarantine = np.zeros((number_of_agents), dtype=np.int64)
-        self.current_location = np.zeros((number_of_agents), dtype=np.int64)
-        self.current_facemask = np.zeros((number_of_agents), dtype=np.int64)
-        self.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.wears_facemask = np.zeros((number_of_agents, number_of_activities), dtype=np.int64)
-
 class Region:
     """Represents a region, for example a country or an administrative division, consisting of
     agents, locations and activities.

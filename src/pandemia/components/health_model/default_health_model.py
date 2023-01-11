@@ -416,8 +416,6 @@ class DefaultHealthModel(HealthModel):
 
         self.update(vector_region, 0)
 
-
-
     def update(self, vector_region, t):
         """Updates health functions"""
 
@@ -536,6 +534,16 @@ class DefaultHealthModel(HealthModel):
         num_rho_outcomes = len(self.health_presets_config[self.preset_names[0]])
         for p in self.health_presets_config:
             assert len(self.health_presets_config[p]) == num_rho_outcomes
+
+        for preset_name in self.preset_names:
+            for r in range(num_rho_outcomes):
+                for s1 in range(self.number_of_strains):
+                    for s2 in range(self.number_of_strains):
+                        f = 'rho_immunity_failure'
+                        items = len(self.health_presets_config[preset_name][r][f][s1][s2][1])
+                        for i in range(items):
+                            assert len(self.health_presets_config[preset_name][r][f][s1][s2][1][i])\
+                                   == num_rho_outcomes
 
         return num_rho_outcomes
 
