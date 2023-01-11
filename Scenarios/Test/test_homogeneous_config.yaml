@@ -184,10 +184,10 @@ travel_model:
   travel_transmission_multiplier: 100.0                                                             # POSSIBLE FREE VARIABLE
   interpolation: 0.0 # Between 0 and 1, values larger than 0 boost international travel             # POSSIBLE FREE VARIABLE
 
-# ######################################### Input ##################################################
+# ######################################### Policy Maker ###########################################
 
-input_model:
-  __type__: void_input_model.VoidInputModel
+policy_maker_model:
+  __type__: void_policy_maker_model.VoidPolicyMakerModel
 
 # ######################################### Output #################################################
 

@@ -34,7 +34,7 @@ class Simulator:
                  testing_and_contact_tracing_model,
                  vaccination_model,
                  travel_model,
-                 input_model,
+                 policy_maker_model,
                  telemetry_bus):
 
         # Static info
@@ -65,7 +65,7 @@ class Simulator:
         self.testing_and_contact_tracing_model = testing_and_contact_tracing_model
         self.vaccination_model = vaccination_model
         self.travel_model = travel_model
-        self.input_model = input_model
+        self.policy_maker_model = policy_maker_model
 
         self.number_of_strains = self.health_model.number_of_strains
         self.number_of_vaccines = self.vaccination_model.number_of_vaccines
@@ -98,7 +98,7 @@ class Simulator:
         self.testing_and_contact_tracing_model.set_telemetry_bus(self.telemetry_bus)
         self.vaccination_model.set_telemetry_bus(self.telemetry_bus)
         self.travel_model.set_telemetry_bus(self.telemetry_bus)
-        self.input_model.set_telemetry_bus(self.telemetry_bus)
+        self.policy_maker_model.set_telemetry_bus(self.telemetry_bus)
 
     def _vectorize_components(self):
         """Initialize the numpy arrays associated to each component"""
@@ -106,7 +106,7 @@ class Simulator:
         for vector_region in self.vector_regions:
 
             self.travel_model.vectorize_component(vector_region)
-            self.input_model.vectorize_component(vector_region)
+            self.policy_maker_model.vectorize_component(vector_region)
             self.seasonal_effects_model.vectorize_component(vector_region)
             self.health_model.vectorize_component(vector_region)
             self.movement_model.vectorize_component(vector_region)
@@ -164,7 +164,7 @@ class Simulator:
 
         for vector_region in self.vector_regions:
 
-            self.input_model.initial_conditions(vector_region)
+            self.policy_maker_model.initial_conditions(vector_region)
             self.seasonal_effects_model.initial_conditions(vector_region)
             self.health_model.initial_conditions(vector_region)
             self.movement_model.initial_conditions(vector_region, offset)
@@ -183,7 +183,7 @@ class Simulator:
         for vector_region in vector_regions:
 
             self.seasonal_effects_model.dynamics(vector_region, day)
-            self.input_model.dynamics(vector_region, day)
+            self.policy_maker_model.dynamics(vector_region, day)
 
             for tick in range(ticks_in_day):
 

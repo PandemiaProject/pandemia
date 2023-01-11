@@ -22,7 +22,7 @@ def get_historial_data():
     sim_factory.build_components()
     telemetry_bus = MessageBus()
     sim = sim_factory.new_sim(telemetry_bus)
-    sim.input_model.new_input(None)
+    sim.policy_maker_model.new_input(None)
     sim.enable_parallel = False
 
     # Set validation parameter values
@@ -33,8 +33,8 @@ def get_historial_data():
     sim.health_model.preexisting_sigma_multiplier = 0.5
     sim.health_model.preexisting_rho_multiplier = 0.5
     sim.travel_model.travel_multiplier = 10.0
-    sim.input_model.max_transmission_control = 0.7
-    sim.input_model.max_travel_control = 0.5
+    sim.policy_maker_model.max_transmission_control = 0.7
+    sim.policy_maker_model.max_travel_control = 0.5
 
     sim.random_seed = 1
 
@@ -53,7 +53,7 @@ def build_and_run(solution, seed):
     sim_factory.build_components()
     telemetry_bus = MessageBus()
     sim = sim_factory.new_sim(telemetry_bus)
-    sim.input_model.new_input(None)
+    sim.policy_maker_model.new_input(None)
     sim.enable_parallel = False
 
     # Set validation parameter values
@@ -66,8 +66,8 @@ def build_and_run(solution, seed):
     sim.health_model.preexisting_sigma_multiplier = (solution[4] * (1.0-0.5)) + 0.5
     sim.health_model.preexisting_rho_multiplier = (solution[5] * (1.0-0.5)) + 0.5
     sim.travel_model.travel_multiplier = (solution[6] * (100.0-1.0)) + 1.0
-    sim.input_model.max_transmission_control = (solution[7] * (1.0-0.5)) + 0.5
-    sim.input_model.max_travel_control = (solution[8] * (1.0-0.5)) + 0.5
+    sim.policy_maker_model.max_transmission_control = (solution[7] * (1.0-0.5)) + 0.5
+    sim.policy_maker_model.max_travel_control = (solution[8] * (1.0-0.5)) + 0.5
     sim.travel_model.interpolation = (solution[9] * (0.01-0.0)) + 0.0
 
     sim.random_seed = seed

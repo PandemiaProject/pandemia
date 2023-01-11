@@ -314,10 +314,10 @@ travel_model:
   # each day. Values in between interpolate between these numbers.
   interpolation: 0.0
 
-# ######################################### Input ##################################################
+# ######################################### Policy Maker ###########################################
 
-input_model:
-  __type__: void_input_model.VoidInputModel
+policy_maker_model:
+  __type__: void_policy_maker_model.VoidPolicyMakerModel
 
 # ######################################### Output #################################################
 

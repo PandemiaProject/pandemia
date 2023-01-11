@@ -1,22 +1,22 @@
-"""Void input model, specifiying a model with no policy interventions"""
+"""Void policy model, specifiying a model with no policy interventions"""
 
 import logging
 
-from ..input_model import InputModel
+from ..policy_maker_model import PolicyMakerModel
 
-log = logging.getLogger("void_input_model")
+log = logging.getLogger("void_policy_maker_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class VoidInputModel(InputModel):
-    """Default model of input, specifiying a model with no policy interventions"""
+class VoidPolicyMakerModel(PolicyMakerModel):
+    """Default model of a policy maker, specifiying a model with no policy interventions"""
 
     def __init__(self, config, scale_factor, clock, number_of_regions,
                  number_of_vaccines, age_groups):
         """Initialize component"""
         super().__init__(config, scale_factor)
 
-    def new_input(self, policy):
-        """Set new input"""
+    def new_policy(self, policy):
+        """Set new policy"""
 
         pass
 
@@ -30,6 +30,6 @@ class VoidInputModel(InputModel):
         pass
 
     def dynamics(self, vector_region, day):
-        """Changes to input"""
+        """Changes to policy"""
 
         pass

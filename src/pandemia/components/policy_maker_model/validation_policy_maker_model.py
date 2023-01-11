@@ -1,4 +1,4 @@
-"""Default input model, specifiying a predefined set of policy updates, on regional transmission and
+"""Default policy model, specifiying a predefined set of policy updates, on regional transmission and
 to travel between regions"""
 
 from collections import defaultdict
@@ -7,13 +7,13 @@ import numpy as np
 import csv
 import datetime
 
-from ..input_model import InputModel
+from ..policy_maker_model import PolicyMakerModel
 
-log = logging.getLogger("validation_input_model")
+log = logging.getLogger("validation_policy_maker_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class ValidationInputModel(InputModel):
-    """Default model of input, specifiying a predefined set of policy interventions loaded from
+class ValidationPolicyMakerModel(PolicyMakerModel):
+    """Default model of a policy maker, specifiying a predefined set of policy interventions loaded from
     data files, affecting transmission in regions and travel between regions"""
 
     def __init__(self, config, scale_factor, clock, number_of_regions,
@@ -36,17 +36,17 @@ class ValidationInputModel(InputModel):
         self.stay_at_home = defaultdict(dict)
         self.travel_dict = defaultdict(dict)
 
-    def new_input(self, policy):
-        """Set new input"""
+    def new_policy(self, policy):
+        """Set new policy"""
 
         self.day_to_date = {}
         for day in range(self.simulation_length_days):
             self.day_to_date[day] =\
                 (self.epoch + datetime.timedelta(days=day)).strftime('%d/%m/%Y%Z')
 
-        self.transmission_control_input =\
+        self.transmission_control_policy =\
             np.ones((self.simulation_length_days, self.number_of_regions), dtype=np.float64)
-        self.border_closure_input =\
+        self.border_closure_policy =\
             np.ones((self.simulation_length_days, self.number_of_regions), dtype=np.float64)
 
         with open(self.stay_at_home_data_fp, newline='') as csvfile:
@@ -72,29 +72,29 @@ class ValidationInputModel(InputModel):
             date = self.day_to_date[day]
             if date in self.stay_at_home:
                 if vector_region.other_name in self.stay_at_home[date]:
-                    self.transmission_control_input[day][vector_region.id] =\
+                    self.transmission_control_policy[day][vector_region.id] =\
                         1 - (self.max_transmission_control *\
                              self.stay_at_home[date][vector_region.other_name])
             else:
-                self.transmission_control_input[day][vector_region.id] = 1.0
+                self.transmission_control_policy[day][vector_region.id] = 1.0
             if date in self.travel_dict:
                 if vector_region.other_name in self.travel_dict[date]:
-                    self.border_closure_input[day][vector_region.id] =\
+                    self.border_closure_policy[day][vector_region.id] =\
                         1 - (self.max_travel_control *\
                              self.travel_dict[date][vector_region.other_name])
             else:
-                self.border_closure_input[day][vector_region.id] = 1.0
+                self.border_closure_policy[day][vector_region.id] = 1.0
 
     def initial_conditions(self, vector_region):
-        """Initial input"""
+        """Initial policy"""
 
         pass
 
     def dynamics(self, vector_region, day):
-        """Changes to input"""
+        """Changes to policy"""
 
         vector_region.current_region_transmission_multiplier *=\
-            self.transmission_control_input[day][vector_region.id]
+            self.transmission_control_policy[day][vector_region.id]
 
         vector_region.current_border_closure_multiplier =\
-            self.border_closure_input[day][vector_region.id]
+            self.border_closure_policy[day][vector_region.id]

@@ -140,7 +140,7 @@ Once the simulator has been built, it can then be run! The main Pandemia loop lo
 \State travel.dynamics(regions, travel{\_}matrix, day)
 \For{region in regions}
 \State seasonality.dynamics(region, day)
-\State input.dynamics(region, day)
+\State policy{\_}maker.dynamics(region, day)
 \For{tick in range(ticks{\_}in{\_}day)}
 \State $\text{t} \gets (\text{ticks{\_}in{\_}day} * \text{day}) + \text{tick}$
 \State health.dynamics(region, t)
@@ -156,9 +156,9 @@ Once the simulator has been built, it can then be run! The main Pandemia loop lo
 
 Note that some components update each day, while others update each tick. At the beginning of each day, Pandemia decides who is travelling from each region to each other region, and infects these travellers based on the average infectiousness of their destination region. These travellers are then set aside for the remainder of the day. Pandemia then loops over the regions, performing independent agent-based simulations. Since for the remainder of the day these simulations are independent, the loop over the regions can be parallelized. In this way, Pandemia is both fast and scalable. On a laptop computer, using 15 CPUs and 24GB of RAM, Pandemia has been able to perform a 100 day simulation with 24 ticks per day, of over 100 million agents, in under 1.5 hours.
 
-\section{Input}\label{sec:input}
+\section{Policy Maker}\label{sec:policymaker}
 
-The \textbf{Input} component allows the user to specify a \textbf{Policy}, consisting of interventions. A policy is encoded by arrays of integers and floats, indicating the availability or strength of various interventions in each region each day. Currently supported interventions include:
+The \textbf{Policy Maker} component allows the user to specify a \textbf{Policy}, consisting of interventions. A policy is encoded by arrays of integers and floats, indicating the availability or strength of various interventions in each region each day. Currently supported interventions include:
 \begin{itemize}
 \item \textbf{Lockdown}
 \item \textbf{Border Closure}
@@ -185,7 +185,7 @@ representing a typical school week.
 
 Recall also, that during the building of the world, each agent is assigned a weighted set of locations for each activity. For example, suppose in a given region there are two activities, \textbf{Home} and \textbf{Other}. Then, a given agent might be assigned a single location for the activity \textbf{Home}, with weight $1.0$, and several other locations for the activity \textbf{Other}, with weights chosen according to the distance from home, so that locations further from home are less likely to be visited.
 
-In the default movement model, whenever an agent switches from one activity to another, the agent randomly selects a new location from the corresponding set of locations, using the specified weights, at which they will then perform this new activity. Upon changing activity, agents may also put on or take off a face mask, depending on the activity and the current policy on face masks, as specified in the \textbf{Configuration} and \textbf{Input}. If the change of location is prohibited by a policy intervention, for example a lockdown, then the choice of agent is overridden and they are instead directed to their home location. In particular, each agent must for the default movement model be assigned a home location.
+In the default movement model, whenever an agent switches from one activity to another, the agent randomly selects a new location from the corresponding set of locations, using the specified weights, at which they will then perform this new activity. Upon changing activity, agents may also put on or take off a face mask, depending on the activity and the current policy on face masks, as specified by the \textbf{Configuration} and \textbf{Policy Maker}. If the change of location is prohibited by a policy intervention, for example a lockdown, then the choice of agent is overridden and they are instead directed to their home location. In particular, each agent must for the default movement model be assigned a home location.
 
 \section{Health}\label{sec:health}
 
@@ -332,13 +332,13 @@ If a region contains neither a hospital nor a cemetery, then the hospitalization
 
 The default testing and contact tracing model requires the default health model and a world featuring a home location for each agent. The model implements diagnostic tests, contact tracing and self-isolation. Self-isolation directs an agent to remain at home for the duration of the self-isolation period. In particular, each agent must for the default testing and contact tracing model be assigned a home location.
 
-The input component specifies how many test are available in each region each day, for each of the following three systems:
+The policy maker component specifies how many test are available in each region each day, for each of the following three systems:
 \begin{itemize}
 \item \textbf{Random Testing}
 \item \textbf{Symptomatic Testing}
 \item \textbf{Contact Tracing}
 \end{itemize}
-The input component also specifies how many agents can have their contacts traced each day. If an agent is tested and their current infectiousness is above the test threshold, then with probability $ 1 - p $ the agent tests positive, where $p$ is the probability of a false negative.
+The policy maker component also specifies how many agents can have their contacts traced each day. If an agent is tested and their current infectiousness is above the test threshold, then with probability $ 1 - p $ the agent tests positive, where $p$ is the probability of a false negative.
 
 \subsection{Random Testing}
 
@@ -360,7 +360,7 @@ The default vaccination model requires the default health model. The model suppo
 \begin{center}
 \includegraphics[width=0.5\textwidth]{codeexample2bw}
 \end{center}
-Here the vaccine \texttt{vaccine{\_0}} encodes updates to rho and sigma immunity for two strains of the pathogen. The updates follow the exact same multiplicative procedure as the immunity updates resulting from an infection, as described in Section \ref{sec:health}. The model also features age-dependent vaccine hesitancy, and a minimum time between doses. The input component specifies how many doses of each vaccine are available in each region each day, for each age group, with this number of doses being administered to a randomly selected subset of all eligible and willing agents.
+Here the vaccine \texttt{vaccine{\_0}} encodes updates to rho and sigma immunity for two strains of the pathogen. The updates follow the exact same multiplicative procedure as the immunity updates resulting from an infection, as described in Section \ref{sec:health}. The model also features age-dependent vaccine hesitancy, and a minimum time between doses. The policy maker component specifies how many doses of each vaccine are available in each region each day, for each age group, with this number of doses being administered to a randomly selected subset of all eligible and willing agents.
 
 \section{Seasonality}
 
@@ -370,7 +370,7 @@ The seasonal effects component of the Pandemia simulator can be used to configur
 
 The travel model implements mixing between regions. It requires the default health model. At the beginning of each day, a number of uninfected agents are randomly selected to travel from each region to each other region.
 
-The input component associated to each region for each day a multiplier in the range $\texttt{[0,1]}.$ This multiplier represents the extent to which travel \textit{out} of the region is reduced by border restrictions that day, with the value $\texttt{0}$ representing total suppression of travel out of the country. The number of agents travelling between regions $i$ and $j$ is therefore given by the corresponding entry in the \textbf{Travel Matrix}, multiplied by the border closure multiplier of region $i$.
+The policy maker component associates to each region for each day a multiplier in the range $\texttt{[0,1]}.$ This multiplier represents the extent to which travel \textit{out} of the region is reduced by border restrictions that day, with the value $\texttt{0}$ representing total suppression of travel out of the country. The number of agents travelling between regions $i$ and $j$ is therefore given by the corresponding entry in the \textbf{Travel Matrix}, multiplied by the border closure multiplier of region $i$.
 
 Travellers mix homogeneously with the entire population of the destination region. In particular, for each region $j$, an aggregated level of infectiousness is calculated, with this resulting probability, $p_j$, being calculated as:
 \begin{equation*}
@@ -506,7 +506,7 @@ Recall that the world and model components are specified using a \textbf{Configu
 
 $$\textbf{Cost} = \text{Sim}(\textbf{Configuration}, \textbf{Policy}).$$
 
-For a given \textbf{Configuration}, optimization algorithms can then be used to determine the \textbf{Policy} that minimizes the \textbf{Cost}. Recall that the \textbf{Policy} is the object referred to in Section \ref{sec:input}, consisting of arrays of integers and floats, that determines which interventions are active or available in each region each day.
+For a given \textbf{Configuration}, optimization algorithms can then be used to determine the \textbf{Policy} that minimizes the \textbf{Cost}. Recall that the \textbf{Policy} is the object referred to in Section \ref{sec:policymaker}, consisting of arrays of integers and floats, that determines which interventions are active or available in each region each day.
 
 Such an optimization algorithm can be found in the Pandemia codebase. It uses a genetic algorithm to search for optimal policies. Much like the validation tools, this is also a work in progress.
 

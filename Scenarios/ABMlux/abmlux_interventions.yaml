@@ -310,15 +310,15 @@ vaccination_model:
 travel_model:
   __type__: void_travel_model.VoidTravelModel
 
-# ######################################### Input ##################################################
+# ######################################### Policy Maker ###########################################
 
-input_model:
-  # The input component determines the level of interventions in each region each day. In the
-  # DefaultInputModel, a data file for each country is used to determine the level of each
+policy_maker_model:
+  # The policy maker component determines the level of interventions in each region each day. In the
+  # DefaultPolicyMakerModel, a data file for each country is used to determine the level of each
   # intervention for that country each day.
-  __type__: default_input_model.DefaultInputModel
+  __type__: default_policy_maker_model.DefaultPolicyMakerModel
   # The data files are found in the following folder.
-  input_data_filepath: Scenarios/ABMlux/input_data
+  policy_data_filepath: Scenarios/ABMlux/policy_data
 
 # ######################################### Output #################################################
 

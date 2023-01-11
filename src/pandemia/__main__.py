@@ -64,10 +64,10 @@ def main():
 
     sim = sim_factory.new_sim(telemetry_bus)
 
-    # ############## Input ##############
+    # ############## Policy Maker ##############
 
     policy = None
-    sim.input_model.new_input(policy)
+    sim.policy_maker_model.new_policy(policy)
 
     # ############## Setup ##############
 

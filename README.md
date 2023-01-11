@@ -48,10 +48,10 @@ include models of:
 * Vaccination
 * Diagnostics
 * Seasonality
-* Input
+* Policy Maker
 
 The models provided support, for example, multiple strains, multiple vaccines, a novel approach to
-modelling the health of individuals and a complex representation of immunity. The input component
+modelling the health of individuals and a complex representation of immunity. The policy maker component
 allows the user to specify a **Policy**, consisting of interventions. Featured interventions
 include:
 

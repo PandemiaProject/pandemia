@@ -238,10 +238,10 @@ travel_model:
   travel_transmission_multiplier: 2.0
   interpolation: 0.01
 
-# ######################################### Input ##################################################
+# ######################################### Policy Maker ###########################################
 
-input_model:
-  __type__: random_input_model.RandomInputModel
+policy_maker_model:
+  __type__: random_policy_maker_model.RandomPolicyMakerModel
   seed: 1
 
 # ######################################### Output #################################################
