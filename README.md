@@ -22,9 +22,30 @@ re-emergence of infectious diseases threatens the health and well-being of peopl
 and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
 
 This document contains an overview of the model, a quickstart guide and information for
-contributors. The full user guide can be found [here](docs/user_guide.pdf).
+contributors. The full user guide, including a narrative description of the methodology, can be
+found [here](docs/user_guide.pdf).
 
 The code is mixed Python and C.
+
+## Background
+
+In an individual-based model, the simultaneous actions and interactions of multiple individuals are
+simulated in an attempt to re-create and predict the emergence of complex phenomena resulting from
+their collective behaviour. This *bottom-up* approach contrasts with the *top-down* equation-based
+approach to epidemic modelling, an example of the latter being the SIR model. While individual-based
+models are more computationally intensive, they provide the most realistic descriptions of social
+interaction and infectious disease dynamics.
+
+**Pandemia** is based on the [**ABMlux**](https://github.com/abm-covid-lux/abmlux) model, developed
+in Luxembourg between July 2020 and February 2021, funded by the National Research Fund of
+Luxembourg. ABMlux was used in the article:
+
+* Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from
+lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330
+
+In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg,
+and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia
+is a far-reaching generalization of the ABMlux model.
 
 ## Overview
 The Pandemia simulator acts upon a **World**. A **World** consists of a number of objects of type
@@ -238,8 +259,6 @@ pdoc --html --overwrite --html-dir docs pandemia
 ## Acknowledgements
 
 ## Citing this work
-Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), an epidemic model used in the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330. In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg, and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia is a far-reaching generalization of the ABMlux model.
-
 If you publish using technology from this repository, please cite the above article using this BibTeX:
 ```
 @article{10.1371/journal.pone.0261330,
