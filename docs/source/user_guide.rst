@@ -189,7 +189,7 @@ loop looks approximately as follows:
 
       clock, regions, travel\_matrix travel.dynamics(regions,
       travel\_matrix, day) seasonality.dynamics(region, day)
-      input.dynamics(region, day)
+      policy\_maker.dynamics(region, day)
       :math:`\text{t} \gets (\text{ticks{\_}in{\_}day} * \text{day}) + \text{tick}`
       health.dynamics(region, t) movement.dynamics(region, t)
       hospitalization.dynamics(region, t)
@@ -208,12 +208,12 @@ Pandemia is both fast and scalable. On a laptop computer, using 15 CPUs
 and 24GB of RAM, Pandemia has been able to perform a 100 day simulation
 with 24 ticks per day, of over 100 million agents, in under 1.5 hours.
 
-.. _`sec:input`:
+.. _`sec:policymaker`:
 
-Input
-=====
+Policy Maker
+============
 
-The **Input** component allows the user to specify a **Policy**,
+The **Policy Maker** component allows the user to specify a **Policy**,
 consisting of interventions. A policy is encoded by arrays of integers
 and floats, indicating the availability or strength of various
 interventions in each region each day. Currently supported interventions
@@ -282,9 +282,9 @@ activity to another, the agent randomly selects a new location from the
 corresponding set of locations, using the specified weights, at which
 they will then perform this new activity. Upon changing activity, agents
 may also put on or take off a face mask, depending on the activity and
-the current policy on face masks, as specified in the **Configuration**
-and **Input**. If the change of location is prohibited by a policy
-intervention, for example a lockdown, then the choice of agent is
+the current policy on face masks, as specified by the **Configuration**
+and **Policy Maker**. If the change of location is prohibited by a
+policy intervention, for example a lockdown, then the choice of agent is
 overridden and they are instead directed to their home location. In
 particular, each agent must for the default movement model be assigned a
 home location.
@@ -477,7 +477,7 @@ follows:
 
 .. container:: center
 
-   .. image:: codeexamplebw
+   .. image:: images/codeexamplebw.png
       :alt: image
       :width: 50.0%
 
@@ -734,8 +734,8 @@ Self-isolation directs an agent to remain at home for the duration of
 the self-isolation period. In particular, each agent must for the
 default testing and contact tracing model be assigned a home location.
 
-The input component specifies how many test are available in each region
-each day, for each of the following three systems:
+The policy maker component specifies how many test are available in each
+region each day, for each of the following three systems:
 
 -  **Random Testing**
 
@@ -743,7 +743,7 @@ each day, for each of the following three systems:
 
 -  **Contact Tracing**
 
-The input component also specifies how many agents can have their
+The policy maker component also specifies how many agents can have their
 contacts traced each day. If an agent is tested and their current
 infectiousness is above the test threshold, then with probability
 :math:`1 - p` the agent tests positive, where :math:`p` is the
@@ -799,7 +799,7 @@ vaccine. Consider, for example, the following configuration:
 
 .. container:: center
 
-   .. image:: codeexample2bw
+   .. image:: images/codeexample2bw.png
       :alt: image
       :width: 50.0%
 
@@ -808,10 +808,10 @@ immunity for two strains of the pathogen. The updates follow the exact
 same multiplicative procedure as the immunity updates resulting from an
 infection, as described in Section `6 <#sec:health>`__. The model also
 features age-dependent vaccine hesitancy, and a minimum time between
-doses. The input component specifies how many doses of each vaccine are
-available in each region each day, for each age group, with this number
-of doses being administered to a randomly selected subset of all
-eligible and willing agents.
+doses. The policy maker component specifies how many doses of each
+vaccine are available in each region each day, for each age group, with
+this number of doses being administered to a randomly selected subset of
+all eligible and willing agents.
 
 Seasonality
 ===========
@@ -833,14 +833,14 @@ default health model. At the beginning of each day, a number of
 uninfected agents are randomly selected to travel from each region to
 each other region.
 
-The input component associated to each region for each day a multiplier
-in the range :math:`\texttt{[0,1]}.` This multiplier represents the
-extent to which travel *out* of the region is reduced by border
-restrictions that day, with the value :math:`\texttt{0}` representing
-total suppression of travel out of the country. The number of agents
-travelling between regions :math:`i` and :math:`j` is therefore given by
-the corresponding entry in the **Travel Matrix**, multiplied by the
-border closure multiplier of region :math:`i`.
+The policy maker component associates to each region for each day a
+multiplier in the range :math:`\texttt{[0,1]}.` This multiplier
+represents the extent to which travel *out* of the region is reduced by
+border restrictions that day, with the value :math:`\texttt{0}`
+representing total suppression of travel out of the country. The number
+of agents travelling between regions :math:`i` and :math:`j` is
+therefore given by the corresponding entry in the **Travel Matrix**,
+multiplied by the border closure multiplier of region :math:`i`.
 
 Travellers mix homogeneously with the entire population of the
 destination region. In particular, for each region :math:`j`, an
@@ -891,20 +891,20 @@ All parameters, including the scale factor and random seed, are
 configured in a single file, called the **Configuration**. The choice of
 world factory is specified in the configuration. Several example world
 factories have been provided, in particular the homogeneous mixing
-example :math:`\texttt{Global}` and the heterogeneous mixing example
-:math:`\texttt{Global{\_}Grid}`. File paths to input data are also
-specified in the configuration.
+example :math:`\texttt{Homogeneous}` and the heterogeneous mixing
+example :math:`\texttt{Heterogeneous}`. File paths to input data are
+also specified in the configuration.
 
 Example configurations and input data are collected into **Scenarios**.
 
 Homogeneous Mixing
 ------------------
 
-The :math:`\texttt{Global}` world factory builds regions corresponding
-to the countries of the world, where for each region there is only one
-activity and one location, equivalent to the region itself. Mixing
-within each country is therefore homogeneous. Mixing between regions is
-determined using air travel data.
+The :math:`\texttt{Homogeneous}` world factory builds regions
+corresponding to the countries of the world, where for each region there
+is only one activity and one location, equivalent to the region itself.
+Mixing within each country is therefore homogeneous. Mixing between
+regions is determined using air travel data.
 
 In this homogeneous mixing scenario, agents are not assigned homes.
 Consequently, movement and testing and contact tracing models are void,
@@ -912,19 +912,19 @@ the associated interventions and dynamics being irrelevant to this
 scenario.
 
 Using the default reporter to render prevalence within each region, the
-:math:`\texttt{Global}` scenario can be visualized as follows:
+:math:`\texttt{Homogeneous}` scenario can be visualized as follows:
 
 .. container:: center
 
-   .. image:: homogeneous
+   .. image:: images/homogeneous.png
       :alt: image
       :width: 90.0%
 
 Input data
 ~~~~~~~~~~
 
-The input data for the :math:`\texttt{Global}` scenario comes from a
-number of sources. The shape files come from Eurostat:
+The input data for the :math:`\texttt{Homogeneous}` scenario comes from
+a number of sources. The shape files come from Eurostat:
 
 .. container:: center
 
@@ -958,7 +958,7 @@ network in 2010, later refined in to provide monthly estimates in:
 Heterogeneous Mixing
 --------------------
 
-The :math:`\texttt{Global{\_}Grid}` world factory groups agents together
+The :math:`\texttt{Heterogeneous}` world factory groups agents together
 into households, and for each region there are two activities,
 :math:`\texttt{Home{\_}Activity}` and
 :math:`\texttt{Community{\_}Activity}`. Individuals perform the
@@ -989,11 +989,11 @@ where :math:`N(s_2)` is the number of people living in square
 the gravity model exponent.
 
 Using the default reporter to render prevalence within each region, the
-:math:`\texttt{Global{\_}Grid}` scenario can be visualized as follows:
+:math:`\texttt{Heterogeneous}` scenario can be visualized as follows:
 
 .. container:: center
 
-   .. image:: heterogeneous
+   .. image:: images/heterogeneous.png
       :alt: image
       :width: 90.0%
 
@@ -1002,8 +1002,8 @@ Using the default reporter to render prevalence within each region, the
 Input data
 ~~~~~~~~~~
 
-In addition to the datasets used for the :math:`\texttt{Global}`
-scenario, the :math:`\texttt{Global{\_}Grid}` scenario uses population
+In addition to the datasets used for the :math:`\texttt{Homogeneous}`
+scenario, the :math:`\texttt{Heterogeneous}` scenario uses population
 grid data from NASA:
 
 -  Center for International Earth Science Information Network - CIESIN -
@@ -1047,7 +1047,24 @@ numerous activities and dozens of locations types. ABMlux allows this
 object to be saved as a :math:`\texttt{.abm}` file, which can then be
 read by Pandemia’s :math:`\texttt{abmlux}` world factory. This world
 factory converts the Luxembourg model into a Pandemia world object, on
-which a Pandemia simulation can then be built.
+which a Pandemia simulation can then be built. To do this, first clone
+the repository
+
+.. container:: center
+
+   https://github.com/abm-covid-lux/multi_strain_abmlux
+
+and install using
+
+.. math:: \texttt{pip install -e .[test]}.
+
+\ Then run the command
+
+.. math:: \texttt{ms{\_}abmlux Scenarios/Luxembourg/config.yaml sim{\_}factory.abm}.
+
+Once :math:`\texttt{sim{\_}factory.abm}` has been created, copy and
+paste this file into Pandemia’s :math:`\texttt{Scenarios/ABMlux/data}`
+folder.
 
 While Pandemia regions are not required to have the complexity of the
 ABMlux region, such a level of detail is supported by Pandemia, and will
@@ -1079,9 +1096,10 @@ simulation returns a **Cost**:
 
 For a given **Configuration**, optimization algorithms can then be used
 to determine the **Policy** that minimizes the **Cost**. Recall that the
-**Policy** is the object referred to in Section `4 <#sec:input>`__,
-consisting of arrays of integers and floats, that determines which
-interventions are active or available in each region each day.
+**Policy** is the object referred to in Section
+`4 <#sec:policymaker>`__, consisting of arrays of integers and floats,
+that determines which interventions are active or available in each
+region each day.
 
 Such an optimization algorithm can be found in the Pandemia codebase. It
 uses a genetic algorithm to search for optimal policies. Much like the
@@ -1099,5 +1117,5 @@ lives and reduce the cost of interventions. By inverting the cost
 function, Pandemia can also be used to determine which strategies are
 best avoided.
 
-.. |image| image:: pandemia_logo
+.. |image| image:: images/pandemia_logo.jpg
    :width: 20.0%
