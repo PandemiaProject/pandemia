@@ -45,8 +45,8 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
 
         vector_region.number_of_hospitals = len(hospitals)
         vector_region.number_of_cemeteries = len(cemeteries)
-        vector_region.hospitals = np.array(hospitals).astype(int)
-        vector_region.cemeteries = np.array(cemeteries).astype(int)
+        vector_region.hospitals = np.array(hospitals).astype(np.int64)
+        vector_region.cemeteries = np.array(cemeteries).astype(np.int64)
         vector_region.in_hospital = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.in_cemetery = np.zeros((number_of_agents), dtype=np.int64)
 

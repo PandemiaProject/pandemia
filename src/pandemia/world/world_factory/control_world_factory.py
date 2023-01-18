@@ -11,7 +11,7 @@ from ..region import Region
 from .. import World
 from . import WorldFactory
 
-log = logging.getLogger('test_world_factory')
+log = logging.getLogger('control_world_factory')
 
 class ControlWorldFactory(WorldFactory):
     """Creates a world which can be used for testing all components of the model (individually or collectively)."""

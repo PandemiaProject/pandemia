@@ -672,7 +672,7 @@ void dynamics_movement
                     requesting_facemask_update[n] = 1;
                 }
                 // If the agent is currently wearing a facemask but shouldn't be, take it off
-                if(current_facemask[n] == 1 && (facemask_intervention == -1 ||
+                if(current_facemask[n] == 1 && (facemask_intervention == 0 ||
                                                 wears_facemask[(n * A) + new_activity] == 0)){
                     requested_facemask_update[n] = 0;
                     requesting_facemask_update[n] = 1;
@@ -768,7 +768,7 @@ void default_testing_and_contact_tracing_dynamics
                 int num_to_test_contact,
                 int max_regular_contacts_to_test,
                 int id,
-                double symptomatic_disease_treshold,
+                double symptomatic_disease_threshold,
                 double test_threshold,
                 double test_false_negative,
                 double prob_quarantine_with_symptoms_without_test,
@@ -841,8 +841,8 @@ void default_testing_and_contact_tracing_dynamics
     for(int j=0; j<num_eligible_symp; j++){
         int n, test_result;
         n = eligible_agents_symp[j];
-        if(current_disease[n] >= symptomatic_disease_treshold){
-            if(yesterdays_disease[n] < symptomatic_disease_treshold){
+        if(current_disease[n] >= symptomatic_disease_threshold){
+            if(yesterdays_disease[n] < symptomatic_disease_threshold){
                 if(num_to_test_symptomatic > 0){
                     test_result = test(random_state, current_infectiousness[n], test_threshold,
                                        test_false_negative);
@@ -1135,11 +1135,11 @@ void dynamics_vaccination
         int num_eligible = 0;
         uint64_t * eligible = (uint64_t *)malloc(sizeof(uint64_t) * N);
         for(int n=0; n<N; n++){
-            if(current_region[n] == id &&
-               current_disease[n] < 1.0 &&
-               day - most_recent_first_dose[n] >= booster_waiting_time_days &&
-               current_strain[n] == -1 &&
-               vaccine_hesitant[n] == 0){
+            if((current_region[n] == id) &&
+               (current_disease[n] < 1.0) &&
+               (day - most_recent_first_dose[n] >= booster_waiting_time_days) &&
+               (current_strain[n] == -1) &&
+               (vaccine_hesitant[n] == 0)){
                 eligible[n] = 1;
                 num_eligible += 1;
             } else {
@@ -1154,7 +1154,7 @@ void dynamics_vaccination
         int t = day * ticks_in_day;
         int num_agents_to_vaccinate = 0;
         for(int v=0; v<V; v++){
-            num_agents_to_vaccinate += num_to_vaccinate[(age_group_index * A) + v];
+            num_agents_to_vaccinate += num_to_vaccinate[(age_group_index * V) + v];
         }
         num_agents_to_vaccinate = fmin(num_eligible, num_agents_to_vaccinate);
         uint64_t * agents_to_vaccinate = (uint64_t *)malloc(sizeof(uint64_t) * num_agents_to_vaccinate);
@@ -1243,7 +1243,7 @@ void dynamics_vaccination
                     }
 
                     sigma_length =
-                            vaccine_rho_immunity_failure_lengths[(v * S) + s];
+                            vaccine_sigma_immunity_failure_lengths[(v * S) + s];
 
                     for(int i=0; i<I; i++){
 
@@ -1266,7 +1266,7 @@ void dynamics_vaccination
                 requesting_immunity_update[n] = 1;
 
             }
-            if(num_vaccinated >= num_to_vaccinate[(age_group_index * A) + v]){
+            if(num_vaccinated >= num_to_vaccinate[(age_group_index * V) + v]){
                 v += 1;
                 num_vaccinated = 0;
             }

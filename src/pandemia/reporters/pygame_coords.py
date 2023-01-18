@@ -32,7 +32,7 @@ class PygameCoords(Reporter):
         self.font_size            = config['font_size']
         self.display_width        = config['display_width']
         self.display_height       = config['display_height']
-        self.square_width_config  = config['square_width']
+        self.cellsize_config  = config['cellsize']
         self.fullscreen           = config['fullscreen']
         cmap                      = config['cmap']
 
@@ -92,11 +92,11 @@ class PygameCoords(Reporter):
             self.height = int(self.display_height)
             self.width = int(self.height * r_old)
 
-        if self.square_width_config is not None:
-            self.square_width = int(self.width / (spatial_width / self.square_width_config)) + 1
-            self.square_height = int(self.height / (spatial_height / self.square_width_config)) + 1
+        if self.cellsize_config is not None:
+            self.cellsize = int(self.width / (spatial_width / self.cellsize_config)) + 1
+            self.square_height = int(self.height / (spatial_height / self.cellsize_config)) + 1
         else:
-            self.square_width = 1
+            self.cellsize = 1
             self.square_height = 1
 
         # Determine the mapping of spatial coordinates to display coordinates on screen
@@ -151,7 +151,7 @@ class PygameCoords(Reporter):
             for coord in self.region_coordinates:
                 colour = self.prevalence_to_colour[0]
                 pygame.draw.rect(self.screen, colour, pygame.Rect(coord[0] + self.x_offset,
-                                 coord[1] + self.y_offset, self.square_width,
+                                 coord[1] + self.y_offset, self.cellsize,
                                  self.square_height))
         self.background_screen = self.screen.copy()
 
@@ -194,7 +194,7 @@ class PygameCoords(Reporter):
                     if not empty_pixels[(x * self.height) + y]:
                         colour = self.prevalence_to_colour[prevalence[(x * self.height) + y]]
                         pygame.draw.rect(self.screen, colour, pygame.Rect(x + self.x_offset,
-                                         y + self.y_offset, self.square_width, self.square_height))
+                                         y + self.y_offset, self.cellsize, self.square_height))
 
             infected = int((1 / self.scale_factor) * infected)
 

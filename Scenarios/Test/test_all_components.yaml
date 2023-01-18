@@ -200,7 +200,7 @@ hospitalization_and_death_model:
 testing_and_contact_tracing_model:
   __type__: default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel
   quarantine_period_days: 14
-  symptomatic_disease_treshold: 0.2
+  symptomatic_disease_threshold: 0.2
   prob_quarantine_with_symptoms_without_test: 0.001
   prob_quarantine_with_contact_without_test: 0.001
   test_threshold: 0.005
@@ -238,10 +238,10 @@ travel_model:
   travel_transmission_multiplier: 2.0
   interpolation: 0.01
 
-# ######################################### Input ##################################################
+# ######################################### Policy Maker ###########################################
 
-input_model:
-  __type__: random_input_model.RandomInputModel
+policy_maker_model:
+  __type__: random_policy_maker_model.RandomPolicyMakerModel
   seed: 1
 
 # ######################################### Output #################################################

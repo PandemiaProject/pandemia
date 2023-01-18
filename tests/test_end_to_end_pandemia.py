@@ -150,10 +150,10 @@ def _update_config(input_scenario: Union[dict, str, Path], delta_config: dict) -
 
 
 @pytest.mark.slow
-def test_end_to_end_global(run_end_to_end_simulation):
-    input_scenario = "Scenarios/Test/test_global_config.yaml"
+def test_end_to_end_homogeneous(run_end_to_end_simulation):
+    input_scenario = "Scenarios/Test/test_homogeneous_config.yaml"
     # expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
-    expect_results = "tests/e2e_expected_outputs/strain_counts_test_global_config.csv"
+    expect_results = "tests/e2e_expected_outputs/strain_counts_test_homogeneous_config.csv"
 
     run_end_to_end_simulation(input_scenario, expect_results)
 
@@ -205,11 +205,11 @@ def test_e2e_hospitalization_and_death_model(
 
 
 @pytest.mark.slow
-def test_e2e_input_model(get_default_expected_df, run_end_to_end_simulation):
+def test_e2e_policy_maker_model(get_default_expected_df, run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
 
     delta_config = {
-        "input_model": {"__type__": "random_input_model.RandomInputModel", "seed": 1}
+        "policy_maker_model": {"__type__": "random_policy_maker_model.RandomPolicyMakerModel", "seed": 1}
     }
 
     scenario = _update_config(input_scenario, delta_config)
@@ -244,7 +244,7 @@ def test_e2e_testing_and_contact_tracing_model(
         "testing_and_contact_tracing_model": {
             "__type__": "default_testing_and_contact_tracing_model.DefaultTestingAndContactTracingModel",
             "quarantine_period_days": 14,
-            "symptomatic_disease_treshold": 0.2,
+            "symptomatic_disease_threshold": 0.2,
             "prob_quarantine_with_symptoms_without_test": 0.001,
             "prob_quarantine_with_contact_without_test": 0.001,
             "test_threshold": 0.005,
@@ -256,7 +256,7 @@ def test_e2e_testing_and_contact_tracing_model(
     scenario = _update_config(input_scenario, delta_config)
 
     delta_config = {
-        "input_model": {"__type__": "random_input_model.RandomInputModel", "seed": 1}
+        "policy_maker_model": {"__type__": "random_policy_maker_model.RandomPolicyMakerModel", "seed": 1}
     }
 
     scenario = _update_config(scenario, delta_config)
@@ -319,7 +319,7 @@ def test_e2e_vaccination_model(get_default_expected_df, run_end_to_end_simulatio
     scenario = _update_config(input_scenario, delta_config)
 
     delta_config = {
-        "input_model": {"__type__": "random_input_model.RandomInputModel", "seed": 1}
+        "policy_maker_model": {"__type__": "random_policy_maker_model.RandomPolicyMakerModel", "seed": 1}
     }
 
     scenario = _update_config(scenario, delta_config)

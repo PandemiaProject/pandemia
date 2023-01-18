@@ -22,9 +22,30 @@ re-emergence of infectious diseases threatens the health and well-being of peopl
 and tools such as Pandemia can play a vital role in supporting pandemic preparedness and response.
 
 This document contains an overview of the model, a quickstart guide and information for
-contributors. The full user guide can be found [here](docs/user_guide.pdf).
+contributors. The full user guide, including a narrative description of the methodology, can be
+found [here](docs/user_guide.pdf).
 
 The code is mixed Python and C.
+
+## Background
+
+In an individual-based model, the simultaneous actions and interactions of multiple individuals are
+simulated in an attempt to re-create and predict the emergence of complex phenomena resulting from
+their collective behaviour. This *bottom-up* approach contrasts with the *top-down* equation-based
+approach to epidemic modelling, an example of the latter being the SIR model. While individual-based
+models are more computationally intensive, they provide the most realistic descriptions of social
+interaction and infectious disease dynamics.
+
+**Pandemia** is based on the [**ABMlux**](https://github.com/abm-covid-lux/abmlux) model, developed
+in Luxembourg between July 2020 and February 2021, funded by the National Research Fund of
+Luxembourg. ABMlux was used in the article:
+
+* Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from
+lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330
+
+In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg,
+and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia
+is a far-reaching generalization of the ABMlux model.
 
 ## Overview
 The Pandemia simulator acts upon a **World**. A **World** consists of a number of objects of type
@@ -48,10 +69,10 @@ include models of:
 * Vaccination
 * Diagnostics
 * Seasonality
-* Input
+* Policy Maker
 
 The models provided support, for example, multiple strains, multiple vaccines, a novel approach to
-modelling the health of individuals and a complex representation of immunity. The input component
+modelling the health of individuals and a complex representation of immunity. The policy maker component
 allows the user to specify a **Policy**, consisting of interventions. Featured interventions
 include:
 
@@ -67,12 +88,12 @@ Objects of type **Reporter** collect output data for visualization and analysis.
 A number of **World Factory** and **Component** examples are provided for the user. In particular,
 for each **Component**, a default model is provided, as well as a void model in case the user does
 not wish for this component to be active during a simulation. Among the **World Factory** examples
-are **Global** and **Global Grid**. Both these factories build all the countries in the world, using
-air travel data to configure travel between countries. However, whereas **Global** implements
-homogeneous mixing within each country, **Global Grid** implements a simple model of hetergeneous
-mixing, based on average household size and population density grids. **Global Grid** also allows
+are **Homogeneous** and **Heterogeneous**. Both these factories build all the countries in the world, using
+air travel data to configure travel between countries. However, whereas **Homogeneous** implements
+homogeneous mixing within each country, **Heterogeneous** implements a simple model of hetergeneous
+mixing, based on average household size and population density grids. **Heterogeneous** also allows
 the user to limit the simulation to a chosen subset of countries. In particular, the user can run
-**Global Grid** on only a single country, if the user wishes. For both of these world factories,
+**Heterogeneous** on only a single country, if the user wishes. For both of these world factories,
 the recommended scale factor is 0.0005.
 
 Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
@@ -80,30 +101,30 @@ of submodel for each of the simulation components, together with configurations 
 objects and the reporters. Example scenarios can be found in the [Scenarios](Scenarios/)
 directory.
 
-The homogeneous mixing scenario **Global** uses the **Global** world factory. In this
-scenario, individuals mix homogeneously within each region, with mixing between regions being
-determined using air travel data. Colouring regions according to prevalance, the scenario can be
-visualized as follows:
+The homogeneous mixing scenario uses the **Homogeneous** world factory. In this scenario,
+individuals mix homogeneously within each region, with mixing between regions being determined using
+air travel data. Colouring regions according to prevalance, the scenario can be visualized as
+follows:
 
 ![pandemia Logo](pandemia_homogeneous.jpg)
 
-The heterogeneous mixing scenario **Global Grid** uses the **Global Grid** world factory. In this
-scenario, individuals mix heterogeneously within each region. This uses data on average household
-size, population distribution and a simple gravity model of mobility. Colouring grid squares
-according to numbers infected, the scenario has the following visualization:
+The heterogeneous mixing scenario uses the **Heterogeneous** world factory. In this scenario,
+individuals mix heterogeneously within each region. This uses data on average household size,
+population distribution and a simple gravity model of mobility. Colouring grid squares according to
+numbers infected, the scenario has the following visualization:
 
 ![pandemia Logo](pandemia_heterogeneous.jpg)
 
 For each scenario, all parameter values are set in the corresponding YAML file. For example, the
-**Global** config can be found [here](Scenarios/Global/global_config.yaml) while the **Global Grid**
-config can be found [here](Scenarios/Global_Grid/global_grid_config.yaml).
+**Homogeneous** config can be found [here](Scenarios/Homogeneous/homogeneous_config.yaml) while the **Heterogeneous**
+config can be found [here](Scenarios/Heterogeneous/heterogeneous_config.yaml).
 
 ### Input Data
 Input data for each scenario are found in the [Scenarios/](Scenarios/) directory. For example, all
-input data for the **Global** scenario are found in [Scenarios/Global/data](Scenarios/Global/data).
-All input data for the **Global Grid** scenario are found in [Scenarios/Global_Grid/data](Scenarios/Global_Grid/data).
+input data for the **Homogeneous** scenario are found in [Scenarios/Homogeneous/data](Scenarios/Homogeneous/data).
+All input data for the **Heterogeneous** scenario are found in [Scenarios/Heterogeneous/data](Scenarios/Heterogeneous/data).
 
-The **Global Grid** world factory uses the following grid data, available under a CC BY 4.0 license:
+The **Heterogeneous** world factory uses the following grid data, available under a CC BY 4.0 license:
 
 Center for International Earth Science Information Network - CIESIN - Columbia University. 2018.
 Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11. Palisades,
@@ -111,8 +132,9 @@ New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.o
 Accessed 31 OCTOBER 2022.
 
 ### Output Data
-Output data are stored in an output directory, configured by the user in the reporters section of the
-scenario configuration.
+Output data are stored in a output directory. This is configured by the user in the reporters
+section of the scenario configuration. Output can include a csv file of the numbers infected with
+each strain, in each region each day, and plots in png format of infections and deaths over time.
 
 ## Requirements
 
@@ -134,24 +156,24 @@ pip install .
 ```
 To run the homogeneous mixing scenario:
 ```
-pandemia Scenarios/Global/global_config.yaml
+pandemia Scenarios/Homogeneous/homogeneous_config.yaml
 ```
 To run the heterogeneous mixing scenario:
 ```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml
+pandemia Scenarios/Heterogeneous/heterogeneous_config.yaml
 ```
 To run the heterogeneous mixing scenario and save after the world building phase:
 ```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+pandemia Scenarios/Heterogeneous/heterogeneous_config.yaml Scenarios/Heterogeneous/heterogeneous_world.wld
 ```
 To run the heterogeneous mixing scenario using the save, thereby skipping the world building phase:
 ```
-pandemia Scenarios/Global_Grid/global_grid_config.yaml Scenarios/Global_Grid/global_grid_world.wld
+pandemia Scenarios/Heterogeneous/heterogeneous_config.yaml Scenarios/Heterogeneous/heterogeneous_world.wld
 ```
 To configure a new scenario, the user should choose one of the configs already provided, as a
 template, which they should then edit as necessary. These configs are annotated with comments
 briefly explaining the meaning of each of the parameters. For more information, consult the user
-manual.
+guide.
 
 The advanced user might even wish to write their own models, to be used instead of the default
 models provided.
@@ -195,7 +217,7 @@ All the scenarios files for integration tests are in `./Scenarios/Tests`.
 
 | Test Scenario | Purpose |
 |---|---|
-| `test_global_config.yaml` | A general purpose global scenario |
+| `test_homogeneous_config.yaml` | A general purpose homogeneous mixing scenario |
 | `test_all_components.yaml` | A scenario that uses the "Default" version of every component |
 | `test_void_all.yaml` | A scenario that uses the "Void" version of every component |
 | `test_e2e_health_and_movement_model.yaml` | Uses the "DefaultHealthModel", "DefaultMovementModel" and the "Void" version of all other components |
@@ -237,8 +259,6 @@ pdoc --html --overwrite --html-dir docs pandemia
 ## Acknowledgements
 
 ## Citing this work
-Pandemia is based on [ABMlux](https://github.com/abm-covid-lux/abmlux), an epidemic model used in the article Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330. In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg, and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia is a far-reaching generalization of the ABMlux model.
-
 If you publish using technology from this repository, please cite the above article using this BibTeX:
 ```
 @article{10.1371/journal.pone.0261330,

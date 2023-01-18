@@ -8,60 +8,6 @@ from .location import Location
 
 log = logging.getLogger("region")
 
-class VectorRegion:
-    """Contains vector representations of agents, locations and other objects. Additional
-    attributes are initialized by the simulation components, for example the health model,
-    inside their vectorize_component function."""
-
-    def __init__(self, id: int,
-                       name: str,
-                       ticks_in_week: int,
-                       number_of_activities: int,
-                       number_of_agents: int,
-                       number_of_locations: int,
-                       max_num_activity_locations: int):
-
-        self.id = id
-        self.name = name
-        self.other_name = None
-        self.super_region = None
-        self.random_state = None
-        self.prng = None
-        self.number_of_agents = number_of_agents
-        self.age = np.zeros((number_of_agents), dtype=np.int64)
-        self.number_of_locations = number_of_locations
-
-        assert number_of_activities <= 255
-        self.number_of_activities = number_of_activities
-        self.weekly_routines = np.zeros((number_of_agents, ticks_in_week), dtype=np.uint8)
-
-        self.num_activity_locations =\
-            np.zeros((number_of_agents, number_of_activities), dtype=np.int64)
-        self.activity_locations = np.zeros((number_of_agents, number_of_activities,
-                                            max_num_activity_locations), dtype=np.int64)
-        self.activity_location_weights = np.zeros((number_of_agents, number_of_activities,
-                                                   max_num_activity_locations), dtype=np.float64)
-        self.max_num_activity_locations = max_num_activity_locations
-        self.activity_strings = [None for _ in range(number_of_activities)]
-        self.location_typ_strings = [None for _ in range(number_of_locations)]
-        self.location_x_coords = np.zeros((number_of_locations), dtype=np.float64)
-        self.location_y_coords = np.zeros((number_of_locations), dtype=np.float64)
-        self.coordinates = None
-        self.region_coordinates = None
-
-        # These members are not consistently applied between Void and Default components
-        self.current_disease = np.zeros((number_of_agents), dtype=np.float64)
-        self.current_strain = np.full((number_of_agents), -1, dtype=np.int64)
-        self.requested_location_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.requesting_location_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.home_location = np.zeros((number_of_agents), dtype=np.int64)
-        self.current_quarantine = np.zeros((number_of_agents), dtype=np.int64)
-        self.current_location = np.zeros((number_of_agents), dtype=np.int64)
-        self.current_facemask = np.zeros((number_of_agents), dtype=np.int64)
-        self.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
-        self.wears_facemask = np.zeros((number_of_agents, number_of_activities), dtype=np.int64)
-
 class Region:
     """Represents a region, for example a country or an administrative division, consisting of
     agents, locations and activities.
@@ -229,9 +175,9 @@ class VectorRegion:
     Parameters:
     ----------
     id : int
-        An integer identifier for this region.
+        An integer identifier for this region. This will be determined by the world factory.
     name : str
-        The name of the region. For example, if the region represents a country, this could be the
+        A name for this region. For example, if the region represents a country, this could be the
         country code in ISO 3166-1 alpha-2 format.
     ticks_in_week : int
         The number of clock ticks in the week.
@@ -247,16 +193,16 @@ class VectorRegion:
     """
 
     id = None
-    """An integer identifier for this region (`int`).
+    """An integer identifier for this region (`int`). This will be determined by the world factory.
     """
 
     name = None
-    """The name of the region (`str`). For example, if the region represents a country, this could
+    """A name for this region (`str`). For example, if the region represents a country, this could
     be the country code in ISO 3166-1 alpha-2 format.
     """
 
     other_name = None
-    """Another name of the region (`Union[None, str]`). For example, if the region represents a
+    """Another name of this region (`Union[None, str]`). For example, if the region represents a
     country, this could be the country code in ISO 3166-1 alpha-3 format.
     """
 

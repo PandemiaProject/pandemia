@@ -18,13 +18,13 @@ class Policy():
 
     def __init__(self, T, R, A, V):
 
-        self.lockdown_input            = np.full((T, R), -1, dtype=np.int64)
-        self.border_closure_input      = np.full((T, R), 1.0, dtype=np.float64)
-        self.facemask_input            = np.full((T, R), -1, dtype=np.int64)
-        self.random_testing_input      = np.full((T, R), 0, dtype=np.int64)
-        self.symptomatic_testing_input = np.full((T, R), 0, dtype=np.int64)
-        self.contact_testing_input     = np.full((T, R), 0, dtype=np.int64)
-        self.vaccination_input         = np.full((T, R, A, V), 0, dtype=np.int64)
+        self.lockdown_policy            = np.full((T, R), -1, dtype=np.int64)
+        self.border_closure_policy      = np.full((T, R), 1.0, dtype=np.float64)
+        self.facemask_policy            = np.full((T, R), -1, dtype=np.int64)
+        self.random_testing_policy      = np.full((T, R), 0, dtype=np.int64)
+        self.symptomatic_testing_policy = np.full((T, R), 0, dtype=np.int64)
+        self.contact_testing_policy     = np.full((T, R), 0, dtype=np.int64)
+        self.vaccination_policy         = np.full((T, R, A, V), 0, dtype=np.int64)
 
 def fitness_func(solution, solution_idx):
     """Builds simulator and runs"""
@@ -65,7 +65,7 @@ def fitness_func(solution, solution_idx):
                             num_can_vaccinate_each_day)
         vaccination_sol[day] = (np.multiply(share[:, None], dist[supply_period])).astype(int)
 
-    policy.vaccination_input = vaccination_sol[:, :, :, np.newaxis]
+    policy.vaccination_policy = vaccination_sol[:, :, :, np.newaxis]
 
     average_cost = 0
     num_valid_runs = 0
@@ -82,7 +82,7 @@ def fitness_func(solution, solution_idx):
         sim.random_seed = seed
 
         # Run sim
-        sim.input_model.new_input(policy)
+        sim.policy_maker_model.new_policy(policy)
         sim.setup()
         sim.run()
         cost = sim.calculate_cost(policy)
@@ -111,10 +111,10 @@ sim_factory.build_components()
 telemetry_bus = MessageBus()
 sim = sim_factory.new_sim(telemetry_bus)
 
-num_days = sim.input_model.simulation_length_days
-num_regions = sim.input_model.number_of_regions
-num_vaccines = sim.input_model.number_of_vaccines
-num_age_groups = sim.input_model.number_of_vaccination_age_groups
+num_days = sim.policy_maker_model.simulation_length_days
+num_regions = sim.policy_maker_model.number_of_regions
+num_vaccines = sim.policy_maker_model.number_of_vaccines
+num_age_groups = sim.policy_maker_model.number_of_vaccination_age_groups
 
 assert num_vaccines == 1
 

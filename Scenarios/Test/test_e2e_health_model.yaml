@@ -199,10 +199,10 @@ vaccination_model:
 travel_model:
   __type__: void_travel_model.VoidTravelModel
 
-# ######################################### Input ##################################################
+# ######################################### Policy Maker ###########################################
 
-input_model:
-  __type__: void_input_model.VoidInputModel
+policy_maker_model:
+  __type__: void_policy_maker_model.VoidPolicyMakerModel
 
 # ######################################### Output #################################################
 

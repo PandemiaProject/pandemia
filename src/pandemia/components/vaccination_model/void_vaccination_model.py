@@ -11,7 +11,8 @@ log = logging.getLogger("void_vaccination_model")
 class VoidVaccinationModel(VaccinationModel):
     """Void model of vaccination"""
 
-    def __init__(self, config, clock, number_of_strains, immunity_length, immunity_period_ticks):
+    def __init__(self, config, clock, number_of_strains, number_of_rho_immunity_outcomes,
+                 immunity_length, immunity_period_ticks):
         """Initial vaccination"""
         super().__init__(config)
 

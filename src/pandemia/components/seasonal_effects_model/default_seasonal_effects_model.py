@@ -37,10 +37,10 @@ class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
                 next(csvfile)
                 region_data_seasonality = csv.reader(csvfile, delimiter=',')
                 for row in region_data_seasonality:
-                    iso = str(row[2])
+                    iso = str(row[1])
                     seasonal_multipliers = []
                     for r in range(12):
-                        if int(row[4 + r]) == 1:
+                        if int(row[3 + r]) == 1:
                             multiplier = 1
                         else:
                             multiplier = 0
