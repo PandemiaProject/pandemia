@@ -11,6 +11,7 @@ Welcome to pandemia's documentation!
 .. toctree::
 
    usage
+   userguide
    api
 
 
