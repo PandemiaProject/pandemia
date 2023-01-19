@@ -5,6 +5,8 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
 [![End to End tests](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml/badge.svg)](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml)
+[![Documentation Status](https://readthedocs.org/projects/pandemia/badge/?version=latest)](https://pandemia.readthedocs.io/en/latest/?badge=latest)
+
 
 ![pandemia Logo](pandemia_logo.jpg)
 
