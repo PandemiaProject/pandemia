@@ -50,11 +50,12 @@ setup(
     extras_require={  # Optional
         # 'dev': ['check-manifest'],
         'test': ['pandas',
-                 'pdoc',
+                 'pdoc3',
                  'pytest',
                  'pytest-cov',
                  "pytest-flakefinder",
-                 "icecream"
+                 "icecream",
+                 "Sphinx~=6.1.3"
                  ],
     },
     package_data={'pandemia': ["C/build/*"]},

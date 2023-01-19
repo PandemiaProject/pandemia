@@ -155,3 +155,6 @@ tests/recreate_gold_standard/
 *.idea/
 sync_windows_vm.sh
 *.eggs/*
+
+# Docs
+docs/source/generated/*

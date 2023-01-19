@@ -5,6 +5,8 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/?/badge?s=006dc8f386c6ea6d2a7a90377ff30fcf15328919)](https://www.codefactor.io/repository/github/?) -->
 
 [![End to End tests](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml/badge.svg)](https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml)
+[![Documentation Status](https://readthedocs.org/projects/pandemia/badge/?version=latest)](https://pandemia.readthedocs.io/en/latest/?badge=latest)
+
 
 ![pandemia Logo](pandemia_logo.jpg)
 
@@ -23,7 +25,7 @@ and tools such as Pandemia can play a vital role in supporting pandemic prepared
 
 This document contains an overview of the model, a quickstart guide and information for
 contributors. The full user guide, including a narrative description of the methodology, can be
-found [here](docs/user_guide.pdf).
+found [here](https://pandemia.readthedocs.io/en/feature-docs-workflow/user_guide.html).
 
 The code is mixed Python and C.
 
@@ -44,7 +46,7 @@ Luxembourg. ABMlux was used in the article:
 lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330
 
 In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg,
-and used it simulate the impact of interventions over the first 6 months of the pandemic. Pandemia
+and used it to simulate the impact of interventions over the first 6 months of the pandemic. Pandemia
 is a far-reaching generalization of the ABMlux model.
 
 ## Overview
@@ -103,15 +105,14 @@ directory.
 
 The homogeneous mixing scenario uses the **Homogeneous** world factory. In this scenario,
 individuals mix homogeneously within each region, with mixing between regions being determined using
-air travel data. Colouring regions according to prevalance, the scenario can be visualized as
+air travel data. Colouring regions according to prevalence, the scenario can be visualized as
 follows:
 
 ![pandemia Logo](pandemia_homogeneous.jpg)
 
 The heterogeneous mixing scenario uses the **Heterogeneous** world factory. In this scenario,
 individuals mix heterogeneously within each region. This uses data on average household size,
-population distribution and a simple gravity model of mobility. Colouring grid squares according to
-numbers infected, the scenario has the following visualization:
+population distribution and a simple gravity model of mobility. Colouring grid squares according to the numbers infected, the scenario has the following visualization:
 
 ![pandemia Logo](pandemia_heterogeneous.jpg)
 
@@ -132,7 +133,7 @@ New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.o
 Accessed 31 OCTOBER 2022.
 
 ### Output Data
-Output data are stored in a output directory. This is configured by the user in the reporters
+Output data are stored in an output directory. This is configured by the user in the reporters
 section of the scenario configuration. Output can include a csv file of the numbers infected with
 each strain, in each region each day, and plots in png format of infections and deaths over time.
 
@@ -140,7 +141,7 @@ each strain, in each region each day, and plots in png format of infections and 
 
 - Python 3.10
   - Python version other than 3.10 may produce errors.
-- A GCC complier.
+  - A GCC compiler.
 
 ## Quickstart
 

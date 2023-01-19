@@ -3,5 +3,6 @@
         "*.rmd": "markdown",
         "inttypes.h": "c",
         "stdio.h": "c"
-    }
+    },
+    "esbonio.sphinx.confDir": ""
 }

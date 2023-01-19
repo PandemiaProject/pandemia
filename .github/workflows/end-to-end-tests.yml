@@ -10,6 +10,8 @@ on:
     paths-ignore:
       - '**/*md'
       - '**/*tex'
+      - '.readthedocs.yaml'
+      - 'docs/'
   workflow_dispatch:
 
 
