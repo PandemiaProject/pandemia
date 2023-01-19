@@ -27,12 +27,28 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx_rtd_theme',
-    'myst_parser'
+    'myst_parser',
+    'sphinx.ext.napoleon',
+    'autoapi.extension',
 ]
 
 
 templates_path = ['_templates']
 exclude_patterns = []
+
+autoapi_dirs = ['../../src/pandemia']
+autoapi_type = "python"
+
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "imported-members",
+]
+
+autoapi_keep_files = True
+autodoc_typehints = "signature"
 
 
 

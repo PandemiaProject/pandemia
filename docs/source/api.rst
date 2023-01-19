@@ -1,17 +1,9 @@
 API Reference
 =============
 
-.. autosummary::
-   :recursive:
-   :toctree: 
-  
-   pandemia
-..
-   :template: api_page_template.rst
 
-   pandemia
+.. toctree::
+   :maxdepth: 3
 
-.. 
-   currentmodule:: 
-   :members:
-   :undoc-members:
+   ...
+   autoapi/index

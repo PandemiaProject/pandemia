@@ -4,3 +4,4 @@ sphinxcontrib-devhelp
 sphinxcontrib-htmlhelp
 sphinxcontrib-jsmath
 sphinxcontrib-serializinghtml
+sphinx-autoapi
