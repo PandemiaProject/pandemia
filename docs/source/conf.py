@@ -38,6 +38,7 @@ exclude_patterns = []
 
 autoapi_dirs = ['../../src/pandemia']
 autoapi_type = "python"
+autoapi_root = "api"
 
 autoapi_options = [
     "members",
@@ -47,9 +48,9 @@ autoapi_options = [
     "imported-members",
 ]
 
-autoapi_keep_files = True
+autoapi_keep_files = False
 autodoc_typehints = "signature"
-
+autoapi_add_toctree_entry = False
 
 
 # -- Options for HTML output -------------------------------------------------
