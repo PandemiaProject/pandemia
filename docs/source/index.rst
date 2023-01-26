@@ -17,6 +17,7 @@ Pandemia
 
    readme
    user_guide
+   configuration
    api
 
 
