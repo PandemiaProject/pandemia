@@ -352,7 +352,7 @@ For agent :math:`\texttt{n}`, the variable
 so with which strain. The variable is an integer, taking values in the
 range
 
-.. math:: \{\texttt{-1, 0, 1, 2, \ldots, S - 1}\}
+.. math:: \{\texttt{-1, 0, 1, 2}, \ldots, \texttt{S - 1}\}
 
 where :math:`\texttt{S}` denotes the number of strains. If the agent is
 not infected, then
@@ -1119,3 +1119,5 @@ best avoided.
 
 .. |image| image:: images/pandemia_logo.jpg
    :width: 20.0%
+
+
