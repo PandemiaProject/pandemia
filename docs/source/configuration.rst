@@ -50,6 +50,5 @@ Logging
 
 .. include:: ../../Scenarios/Heterogeneous/heterogeneous_baseline.yaml
    :start-after: # Logging #
-   :end-before: # Output #
    :code:
 

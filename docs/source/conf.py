@@ -9,6 +9,7 @@
 import pathlib
 import sys
 import sphinx_rtd_theme
+from pandemia.version import VERSION
 
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 
@@ -16,7 +17,7 @@ sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 project = 'pandemia'
 copyright = '2023, Thompson, James AND Wattam, Stephen'
 author = 'Thompson, James AND Wattam, Stephen'
-release = '0.1.0'
+release = VERSION
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -27,9 +28,10 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx_rtd_theme',
-    'myst_parser',
+    # 'myst_parser',
     'sphinx.ext.napoleon',
     'autoapi.extension',
+    'm2r2',
 ]
 
 
@@ -52,6 +54,12 @@ autoapi_keep_files = False
 autodoc_typehints = "signature"
 autoapi_add_toctree_entry = False
 
+# source_suffix = {
+#     '.rst': 'restructuredtext',
+#     '.md': 'markdown',
+# }
+
+source_suffix = ['.rst', '.md']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
