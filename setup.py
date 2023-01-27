@@ -2,7 +2,7 @@ import pathlib
 from setuptools import setup, find_packages
 
 here = pathlib.Path(__file__).parent.resolve()
-long_description = (here / 'README.md').read_text(encoding='utf-8')
+long_description = (here / 'README.rst').read_text(encoding='utf-8')
 version = {}
 with open(here / "src/pandemia/version.py") as fp:
     exec(fp.read(), version)

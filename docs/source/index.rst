@@ -2,16 +2,22 @@
    sphinx-quickstart on Fri Jan  6 14:35:19 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
+ 
+.. image::  ./images/pandemia_logo.jpg
+   :target: ./images/pandemia_logo.jpg
+   :alt: pandemia Logo
 
-Welcome to pandemia's documentation!
-====================================
+Pandemia
+========
 
 **Pandemia** is Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
 
 .. toctree::
+   :maxdepth: 2
 
-   usage
+   readme
    user_guide
+   configuration
    api
 
 
