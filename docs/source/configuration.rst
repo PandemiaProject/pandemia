@@ -8,7 +8,9 @@ The pandemia configuration file is a yaml file. An annotated example is shown be
 Basic Parameters
 ----------------
 
-.. include:: ../../Scenarios/Heterogeneous/heterogeneous_baseline.yaml
+
+
+.. include:: ../../Scenarios/Heterogeneous/heterogeneous_interventions.yaml
    :start-after: # Basic Parameters #
    :end-before: # Clock #
    :code:
@@ -16,7 +18,7 @@ Basic Parameters
 Clock
 -----
 
-.. include:: ../../Scenarios/Heterogeneous/heterogeneous_baseline.yaml
+.. include:: ../../Scenarios/Heterogeneous/heterogeneous_interventions.yaml
    :start-after: # Clock #
    :end-before: # World #
    :code:
@@ -24,7 +26,7 @@ Clock
 World
 -----
 
-.. include:: ../../Scenarios/Heterogeneous/heterogeneous_baseline.yaml
+.. include:: ../../Scenarios/Heterogeneous/heterogeneous_interventions.yaml
    :start-after: # World #
    :end-before: # Seasonal Effects #
    :code:
@@ -32,7 +34,7 @@ World
 Models Components
 -----------------
 
-.. include:: ../../Scenarios/Heterogeneous/heterogeneous_baseline.yaml
+.. include:: ../../Scenarios/Heterogeneous/heterogeneous_interventions.yaml
    :start-after: # Seasonal Effects #
    :end-before: # Output #
    :code:
@@ -40,7 +42,7 @@ Models Components
 Outputs
 -------
 
-.. include:: ../../Scenarios/Heterogeneous/heterogeneous_baseline.yaml
+.. include:: ../../Scenarios/Heterogeneous/heterogeneous_interventions.yaml
    :start-after: # Output #
    :end-before: # Logging #
    :code:
@@ -48,7 +50,7 @@ Outputs
 Logging
 -------
 
-.. include:: ../../Scenarios/Heterogeneous/heterogeneous_baseline.yaml
+.. include:: ../../Scenarios/Heterogeneous/heterogeneous_interventions.yaml
    :start-after: # Logging #
    :code:
 
