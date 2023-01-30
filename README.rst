@@ -313,6 +313,15 @@ Consult the `User Guide <docs/user_guide.pdf>`_\ , or generate documentation usi
    pip install pdoc
    pdoc --html --overwrite --html-dir docs pandemia
 
+To generate and view a local copy of the documenation:
+
+.. code-block:: bash
+
+   cd docs
+   pip install -r requirements.txt
+   make html
+   open build/html/index.html
+
 Contributors
 ------------
 
