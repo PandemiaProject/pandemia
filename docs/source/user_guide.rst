@@ -255,10 +255,10 @@ resolution. Then one weekly routine could be:
 
 .. container:: center
 
-  | [**Home**, **Home**, **Home**, **Home**, **Work**, **Home**,
-  |  **Home**, **Work**, **Home**, **Home**, **Work**, **Home**, **Home**,
-  |  **Work**, **Home**, **Home**, **Work**, **Home**, **Home**, **Home**,
-  |  **Home**]
+   [**Home**, **Home**, **Home**, **Home**, **Work**, **Home**,
+    **Home**, **Work**, **Home**, **Home**, **Work**, **Home**, **Home**,
+    **Work**, **Home**, **Home**, **Work**, **Home**, **Home**, **Home**,
+    **Home**]
 
 representing a typical working week, while another weekly routine could
 be:
@@ -266,9 +266,9 @@ be:
 .. container:: center
 
    [**Home**, **Home**, **Home**, **Home**, **School**, **Home**,
-   **Home**, **School**, **Home**, **Home**, **School**, **Home**,
-   **Home**, **School**, **Home**, **Home**, **School**, **Home**,
-   **Home**, **Home**, **Home**]
+    **Home**, **School**, **Home**, **Home**, **School**, **Home**,
+    **Home**, **School**, **Home**, **Home**, **School**, **Home**,
+    **Home**, **Home**, **Home**]
 
 representing a typical school week.
 
