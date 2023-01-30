@@ -60,6 +60,10 @@ In an individual-based model, the simultaneous actions and interactions of multi
 
 In `Pandemia`, the policy maker is directly represented as a component in the simulation. The policy maker enacts interventions on a temporal and regional basis, including lockdowns, border closures, vaccination, testing and contact tracing and face masks. In the first instance, this allows the user to simulate a predefined strategy and assess its impact. Using optimization algorithms, `Pandemia` can take a step beyond this, searching systematically for optimal strategies which minimize the total cost of an outbreak. These optimization tools are, at the time of writing, a work in progress and represent the next step in the development of `Pandemia`.
 
+TODO:
+- cite some reviews of agent-based covid or epi models?
+- cite SIR model if mentioning it?
+
 # Acknowledgements
 
 We acknowledge contributions from ?
