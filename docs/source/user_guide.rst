@@ -187,14 +187,18 @@ loop looks approximately as follows:
 
    .. container:: algorithmic
 
-      clock, regions, travel\_matrix travel.dynamics(regions,
-      travel\_matrix, day) seasonality.dynamics(region, day)
-      policy\_maker.dynamics(region, day)
-      :math:`\text{t} \gets (\text{ticks{\_}in{\_}day} * \text{day}) + \text{tick}`
-      health.dynamics(region, t) movement.dynamics(region, t)
-      hospitalization.dynamics(region, t)
-      testing\_and\_contact\_tracing.dynamics(region, t)
-      vaccination.dynamics(region, t)
+      for day in clock:
+         travel.dynamics(regions, travel\_matrix, day)
+         for region in regions:
+            seasonality.dynamics(region, day)
+            policy\_maker.dynamics(region, day)
+            for t in range(ticks\_in\_day):
+               :math:`\text{t} \gets (\text{ticks_in_day} * \text{day}) + \text{tick}`
+               health.dynamics(region, t)
+               movement.dynamics(region, t)
+               hospitalization.dynamics(region, t)
+            testing\_and\_contact\_tracing.dynamics(region, t)
+            vaccination.dynamics(region, t)
 
 Note that some components update each day, while others update each
 tick. At the beginning of each day, Pandemia decides who is travelling
@@ -346,7 +350,7 @@ Strain
 
 For agent :math:`\texttt{n}`, the variable
 
-.. math:: \texttt{current{\_}strain[n]}
+.. math:: \texttt{current_strain[n]}
 
 \ indicates whether or not agent :math:`\texttt{n}` is infected, and if
 so with which strain. The variable is an integer, taking values in the
@@ -357,7 +361,7 @@ range
 where :math:`\texttt{S}` denotes the number of strains. If the agent is
 not infected, then
 
-.. math:: \texttt{current{\_}strain[n] = -1}.
+.. math:: \texttt{current_strain[n] = -1}.
 
 We assume that agents can only be infected with one strain at a time.
 
@@ -366,17 +370,17 @@ Disease
 
 For agent :math:`\texttt{n}`, the variable
 
-.. math:: \texttt{current{\_}disease[n]}
+.. math:: \texttt{current_disease[n]}
 
 \ indicates the extent to which agent :math:`\texttt{n}` is diseased.
 The variable is a float, taking values in the range
 :math:`\texttt{[0,1]}.` If the agent has no disease, then
 
-.. math:: \texttt{current{\_}disease[n] = 0}.
+.. math:: \texttt{current_disease[n] = 0}.
 
 If the agent is dead, then
 
-.. math:: \texttt{current{\_}disease[n] = 1}.
+.. math:: \texttt{current_disease[n] = 1}.
 
 Values close to :math:`\texttt{1}` represent severe disease, values
 close to :math:`\texttt{0}` represent mild disease. Values above a
@@ -388,24 +392,24 @@ Infectiousness
 
 For agent :math:`\texttt{n}`, the variable
 
-.. math:: \texttt{current{\_}infectiousness[n]}
+.. math:: \texttt{current_infectiousness[n]}
 
 \ indicates the extent to which agent :math:`\texttt{n}` is infectious.
 The variable is a float, taking non-negative values. If the agent is
 infected but not infectious, then
 
-.. math:: \texttt{current{\_}infectiousness[n]} = 0.
+.. math:: \texttt{current_infectiousness[n]} = 0.
 
 If the agent is infected, then increasing the value of this variable
 increases the probability that the agent transmits strain
-:math:`\texttt{current{\_}strain[n]}` to other agents.
+:math:`\texttt{current_strain[n]}` to other agents.
 
 Immunity (Outer Layer)
 ----------------------
 
 For agent :math:`\texttt{n}` and strain :math:`\texttt{s}`, the variable
 
-.. math:: \texttt{current{\_}sigma{\_}immunity{\_}failure[n][s]}
+.. math:: \texttt{current_sigma_immunity_failure[n][s]}
 
 \ represents the probability that the immune system of agent
 :math:`\texttt{n}` *fails* to prevent an infection when exposed to
@@ -441,7 +445,7 @@ are :math:`\texttt{R}` internal layers, and therefore :math:`\texttt{R}`
 possible outcomes. Then, for agent :math:`\texttt{n}` and strain
 :math:`\texttt{s}`, the variable
 
-.. math:: \texttt{current{\_}rho{\_}immunity{\_}failure[n][s]}
+.. math:: \texttt{current_rho_immunity_failure[n][s]}
 
 \ gives a vector of probabilities, of length :math:`\texttt{R}`,
 corresponding to the *failure* probabilities of each layer. If a
@@ -457,7 +461,7 @@ infection.
 While sigma immunity determines whether or not an infection occurs, with
 rho immunity determining the outcome of that infection, to understand
 the outcomes themselves we must discuss the
-:math:`\texttt{health{\_}presets}`.
+:math:`\texttt{health_presets}`.
 
 Presets and Updates
 -------------------
@@ -466,7 +470,7 @@ The default response to an infection is determined for each agent, for
 each strain, during the initialization of the health component, before
 the start of the simulation. In particular, if an agent has been
 assigned the preset response :math:`\texttt{p}` from the set of possible
-presets :math:`\texttt{health{\_}presets}`, then the object
+presets :math:`\texttt{health_presets}`, then the object
 :math:`\texttt{p[r]}` contains data which determine updates, for each of
 the five health attributes described above, corresponding to outcome
 :math:`\texttt{r}`.
@@ -497,15 +501,15 @@ function :math:`f` given by
 Suppose in the above example that agent :math:`\texttt{n}` has just been
 infected with strain :math:`\texttt{0}`, and that the infection has
 resulted in outcome :math:`\texttt{r}`, with :math:`\texttt{p[r]}` as
-above. Then the variable :math:`\texttt{current{\_}strain[n]}` will take
+above. Then the variable :math:`\texttt{current_strain[n]}` will take
 the value :math:`\texttt{0}` for the next :math:`\texttt{5}` days, after
 which it will return to the value :math:`\texttt{-1}`, indicating that
 the agent is no longer infected. The variable
-:math:`\texttt{current{\_}disease[n]}` will take the value
+:math:`\texttt{current_disease[n]}` will take the value
 :math:`\texttt{0.2}` for the next :math:`\texttt{5}` days, after which
 it will return to the value :math:`\texttt{0.0}`, indicating that the
 agent has recovered. The variable
-:math:`\texttt{current{\_}infectiousness[n]}` will take the value
+:math:`\texttt{current_infectiousness[n]}` will take the value
 :math:`\texttt{0.0025}` for the next :math:`\texttt{3}` days, followed
 by :math:`\texttt{0.0075}` for :math:`\texttt{2}` days, after which it
 will return to the value :math:`\texttt{0.0}`, indicating that the agent
@@ -627,11 +631,11 @@ the procedure outlined in the previous subsections.
 SIR Rescaling
 -------------
 
-If the option :math:`\texttt{sir{\_}rescaling}` is set to
+If the option :math:`\texttt{sir_rescaling}` is set to
 :math:`\texttt{True}`, then transmission probabilities are rescaled in
 such a way that approximates the homogeneous mixing of standard
 compartmental models. In particular, the
-:math:`\texttt{sir{\_}rescaling}` option multiplies all health model
+:math:`\texttt{sir_rescaling}` option multiplies all health model
 transmission probabilities by the reciprocal of the tick length, in
 days, divided by the number of agents in each location. Moreover, with
 this option activated it is also possible to implement a contact matrix,
@@ -643,7 +647,7 @@ and no face masks. Suppose that :math:`\nu_m = 1` if :math:`m` is
 infected, with :math:`\nu_m = 0` otherwise. Denote by :math:`N_{a}` the
 number of people in group :math:`a` and by :math:`h` the step size (that
 is, the reciprocal of the tick length, in days). Then the
-:math:`\texttt{sir{\_}rescaling}` option multiplies all health model
+:math:`\texttt{sir_rescaling}` option multiplies all health model
 transmission probabilities by :math:`h / N_a`. Denoting by
 :math:`m_{ab}` the mixing between groups :math:`a` and :math:`b` and by
 :math:`I_b` the number of currently infected agents in group :math:`b`,
@@ -680,11 +684,11 @@ In particular, with only one population subgroup we have
 of the SIR model. With exponentially distributed recovery times, and no
 reinfection, we recover the remaining equations, and therefore arrive at
 a stochastic approximation of the SIR model. With the option
-:math:`\texttt{sir{\_}rescaling}` set to :math:`\texttt{True}`, the
+:math:`\texttt{sir_rescaling}` set to :math:`\texttt{True}`, the
 Pandemia default health model can be therefore viewed as a stochastic
 agent-based generalization of standard compartmental models.
 
-On the other hand, with the option :math:`\texttt{sir{\_}rescaling}` set
+On the other hand, with the option :math:`\texttt{sir_rescaling}` set
 to :math:`\texttt{False}`, the transmission probabilities are not
 divided by the number of agents in each location. This means that adding
 susceptible agents to the location of an infected agents does not dilute
@@ -694,10 +698,10 @@ then with homogeneous mixing the probability that Alice is infected by
 Bob *decreases* if more susceptible people get on the bus.
 
 For worlds with large numbers of agents per location, setting the option
-:math:`\texttt{sir{\_}rescaling}` to :math:`\texttt{True}` may be
+:math:`\texttt{sir_rescaling}` to :math:`\texttt{True}` may be
 appropriate, whereas for worlds with large numbers of locations, with
 typically only a few agents per location at each time, setting the
-option :math:`\texttt{sir{\_}rescaling}` to :math:`\texttt{False}` might
+option :math:`\texttt{sir_rescaling}` to :math:`\texttt{False}` might
 be preferable. The latter scenario should, typically, be more realistic.
 
 Hospitalization
@@ -878,7 +882,7 @@ the procedure outlined in the section on the default health model.
 The current region of an agent :math:`\texttt{n}` is recorded by the
 variable
 
-.. math:: \texttt{current{\_}region[n]}.
+.. math:: \texttt{current_region[n]}.
 
 \ Agents whose current region is not their home region are considered
 travellers, and are ignored by other components where appropriate for
@@ -960,16 +964,16 @@ Heterogeneous Mixing
 
 The :math:`\texttt{Heterogeneous}` world factory groups agents together
 into households, and for each region there are two activities,
-:math:`\texttt{Home{\_}Activity}` and
-:math:`\texttt{Community{\_}Activity}`. Individuals perform the
-:math:`\texttt{Home{\_}Activity}` in their assigned House, while they
-perform the :math:`\texttt{Community{\_}Activity}` in randomly selected
+:math:`\texttt{Home_Activity}` and
+:math:`\texttt{Community_Activity}`. Individuals perform the
+:math:`\texttt{Home_Activity}` in their assigned House, while they
+perform the :math:`\texttt{Community_Activity}` in randomly selected
 grid squares, with the random selection being weighted by distance.
 Individuals above or below certain ages do not perform the
-:math:`\texttt{Community{\_}Activity}`. Those who do perform the
-:math:`\texttt{Community{\_}Activity}` do so for 8 hours each weekday,
+:math:`\texttt{Community_Activity}`. Those who do perform the
+:math:`\texttt{Community_Activity}` do so for 8 hours each weekday,
 between 8am and 4pm. When performing
-:math:`\texttt{Community{\_}Activity}`, each individual gets a list of
+:math:`\texttt{Community_Activity}`, each individual gets a list of
 grid squares to choose from. The grid square containing their House is
 always included in this list.
 
@@ -1060,9 +1064,9 @@ and install using
 
 \ Then run the command
 
-.. math:: \texttt{ms{\_}abmlux Scenarios/Luxembourg/config.yaml sim{\_}factory.abm}.
+.. math:: \texttt{ms_abmlux Scenarios/Luxembourg/config.yaml sim_factory.abm}.
 
-Once :math:`\texttt{sim{\_}factory.abm}` has been created, copy and
+Once :math:`\texttt{sim_factory.abm}` has been created, copy and
 paste this file into Pandemia’s :math:`\texttt{Scenarios/ABMlux/data}`
 folder.
 
