@@ -54,11 +54,11 @@ Such is the sweeping impact of a pandemic, that the difference between an optima
 
 In an individual-based model, the simultaneous actions and interactions of multiple individuals are simulated in an attempt to re-create and predict the emergence of complex phenomena resulting from their collective behaviour. This bottom-up approach contrasts with the top-down equation-based approach to epidemic modelling, an example of the latter being the SIR model. While individual-based models are more computationally intensive, they provide the most realistic descriptions of social interaction and infectious disease dynamics.
 
-`Pandemia` is based on the @ABMlux model, developed in Luxembourg between July 2020 and February 2021 and funded by the National Research Fund of Luxembourg. ABMlux was used in the article @Thompson:2021 to estimate the impact of interventions against COVID-19 in Luxembourg. `Pandemia` represents a far-reaching generalization of the ABMlux model, adding speed and scalability along with a host of other features, including support for multiple virus strains with cross and waning immunity, multiple vaccines, international travel, seasonality and more.
+`Pandemia` is based on the @ABMlux model, developed in Luxembourg between July 2020 and February 2021 and funded by the National Research Fund of Luxembourg. ABMlux was used in the article @Thompson:2021 to estimate the impact of interventions against COVID-19 in Luxembourg. `Pandemia` represents a far-reaching generalization of the ABMlux model, adding speed and scalability along with a host of other features, including support for multiple viral variants with cross and waning immunity, multiple vaccines, international travel, seasonality and more.
 
-`Pandemia` moreover features a Policy Maker component, directly representing the policy maker inside the simulation. Together with optimization algorithms, this facilitates the search for optimal strategies.
+In `Pandemia`, the policy maker is represented as a component in the simulation. The policy maker enacts interventions on a temporal and regional basis, including lockdowns, border closures, vaccination, testing and contact tracing and face masks. In the first instance, this allows the user to simulate a predefined strategy of interventions and assess their impact. Using optimization algorithms, `Pandemia` can take a step beyond this, being able to search systematically for optimal strategies which minimize the total cost of the outbreak.
 
-This software can be of much use to researchers looking to assess the impact of policy in the context of a global public health emergency, caused by an infectious disease of humans.
+This software will be of much use to researchers looking to assess the impact of policy in the context of a global public health emergency, caused by an infectious disease of humans.
 
 # Acknowledgements
 
