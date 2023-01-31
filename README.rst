@@ -35,7 +35,7 @@ and tools such as Pandemia can play a vital role in supporting pandemic prepared
 
 This document contains an overview of the model, a quickstart guide and information for
 contributors. The full user guide, including a narrative description of the methodology, can be
-found `here <https://pandemia.readthedocs.io/en/feature-docs-workflow/user_guide.html>`_.
+found `here <https://pandemia.readthedocs.io/en/latest/>`_.
 
 The code is mixed Python and C.
 
