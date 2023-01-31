@@ -306,14 +306,8 @@ Test coverage is reported automatically on each run of pytest. To obtain the htm
 Documentation
 -------------
 
-Consult the `User Guide <docs/user_guide.pdf>`_\ , or generate documentation using:
-
-.. code-block:: bash
-
-   pip install pdoc
-   pdoc --html --overwrite --html-dir docs pandemia
-
-To generate and view a local copy of the documenation:
+Consult the documenation `here <https://pandemia.readthedocs.io/en/latest/>`_\. To generate and view
+a local copy of this documenation:
 
 .. code-block:: bash
 
@@ -321,12 +315,39 @@ To generate and view a local copy of the documenation:
    pip install -r requirements.txt
    make html
    open build/html/index.html
+   
+Alternatively, the user can generate documentation using:
+
+.. code-block:: bash
+
+   pip install pdoc
+   pdoc --html --overwrite --html-dir docs pandemia
 
 Contributors
 ------------
 
+Researchers and students are welcome to contribute to this project.
+
+Please raise an issue if a bug is found.
+
+More advanced contributions could involve, for example, the building of World Factories for
+populations of interest to the user, the creation of new component models in addition to the default
+ones, or the further development of methods for model validation and strategy optimization.
+
 Acknowledgements
 ----------------
+
+The Pandemia software was created by James Thompson in early 2022, based on the ABMlux software
+written by Stephen Wattam and James Thompson, with contributions from Andy Smith and Aoife Hughes.
+
+Since June 2022, James Thompson has been employed as a Research Associate at the Department of
+Infectious Disease Epidemiology at Imperial College London, having been previously employed by The
+Alan Turing Institute, between April 2021 and May 2022.
+
+Stephen Wattam contributed to the ABMlux project via WAP Academic Consulting Ltd.
+
+Since October 2022, Andy Smith and Aoife Hughes have contributed to the Pandemia project as members
+of the Research Engineering Group at The Alan Turing Institute.
 
 Citing this work
 ----------------
