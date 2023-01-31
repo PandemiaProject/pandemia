@@ -20,13 +20,10 @@ class DefaultHealthModel(HealthModel):
     """Default model of agent health.
 
     Instead of the compartmental description of health often applied in epidemic models, the default
-    health model describes an agent's health with five attributes:
-    - sigma immunity (protection against infection)
-    - rho immunity (protection against severe outcomes)
-    - infectiousness
-    - disease
-    - strain
-    Low-level C functions, wrapped in Python functions, implement changes to agent health.
+    health model describes an agent's health with five attributes. These are sigma immunity
+    (protection against infection), rho immunity (protection against severe outcomes),
+    infectiousness, disease and strain. Low-level C functions, wrapped in Python functions,
+    implement changes to agent health.
 
     Parameters:
     -----------
