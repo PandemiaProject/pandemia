@@ -22,7 +22,9 @@ from os import cpu_count
 log = logging.getLogger('heterogeneous_world_factory')
 
 class HeterogeneousWorldFactory(WorldFactory):
-    """In this World model, for each region there are two activities, namely Home_Activity and
+    """A simple model of heterogeneous mixing within regions.
+    
+    In this World model, for each region there are two activities, namely Home_Activity and
     Community_Activity. Each agent in assigned a weekly routine, with days divided into three
     periods, each period lasting eight hours. Each agent is assigned a home, at which they perform
     the activity Home_Activity, with the homes spatially distributed within each region using
@@ -35,6 +37,16 @@ class HeterogeneousWorldFactory(WorldFactory):
     House and Square. Locations of type Square are assigned a location specific transmission
     multiplier. This is a free parameter that modulates the intensity of community transmission. In
     this model, travel between regions is based on air travel data.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this world factory.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    scale_factor : float
+        The scale factor, coming from the full config.
     """
 
     def __init__(self, config, clock, scale_factor):
@@ -73,8 +85,6 @@ class HeterogeneousWorldFactory(WorldFactory):
         self.local_travel_prob_per_day   = self.config['local_travel_prob_per_day']
         self.distance_threshold          = self.config['distance_threshold']
 
-
-
     def _parallel_create_region(self, row_id):
         row, id = row_id
         iso2 = str(row[1])
@@ -87,7 +97,6 @@ class HeterogeneousWorldFactory(WorldFactory):
             number_of_agents = max(int(population_size * self.scale_factor), 1)
             new_region = self._create_region(id, iso2, iso3, super_region, number_of_agents,
                                                 age_distribution, household_size)
-            #world.regions.append(new_region)
             return new_region
 
     def get_world(self) -> World:
@@ -103,7 +112,8 @@ class HeterogeneousWorldFactory(WorldFactory):
             region_data = csv.reader(csvfile, delimiter=',')
             row_ids = [(r, idx) for idx, r in enumerate(region_data) ]
             with multiprocessing.Pool(processes=cpu_count()-1) as pool:
-                world.regions = list(tqdm(pool.imap_unordered(self._parallel_create_region, row_ids), total=len(row_ids)))
+                world.regions = list(tqdm(pool.imap_unordered(self._parallel_create_region,
+                                                                      row_ids), total=len(row_ids)))
         
         world.regions = [r for r in world.regions if r is not None]
         world.number_of_regions = len(world.regions)
@@ -129,7 +139,7 @@ class HeterogeneousWorldFactory(WorldFactory):
 
     def _create_region(self, id, iso2, iso3, super_region, number_of_agents,
                        age_distribution, household_size):
-        """Creates test agents and test locations and assembles them into test regions"""
+        """Creates test agents and test locations and assembles them into test regions."""
 
         assert self.clock.ticks_in_day == 3
 
@@ -298,7 +308,7 @@ class HeterogeneousWorldFactory(WorldFactory):
         return new_region
 
     def _travel_weight(self, square, other_square):
-        """For a given distance, returns a weight"""
+        """For a given distance, returns a weight."""
 
         dist = square.distance_euclidean(other_square)
         population_other_square = len(self.squares_to_agents[other_square])
@@ -308,7 +318,7 @@ class HeterogeneousWorldFactory(WorldFactory):
         return weight
 
     def _assign_routine(self, age):
-        """Creates random weekly routine"""
+        """Creates random weekly routine."""
 
         weekend_day = [self.home_activity, self.home_activity, self.home_activity]
         week_day = [self.home_activity, self.community_activity, self.home_activity]
@@ -324,7 +334,7 @@ class HeterogeneousWorldFactory(WorldFactory):
         return weekly_routine
 
     def add_shape_data(self, regions_shape_data_file, world):
-        """Add polgonal shapes to regions for rendering"""
+        """Add polgonal shapes to regions for rendering."""
 
         sf = shp.Reader(regions_shape_data_file)
         shape_recs = sf.shapeRecords()

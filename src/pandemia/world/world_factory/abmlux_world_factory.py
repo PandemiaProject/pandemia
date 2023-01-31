@@ -1,7 +1,6 @@
 """This file creates a world."""
 
 import logging
-import csv
 import numpy as np
 import pickle
 
@@ -14,8 +13,23 @@ from . import WorldFactory
 log = logging.getLogger('world_factory')
 
 class ABMluxWorldFactory(WorldFactory):
-    """Takes a World in ABMlux format and converts it into Pandemia format. Worlds built using
-    ABMlux can therefore serve as the basis for a Pandemia simulation."""
+    """A world factory that extracts an ABMlux world.
+
+    This world factory extracts a world built by multi_strain_abmlux and coverts it into Pandemia
+    format. This allows Pandemia to load the ABMlux Luxembourg synthetic region, which features
+    households, schools, places of work, shops, restaurants, complex daily and weekly routines.
+    Worlds built using ABMlux can therefore serve as the basis for a Pandemia simulation.
+    
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this world factory.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    scale_factor : float
+        The scale factor, coming from the full config.
+    """
 
     def __init__(self, config, clock, scale_factor):
 

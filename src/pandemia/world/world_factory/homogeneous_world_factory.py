@@ -25,11 +25,12 @@ class HomogeneousWorldFactory(WorldFactory):
     Parameters:
     -----------
     config : Config
-        A Pandemia Config object.
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this world factory.
     clock : Clock
-        A Pandemia Clock object.
+        A Pandemia Clock object, discretizing the day.
     scale_factor : float
-        The desired scale factor.
+        The scale factor, coming from the full config.
     """
 
     def __init__(self, config, clock, scale_factor):

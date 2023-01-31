@@ -1,4 +1,3 @@
-"""Utility functions used during data management"""
 
 import importlib
 import logging
@@ -9,11 +8,17 @@ def instantiate_class(module_base, module_path, *args, **kwargs):
     """Take a string and arguments and instantiate a class, returning it.
 
     Parameters:
-        module_base (str): String showing the base module to instantiate upon, e.g. pandemia.reporters
-        module_path (str): String containing module path, e.g. cli.TQDM
-        *args, **kwargs: Passed to the constructor
+    -----------
+        module_base : str
+            String showing the base module to instantiate upon, e.g. pandemia.reporters
+        module_path : str
+            String containing module path, e.g. cli.TQDM
+        args, kwargs:
+            Passed to the constructor
 
-    Returns: The class instantiated
+    Returns:
+    --------
+        The class instantiated
     """
 
     # Instantiate the class itself
