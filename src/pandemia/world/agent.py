@@ -10,12 +10,12 @@ class Agent:
     """Represents an individual person.
 
     Parameters:
-    ----------
+    -----------
     age : int
         The age of the individual, in years.
 
     Attributes:
-    ----------
+    -----------
     uuid : str
         A universally unique identifier for this agent.
     age : int

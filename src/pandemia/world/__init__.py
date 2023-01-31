@@ -11,7 +11,7 @@ class World:
     countries.
 
     Parameters:
-    ----------
+    -----------
     scale_factor : float
         Attached to each world is a scale factor, indicating that scaling may have taken place in
         the creation of the world. For example, a world with 1 million agents representing a real
@@ -19,7 +19,7 @@ class World:
         attribute since the scale factor is needed to scale quantities during input and output.
 
     Attributes:
-    ----------
+    -----------
     regions : list[Region]
         The list of regions in this world.
     number_of_regions : int
@@ -44,9 +44,9 @@ class World:
         """Converts an object of type World to an object of type VectorWorld. A VectorWorld contains
         a list of objects of type VectorRegion, as opposed to objects of type Region, as in a World.
 
-        Returns
-        -------
-        new_vector_world : `VectorWorld`
+        Returns:
+        --------
+        new_vector_world : VectorWorld
             A vector representation of the world.
         """
 
@@ -70,7 +70,7 @@ class VectorWorld:
     countries.
 
     Parameters:
-    ----------
+    -----------
     scale_factor : float
         Attached to each world is a scale factor, indicating that scaling may have taken place in
         the creation of the world. For example, a world with 1 million agents representing a real
@@ -78,7 +78,7 @@ class VectorWorld:
         attribute since the scale factor is needed to scale quantities during input and output.
 
     Attributes:
-    ----------
+    -----------
     vector_regions : list[VectorRegion]
         The list of regions in this vectorized world.
     number_of_regions : int

@@ -15,10 +15,22 @@ from . import WorldFactory
 log = logging.getLogger('homogeneous_world_factory')
 
 class HomogeneousWorldFactory(WorldFactory):
-    """In this model, in each region there is only one activity, namely Default. There is only one
+    """Homogeneous mixing within regions.
+    
+    In this model, in each region there is only one activity, namely Default. There is only one
     location in each region. Agents mix within regions all within the same location. Using the
     sir_rescaling option in the default health model, agents in this world will mix homogeneously
-    within each region. Travel between regions is determined using air travel data."""
+    within each region. Travel between regions is determined using air travel data.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object.
+    clock : Clock
+        A Pandemia Clock object.
+    scale_factor : float
+        The desired scale factor.
+    """
 
     def __init__(self, config, clock, scale_factor):
 
@@ -39,7 +51,7 @@ class HomogeneousWorldFactory(WorldFactory):
 
         world = World(self.scale_factor)
 
-        self._create_test_regions(world)
+        self._create_regions(world)
 
         world.travel_matrix =\
             self.get_travel_matrix(world, self.airport_path, self.air_travel_path,
@@ -48,8 +60,8 @@ class HomogeneousWorldFactory(WorldFactory):
 
         return world
 
-    def _create_test_regions(self, world):
-        """Creates world for example one"""
+    def _create_regions(self, world):
+        """Creates regions."""
 
         ticks_in_week = self.clock.ticks_in_week
 
@@ -60,7 +72,7 @@ class HomogeneousWorldFactory(WorldFactory):
         self.add_shape_data(self.regions_shape_data_file, world)
 
     def initialize_regions(self, regions_data_path, ticks_in_week, world):
-        """Initialize regions"""
+        """Initialize regions."""
 
         # Initialize regions using population data
         activities = ["Default"]
@@ -101,7 +113,7 @@ class HomogeneousWorldFactory(WorldFactory):
         log.info("Created world with %d agents", total_number_of_agents)
 
     def add_shape_data(self, regions_shape_data_file, world):
-        """Add polgonal shapes to regions for rendering"""
+        """Add polgonal shapes to regions for rendering."""
 
         sf = shp.Reader(regions_shape_data_file)
         shape_recs = sf.shapeRecords()
@@ -129,11 +141,12 @@ class HomogeneousWorldFactory(WorldFactory):
 
     def get_travel_matrix(self, world, airport_data_file, air_travel_data_file,
                           local_travel_prob_per_day, distance_threshold):
-        """Constructs matrix of mixing between regions, constructed via a combination of
-        air travel and local travel. Since the air travel data used for these simulaitons also
-        records the month of travel, we additionally calculate an air travel matrix for each month,
-        for later use. Note that the matrix gets rescaled, using a scale_factor, not here but in
-        the regional mixing model."""
+        """Constructs matrix of mixing between regions.
+        
+        The matrix is constructed via a combination of air travel and local travel. Since the air
+        travel data used for these simulaitons also records the month of travel, we additionally
+        calculate an air travel matrix for each month, for later use. Note that the matrix gets
+        rescaled, using a scale_factor, not here but in the regional mixing model."""
 
         regions = world.regions
 

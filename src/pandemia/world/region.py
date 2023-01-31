@@ -14,7 +14,7 @@ class Region:
     A region can represent, for example a country or an administrative division within a country.
 
     Parameters:
-    ----------
+    -----------
     id : int
         An integer identifier for this region.
     name : str
@@ -28,7 +28,7 @@ class Region:
         A list of all locations in this region.
 
     Attributes:
-    ----------
+    -----------
     id : int
         An integer identifier for this region.
     name : str
@@ -77,8 +77,8 @@ class Region:
         A VectorRegion is a vectorized versions of the former, with Python lists and dictionaries
         converted to numpy arrays for fast interface with low-level C functions.
 
-        Returns
-        -------
+        Returns:
+        --------
         vector_region : `VectorRegion`
             A vector representation of the region.
         """
@@ -161,7 +161,7 @@ class VectorRegion:
     may be added to the vector world by simulation components, where necessary.
 
     Parameters:
-    ----------
+    -----------
     id : int
         An integer identifier for this region. This will be determined by the world factory.
     name : str
@@ -180,7 +180,7 @@ class VectorRegion:
         maximum is taken accross all agents and all activities in this region.
     
     Attributes:
-    ----------
+    -----------
     id : int
         An integer identifier for this region. This will be determined by the world factory.
     name : str
