@@ -4,6 +4,8 @@
    | |image|
    | 2023-01-18
 
+.. sectnum::
+
 Introduction
 ============
 
@@ -183,22 +185,11 @@ Run
 Once the simulator has been built, it can then be run! The main Pandemia
 loop looks approximately as follows:
 
-.. container:: algorithm
+.. container:: center
 
-   .. container:: algorithmic
-
-      for day in clock:
-         travel.dynamics(regions, travel\_matrix, day)
-         for region in regions:
-            seasonality.dynamics(region, day)
-            policy\_maker.dynamics(region, day)
-            for t in range(ticks\_in\_day):
-               :math:`\text{t} \gets (\text{ticks_in_day} * \text{day}) + \text{tick}`
-               health.dynamics(region, t)
-               movement.dynamics(region, t)
-               hospitalization.dynamics(region, t)
-            testing\_and\_contact\_tracing.dynamics(region, t)
-            vaccination.dynamics(region, t)
+   .. image:: images/psuedo.png
+      :alt: image
+      :width: 50.0%
 
 Note that some components update each day, while others update each
 tick. At the beginning of each day, Pandemia decides who is travelling
@@ -253,22 +244,12 @@ region there are three activities, **Home**, **Work** and **School**,
 and that we wish to specify the routine of agents with an 8 hour time
 resolution. Then one weekly routine could be:
 
-.. container:: center
-
-   [**Home**, **Home**, **Home**, **Home**, **Work**, **Home**,
-    **Home**, **Work**, **Home**, **Home**, **Work**, **Home**, **Home**,
-    **Work**, **Home**, **Home**, **Work**, **Home**, **Home**, **Home**,
-    **Home**]
+   [**Home**, **Home**, **Home**, **Home**, **Work**, **Home**, **Home**, **Work**, **Home**, **Home**, **Work**, **Home**, **Home**, **Work**, **Home**, **Home**, **Work**, **Home**, **Home**, **Home**, **Home**]
 
 representing a typical working week, while another weekly routine could
 be:
 
-.. container:: center
-
-   [**Home**, **Home**, **Home**, **Home**, **School**, **Home**,
-    **Home**, **School**, **Home**, **Home**, **School**, **Home**,
-    **Home**, **School**, **Home**, **Home**, **School**, **Home**,
-    **Home**, **Home**, **Home**]
+   [**Home**, **Home**, **Home**, **Home**, **School**, **Home**, **Home**, **School**, **Home**, **Home**, **School**, **Home**, **Home**, **School**, **Home**, **Home**, **School**, **Home**, **Home**, **Home**, **Home**]
 
 representing a typical school week.
 
@@ -332,18 +313,18 @@ attributes are stored as *functions*. The value of an attribute at time
 time :math:`\texttt{t}`. During a simulation, the following variables
 store the values of these functions at the current time:
 
--  ``current``\ ``_``\ ``strain``
+-  ``current_strain``
 
--  ``current``\ ``_``\ ``disease``
+-  ``current_disease``
 
--  ``current``\ ``_``\ ``infectiousness``
+-  ``current_infectiousness``
 
--  ``current``\ ``_``\ ``sigma``\ ``_``\ ``immunity``\ ``_``\ ``failure``
+-  ``current_sigma_immunity_failure``
 
--  ``current``\ ``_``\ ``rho``\ ``_``\ ``immunity``\ ``_``\ ``failure``
+-  ``current_rho_immunity_failure``
 
-The prefix ``sigma``\ ``_`` refers to the outer layer of the immune
-system, while the prefix ``rho``\ ``_`` refers to the inner layers.
+The prefix ``sigma_`` refers to the outer layer of the immune
+system, while the prefix ``rho_`` refers to the inner layers.
 
 Strain
 ------
@@ -486,16 +467,19 @@ follows:
       :width: 50.0%
 
 The numbers in these arrays encode step functions. For example, the pair
-of arrays :math:`\texttt{[[-1,0,5], [0.0,0.2,0.0]]}` encodes the step
-function :math:`f` given by
+of arrays
+
+.. math:: \texttt{[-1,0,5], [0.0,0.2,0.0]}
+
+encodes the step function :math:`f` given by
 
 .. math::
 
    f(t) =
    \begin{cases}
-   0.0 \text{ for } t < 0 \\
-   0.2 \text{ for } 5 > t \geq 0 \\
-   0.0 \text{ for } t \geq 5
+   0.0, \text{ for } t < 0 \\
+   0.2, \text{ for } 5 > t \geq 0 \\
+   0.0, \text{ for } t \geq 5
    \end{cases}.\nonumber
 
 Suppose in the above example that agent :math:`\texttt{n}` has just been
@@ -807,7 +791,7 @@ vaccine. Consider, for example, the following configuration:
       :alt: image
       :width: 50.0%
 
-Here the vaccine ``vaccine``\ ``_0`` encodes updates to rho and sigma
+Here the vaccine :math:`\texttt{vaccine_0}` encodes updates to rho and sigma
 immunity for two strains of the pathogen. The updates follow the exact
 same multiplicative procedure as the immunity updates resulting from an
 infection, as described in Section `6 <#sec:health>`__. The model also
@@ -918,11 +902,10 @@ scenario.
 Using the default reporter to render prevalence within each region, the
 :math:`\texttt{Homogeneous}` scenario can be visualized as follows:
 
-.. container:: center
-
-   .. image:: images/homogeneous.png
-      :alt: image
-      :width: 90.0%
+.. image:: images/homogeneous.png
+   :align: center
+   :alt: image
+   :width: 90.0%
 
 Input data
 ~~~~~~~~~~
@@ -995,11 +978,10 @@ the gravity model exponent.
 Using the default reporter to render prevalence within each region, the
 :math:`\texttt{Heterogeneous}` scenario can be visualized as follows:
 
-.. container:: center
-
-   .. image:: images/heterogeneous.png
-      :alt: image
-      :width: 90.0%
+.. image:: images/heterogeneous.png
+   :align: center
+   :alt: image
+   :width: 90.0%
 
 .. _input-data-1:
 
@@ -1058,17 +1040,12 @@ the repository
 
    https://github.com/abm-covid-lux/multi_strain_abmlux
 
-and install using
+and install using ``pip install -e .[test]`` Then run the command
 
-.. math:: \texttt{pip install -e .[test]}.
+``ms_abmlux Scenarios/Luxembourg/config.yaml sim_factory.abm``
 
-\ Then run the command
-
-.. math:: \texttt{ms_abmlux Scenarios/Luxembourg/config.yaml sim_factory.abm}.
-
-Once :math:`\texttt{sim_factory.abm}` has been created, copy and
-paste this file into Pandemia’s :math:`\texttt{Scenarios/ABMlux/data}`
-folder.
+Once ``sim_factory.abm`` has been created, copy and paste this file into
+Pandemia’s ``Scenarios/ABMlux/data`` folder.
 
 While Pandemia regions are not required to have the complexity of the
 ABMlux region, such a level of detail is supported by Pandemia, and will
