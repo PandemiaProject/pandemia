@@ -17,15 +17,26 @@ log = logging.getLogger("default_health_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultHealthModel(HealthModel):
-    """Default model of agent health. This model abandons the compartmental description of health
-    often applied in epidemic models. Instead, an agent's health is determined by five parameters:
-    
-        - sigma immunity (protection against infection)
-        - rho immunity (protection against severe outcomes)
-        - infectiousness
-        - disease
-        - strain
-    
+    """Default model of agent health.
+
+    Instead of the compartmental description of health often applied in epidemic models, the default
+    health model describes an agent's health with five attributes:
+    - sigma immunity (protection against infection)
+    - rho immunity (protection against severe outcomes)
+    - infectiousness
+    - disease
+    - strain
+    Low-level C functions, wrapped in Python functions, implement changes to agent health.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    scale_factor : float
+        The scale factor, coming from the full config.
     """
 
     def __init__(self, config, scale_factor, clock):
@@ -242,7 +253,7 @@ class DefaultHealthModel(HealthModel):
             self.preset_sigma_immunity_failure_lengths.flatten()
 
     def vectorize_component(self, vector_region):
-        """Initializes vector region numpy arrays related to this component"""
+        """Initializes vector region numpy arrays related to this component."""
 
         number_of_agents                = vector_region.number_of_agents
         number_of_locations             = vector_region.number_of_locations
@@ -301,7 +312,7 @@ class DefaultHealthModel(HealthModel):
         self._get_age_mixing_matrix(vector_region)
 
     def initial_conditions(self, vector_region):
-        """Updates health functions"""
+        """Establishes initial conditions for default health model."""
 
         # Complete assignment of default health function values
         num_r_vals = self.number_of_rho_immunity_outcomes
@@ -417,7 +428,7 @@ class DefaultHealthModel(HealthModel):
         self.update(vector_region, 0)
 
     def update(self, vector_region, t):
-        """Updates health functions"""
+        """Updates agent health."""
 
         self.update_health(
             c_int(t),
@@ -450,7 +461,7 @@ class DefaultHealthModel(HealthModel):
         )
 
     def dynamics(self, vector_region, t):
-        """Changes to agent health"""
+        """The transmission dynamics."""
 
         self.transmission(
             c_int(self.number_of_strains),
@@ -481,7 +492,7 @@ class DefaultHealthModel(HealthModel):
         self.infect_wrapper(vector_region, t)
 
     def infect_wrapper(self, vector_region, t):
-        """Changes to agent health"""
+        """The infection system."""
 
         self.infect(
             c_int(t),
