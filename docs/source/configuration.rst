@@ -8,8 +8,6 @@ The pandemia configuration file is a yaml file. An annotated example is shown be
 Basic Parameters
 ----------------
 
-
-
 .. include:: ../../Scenarios/Heterogeneous/heterogeneous_interventions.yaml
    :start-after: # Basic Parameters #
    :end-before: # Clock #
