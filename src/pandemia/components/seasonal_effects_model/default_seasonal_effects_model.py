@@ -12,12 +12,24 @@ log = logging.getLogger("default_seasonal_effects_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
-    """Default model of seasonal effects. Each region is assigned a region_transmission_multiplier.
-    Seasonal effects can implemented by varying this multiplier, which in this default model occurs
-    for each region each month."""
+    """Default model of seasonalality.
+
+    Each region is assigned a region_transmission_multiplier. Seasonal effects can implemented by
+    varying this multiplier, which in this default model occurs for each region each month.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    vector_world : VectorWorld
+        A Pandemia VectorWorld object, containing the relevant regions.
+    clock : Clock
+        A Pandemia Clock object, containing the start date.
+    """
 
     def __init__(self, config, vector_world, clock):
-        """Initialize component"""
+        """Initialize component."""
         super().__init__(config)
 
         self.epoch = clock.epoch
@@ -53,14 +65,14 @@ class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
                         seasonal_multiplier_records[vector_region.name]
 
     def vectorize_component(self, vector_region):
-        """Initializes numpy arrays associated to this component"""
+        """Initializes numpy arrays associated to this component."""
 
         vector_region.region_transmission_multiplier =\
             np.ones((self.simulation_length_days), dtype=np.float64)
         vector_region.current_region_transmission_multiplier = 1.0
 
     def initial_conditions(self, vector_region):
-        """Initial seasonal effect"""
+        """Initial seasonal effect."""
 
         multipliers = self.seasonal_multiplier_by_region[vector_region.id]
         self.seasonal_multiplier_by_region[vector_region.id][multipliers == 0] =\
@@ -75,7 +87,7 @@ class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
             vector_region.region_transmission_multiplier[0]
 
     def dynamics(self, vector_region, day):
-        """Changes to seasonal effects"""
+        """Changes to seasonal effects."""
 
         vector_region.current_region_transmission_multiplier =\
             vector_region.region_transmission_multiplier[day]

@@ -11,11 +11,19 @@ log = logging.getLogger("default_hospitalization_and_death_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
-    """Default model of agent hospitalization and death. Moves agents to hospitals and cemeteries
-    when necessary. In this simple default implementation, hospitalization only has an impact on
-    agent location, not on health (otherwise, a parameter representing the 'efficacy' of
-    hospitalization may be needed). Hospitals and cemeteries are chosen at random from all such
-    locations in the region."""
+    """Default model of agent hospitalization and death.
+
+    Moves agents to hospitals and cemeteries when necessary. In this simple default implementation,
+    hospitalization only has an impact on agent location, not on health (otherwise, a parameter
+    representing the 'efficacy' of hospitalization may be needed). Hospitals and cemeteries are
+    chosen at random from all such locations in the region.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    """
 
     def __init__(self, config):
         """Initialize component"""
@@ -30,7 +38,7 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
         self.cemetery_location_type = config['cemetery_location_type']
 
     def vectorize_component(self, vector_region):
-        """Initializes numpy arrays associated to this component"""
+        """Initializes numpy arrays associated to this component."""
 
         number_of_agents = vector_region.number_of_agents
         number_of_locations = vector_region.number_of_locations
@@ -51,14 +59,14 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
         vector_region.in_cemetery = np.zeros((number_of_agents), dtype=np.int64)
 
     def initial_conditions(self, vector_region):
-        """Initial hospitalization and death"""
+        """Establishes initial conditions for hospitalization and death."""
 
         for n in range(vector_region.number_of_agents):
             vector_region.in_hospital[n] = 0
             vector_region.in_cemetery[n] = 0
 
     def dynamics(self, vector_region):
-        """Changes agent locations"""
+        """Moves agents to and from hospitals and cemeteries."""
 
         self.dynamics_hospitalization_and_death(
             c_int(vector_region.number_of_agents),
