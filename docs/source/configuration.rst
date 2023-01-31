@@ -5,6 +5,11 @@ Configuration Files
 
 The pandemia configuration file is a yaml file. An annotated example is shown below.
 
+The example given is of the Heterogeneous Mixing scenerio with interventions. The user
+can create a new example by making a copy of one of the yaml files provided, before
+editing the values contained within. The configuration files are divided into sections,
+reflecting the structure of the Pandemia model.
+
 Basic Parameters
 ----------------
 
