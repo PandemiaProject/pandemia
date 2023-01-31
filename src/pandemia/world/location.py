@@ -9,7 +9,9 @@ from pyproj import Transformer
 LocationTuple = tuple[float, float]
 
 class Location:
-    """Represents a location, for example an area of land or a building.
+    """A location, for example an area of land or a building.
+
+    During a simulation, agents move between locations according to their daily and weekly routines.
 
     Parameters:
     ----------
@@ -17,18 +19,15 @@ class Location:
         The type of location, as a string. For example "House" or "Restaurant".
     coord : tuple
         A 2-tuple of floats, representing x, y coordinates.
-    """
 
-    uuid = None
-    """A universally unique identifier for this location (`str`).
-    """
-
-    typ = None
-    """The type of location, as a string (`str`). For example "House" or "Restaurant".
-    """
-
-    coord = None
-    """A 2-tuple of floats, representing x, y coordinates (`tuple`).
+    Attributes:
+    ----------
+    uuid : str
+        A universally unique identifier for this location.
+    typ : str
+        The type of location, as a string. For example "House" or "Restaurant".
+    coord : tuple
+        A 2-tuple of floats, representing x, y coordinates.
     """
 
     def __init__(self, typ: str, coord: LocationTuple):
@@ -51,8 +50,9 @@ class Location:
             The Euclidean distance to the other location.
         """
 
-        return sqrt(((self.coord[0]-other.coord[0])**2)\
-                  + ((self.coord[1]-other.coord[1])**2))
+        distance = sqrt(((self.coord[0]-other.coord[0])**2) + ((self.coord[1]-other.coord[1])**2))
+
+        return distance
 
 # pylint: disable=invalid-name
 def ETRS89_to_WGS84(coord: LocationTuple) -> LocationTuple:

@@ -9,8 +9,9 @@ from .location import Location
 log = logging.getLogger("region")
 
 class Region:
-    """Represents a region, for example a country or an administrative division, consisting of
-    agents, locations and activities.
+    """A region, consisting of agents, locations and activities.
+
+    A region can represent, for example a country or an administrative division within a country.
 
     Parameters:
     ----------
@@ -19,58 +20,42 @@ class Region:
     name : str
         The name of the region. For example, if the region represents a country, this could be the
         country code in ISO 3166-1 alpha-2 format.
+    activities : list[str]
+        A list of all activities performed by agents in this region.
+    agents : list[Agent]
+        A list of all agents in this region.
+    locations : list[Location]
+        A list of all locations in this region.
+
+    Attributes:
+    ----------
+    id : int
+        An integer identifier for this region.
+    name : str
+        The name of the region. For example, if the region represents a country, this could be the
+        country code in ISO 3166-1 alpha-2 format.
+    other_name : str
+       Another name of the region. For example, if the region represents a country, this could be
+       the country code in ISO 3166-1 alpha-3 format.
+    super_region : str
+        The group of regions to which this region belongs. For example, if the regions represents a
+        country, its super region might be the continent to which it belongs.
     activities: list[str]
         A list of all activities performed by agents in this region.
     agents: list[Agent]
         A list of all agents in this region.
     locations: list[Location]
         A list of all locations in this region.
-    """
-
-    id = None
-    """An integer identifier for this region (`int`).
-    """
-
-    name = None
-    """The name of the region (`str`). For example, if the region represents a country, this could
-    be the country code in ISO 3166-1 alpha-2 format.
-    """
-
-    other_name = None
-    """Another name of the region (`Union[None, str])`). For example, if the region represents a
-    country, this could be the country code in ISO 3166-1 alpha-3 format.
-    """
-
-    super_region = None
-    """The group of regions to which this region belongs (`Union[None, str])`). For example, if the
-    regions represents a country, its super region might be the continent to which it belongs.
-    """
-
-    activities = None
-    """A list of all activities performed by agents in this region (`str`).
-    """
-
-    agents = None
-    """A list of all agents in this region (`list[Agent]`).
-    """
-
-    locations = None
-    """A list of all locations in this region (`list[Location]`).
-    """
-
-    coordinates = None
-    """Used to render the region as polygons (`Union[None, list]`). If provided, the list should be
-    of the format:
+    coordinates : list
+        Used to render the region as polygons. If provided, the list should be of the format:
             
-                [[points_0], [points_1], ..., [points_N]]
+            [[points_0], [points_1], ..., [points_N]]
 
-    with each points_n a list of 2-tuples of floats. A list points_n represents the x, y coordinates
-    of each point along the border of a connected piece of the region.
-    """
-
-    region_coordinates = None
-    """Used to render the region as grid squares (`Union[None, list]`). If provided, the list should
-    be a list of 2-tuples of floats, representing the x, y coordinates of each grid square.
+        with each points_n a list of 2-tuples of floats. A list points_n represents the x, y
+        coordinates of each point along the border of a connected piece of the region.
+    region_coordinates : list
+        Used to render the region as grid squares. If provided, the list should be a list of
+        2-tuples of floats, representing the x, y coordinates of each grid square.
     """
 
     def __init__(self, id: int, name: str, activities: list[str],
@@ -87,8 +72,10 @@ class Region:
         self.region_coordinates: Union[None, list] = None
 
     def vectorize_region(self):
-        """Converts the object of type Region to an object of type VectorRegion. The latter objects
-        are vectorized versions of the former, consisting mainly of numpy arrays.
+        """Converts the object of type Region to an object of type VectorRegion.
+        
+        A VectorRegion is a vectorized versions of the former, with Python lists and dictionaries
+        converted to numpy arrays for fast interface with low-level C functions.
 
         Returns
         -------
@@ -167,8 +154,9 @@ class Region:
         return vector_region
 
 class VectorRegion:
-    """Represents a region, for example a country or an administrative division, in vector
-    format. Agents, locations and activities are now represented as integers, with various
+    """A region in vectorized format.
+    
+    Agents, locations and activities are now represented as integers, with various
     arrays used to store their attributes. Further attributes, in addition to the ones below,
     may be added to the vector world by simulation components, where necessary.
 
@@ -190,115 +178,78 @@ class VectorRegion:
     max_num_activity_locations: int
         The maximum number of locations at which it is possible to perform an activity (`int`). This
         maximum is taken accross all agents and all activities in this region.
-    """
-
-    id = None
-    """An integer identifier for this region (`int`). This will be determined by the world factory.
-    """
-
-    name = None
-    """A name for this region (`str`). For example, if the region represents a country, this could
-    be the country code in ISO 3166-1 alpha-2 format.
-    """
-
-    other_name = None
-    """Another name of this region (`Union[None, str]`). For example, if the region represents a
-    country, this could be the country code in ISO 3166-1 alpha-3 format.
-    """
-
-    super_region = None
-    """The group of regions to which this region belongs (`Union[None, str]`). For example, if the
-    regions represents a country, its super region might be the continent to which it belongs.
-    """
-    random_state = None
-    """A pair of 64-bit integers (`Union[None, np.ndarray]`). This pair is the random seed to be
-    used by the prng inside the C libraries. This is an numpy array of length 2, consisting of two
-    integers of type numpy.uint64. Each region gets it own random state, to preserve determinism
-    when parallelizing.
-    """
-
-    prng = None
-    """An instance of the Random class for this region (`Union[None, Random]`). Each region gets it
-    own instance of the Random class, to preserve determinism when parallelizing.
-    """
-
-    number_of_agents = None
-    """The number of agents in this region (`int`).
-    """
-
-    number_of_locations = None
-    """The number of locations in this region (`int`).
-    """
-
-    number_of_activities = None
-    """The number of activities performed by agents in this region (`int`).
-    """
-
-    age = None
-    """An array of length number_of_agents recording the age of each agent (`np.ndarray`).
-    """
-
-    weekly_routines = None
-    """For each agent, a sequence of integers of length ticks_in_week, indicating which activities
-    (represented as integers) are performed each tick (`np.ndarray`).
-    """
-
-    num_activity_locations = None
-    """For each agent, for each activity, the number of locations at which that agent can perform
-    that activity (`np.ndarray`).
-    """
-
-    activity_locations = None
-    """For each agent, for each activity, the locations (represented as integers) at which the agent
-    can perform that activity (`np.ndarray`). The number of locations at which agents perform
-    activities may be variable, as recorded by num_activity_locations, but should be bounded above
-    by max_num_activity_locations. This array is not a jagged array, the entries between
-    num_activity_locations and max_num_activity_locations being padding.
-    """
-
-    activity_location_weights = None
-    """For each agent, for each activity, the weights for each location at which the agent can
-    perform that activity (`np.ndarray`). The weights need not sum to one, with these weights being
-    only relavent upto num_activity_locations. This array is not a jagged array, the entries between
-    num_activity_locations and max_num_activity_locations being padding.
-    """
-
-    max_num_activity_locations = None
-    """The maximum number of locations at which it is possible to perform an activity (`int`). This
-    maximum is taken accross all agents and all activities in this region.
-    """
-
-    activity_strings = None
-    """The list of activities for this region (`list[str]`). If an activity is represented by the
-    integer a, then the corresponding string will be activity_strings[a], for example "Home".
-    """
-
-    location_typ_strings = None
-    """If a location is represented by the integer l, then location_typ_strings[l] gives the type of
-    location l, for example "House" (`list[str]`).
-    """
-
-    location_x_coords = None
-    """The x coordinates of all locations in this region (`np.ndarray`).
-    """
-
-    location_y_coords = None
-    """The y coordinates of all locations in this region (`np.ndarray`).
-    """
-
-    coordinates = None
-    """Used to render the region as polygons (`Union[None, list]`). If provided, the list should be
-    of the format:
+    
+    Attributes:
+    ----------
+    id : int
+        An integer identifier for this region. This will be determined by the world factory.
+    name : str
+        A name for this region. For example, if the region represents a country, this could be the
+        country code in ISO 3166-1 alpha-2 format.
+    other_name : str
+       Another name of the region. For example, if the region represents a country, this could be
+       the country code in ISO 3166-1 alpha-3 format.
+    super_region : str
+        The group of regions to which this region belongs. For example, if the regions represents a
+        country, its super region might be the continent to which it belongs.
+    random_state : np.ndarray
+        A pair of 64-bit integers. This pair is the random seed to be used by the prng inside the C
+        libraries. This is an numpy array of length 2, consisting of two integers of type
+        np.uint64. Each region gets it own random state, to preserve determinism when
+        parallelizing.
+    prng : Random
+        An instance of the Random class for this region. Each region gets it own instance of the
+        Random class, to preserve determinism when parallelizing.
+    ticks_in_week : int
+        The number of clock ticks in the week.
+    number_of_agents : int
+        The number of agents in this region.
+    number_of_activities : int
+        The number of activities performed by agents in this region.
+    number_of_locations : int
+        The number of locations in this region.
+    max_num_activity_locations : int
+        The maximum number of locations at which it is possible to perform an activity (`int`). This
+        maximum is taken accross all agents and all activities in this region.
+    age : np.ndarray
+        An array of length number_of_agents recording the age of each agent.
+    weekly_routines : np.ndarray
+        For each agent, a sequence of integers of length ticks_in_week, indicating which activities
+        (represented as integers) are performed each tick.
+    num_activity_locations : np.ndarray
+        For each agent, for each activity, the number of locations at which that agent can perform
+        that activity.
+    activity_locations : np.ndarray
+        For each agent, for each activity, the locations (represented as integers) at which the
+        agent can perform that activity. The number of locations at which agents perform activities
+        may be variable, as recorded by num_activity_locations, but should be bounded above by
+        max_num_activity_locations. This array is not a jagged array, the entries between
+        num_activity_locations and max_num_activity_locations being padding.
+    activity_location_weights : np.ndarray
+        For each agent, for each activity, the weights for each location at which the agent can
+        perform that activity. The weights need not sum to one, with these weights being only
+        relavent upto num_activity_locations. This array is not a jagged array, the entries between
+        num_activity_locations and max_num_activity_locations being padding.
+    activity_strings : list[str]
+        The list of activities for this region. If an activity is represented by the integer a, then
+        the corresponding string will be activity_strings[a], for example "Home".
+    location_typ_strings : list[str]
+        If a location is represented by the integer l, then location_typ_strings[l] gives the type
+        of location l, for example "House".
+    location_x_coords : np.ndarray
+        The x coordinates of all locations in this region (`np.ndarray`).
+    location_y_coords : np.ndarray
+        The y coordinates of all locations in this region (`np.ndarray`).
+    coordinates : list
+        Used to render the region as polygons. If provided, the list should be of the format:
             
                 [[points_0], [points_1], ..., [points_N]]
 
-    with each points_n a list of 2-tuples of floats. A list points_n represents the x, y coordinates
-    of each point along the border of a connected piece of the region.
-    """
-
-    region_coordinates = None
-    """Used to render the region as grid squares (`Union[None, list]`). If provided, the list should
-    be a list of 2-tuples of floats, representing the x, y coordinates of each grid square.
+        with each points_n a list of 2-tuples of floats. A list points_n represents the x, y
+        coordinates of each point along the border of a connected piece of the region.
+    region_coordinates : list
+        Used to render the region as grid squares. If provided, the list should be a list of
+        2-tuples of floats, representing the x, y coordinates of each grid square.
     """
 
     def __init__(self, id: int,
