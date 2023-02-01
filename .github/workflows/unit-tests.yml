@@ -1,0 +1,63 @@
+# This workflow will install Python dependencies, run tests with a variety of Python versions, on Windows and Linux
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Unit Tests
+
+on:
+  pull_request:
+    branches:
+      - "develop"
+    paths-ignore:
+      - '**/*md'
+      - '**/*tex'
+      - '.readthedocs.yaml'
+      - 'docs/'
+  workflow_dispatch:
+
+
+jobs:
+  unittests:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      # We use `fail-fast: false` for teaching purposes. This ensure that all combinations of the matrix
+      # will run even if one or more fail. 
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11"]
+        os: [ubuntu-22.04, windows-latest]
+        # os: [ubuntu-22.04]
+
+        # This is the syntax for running tests in MacOS as well as Windows + Linux. However it is excluded
+        # for now due to the high cost of MacOS usage:
+        # os: [ubuntu-latest, windows-latest, macos-12]
+
+        # This is the syntax for adding an one-off variation to the matrix configuration above
+        # include:
+        #   - python-version: "3.10"
+        #     os: ubuntu-22.04
+        #     test-group: known_failing
+        #     allow-fail: true
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    # Install Pandemia itself from then source
+    - name: Install Pandemia
+      run: |
+        python -m pip install -e .
+    # Install any packages require for testing
+    - name: Install tests for Pandemia
+      run: |
+        python -m pip install -e .[test]
+    - name: Compile the C code
+      run: |
+        make
+    # Now run the tests
+    - name: Test with pytest _EXCLUDING_ those marked "slow".
+      run: |
+        pytest -v
