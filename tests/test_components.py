@@ -128,6 +128,7 @@ def test_vectorize_component(concrete_model, sample_vector_region):
     """
     all_excepted_values = {
         "DefaultHealthModel": 27,
+        "VoidHealthModel": 9,
         "DefaultHospitalizationAndDeathModel": 6,
         "VoidHospitalizationAndDeathModel": 0,
         "DefaultMovementModel": 1,
