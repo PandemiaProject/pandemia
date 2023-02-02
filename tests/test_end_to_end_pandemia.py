@@ -153,7 +153,9 @@ def _update_config(input_scenario: Union[dict, str, Path], delta_config: dict) -
 def test_end_to_end_homogeneous(run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_homogeneous_config.yaml"
     # expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
-    expect_results = "tests/e2e_expected_outputs/strain_counts_test_homogeneous_config.csv"
+    expect_results = (
+        "tests/e2e_expected_outputs/strain_counts_test_homogeneous_config.csv"
+    )
 
     run_end_to_end_simulation(input_scenario, expect_results)
 
@@ -209,7 +211,10 @@ def test_e2e_policy_maker_model(get_default_expected_df, run_end_to_end_simulati
     input_scenario = "Scenarios/Test/test_e2e_health_and_movement_model.yaml"
 
     delta_config = {
-        "policy_maker_model": {"__type__": "random_policy_maker_model.RandomPolicyMakerModel", "seed": 1}
+        "policy_maker_model": {
+            "__type__": "random_policy_maker_model.RandomPolicyMakerModel",
+            "seed": 1,
+        }
     }
 
     scenario = _update_config(input_scenario, delta_config)
@@ -256,7 +261,10 @@ def test_e2e_testing_and_contact_tracing_model(
     scenario = _update_config(input_scenario, delta_config)
 
     delta_config = {
-        "policy_maker_model": {"__type__": "random_policy_maker_model.RandomPolicyMakerModel", "seed": 1}
+        "policy_maker_model": {
+            "__type__": "random_policy_maker_model.RandomPolicyMakerModel",
+            "seed": 1,
+        }
     }
 
     scenario = _update_config(scenario, delta_config)
@@ -319,7 +327,10 @@ def test_e2e_vaccination_model(get_default_expected_df, run_end_to_end_simulatio
     scenario = _update_config(input_scenario, delta_config)
 
     delta_config = {
-        "policy_maker_model": {"__type__": "random_policy_maker_model.RandomPolicyMakerModel", "seed": 1}
+        "policy_maker_model": {
+            "__type__": "random_policy_maker_model.RandomPolicyMakerModel",
+            "seed": 1,
+        }
     }
 
     scenario = _update_config(scenario, delta_config)

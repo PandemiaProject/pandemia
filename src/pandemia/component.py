@@ -38,6 +38,12 @@ class Component(ABC):
         self.telemetry_bus.publish(topic, *args, **kwargs)
 
     @abstractmethod
+    def vectorize_component(self, vector_region):
+        """Initializes numpy arrays associated to this component"""
+        pass
+
+    @abstractmethod
     def initial_conditions(self, vector_region):
         """Define the initial state of the vector_regions"""
         pass
+

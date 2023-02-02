@@ -8,39 +8,10 @@ from pandemia.components import (
     seasonal_effects_model,
     testing_and_contact_tracing_model,
     travel_model,
-    vaccination_model
+    vaccination_model,
 )
 
-"""
-from pandemia.components.health_model.default_health_model import DefaultHealthModel
-from pandemia.components.health_model import HealthModel
-from pandemia.components.hospitalization_and_death_model import HospitalizationAndDeathModel
-from pandemia.components.health_model.void_health_model import VoidHealthModel
-from pandemia.components.hospitalization_and_death_model.default_hospitalization_and_death_model import DefaultHospitalizationAndDeathModel
-from pandemia.components.hospitalization_and_death_model.void_hospitalization_and_death_model import VoidHospitalizationAndDeathModel
-from pandemia.components.movement_model import MovementModel
-from pandemia.components.movement_model.default_movement_model import DefaultMovementModel
-from pandemia.components.movement_model.void_movement_model import VoidMovementModel
-from pandemia.components.policy_maker_model import PolicyMakerModel
-from pandemia.components.policy_maker_model.default_policy_maker_model import DefaultPolicyMakerModel
-from pandemia.components.policy_maker_model.optimization_policy_maker_model import OptimizationPolicyMakerModel
-from pandemia.components.policy_maker_model.random_policy_maker_model import RandomPolicyMakerModel
-from pandemia.components.policy_maker_model.validation_policy_maker_model import ValidationPolicyMakerModel
-from pandemia.components.policy_maker_model.void_policy_maker_model import VoidPolicyMakerModel
-from pandemia.components.seasonal_effects_model import SeasonalEffectsModel
-from pandemia.components.seasonal_effects_model.default_seasonal_effects_model import DefaultSeasonalEffectsModel
-from pandemia.components.seasonal_effects_model.void_seasonal_effects_model import VoidSeasonalEffectsModel
-from pandemia.components.testing_and_contact_tracing_model import TestingAndContactTracingModel
-from pandemia.components.testing_and_contact_tracing_model.default_testing_and_contact_tracing_model import DefaultTestingAndContactTracingModel
-from pandemia.components.testing_and_contact_tracing_model.void_testing_and_contact_tracing_model import VoidTestingAndContactTracingModel
-from pandemia.components.travel_model import TravelModel
-from pandemia.components.travel_model.default_travel_model import DefaultTravelModel
-from pandemia.components.travel_model.void_travel_model import VoidTravelModel
-from pandemia.components.vaccination_model import VaccinationModel
-from pandemia.components.vaccination_model.default_vaccination_model import DefaultVaccinationModel
-from pandemia.components.vaccination_model.void_vaccination_model import VoidVaccinationModel
-"""
-
+from pandemia.random_tools import Random
 
 
 from pandemia.config import Config
@@ -50,96 +21,160 @@ from pkgutil import walk_packages
 import importlib
 from icecream import ic
 
-@pytest.fixture
-def list_of_abstract_components():
-    """These classes _should_ be abstract"""
-    return [
-        Component,
-        health_model.HealthModel,
-        hospitalization_and_death_model.HospitalizationAndDeathModel,
-        movement_model.MovementModel,
-        policy_maker_model.PolicyMakerModel,
-        seasonal_effects_model.SeasonalEffectsModel,
-        testing_and_contact_tracing_model.TestingAndContactTracingModel,
-        travel_model.TravelModel,
-        vaccination_model.VaccinationModel
-    ]
+from helper_list_models import all_model_list
 
-def _all_subclasses(cls):
+abstract_classes = [
+    Component,
+    health_model.HealthModel,
+    hospitalization_and_death_model.HospitalizationAndDeathModel,
+    movement_model.MovementModel,
+    policy_maker_model.PolicyMakerModel,
+    seasonal_effects_model.SeasonalEffectsModel,
+    testing_and_contact_tracing_model.TestingAndContactTracingModel,
+    travel_model.TravelModel,
+    vaccination_model.VaccinationModel,
+]
+
+
+@pytest.fixture(
+    scope="module",
+    params=all_model_list,
+    ids=[type(obj).__name__ for obj in all_model_list],
+)
+def concrete_model(request):
+    return request.param
+
+
+def _recurse_subclasses(cls):
     """
     Note that this will only find subclasses that have already been imported
     See https://stackoverflow.com/a/3862957/3837936
     """
     return set(cls.__subclasses__()).union(
-            [s for c in cls.__subclasses__() for s in _all_subclasses(c)])
+        [s for c in cls.__subclasses__() for s in _recurse_subclasses(c)]
+    )
+
 
 @pytest.fixture
-def all_components():
+def find_subclasses():
     """
     This will return `Component`, and all known subclasses (both abstract and concrete)
     """
     # Find and import all the subpackages
     search_path = [pandemia.__path__[0] + "/components"]
 
-    for _, module_name, _ in walk_packages(search_path, pandemia.__name__ + '.components.'):
+    for _, module_name, _ in walk_packages(
+        search_path, pandemia.__name__ + ".components."
+    ):
         print(module_name)
         importlib.import_module(module_name)
 
     # Now search for subclasses of `Component`
-    subclasses = _all_subclasses(Component)
+    subclasses = _recurse_subclasses(Component)
     return subclasses
 
 
-
 @pytest.fixture
-def sample_config():
-
-    return Config(_dict={})
-@pytest.fixture
-
 def sample_vector_region():
+    """Create a new instance of VectorRegion for each call"""
+
     def v_region():
-        return region.VectorRegion(
+        vr = region.VectorRegion(
             id=1,
             name="test_vector_region",
             ticks_in_week=21,
             number_of_activities=2,
             number_of_agents=2,
             number_of_locations=1,
-            max_num_activity_locations=2
+            max_num_activity_locations=2,
         )
+        vr.prng = Random(123)
+        return vr
 
     return v_region
 
-def test_abstract_components(list_of_abstract_components, sample_config):
-    """Test that the top level components are abstract and cannot be instantiated"""
-    for comp in list_of_abstract_components:
-        print(str(comp))
-        with pytest.raises(TypeError, match="Can't instantiate abstract class"):
-            comp(sample_config)
 
-def test_component_constructor(all_components, sample_config):
-    for comp in all_components:
-        print(comp)
-        comp(sample_config)
+@pytest.mark.parametrize(
+    "class_name",
+    abstract_classes,
+)
+def test_abstract_components(class_name):
+    """Test that the top level components are abstract and cannot be instantiated. These classes _should_ be abstract"""
+    with pytest.raises(TypeError, match="Can't instantiate abstract class"):
+        class_name(Config(_dict={}))
 
-    assert False
 
-def test_vectorize_component(all_components, sample_config, sample_vector_region):
-    for Comp in all_components:
-        comp = Comp(sample_config)
-        v_region = sample_vector_region()
-        before = len(dir(v_region))
-        comp.vectorize_component(v_region)
-        after = len(dir(v_region))
-        ic(after - before, Comp)
+def test_sample_exist_for_each_concrete_class(find_subclasses):
+    """
+    This test asserts that the list `helper_list_models.all_model_list` contains exactly one of each
+    available concrete subclass of `Component`. If a new subclass is created and an example not added to
+    `helper_list_models.all_model_list` then this test will fail.
+    """
+    actual_subclasses = set(find_subclasses) - set(abstract_classes)
+    expected_subclasses = set([type(obj) for obj in all_model_list])
 
-    assert False
+    diff = actual_subclasses.symmetric_difference(expected_subclasses)
+    assert len(diff) == 0
 
-@pytest.mark.skip("Test not implemented yet")
-def test_initial_conditions():
-    assert False
 
-@pytest.mark.skip("Test not implemented yet")
-def test_component_dynamics():
-    assert False
+def test_vectorize_component(concrete_model, sample_vector_region):
+    """
+    For all Component subclasses - test calling the `vectorize_component` method.
+    In a simulation this is typically the first method called, after construction.
+
+    **At present the only positive assertion that this has worked as expected is the change in the number of attributes on the `vector_region`.**
+
+    NOTE: The expected values have _only_ been obtained by running this test. The have not been checked by manually inspecting the code.
+    """
+    all_excepted_values = {
+        "DefaultHealthModel": 27,
+        "DefaultHospitalizationAndDeathModel": 6,
+        "VoidHospitalizationAndDeathModel": 0,
+        "DefaultMovementModel": 1,
+        "VoidMovementModel": 9,
+        "DefaultPolicyMakerModel": 0,
+        "OptimizationPolicyMakerModel": 0,
+        "RandomPolicyMakerModel": 0,
+        "ValidationPolicyMakerModel": 1,
+        "VoidPolicyMakerModel": 0,
+        "DefaultSeasonalEffectsModel": 2,
+        "VoidSeasonalEffectsModel": 1,
+        "DefaultTestingAndContactTracingModel": 8,
+        "VoidTestingAndContactTracingModel": 0,
+        "DefaultTravelModel": 2,
+        "VoidTravelModel": 1,
+        "DefaultVaccinationModel": 5,
+        "VoidVaccinationModel": 0,
+    }
+
+    expected_extra_attributes = all_excepted_values[type(concrete_model).__name__]
+
+    v_region = sample_vector_region()
+    before = len(dir(v_region))
+    concrete_model.vectorize_component(v_region)
+    after = len(dir(v_region))
+    actual_extra_attributes = after - before
+    ic(actual_extra_attributes, concrete_model)
+    assert actual_extra_attributes == expected_extra_attributes
+
+
+def test_initial_conditions(concrete_model, sample_vector_region):
+    """
+    For all Component subclasses - test calling the `initial_conditions` method.
+
+    The `vectorize_component` method is called first, has it is typically the first method called, after construction.
+    Any errors from `vectorize_component` are ignored in this test.
+
+    **At present the NO positive assertion that this has worked as expected. Only the absence of an error in
+    `initial_conditions` is sufficient for this test to pass.
+    """
+
+    v_region = sample_vector_region()
+
+    # Ignore errors in `vectorize_component`
+    try:
+        concrete_model.vectorize_component(v_region)
+    except Exception:
+        pass
+
+    concrete_model.initial_conditions(v_region)
