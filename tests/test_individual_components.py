@@ -1,4 +1,6 @@
-from pandemia.components.policy_maker_model.default_policy_maker_model import DefaultPolicyMakerModel
+from pandemia.components.policy_maker_model.default_policy_maker_model import (
+    DefaultPolicyMakerModel,
+)
 from pandemia.config import Config
 from helper_list_models import get_clock
 import pytest
@@ -34,20 +36,19 @@ def test_default_policy_model_input_file(tmp_path):
     )
 
     vr = region.VectorRegion(
-            id=1,
-            name="test_vector_region",
-            ticks_in_week=21,
-            number_of_activities=2,
-            number_of_agents=2,
-            number_of_locations=1,
-            max_num_activity_locations=2,
-        )
+        id=1,
+        name="test_vector_region",
+        ticks_in_week=21,
+        number_of_activities=2,
+        number_of_agents=2,
+        number_of_locations=1,
+        max_num_activity_locations=2,
+    )
     vr.prng = Random(123)
 
     # Check that an error is raised when the file does not exist:
     with pytest.raises(ValueError, match="does not exist"):
         dpmm.vectorize_component(vr)
-
 
     # Check that an error is when an empty file is used:
     policy_file_path.touch()
@@ -61,6 +62,7 @@ def test_default_policy_model_input_file(tmp_path):
     with pytest.raises(ValueError, match="contents are not readable"):
         dpmm.vectorize_component(vr)
 
+
 @pytest.mark.skip("Test is not implemented")
 def test_default_seasonal_multiplier_by_region_by_month():
     """
@@ -72,6 +74,7 @@ def test_default_seasonal_multiplier_by_region_by_month():
     """
     pytest.fail()
 
+
 @pytest.mark.skip("Test is not implemented")
 def test_default_vaccination_model_inputs():
     """
@@ -80,8 +83,8 @@ def test_default_vaccination_model_inputs():
 
     Why are these required given the values can be calculated from values in the health model? Is this
     to ensure that the user input is self-consistent? If so great, but it would good to have more user-friendly
-    error messages if so. 
-    (In general is it better to use ValueError for things that are errors in user input, and 
+    error messages if so.
+    (In general is it better to use ValueError for things that are errors in user input, and
     use assert/AssertionError for unittests and self-consistency of the software - not the input.
     """
     pytest.fail()
