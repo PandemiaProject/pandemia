@@ -9,6 +9,9 @@ About Pandemia
    :target: https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml
    :alt: End to End tests
 
+.. image:: https://github.com/PandemiaProject/pandemia/actions/workflows/unit-tests.yml/badge.svg
+   :target: https://github.com/PandemiaProject/pandemia/actions/workflows/unit-tests.yml
+   :alt: Unit Tests
 
 .. image:: https://readthedocs.org/projects/pandemia/badge/?version=latest
    :target: https://pandemia.readthedocs.io/en/latest/?badge=latest
