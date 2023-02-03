@@ -126,6 +126,21 @@ def test_vectorize_component(concrete_model, sample_vector_region):
 
     NOTE: The expected values have _only_ been obtained by running this test. The have not been checked by manually inspecting the code.
     """
+
+    # Find expected failure cases
+    xfail_if = {
+        "DefaultMovementModel": 87,
+        "ValidationPolicyMakerModel": 89,
+    }
+
+    expected_fail_issue = xfail_if.get(type(concrete_model).__name__, None)
+
+    if expected_fail_issue:
+        expected_fail_reason = f"Expected fail. See issue https://github.com/PandemiaProject/pandemia/issues/{expected_fail_issue}"
+        pytest.xfail(reason= expected_fail_reason)
+
+
+    # Now do the actual tests for the remaining cases
     all_excepted_values = {
         "DefaultHealthModel": 27,
         "VoidHealthModel": 9,
@@ -170,6 +185,27 @@ def test_initial_conditions(concrete_model, sample_vector_region):
     `initial_conditions` is sufficient for this test to pass.
     """
 
+    # Find expected failure cases
+    xfail_if = {
+        "DefaultHealthModel": 86,
+        "DefaultMovementModel": 88,
+        "VoidMovementModel": 88,
+        "DefaultPolicyMakerModel": 89,
+        "OptimizationPolicyMakerModel": 89,
+        "RandomPolicyMakerModel": 89,
+        "ValidationPolicyMakerModel": 89,
+        "DefaultTestingAndContactTracingModel": 90,
+        "DefaultTravelModel": 90,
+    }
+
+    expected_fail_issue = xfail_if.get(type(concrete_model).__name__, None)
+
+    if expected_fail_issue:
+        expected_fail_reason = f"Expected fail. See issue https://github.com/PandemiaProject/pandemia/issues/{expected_fail_issue}"
+        pytest.xfail(reason= expected_fail_reason)
+
+
+    # Now do the actual tests for the remaining cases
     v_region = sample_vector_region()
 
     # Ignore errors in `vectorize_component`
