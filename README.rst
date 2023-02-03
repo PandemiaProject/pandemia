@@ -230,14 +230,24 @@ To install additional dependencies required for testing:
 
    pip install .[test]
 
-Unit tests (Future)
-^^^^^^^^^^^^^^^^^^^
+Unit tests
+^^^^^^^^^^
 
-**Currently there are no unit tests**. When they've been written, they will be run using pytest:
+Unit tests have been written using the standard pytest framework. To run the tests use:
 
 .. code-block::
 
    pytest
+
+
+There are some failing tests which have identified know issues with the code. If, and only if, the issue has been logged as a `GitHub Issue <https://github.com/PandemiaProject/pandemia/issues>`_, 
+then they can be mark as "expected failures", using `pytest.mark.xfail <https://docs.pytest.org/en/6.2.x/skipping.html#xfail-mark-test-functions-as-expected-to-fail>`_.
+It is possible to force these tests to run by using pytest's `--runxfail` switch. eg:
+
+.. code-block::
+
+   pytest --runxfail
+
 
 Integration tests
 ^^^^^^^^^^^^^^^^^

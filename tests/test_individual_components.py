@@ -8,7 +8,9 @@ from pandemia.world import region
 from pandemia.random_tools import Random
 
 
-@pytest.mark.xfail(reason="See issue https://github.com/PandemiaProject/pandemia/issues/91")
+@pytest.mark.xfail(
+    reason="See issue https://github.com/PandemiaProject/pandemia/issues/91"
+)
 def test_default_policy_model_input_file(tmp_path):
     """
     Tests for the DefaultPolicyMakerModel. The model takes a directory of input files as a parameter.

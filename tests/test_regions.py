@@ -2,7 +2,10 @@ from pandemia.world.region import Region, VectorRegion
 from collections import namedtuple
 import pytest
 
-@pytest.mark.xfail(reason="See issue https://github.com/PandemiaProject/pandemia/issues/92")
+
+@pytest.mark.xfail(
+    reason="See issue https://github.com/PandemiaProject/pandemia/issues/92"
+)
 def test_vector_region_constructor():
     Args = namedtuple(
         "Args",

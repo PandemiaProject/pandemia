@@ -137,8 +137,7 @@ def test_vectorize_component(concrete_model, sample_vector_region):
 
     if expected_fail_issue:
         expected_fail_reason = f"Expected fail. See issue https://github.com/PandemiaProject/pandemia/issues/{expected_fail_issue}"
-        pytest.xfail(reason= expected_fail_reason)
-
+        pytest.xfail(reason=expected_fail_reason)
 
     # Now do the actual tests for the remaining cases
     all_excepted_values = {
@@ -202,8 +201,7 @@ def test_initial_conditions(concrete_model, sample_vector_region):
 
     if expected_fail_issue:
         expected_fail_reason = f"Expected fail. See issue https://github.com/PandemiaProject/pandemia/issues/{expected_fail_issue}"
-        pytest.xfail(reason= expected_fail_reason)
-
+        pytest.xfail(reason=expected_fail_reason)
 
     # Now do the actual tests for the remaining cases
     v_region = sample_vector_region()
