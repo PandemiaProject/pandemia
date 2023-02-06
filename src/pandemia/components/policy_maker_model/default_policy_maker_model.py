@@ -11,14 +11,33 @@ log = logging.getLogger("default_policy_maker_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultPolicyMakerModel(PolicyMakerModel):
-    """Default model of a policy maker, specifiying a predefined set of policy interventions. The numbers
-    appearing in the arrays below are for test purposes. To represents a new policy intervention,
-    for example a historical set of interventions, the numbers in these arrays should be changed
-    accordingly."""
+    """Default model of a policy maker.
+
+    Default model of a policy maker, specifiying a predefined set of policy interventions. This
+    policy is specfied using arrays of integers and float, loaded from a csv file that can be
+    editted. The filepath to this csv file should be found in the config.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    scale_factor : float
+        The scale factor, coming from the full config.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    number_of_regions : int
+        The number of regions appearing the model.
+    number_of_vaccines : int
+        The number of vaccines appearing in the model.
+    age_groups : list[int]
+        A list of integers coming from the vaccination model, indicating the age groups for
+        vaccination. For example, the list [0, 18, 65] indicates three age groups.
+    """
 
     def __init__(self, config, scale_factor, clock, number_of_regions,
                  number_of_vaccines, age_groups):
-        """Initialize component"""
+        """Initialize component."""
         super().__init__(config, scale_factor)
 
         self.scale_factor = scale_factor
@@ -39,7 +58,7 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
         self.vaccination_policy = None
 
     def new_policy(self, policy):
-        """Set new policy"""
+        """Sets new policy."""
 
         self.lockdown_policy =\
             np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
@@ -59,7 +78,7 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
                         self.number_of_vaccines), 0, dtype=np.int64)
 
     def vectorize_component(self, vector_region):
-        """Initializes numpy arrays associated to this component"""
+        """Initializes numpy arrays associated to this component."""
 
         iso2 = vector_region.name
         id = vector_region.id
@@ -87,7 +106,7 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
                 self.vaccination_policy[:,id,2,1] = (self.scale_factor * array[12]).astype(np.int64)
 
     def initial_conditions(self, vector_region):
-        """Initial policy"""
+        """Initial policy."""
 
         vector_region.lockdown_intervention =\
             self.lockdown_policy[0][vector_region.id]
@@ -105,7 +124,7 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
             self.vaccination_policy[0][vector_region.id]
 
     def dynamics(self, vector_region, day):
-        """Changes to policy"""
+        """Changes to policy."""
 
         vector_region.lockdown_intervention =\
             self.lockdown_policy[day][vector_region.id]
@@ -123,7 +142,7 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
             self.vaccination_policy[day][vector_region.id]
 
     def _validate_policy(self, policy):
-        """Validates shape of policy array"""
+        """Validates shape of policy array."""
 
         assert policy.lockdown_policy.shape ==\
             (self.simulation_length_days, self.number_of_regions)

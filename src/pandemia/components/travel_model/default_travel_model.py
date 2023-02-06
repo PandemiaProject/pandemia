@@ -13,18 +13,32 @@ log = logging.getLogger("default_travel_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultTravelModel(TravelModel):
-    """Default model of mixing between regions. Each day, a number of agents are selected from each
-    region to travel to each other region. The numbers travelling between regions are given by the
-    matrix agents_travelling_matrix. The destination of the travellers is recorded using the array
-    current_region. Agents outside their home region are typically ignored by other components
-    while they are travelling. Only uninfected agents can travel, but such agents can become
-    infected whlie travelling. The probability that they become infected is given in terms of the
-    average infectiousness of their destination region. The border closure intervention is also
-    implemented here."""
+    """Default model of mixing between regions.
+
+    Each day, a number of agents are selected from each region to travel to each other region. The
+    numbers travelling between regions are given by the matrix agents_travelling_matrix. The
+    destination of the travellers is recorded using the array current_region. Agents outside their
+    home region are typically ignored by other components while they are travelling. Only uninfected
+    agents can travel, but such agents can become infected whlie travelling. The probability that
+    they become infected is given in terms of the average infectiousness of their destination
+    region. The border closure intervention is also implemented here.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    scale_factor : float
+        The scale factor, coming from the full config.
+    number_of_strains : int
+        The number of strains appearing the model.
+    vector_world : VectorWorld
+        A Pandemia VectorWorld object, containing the relevant regions.
+    """
 
     def __init__(self, config, scale_factor, number_of_strains,
                  vector_world):
-        """Initialize component"""
+        """Initialize component."""
         super().__init__(config, scale_factor)
 
         self.transmission_out = self.lib.transmission_out
@@ -49,20 +63,20 @@ class DefaultTravelModel(TravelModel):
             assert self.baseline_agents_travelling_matrix[r][r] == 0
 
     def vectorize_component(self, vector_region):
-        """Initializes numpy arrays associated to this component"""
+        """Initializes numpy arrays associated to this component."""
 
         vector_region.current_border_closure_multiplier = 1.0
         vector_region.current_region = np.full((vector_region.number_of_agents),
                                                 vector_region.id, dtype=np.int64)
 
     def initial_conditions(self, sim):
-        """Initial regional mixing"""
+        """Initial conditions for travel model."""
 
         self.beta = sim.health_model.beta
 
         self.baseline_agents_travelling_matrix =\
-            self.interpolate_matrix(self.baseline_agents_travelling_matrix, sim.vector_world,
-                                    self.interpolation)
+            self._interpolate_matrix(self.baseline_agents_travelling_matrix, sim.vector_world,
+                                     self.interpolation)
 
         # Flatten arrays
         self.baseline_agents_travelling_matrix =\
@@ -70,7 +84,7 @@ class DefaultTravelModel(TravelModel):
 
     def _out(self, vector_region_batch, agents_travelling_matrix, sum_f_by_strain,
              transmission_force, facemask_transmission_multiplier):
-        """Update record of who is travelling abroad for a batch of regions"""
+        """Update record of who is travelling abroad for a batch of regions."""
 
         for vector_region in vector_region_batch:
             self.determine_travellers(
@@ -102,7 +116,7 @@ class DefaultTravelModel(TravelModel):
 
     def _in(self, sim, vector_region_batch, sum_f_by_strain, transmission_force, mutation_matrix,
             facemask_transmission_multiplier, day, ticks_in_day):
-        """Calculate who gets infected for a batch of regions"""
+        """Calculate who gets infected for a batch of regions."""
 
         for vector_region in vector_region_batch:
             self.transmission_in(
@@ -129,7 +143,7 @@ class DefaultTravelModel(TravelModel):
                  facemask_transmission_multiplier,
                  mutation_matrix, enable_parallel,
                  num_jobs, vector_region_batches):
-        """Changes to regional mixing model"""
+        """Travel dynamics resulting in infection and health updates."""
 
         agents_travelling_matrix =\
             np.zeros((self.number_of_regions, self.number_of_regions), dtype=np.int64)
@@ -170,7 +184,7 @@ class DefaultTravelModel(TravelModel):
             self._in(sim, sim.vector_regions, sum_f_by_strain, transmission_force, mutation_matrix,
                      facemask_transmission_multiplier, day, ticks_in_day)
 
-    def interpolate_matrix(self, baseline_agents_travelling_matrix, vector_world, interpolation):
+    def _interpolate_matrix(self, baseline_agents_travelling_matrix, vector_world, interpolation):
         """Artificially inflate number of travellers for testing purposes or otherwise"""
 
         ids_to_population_sizes =\

@@ -1,4 +1,3 @@
-"""Wrapper around python's PRNG to ease the process of performing deterministic re-runs"""
 
 import random
 import logging
@@ -14,66 +13,79 @@ T = TypeVar('T')
 
 class Random:
     """Wraps the python random classes as an abstraction layer over them,
-    and offers a number of convenience methods"""
+    and offers a number of convenience methods.
+    """
 
     def __init__(self, seed=None):
         self.prng = random.Random(seed)
         self.prng_np = numpy.random.RandomState(seed)
 
     def gammavariate(self, alpha: float, beta: float) -> Probability:
-        """Sample gamma distributed random variable with pdf given by
+        """Sample gamma distributed random variable with shape parameter alpha and scale parameter
+        beta.
+        """
 
-                        x ** (alpha - 1) * math.exp(-x / beta)
-            pdf(x) =      --------------------------------------.
-                        math.gamma(alpha) * beta ** alpha
-
-        That is, a gamma random variable with shape parameter alpha and scale parameter beta."""
+        # The pdf is given by:
+        #
+        #              x ** (alpha - 1) * math.exp(-x / beta)
+        #     pdf(x) = --------------------------------------.
+        #                 math.gamma(alpha) * beta ** alpha
+        #
 
         return self.prng.gammavariate(alpha, beta)
 
     def expovariate(self, lambd: float) -> Probability:
-        """Sample exponentially distributed random variable with mean 1 / lambd."""
+        """Sample exponentially distributed random variable with mean 1 / lambda.
+        """
 
         return self.prng.expovariate(lambd)
 
     def random_randrange(self, stop: int) -> int:
-        """Random randrange function"""
+        """Random randrange function.
+        """
 
         return self.prng.randrange(stop)
 
     def binomial(self, size: int, prob: float) -> int:
-        """Random binomial function"""
+        """Random binomial function.
+        """
 
         return self.prng_np.binomial(size, prob)
 
     def randrange_interval(self, start: int, stop: int) -> int:
-        """Random randrange function"""
+        """Random randrange function.
+        """
 
         return self.prng.randrange(start, stop)
 
     def random_choice(self, sequence: Sequence[T]) -> T:
-        """Random choice function"""
+        """Random choice function.
+        """
 
         return sequence[math.floor(self.prng.random()*len(sequence))]
 
     def random_choices(self, population: Sequence[T], weights: Sequence[int],
                     sample_size: int) -> list[T]:
-        """Random choices function"""
+        """Random choices function.
+        """
 
         return self.prng.choices(population, weights=weights, cum_weights=None, k=sample_size)
 
     def random_sample(self, population: Sequence[T], k: int) -> list[T]:
-        """Select k items from the population given."""
+        """Select k items from the population given.
+        """
 
         return self.prng.sample(population, k)
 
     def random_shuffle(self, x: MutableSequence[Any]) -> None:
-        """Random shuffle function"""
+        """Random shuffle function.
+        """
 
         self.prng.shuffle(x)
 
     def random_float(self, x: Probability) -> float:
-        """Return random number between 0 and x"""
+        """Return random number between 0 and x.
+        """
 
         return self.prng.random() * x
 
@@ -82,18 +94,29 @@ class Random:
 
         Identical to 'roulette wheel' random selection.
 
-        problist: a list of n items, each of which is a weight.
+        Parameters:
+        -----------
 
-        Returns: The index number of the item chosen"""
+        problist : list
+            A list of n items, each of which is a weight.
 
-        return self.prng.choices(range(len(problist)), problist)[0]
+        Returns:
+        --------
+
+        index : int
+            The index number of the item chosen.
+        """
+
+        index = self.prng.choices(range(len(problist)), problist)[0]
+
+        return index
 
     def multinoulli_dict(self, problist_dict: dict[T, Probability]) -> T:
-        """Sample from a key:value dict and return a key
-        according to the weights in the values, i.e.:
+        """Sample from a key:value dict using weights.
 
-        {'a': 4, 'b': 6} has a 60% chance of returning
-        'b' and a 40% chance of returning 'a'."""
+        For example, {'a': 4, 'b': 6} has a 60% chance of returning 'b' and a 40% chance of
+        returning 'a'.
+        """
 
         if len(problist_dict) == 0:
 
@@ -108,7 +131,8 @@ class Random:
         return self.prng.choices(list(problist_dict.keys()), weights)[0]
 
     def boolean(self, probability_true: Probability) -> bool:
-        """Return true with the probability given."""
+        """Return true with the probability given.
+        """
 
         assert probability_true >= 0
         assert probability_true <= 1

@@ -11,5 +11,5 @@ class WorldFactory:
     """Generic world factory that outputs a World object."""
 
     def get_world(self) -> World:
-        """Gets world"""
+        """Gets a world."""
         pass

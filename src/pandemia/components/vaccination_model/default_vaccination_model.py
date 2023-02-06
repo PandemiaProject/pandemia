@@ -12,9 +12,29 @@ log = logging.getLogger("default_vaccination_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultVaccinationModel(VaccinationModel):
-    """Default model of vaccination. This supports multiple vaccines, acting on multiple strains of
+    """Default model of vaccination.
+
+    This supports multiple vaccines, acting on multiple strains of
     the pathogen. Vaccines update individual immunity according to the same mechanism used to update
-    immunity in the default health model."""
+    immunity in the default health model.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    number_of_strains : int
+        The number of strains appearing the model.
+    number_of_rho_immunity_outcomes : int
+        The number of (inner) immunity layers appearing the model.
+    immunity_length : int
+        The number of time periods the simulation is divided into, from the point of view of
+        immunity updates. These periods should have length immunity_period_ticks in ticks.
+    immunity_period_ticks : int
+        How frequently agent immunity is updated, in ticks of the simulation clock.
+    """
 
     def __init__(self, config, clock, number_of_strains, number_of_rho_immunity_outcomes,
                  immunity_length, immunity_period_ticks):

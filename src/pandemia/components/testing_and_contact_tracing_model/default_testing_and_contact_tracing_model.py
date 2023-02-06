@@ -12,15 +12,24 @@ log = logging.getLogger("default_testing_and_contact_tracing_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
-    """Default model of testing and contact tracing. Agents can be tested in this model for one of
-    three reasons. First, they might be tested as a result of random testing of the population.
-    Second, they might be tested after they develop symptoms. Third, they might be tested via the
-    contract tracing system. Limited numbers of tests are available for each purpose. Testing and
-    contact tracing indicate who is or who might be infected. Those who test positive are directed
-    by this component to quarantine. For the duration of quarantine, these agents remain at home."""
+    """Default model of testing and contact tracing.
+
+    Agents can be tested in this model for one of three reasons. First, they might be tested as a
+    result of random testing of the population. Second, they might be tested after they develop
+    symptoms. Third, they might be tested via the contract tracing system. Limited numbers of tests
+    are available for each purpose. Testing and contact tracing indicate who is or who might be
+    infected. Those who test positive are directed by this component to quarantine. For the duration
+    of quarantine, these agents remain at home.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    """
 
     def __init__(self, config):
-        """Initialize component"""
+        """Initialize component."""
         super().__init__(config)
 
         self.default_testing_and_contact_tracing_dynamics =\
@@ -40,7 +49,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
             config['prob_quarantine_with_contact_without_test']
 
     def vectorize_component(self, vector_region):
-        """Initializes numpy arrays associated to this component"""
+        """Initializes numpy arrays associated to this component."""
 
         number_of_agents = vector_region.number_of_agents
         max_regular_contacts_to_test = self.max_regular_contacts_to_test
@@ -59,7 +68,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         vector_region.regular_contacts_to_test = vector_region.regular_contacts_to_test.flatten()
 
     def initial_conditions(self, vector_region):
-        """Initial testing and contact tracing conditions"""
+        """Initial testing and contact tracing conditions."""
 
          # Initialize record of when agents should end quarantine
         for n in range(vector_region.number_of_agents):
@@ -88,7 +97,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
             vector_region.regular_contacts_to_test[index] = -1
 
     def dynamics(self, vector_region, day):
-        """Changes to testing and contact tracing"""
+        """Implements testing and contact tracing system."""
 
         self.default_testing_and_contact_tracing_dynamics(
             c_int(vector_region.number_of_agents),

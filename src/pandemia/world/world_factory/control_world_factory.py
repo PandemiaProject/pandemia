@@ -14,7 +14,21 @@ from . import WorldFactory
 log = logging.getLogger('control_world_factory')
 
 class ControlWorldFactory(WorldFactory):
-    """Creates a world which can be used for testing all components of the model (individually or collectively)."""
+    """A world factory used for test purposes.
+
+    This world factory builds a world that can be used for testing all components of the model
+    (individually or collectively).
+    
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this world factory.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    scale_factor : float
+        The scale factor, coming from the full config.
+    """
 
     def __init__(self, config, clock, scale_factor):
 
