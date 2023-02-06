@@ -8,7 +8,7 @@ from ..policy_maker_model import PolicyMakerModel
 log = logging.getLogger("default_policy_maker_model")
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
-class DefaultPolicyMakerModel(PolicyMakerModel):
+class OptimizationPolicyMakerModel(PolicyMakerModel):
     """Default model of a policy maker, specifiying a predefined set of policy interventions. The numbers
     appearing in the arrays below are for test purposes. To represents a new policy intervention,
     for example a historical set of interventions, the numbers in these arrays should be changed

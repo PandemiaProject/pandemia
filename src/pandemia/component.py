@@ -2,6 +2,7 @@
 
 import logging
 from typing import Optional
+from abc import ABC, abstractmethod
 
 from .config import Config
 from .messagebus import MessageBus
@@ -12,7 +13,7 @@ ext=".dll" if platform.system() == 'Windows' else ".so"
 log = logging.getLogger("component")
 
 #pylint: disable=attribute-defined-outside-init
-class Component:
+class Component(ABC):
     """A simulation component. Submodels, for example of movement and health, are represented as
     objects of this class."""
 
@@ -35,3 +36,14 @@ class Component:
             return
 
         self.telemetry_bus.publish(topic, *args, **kwargs)
+
+    @abstractmethod
+    def vectorize_component(self, vector_region):
+        """Initializes numpy arrays associated to this component"""
+        pass
+
+    @abstractmethod
+    def initial_conditions(self, vector_region):
+        """Define the initial state of the vector_regions"""
+        pass
+
