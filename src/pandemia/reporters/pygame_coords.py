@@ -50,6 +50,8 @@ class PygameCoords(Reporter):
 
         self.done = False
 
+        self.pause = -1
+
     def initialize(self, world, number_of_strains):
         """Intializes reporter"""
 
@@ -162,6 +164,12 @@ class PygameCoords(Reporter):
 
         if not self.done:
 
+            while self.pause == 1:
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.button == 3:
+                            self.pause *= -1
+
             num_infected = np.zeros((self.width * self.height), dtype=np.float64)
             num_total    = np.zeros((self.width * self.height), dtype=np.float64)
 
@@ -220,6 +228,8 @@ class PygameCoords(Reporter):
                     if event.button == 1:
                         pygame.quit()
                         self.done = True
+                    if event.button == 3:
+                        self.pause *= -1
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     self.done = True
