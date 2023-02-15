@@ -125,7 +125,7 @@ health_model:
   number_of_strains: 1
   # Control parameters determining the transmission probability of each strain each tick. This list
   # should be of length equal to the number of strains.
-  beta: [0.025]                                                                                     # POSSIBLE FREE VARIABLE
+  beta: [0.035]                                                                                     # POSSIBLE FREE VARIABLE
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
   mutation_matrix: [[1.0]]
@@ -315,36 +315,36 @@ vaccination_model:
   # The minimum time between doses.
   booster_waiting_time_days: 360
   # The impact of the vaccines on the immune system for each strain.
-  vaccines:
-    doses_one_and_two:
-      rho_immunity_failure:
-        [[[-1, 1, 90, 180, 270, 360],
-          [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]]]
-      sigma_immunity_failure:
-        [[[-1, 1, 90, 180, 270, 360],
-          [1.0, 0.2, 0.4, 0.5, 0.75, 0.8]]]
-    dose_three:
-      rho_immunity_failure:
-        [[[-1, 1, 90, 180, 270, 360],
-          [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]]]
-      sigma_immunity_failure:
-        [[[-1, 1, 90, 180, 270, 360],
-          [1.0, 0.2, 0.4, 0.5, 0.75, 0.8]]]
   # vaccines:
   #   doses_one_and_two:
   #     rho_immunity_failure:
   #       [[[-1, 1, 90, 180, 270, 360],
-  #         [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+  #         [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]]]
   #     sigma_immunity_failure:
   #       [[[-1, 1, 90, 180, 270, 360],
-  #         [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]]
+  #         [1.0, 0.2, 0.4, 0.5, 0.75, 0.8]]]
   #   dose_three:
   #     rho_immunity_failure:
   #       [[[-1, 1, 90, 180, 270, 360],
-  #         [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+  #         [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]]]
   #     sigma_immunity_failure:
   #       [[[-1, 1, 90, 180, 270, 360],
-  #         [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]]
+  #         [1.0, 0.2, 0.4, 0.5, 0.75, 0.8]]]
+  vaccines:
+    doses_one_and_two:
+      rho_immunity_failure:
+        [[[-1, 1, 90, 180, 270, 360],
+          [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+      sigma_immunity_failure:
+        [[[-1, 1, 90, 180, 270, 360],
+          [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]]
+    dose_three:
+      rho_immunity_failure:
+        [[[-1, 1, 90, 180, 270, 360],
+          [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+      sigma_immunity_failure:
+        [[[-1, 1, 90, 180, 270, 360],
+          [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]]
 
 # ######################################### Regional Mixing ########################################
 
@@ -360,7 +360,7 @@ travel_model:
   # Travellers mix homogeneously with the entire population of the destination region, with
   # transmission probabilities divided by the number of agents in that region. This parameter is a
   # control parameter which multiplies that ratio.
-  travel_transmission_multiplier: 20.0                                                              # POSSIBLE FREE VARIABLE
+  travel_transmission_multiplier: 25.0                                                              # POSSIBLE FREE VARIABLE
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels
   # each day. Values in between interpolate between these numbers.
@@ -376,8 +376,8 @@ policy_maker_model:
     Scenarios/Heterogeneous/data/historical_data/country_data_international_travel_controls.csv
   vaccination_data_fp:
     Scenarios/Validation/data/owid-covid-data.csv
-  max_transmission_control: 0.9                                                                     # POSSIBLE FREE VARIABLE
-  max_travel_control: 0.9                                                                           # POSSIBLE FREE VARIABLE
+  max_transmission_control: 0.0                                                                     # POSSIBLE FREE VARIABLE
+  max_travel_control: 0.0                                                                           # POSSIBLE FREE VARIABLE
 
 # ######################################### Output #################################################
 
