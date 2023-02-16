@@ -39,14 +39,21 @@ class StrainCounts(Reporter):
         # Write header
         header = ["day", "iso8601"] + [str(region_names[r]) + ", Strain: " + str(s)
                                        for r in range(number_of_regions)
-                                       for s in range(number_of_strains)]
+                                       for s in range(number_of_strains)]\
+                                    + ["Total for Strain: " + str(s) for s in range(number_of_strains)]
         self.writer.writerow(header)
 
     def update_counts(self, clock, strain_counts):
         """Update the CSV, writing a single row for every clock tick"""
 
+        strain_totals = [0 for _ in range(self.number_of_strains)]
+        for r in range(self.number_of_regions):
+            for s in range(self.number_of_strains):
+                strain_totals[s] += strain_counts[(r * self.number_of_strains) + s]
+
         row = [clock.day, clock.iso8601()]
         row += strain_counts.tolist()
+        row += strain_totals
         self.writer.writerow(row)
 
     def stop_sim(self):
