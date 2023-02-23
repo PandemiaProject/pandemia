@@ -3,13 +3,13 @@
 
 # Scale factor. This rescales the number of individuals, locations, and other relevant quantities
 # appearing in the world and simulation components.
-scale_factor: 0.0005 # 0.0005
+scale_factor: 0.01 # 0.0005
 # Profiler. If True then performance data is saved in a file called profiler_output. The parameter
 # pstats_records determines how many lines to print in the profiler report.
 profile: False
 pstats_records: 100
 # Random seed. Pandemia is stochastic and therefore requires a random seed.
-random_seed: 1
+random_seed: 12
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
 enable_parallel: True
@@ -22,7 +22,7 @@ tick_length_s: 28800
 # Length of the simulation, in days.
 simulation_length_days: 1000
 # The date on which the simulation starts.
-epoch: 7th December 2019                                                                            # POSSIBLE FREE VARIABLE
+epoch: 7th February 2020                                                                            # POSSIBLE FREE VARIABLE
 
 # ######################################### World ##################################################
 
@@ -38,7 +38,7 @@ world_factory:
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
   # This world factory is stochastic, and therefore gets its own random seed.
-  random_seed: 1
+  random_seed: 12
   # Filepath to country data, including age structure and population sizes. The actual number of
   # agents is given by multiplying this data by the scale_factor.
   regions_data_file:
@@ -54,7 +54,7 @@ world_factory:
   population_id_data_folder:
     Scenarios/Heterogeneous/data/country_data_population_distribution/processed/id_grids
   # Regions to simulate. If list empty, simulates all regions.
-  regions_to_simulate: [] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
+  regions_to_simulate: ['GB'] # ['KP', 'KR'] # ['FR', 'BE', 'LU', 'DE', 'GB', 'NL', 'IE']
   # There are two locations types, House and Square. A Square refers to a square in the grid data.
   house_location_type: House
   square_location_type: Square
@@ -136,7 +136,7 @@ health_model:
   # of strains. The numbers in these lists indicate how many initial infections there should for
   # each strain in the indicated region.
   num_initial_infections_by_region_by_strain:
-    'CN': [500000, 0, 0, 0]                                                                         # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
+    'GB': [100000, 0, 0, 0]                                                                         # POSSIBLE FREE VARIABLE (ALSO IMMUNE DURATION?)
   # A dictionary pairing location types to location transmission multipliers. Can be null, in which
   # case all location transmission multiplier are 1.0.
   location_typ_multipliers:
@@ -787,6 +787,29 @@ vaccination_model:
          [[-1, 1, 90, 180, 270, 360], [1.0, 0.30, 0.55, 0.65, 0.70, 0.75]],
          [[-1, 1, 90, 180, 270, 360], [1.0, 0.40, 0.65, 0.75, 0.80, 0.85]],
          [[-1, 1, 90, 180, 270, 360], [1.0, 1.00, 1.00, 1.00, 1.00, 1.00]]]
+  # vaccines:
+  #   doses_one_and_two:
+  #     rho_immunity_failure:
+  #       [[[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]],
+  #        [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]],
+  #        [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]],
+  #        [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+  #     sigma_immunity_failure:
+  #       [[[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]],
+  #        [[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]],
+  #        [[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]],
+  #        [[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]]
+  #   dose_three:
+  #     rho_immunity_failure:
+  #       [[[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]],
+  #        [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]],
+  #        [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]],
+  #        [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+  #     sigma_immunity_failure:
+  #       [[[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]],
+  #        [[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]],
+  #        [[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]],
+  #        [[-1, 1, 90, 180, 270, 360], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]]
 
 # ######################################### Regional Mixing ########################################
 
@@ -845,22 +868,22 @@ reporters:
   # each day.
   csv.StrainCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/strain_counts_heterogeneous.csv
+    filename: /tmp/strain_counts_heterogeneous_1.csv
 
   # This reporter plots the number of individuals infected each day.
   plot.PlotInfected:
     show: False
     savefig: True
     # Where the user would like the plot saved.
-    filename: /tmp/infected_heterogeneous.png
+    filename: /tmp/infected_heterogeneous_1.png
 
   # This reporter plots the number of new deaths each day and also cumulative deaths each day.
   plot.PlotDeaths:
     show: False
     savefig: True
     # Where the user would like the plots saved.
-    daily_deaths_filename: /tmp/daily_deaths_heterogeneous.png
-    cumulative_deaths_filename: /tmp/cumulative_deaths_heterogeneous.png
+    daily_deaths_filename: /tmp/daily_deaths_heterogeneous_1.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths_heterogeneous_1.png
     # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
     deaths_by_country_filename: null
     # If a filepath is provided here, the plots will include curves of historical deaths.
