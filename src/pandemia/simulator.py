@@ -278,6 +278,7 @@ class Simulator:
         self.total_deaths = 0
         self.daily_deaths = defaultdict(dict)
         self.cumulative_deaths = defaultdict(dict)
+        self.reporter_deaths = defaultdict(dict)
 
         if self.config['reporters'] is not None:
 
@@ -300,6 +301,14 @@ class Simulator:
 
             self.telemetry_bus.publish("vector_world.data", self.vector_world,
                                                             self.health_model.number_of_strains)
+
+            region_to_omit = self.config['regions_omitted_from_death_counts']
+
+            self.telemetry_bus.publish("death_counts.initialize", self.number_of_regions,
+                                                                  self.number_of_strains,
+                                                                  region_names,
+                                                                  population_sizes,
+                                                                  region_to_omit)
 
     def _output_data_update(self, day):
         """Published strain count updates to the telemetry bus"""
@@ -358,6 +367,10 @@ class Simulator:
 
             infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.int64)
             self.telemetry_bus.publish("strain_counts.update", self.clock, infections)
+
+        if ("csv.DeathCounts" in self.config['reporters']):
+
+            self.telemetry_bus.publish("death_counts.update", self.clock, self.daily_deaths[date])
 
         if ("plot.PlotDeaths" in self.config['reporters']):
 
