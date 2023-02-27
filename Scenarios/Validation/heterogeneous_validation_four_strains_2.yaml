@@ -3,13 +3,13 @@
 
 # Scale factor. This rescales the number of individuals, locations, and other relevant quantities
 # appearing in the world and simulation components.
-scale_factor: 0.0005 # 0.0005
+scale_factor: 0.0005
 # Profiler. If True then performance data is saved in a file called profiler_output. The parameter
 # pstats_records determines how many lines to print in the profiler report.
 profile: False
 pstats_records: 100
 # Random seed. Pandemia is stochastic and therefore requires a random seed.
-random_seed: 2
+random_seed: 4
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
 enable_parallel: True
@@ -38,7 +38,7 @@ world_factory:
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
   # This world factory is stochastic, and therefore gets its own random seed.
-  random_seed: 2
+  random_seed: 4
   # Filepath to country data, including age structure and population sizes. The actual number of
   # agents is given by multiplying this data by the scale_factor.
   regions_data_file:
@@ -669,24 +669,24 @@ health_model:
   # The assignment of presets is random and based on age.
   preset_weights_by_age:
     0:   {preset_0: 1.000000000, preset_1: 0.000000000, preset_2: 0.000000000, preset_3: 0.000000000, preset_4: 0.000000000}
-    5:   {preset_0: 0.999868003, preset_1: 0.000059997, preset_2: 0.000035999, preset_3: 0.000023999, preset_4: 0.000012000}
-    10:  {preset_0: 0.999868003, preset_1: 0.000059997, preset_2: 0.000035999, preset_3: 0.000023999, preset_4: 0.000012000}
-    15:  {preset_0: 0.999736013, preset_1: 0.000119991, preset_2: 0.000071996, preset_3: 0.000047998, preset_4: 0.000024000}
-    20:  {preset_0: 0.999736013, preset_1: 0.000119991, preset_2: 0.000071996, preset_3: 0.000047998, preset_4: 0.000024000}
-    25:  {preset_0: 0.999472053, preset_1: 0.000239965, preset_2: 0.000143986, preset_3: 0.000095995, preset_4: 0.000048000}
-    30:  {preset_0: 0.999208119, preset_1: 0.000359922, preset_2: 0.000215969, preset_3: 0.000143990, preset_4: 0.000072000}
-    35:  {preset_0: 0.998812268, preset_1: 0.000539825, preset_2: 0.000323930, preset_3: 0.000215977, preset_4: 0.000108000}
-    40:  {preset_0: 0.998020745, preset_1: 0.000899514, preset_2: 0.000539806, preset_3: 0.000359935, preset_4: 0.000180000}
-    45:  {preset_0: 0.996965751, preset_1: 0.001378858, preset_2: 0.000827543, preset_3: 0.000551848, preset_4: 0.000276000}
-    50:  {preset_0: 0.995252289, preset_1: 0.002157203, preset_2: 0.001294881, preset_3: 0.000863627, preset_4: 0.000432000}
-    55:  {preset_0: 0.992486749, preset_1: 0.003412992, preset_2: 0.002049195, preset_3: 0.001367064, preset_4: 0.000684000}
-    60:  {preset_0: 0.988278191, preset_1: 0.005322927, preset_2: 0.003197164, preset_3: 0.002133719, preset_4: 0.001068000}
-    65:  {preset_0: 0.981715824, preset_1: 0.008298406, preset_2: 0.004987335, preset_3: 0.003330436, preset_4: 0.001668000}
-    70:  {preset_0: 0.971511324, preset_1: 0.012918816, preset_2: 0.007771421, preset_3: 0.005194438, preset_4: 0.002604000}
-    75:  {preset_0: 0.955630203, preset_1: 0.020093782, preset_2: 0.012105112, preset_3: 0.008102903, preset_4: 0.004068000}
-    80:  {preset_0: 0.930961129, preset_1: 0.031200925, preset_2: 0.018838846, preset_3: 0.012639101, preset_4: 0.006360000}
-    85:  {preset_0: 0.892939633, preset_1: 0.048228274, preset_2: 0.029221541, preset_3: 0.019674552, preset_4: 0.009936000}
-    90:  {preset_0: 0.794713570, preset_1: 0.091694010, preset_2: 0.056063315, preset_3: 0.038101106, preset_4: 0.019428000}
+    5:   {preset_0: 0.999875003, preset_1: 0.000049998, preset_2: 0.000029999, preset_3: 0.000024999, preset_4: 0.000020000}
+    10:  {preset_0: 0.999875003, preset_1: 0.000049998, preset_2: 0.000029999, preset_3: 0.000024999, preset_4: 0.000020000}
+    15:  {preset_0: 0.999750011, preset_1: 0.000099994, preset_2: 0.000059999, preset_3: 0.000049998, preset_4: 0.000040000}
+    20:  {preset_0: 0.999750011, preset_1: 0.000099994, preset_2: 0.000059999, preset_3: 0.000049998, preset_4: 0.000040000}
+    25:  {preset_0: 0.999500044, preset_1: 0.000199976, preset_2: 0.000119988, preset_3: 0.000099992, preset_4: 0.000080000}
+    30:  {preset_0: 0.999250099, preset_1: 0.000299946, preset_2: 0.000179973, preset_3: 0.000149982, preset_4: 0.000120000}
+    35:  {preset_0: 0.998875223, preset_1: 0.000449879, preset_2: 0.000269939, preset_3: 0.000224960, preset_4: 0.000180000}
+    40:  {preset_0: 0.998125619, preset_1: 0.000749663, preset_2: 0.000449831, preset_3: 0.000374888, preset_4: 0.000300000}
+    45:  {preset_0: 0.997126454, preset_1: 0.001149207, preset_2: 0.000689603, preset_3: 0.000574736, preset_4: 0.000460000}
+    50:  {preset_0: 0.995503562, preset_1: 0.001798058, preset_2: 0.001079029, preset_3: 0.000899352, preset_4: 0.000720000}
+    55:  {preset_0: 0.992883925, preset_1: 0.002845133, preset_2: 0.001707566, preset_3: 0.001423376, preset_4: 0.001140000}
+    60:  {preset_0: 0.988896746, preset_1: 0.004438145, preset_2: 0.002664070, preset_3: 0.002221040, preset_4: 0.001780000}
+    65:  {preset_0: 0.982677992, preset_1: 0.006921119, preset_2: 0.004155550, preset_3: 0.003465340, preset_4: 0.002780000}
+    70:  {preset_0: 0.973003960, preset_1: 0.010779748, preset_2: 0.006474837, preset_3: 0.005401456, preset_4: 0.004340000}
+    75:  {preset_0: 0.957938997, preset_1: 0.016779070, preset_2: 0.010084394, preset_3: 0.008417540, preset_4: 0.006780000}
+    80:  {preset_0: 0.934514718, preset_1: 0.026084174, preset_2: 0.015691558, preset_3: 0.013109550, preset_4: 0.010600000}
+    85:  {preset_0: 0.898355906, preset_1: 0.040392559, preset_2: 0.024334327, preset_3: 0.020357208, preset_4: 0.016560000}
+    90:  {preset_0: 0.804615553, preset_1: 0.077172243, preset_2: 0.046667784, preset_3: 0.039164420, preset_4: 0.032380000}
   # This option implements homogeneous mixing, as found in SIR models, by mutliplying all
   # transmission probabilities by the reciprocal of the tick length, in days, divided by the number
   # of agents in each location.
@@ -770,7 +770,7 @@ vaccination_model:
         [[[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]],
          [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]],
          [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]],
-         [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+         [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.75, 0.0], [0.75, 0.0], [0.75, 0.0], [0.75, 0.0], [0.75, 0.0]]]]
       sigma_immunity_failure:
         [[[-1, 1, 90, 180, 270, 360], [1.0, 0.30, 0.55, 0.65, 0.70, 0.75]],
          [[-1, 1, 90, 180, 270, 360], [1.0, 0.30, 0.55, 0.65, 0.70, 0.75]],
@@ -781,7 +781,7 @@ vaccination_model:
         [[[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]],
          [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]],
          [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0], [0.5, 0.0]]],
-         [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]]]
+         [[-1, 1, 90, 180, 270, 360], [[1.0, 0.0], [0.75, 0.0], [0.75, 0.0], [0.75, 0.0], [0.75, 0.0], [0.75, 0.0]]]]
       sigma_immunity_failure:
         [[[-1, 1, 90, 180, 270, 360], [1.0, 0.30, 0.55, 0.65, 0.70, 0.75]],
          [[-1, 1, 90, 180, 270, 360], [1.0, 0.30, 0.55, 0.65, 0.70, 0.75]],
@@ -868,24 +868,29 @@ reporters:
   # each day.
   csv.StrainCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/strain_counts_heterogeneous_2.csv
+    filename: /tmp/strain_counts_heterogeneous_4.csv
+
+  # This reporter outputs a csv file, recording the number of deaths in each region each day.
+  csv.DeathCounts:
+    # Where the user would like the csv saved.
+    filename: /tmp/death_counts_heterogeneous_4.csv
 
   # This reporter plots the number of individuals infected each day.
   plot.PlotInfected:
     show: False
     savefig: True
     # Where the user would like the plot saved.
-    filename: /tmp/infected_heterogeneous_2.png
+    filename: /tmp/infected_heterogeneous_4.png
 
   # This reporter plots the number of new deaths each day and also cumulative deaths each day.
   plot.PlotDeaths:
     show: False
     savefig: True
     # Where the user would like the plots saved.
-    daily_deaths_filename: /tmp/daily_deaths_heterogeneous_2.png
-    cumulative_deaths_filename: /tmp/cumulative_deaths_heterogeneous_2.png
+    daily_deaths_filename: /tmp/daily_deaths_heterogeneous_4.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths_heterogeneous_4.png
     # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
-    deaths_by_country_filename: null
+    deaths_by_country_filename: /tmp/deaths_by_country_4.csv
     # If a filepath is provided here, the plots will include curves of historical deaths.
     historical_data: Scenarios/Homogeneous/data/historical_data/who_data.csv
 
