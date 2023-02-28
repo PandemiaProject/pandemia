@@ -9,7 +9,7 @@ scale_factor: 0.0005
 profile: False
 pstats_records: 100
 # Random seed. Pandemia is stochastic and therefore requires a random seed.
-random_seed: 1
+random_seed: 10
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
 enable_parallel: True
@@ -38,7 +38,7 @@ world_factory:
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
   # This world factory is stochastic, and therefore gets its own random seed.
-  random_seed: 1
+  random_seed: 10
   # Filepath to country data, including age structure and population sizes. The actual number of
   # agents is given by multiplying this data by the scale_factor.
   regions_data_file:
@@ -204,25 +204,25 @@ health_model:
           [[[-1, 0, 15], [-1, 0, -1]]]
   # The assignment of presets is random and based on age.
   preset_weights_by_age:
-    0:   {preset_0: 1.000000000, preset_1: 0.000000000}
-    5:   {preset_0: 0.999875003, preset_1: 0.000049998}
-    10:  {preset_0: 0.999875003, preset_1: 0.000049998}
-    15:  {preset_0: 0.999750011, preset_1: 0.000099994}
-    20:  {preset_0: 0.999750011, preset_1: 0.000099994}
-    25:  {preset_0: 0.999500044, preset_1: 0.000199976}
-    30:  {preset_0: 0.999250099, preset_1: 0.000299946}
-    35:  {preset_0: 0.998875223, preset_1: 0.000449879}
-    40:  {preset_0: 0.998125619, preset_1: 0.000749663}
-    45:  {preset_0: 0.997126454, preset_1: 0.001149207}
-    50:  {preset_0: 0.995503562, preset_1: 0.001798058}
-    55:  {preset_0: 0.992883925, preset_1: 0.002845133}
-    60:  {preset_0: 0.988896746, preset_1: 0.004438145}
-    65:  {preset_0: 0.982677992, preset_1: 0.006921119}
-    70:  {preset_0: 0.973003960, preset_1: 0.010779748}
-    75:  {preset_0: 0.957938997, preset_1: 0.016779070}
-    80:  {preset_0: 0.934514718, preset_1: 0.026084174}
-    85:  {preset_0: 0.898355906, preset_1: 0.040392559}
-    90:  {preset_0: 0.804615553, preset_1: 0.077172243}
+    0:  {preset_0: 1.00000, preset_1: 0.00000}
+    5:  {preset_0: 0.99988, preset_1: 0.00012}
+    10: {preset_0: 0.99988, preset_1: 0.00012}
+    15: {preset_0: 0.99976, preset_1: 0.00024}
+    20: {preset_0: 0.99976, preset_1: 0.00024}
+    25: {preset_0: 0.99952, preset_1: 0.00048}
+    30: {preset_0: 0.99928, preset_1: 0.00072}
+    35: {preset_0: 0.99892, preset_1: 0.00108}
+    40: {preset_0: 0.99820, preset_1: 0.00180}
+    45: {preset_0: 0.99724, preset_1: 0.00276}
+    50: {preset_0: 0.99568, preset_1: 0.00432}
+    55: {preset_0: 0.99316, preset_1: 0.00684}
+    60: {preset_0: 0.98932, preset_1: 0.01068}
+    65: {preset_0: 0.98332, preset_1: 0.01668}
+    70: {preset_0: 0.97396, preset_1: 0.02604}
+    75: {preset_0: 0.95932, preset_1: 0.04068}
+    80: {preset_0: 0.93640, preset_1: 0.06360}
+    85: {preset_0: 0.90064, preset_1: 0.09936}
+    90: {preset_0: 0.80572, preset_1: 0.19428}
   # This option implements homogeneous mixing, as found in SIR models, by mutliplying all
   # transmission probabilities by the reciprocal of the tick length, in days, divided by the number
   # of agents in each location.
