@@ -149,10 +149,11 @@ class PlotDeaths(Reporter):
 
         plt.xlabel('Date')
         increment = int(min(len(self.days) // self.num_x_ticks, len(self.days)))
-        plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
-            labels=[self.day_to_date[self.days[i*increment]] for i in
-                    range((len(self.days) // increment))])
-        plt.xticks(rotation=90)
+        if increment > 0:
+            plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
+                labels=[self.day_to_date[self.days[i*increment]] for i in
+                        range((len(self.days) // increment))])
+            plt.xticks(rotation=90)
         plt.grid(False)
         plt.xlim([0, len(self.days)])
         plt.gca().set_ylim(bottom=0)
