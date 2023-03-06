@@ -40,6 +40,7 @@ class SafirHealthModel(HealthModel):
         self.immunity_length = 1
         self.immunity_period_ticks = 1
         self.mutation_matrix = [[1.0]]
+        self.number_of_rho_immunity_outcomes = 1
 
         self.scale_factor = scale_factor
 
@@ -47,8 +48,6 @@ class SafirHealthModel(HealthModel):
         self.number_of_days = self.clock.simulation_length_days
         self.ticks_in_day = self.clock.ticks_in_day
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/health_model/"
-                                "safir_health_model_functions.dll")
         self.transmission = self.lib.safir3_transmission_model
         self.transmission.restype = None
 

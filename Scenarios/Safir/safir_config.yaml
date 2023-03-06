@@ -180,10 +180,10 @@ vaccination_model:
 
 travel_model:
   # The travel component models the movement of individuals between regions each day. In the
-  # DefaultTravelModel, only uninfected individuals are eligible to travel. The numbers of
+  # SafirTravelModel, only uninfected individuals are eligible to travel. The numbers of
   # travellers is given by the world travel matrix. Transmission is determined by the average
-  # infectiousness of the destination region.
-  __type__: default_travel_model.DefaultTravelModel
+  # infectiousness of the destination region, adapted to the Safir3 transmission model.
+  __type__: safir_travel_model.SafirTravelModel
   # [KEY PARAMETER] Travellers mix homogeneously with the entire population of the destination
   # region, with transmission probabilities divided by the number of agents in that region. This
   # parameter is a control parameter which multiplies that ratio.

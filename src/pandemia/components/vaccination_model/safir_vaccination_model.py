@@ -24,13 +24,16 @@ class SafirVaccinationModel(VaccinationModel):
         A Pandemia Clock object, discretizing the day.
     number_of_strains : int
         Not used in the Safir model.
+    number_of_rho_immunity_outcomes : int
+        Not used in the Safir model.
     immunity_length : int
         Not used in the Safir model. 
     immunity_period_ticks : int
         Not used in the Safir model.
     """
 
-    def __init__(self, config, clock, number_of_strains, immunity_length, immunity_period_ticks):
+    def __init__(self, config, clock, number_of_strains, number_of_rho_immunity_outcomes,
+                 immunity_length, immunity_period_ticks):
         """Initialize component"""
         super().__init__(config)
 
