@@ -1277,3 +1277,152 @@ void dynamics_vaccination
     }
     return;
 }
+
+void safir3_transmission_model
+    (
+        int L, // number_of_locations
+        int N, // number_of_agents
+        int id,
+        int sir_rescaling_int,
+        int ticks_in_day,
+        int A, // number of age groups
+        const double * beta,
+        const uint64_t * subpopulation_index,
+        const double * subpopulation_mixing_matrix,
+        double facemask_transmission_multiplier,
+        double current_region_transmission_multiplier,
+        const uint64_t * current_strain,
+        const double * current_disease,
+        const uint64_t * current_facemask,
+        const uint64_t * current_location,
+        const uint64_t * current_region,
+        const double * current_infectiousness,
+        const double * location_transmission_multiplier,
+        const double * ef_transmission,
+        const double * ef_infection,
+        uint64_t * infection_event,
+        uint64_t * random_state
+    )
+{
+    double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
+    uint64_t * num_agents_by_location_by_age_group = (uint64_t *)malloc(sizeof(uint64_t) * L * A);
+    for(int m=0; m<L; m++){
+        for(int a=0; a<A; a++){
+            transmission_force_by_age_group[(m * A) + a] = 1.0;
+            num_agents_by_location_by_age_group[(m * A) + a] = 0;
+        }
+    }
+
+    // Transmission out
+    if(sir_rescaling_int == 1){
+        for(int n=0; n<N; n++){
+            if(current_region[n] == id){
+                num_agents_by_location_by_age_group[(current_location[n] * A) +
+                                                    subpopulation_index[n]] += 1;
+            }
+        }
+    }
+    for(int a=0; a<A; a++){
+        for(int n=0; n<N; n++){
+            if(current_region[n] == id && current_strain[n] != -1){
+                double f;
+                f = current_region_transmission_multiplier *
+                    location_transmission_multiplier[current_location[n]] *
+                    (1 + (current_facemask[n] * (facemask_transmission_multiplier - 1))) *
+                    current_infectiousness[n] * beta[0] * ef_transmission[n];
+                if(sir_rescaling_int == 1){
+                    f *= subpopulation_mixing_matrix[(a * A) + subpopulation_index[n]] /
+                         (num_agents_by_location_by_age_group[(current_location[n] * A) +
+                                                            subpopulation_index[n]] * ticks_in_day);
+                }
+                transmission_force_by_age_group[(current_location[n] * A) + a] *= 1 - f;
+            }
+        }
+    }
+    for(int a=0; a<A; a++){
+        for(int m=0; m<L; m++){
+            transmission_force_by_age_group[(m * A) + a] =
+                1 - transmission_force_by_age_group[(m * A) + a];
+        }
+    }
+
+    // Transmission in
+    for(int n=0; n<N; n++){
+        if(current_region[n] == id && current_strain[n] == -1 && current_disease[n] < 1.0){
+            double facemask_multiplier;
+            facemask_multiplier =
+                1 + (current_facemask[n] * (facemask_transmission_multiplier - 1));
+            double prob;
+            prob = facemask_multiplier * ef_infection[n] *
+                   transmission_force_by_age_group[(current_location[n] * A) +
+                                                    subpopulation_index[n]];
+            if(bernoulli(random_state, prob) == 1){
+                infection_event[n] = 0;
+            }
+        }
+    }
+    free(transmission_force_by_age_group);
+    free(num_agents_by_location_by_age_group);
+    return;
+}
+
+
+void safir_3_transmission_out
+    (
+        int N, // number_of_agents
+        int id,
+        const double * beta,
+        double facemask_transmission_multiplier,
+        double travel_multiplier,
+        double current_region_transmission_multiplier,
+        const uint64_t * current_region,
+        const double * current_infectiousness,
+        const double * ef_transmission,
+        const uint64_t * current_strain,
+        const uint64_t * current_facemask,
+        double * transmission_force,
+        uint64_t * random_state
+    )
+{
+    double facemask_multiplier, f;
+    for(int n=0; n<N; n++){
+        if(current_region[n] == id && current_strain[n] != -1){
+            facemask_multiplier = 1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
+            f = current_region_transmission_multiplier * ef_transmission[n] *
+                facemask_multiplier * current_infectiousness[n] * beta[current_strain[n]];
+            f = (f * travel_multiplier) / N;
+            f = fmin(f, 1.0);
+            transmission_force[id] *= 1 - f;
+        }
+    }
+    transmission_force[id] = 1 - transmission_force[id];
+    return;
+}
+
+void safir3_transmission_in
+    (
+        int N, // number_of_agents
+        int r1,
+        uint64_t * current_facemask,
+        uint64_t * current_region,
+        double facemask_transmission_multiplier,
+        double * ef_infection,
+        uint64_t * infection_event,
+        double * transmission_force,
+        uint64_t * random_state
+    )
+{
+    for(int n=0; n<N; n++){
+        if(current_region[n] != r1){
+            double facemask_multiplier;
+            facemask_multiplier = 1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
+            double prob;
+            prob = facemask_multiplier * transmission_force[current_region[n]] * ef_infection[n];
+            if(bernoulli(random_state, prob) == 1){
+                infection_event[n] = 0;
+            }
+        }
+
+    }
+    return;
+}
