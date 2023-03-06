@@ -154,7 +154,7 @@ def test_end_to_end_homogeneous(run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_homogeneous_config.yaml"
     # expect_results = "tests/e2e_expected_outputs/strain_counts.csv"
     expect_results = (
-        "tests/e2e_expected_outputs/strain_counts_test_homogeneous_config.csv"
+        "tests/e2e_expected_outputs/test_end_to_end_homogeneous.csv"
     )
 
     run_end_to_end_simulation(input_scenario, expect_results)
@@ -165,7 +165,7 @@ def test_end_to_end_homogeneous(run_end_to_end_simulation):
 @pytest.mark.parametrize("rel_tol, abs_tol", [(0.5, 100)])
 def test_end_to_end_all_components(run_end_to_end_simulation, rel_tol, abs_tol):
     input_scenario = "Scenarios/Test/test_all_components.yaml"
-    expect_results = "tests/e2e_expected_outputs/strain_counts_test_all_components.csv"
+    expect_results = "tests/e2e_expected_outputs/test_end_to_end_all_components.csv"
 
     run_end_to_end_simulation(input_scenario, expect_results, rel_tol, abs_tol)
 
@@ -173,7 +173,7 @@ def test_end_to_end_all_components(run_end_to_end_simulation, rel_tol, abs_tol):
 @pytest.mark.slow
 def test_end_to_end_all_void(run_end_to_end_simulation):
     input_scenario = "Scenarios/Test/test_void_all.yaml"
-    expect_results = "tests/e2e_expected_outputs/strain_counts_test_void_all.csv"
+    expect_results = "tests/e2e_expected_outputs/test_end_to_end_all_void.csv"
 
     run_end_to_end_simulation(input_scenario, expect_results)
 
