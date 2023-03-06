@@ -9,7 +9,7 @@ scale_factor: 0.0005
 profile: False
 pstats_records: 100
 # Random seed. Pandemia is stochastic and therefore requires a random seed.
-random_seed: 2
+random_seed: 1
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
 enable_parallel: True
@@ -38,7 +38,7 @@ world_factory:
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
   # This world factory is stochastic, and therefore gets its own random seed.
-  random_seed: 2
+  random_seed: 1
   # Filepath to country data, including age structure and population sizes. The actual number of
   # agents is given by multiplying this data by the scale_factor.
   regions_data_file:
@@ -868,29 +868,29 @@ reporters:
   # each day.
   csv.StrainCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/strain_counts_heterogeneous_2.csv
+    filename: /tmp/strain_counts_validation.csv
 
   # This reporter outputs a csv file, recording the number of deaths in each region each day.
   csv.DeathCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/death_counts_heterogeneous_2.csv
+    filename: /tmp/death_counts_validation.csv
 
   # This reporter plots the number of individuals infected each day.
   plot.PlotInfected:
     show: False
     savefig: True
     # Where the user would like the plot saved.
-    filename: /tmp/infected_heterogeneous_2.png
+    filename: /tmp/infected_validation.png
 
   # This reporter plots the number of new deaths each day and also cumulative deaths each day.
   plot.PlotDeaths:
     show: False
     savefig: True
     # Where the user would like the plots saved.
-    daily_deaths_filename: /tmp/daily_deaths_heterogeneous_2.png
-    cumulative_deaths_filename: /tmp/cumulative_deaths_heterogeneous_2.png
+    daily_deaths_filename: /tmp/daily_deaths_validation.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths_validation.png
     # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
-    deaths_by_country_filename: /tmp/deaths_by_country_2.csv
+    deaths_by_country_filename: /tmp/deaths_by_country_validation.csv
     # If a filepath is provided here, the plots will include curves of historical deaths.
     historical_data: Scenarios/Homogeneous/data/historical_data/who_data.csv
 
