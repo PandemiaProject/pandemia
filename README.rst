@@ -128,9 +128,9 @@ air travel data. Colouring regions according to prevalence, the scenario can be 
 follows:
 
 
-.. image:: pandemia_homogeneous.jpg
-   :target: pandemia_homogeneous.jpg
-   :alt: pandemia Logo
+.. image:: docs/source/images/pandemia_homogeneous.jpg
+   :target: docs/source/images/pandemia_homogeneous.jpg
+   :alt: pandemia_homogeneous
 
 
 The heterogeneous mixing scenario uses the **Heterogeneous** world factory. In this scenario,
@@ -138,9 +138,9 @@ individuals mix heterogeneously within each region. This uses data on average ho
 population distribution and a simple gravity model of mobility. Colouring grid squares according to the numbers infected, the scenario has the following visualization:
 
 
-.. image:: pandemia_heterogeneous.jpg
-   :target: pandemia_heterogeneous.jpg
-   :alt: pandemia Logo
+.. image:: docs/source/images/pandemia_heterogeneous.jpg
+   :target: docs/source/images/pandemia_heterogeneous.jpg
+   :alt: pandemia_heterogeneous
 
 
 For each scenario, all parameter values are set in the corresponding YAML file. For example, the
