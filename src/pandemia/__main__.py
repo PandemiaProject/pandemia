@@ -53,8 +53,6 @@ def main():
             log.info("Writing to state file: %s", sys.argv[2])
             sim_factory.to_file(sys.argv[2])
 
-    # sim_factory.clock.simulation_length_days = 730 # can manually adjust the sim length here
-
     # Build simulation components
     sim_factory.build_components()
 

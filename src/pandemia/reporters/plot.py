@@ -105,6 +105,8 @@ class PlotDeaths(Reporter):
         if self.deaths_by_country_filename is not None:
             handle = open(self.deaths_by_country_filename, 'w', newline='')
             writer = csv.writer(handle)
+            header = ["region_name", "total_deaths"]
+            writer.writerow(header)
             for region_name in self.region_names:
                 if region_name not in self.regions_omitted:
                     total_deaths =\
@@ -149,10 +151,11 @@ class PlotDeaths(Reporter):
 
         plt.xlabel('Date')
         increment = int(min(len(self.days) // self.num_x_ticks, len(self.days)))
-        plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
-            labels=[self.day_to_date[self.days[i*increment]] for i in
-                    range((len(self.days) // increment))])
-        plt.xticks(rotation=90)
+        if increment > 0:
+            plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
+                labels=[self.day_to_date[self.days[i*increment]] for i in
+                        range((len(self.days) // increment))])
+            plt.xticks(rotation=90)
         plt.grid(False)
         plt.xlim([0, len(self.days)])
         plt.gca().set_ylim(bottom=0)
@@ -177,10 +180,11 @@ class PlotDeaths(Reporter):
                  hist_cumulative_deaths, 'red', linewidth=1, alpha=1.0, label='Deaths - Historical')
         plt.xlabel('Date')
         increment = int(min(len(self.days) // self.num_x_ticks, len(self.days)))
-        plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
-            labels=[self.day_to_date[self.days[i*increment]] for i in
-                    range((len(self.days) // increment))])
-        plt.xticks(rotation=90)
+        if increment > 0:
+            plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
+                labels=[self.day_to_date[self.days[i*increment]] for i in
+                        range((len(self.days) // increment))])
+            plt.xticks(rotation=90)
         plt.grid(False)
         plt.xlim([0, len(self.days)])
         plt.gca().set_ylim(bottom=0)
@@ -244,8 +248,10 @@ class PlotInfected(Reporter):
 
         plt.xlabel('Day')
         increment = int(max(len(self.days) // self.num_x_ticks, len(self.days)))
-        plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
-            labels=[self.days[i*increment] for i in range((len(self.days) // increment))])
+        if increment > 0:
+            plt.xticks(ticks=[i*increment for i in range((len(self.days) // increment))],
+                labels=[self.days[i*increment] for i in range((len(self.days) // increment))])
+            plt.xticks(rotation=90)
         plt.grid(False)
         plt.xlim([0, len(self.days)])
         plt.gca().set_ylim(bottom=0)

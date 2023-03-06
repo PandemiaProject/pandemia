@@ -79,13 +79,13 @@ class ValidationPolicyMakerModel(PolicyMakerModel):
         with open(self.vaccination_data_fp, newline='') as csvfile:
             next(csvfile)
             data = csv.reader(csvfile, delimiter=',')
-            total_first_doses = 0
-            total_third_doses = 0
             for row in data:
                 iso3 = str(row[0])
                 date = datetime.datetime.strptime(str(row[3]), '%Y-%m-%d')
+                total_first_doses = 0
                 if row[35] != "":
                     total_first_doses = int(float(row[35]))
+                total_third_doses = 0
                 if row[37] != "":
                     total_third_doses = int(float(row[37]))
                 self.raw_vaccination_data[iso3][date] = [total_first_doses, total_third_doses]
@@ -166,20 +166,20 @@ class ValidationPolicyMakerModel(PolicyMakerModel):
         date = start_date
         age_group_first_doses = 2
         age_group_third_doses = 2
-        vector_region.num_first_doses_by_age_group = [0,0,0]
-        vector_region.num_third_doses_by_age_group = [0,0,0]
+        num_first_doses_by_age_group = [0,0,0]
+        num_third_doses_by_age_group = [0,0,0]
         for day in range(self.simulation_length_days):
             first_doses = int(self.scale_factor * vaccination_data[date][0])
             third_doses = int(self.scale_factor * vaccination_data[date][1])
             self.vaccination_policy[day][vector_region.id][age_group_first_doses][0] = first_doses
             self.vaccination_policy[day][vector_region.id][age_group_third_doses][1] = third_doses
-            vector_region.num_first_doses_by_age_group[age_group_first_doses] += first_doses
-            vector_region.num_third_doses_by_age_group[age_group_third_doses] += third_doses
-            if vector_region.num_first_doses_by_age_group[age_group_first_doses] >\
+            num_first_doses_by_age_group[age_group_first_doses] += first_doses
+            num_third_doses_by_age_group[age_group_third_doses] += third_doses
+            if num_first_doses_by_age_group[age_group_first_doses] >\
                 0.8 * num_by_age_groups[age_group_first_doses]:
                 age_group_first_doses -= 1
                 age_group_first_doses = max(age_group_first_doses, 0)
-            if vector_region.num_third_doses_by_age_group[age_group_third_doses] >\
+            if num_third_doses_by_age_group[age_group_third_doses] >\
                 0.8 * num_by_age_groups[age_group_third_doses]:
                 age_group_third_doses -= 1
                 age_group_third_doses = max(age_group_third_doses, 0)
