@@ -67,7 +67,7 @@ class DefaultTravelModel(TravelModel):
 
         vector_region.current_border_closure_multiplier = 1.0
         vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                vector_region.id, dtype=np.int64)
+                                                vector_region.id, dtype=np.int32)
 
     def initial_conditions(self, sim):
         """Initial conditions for travel model."""
@@ -110,8 +110,7 @@ class DefaultTravelModel(TravelModel):
                 c_void_p(vector_region.current_strain.ctypes.data),
                 c_void_p(vector_region.current_facemask.ctypes.data),
                 c_void_p(sum_f_by_strain.ctypes.data),
-                c_void_p(transmission_force.ctypes.data),
-                c_void_p(vector_region.random_state.ctypes.data)
+                c_void_p(transmission_force.ctypes.data)
             )
 
     def _in(self, sim, vector_region_batch, sum_f_by_strain, transmission_force, mutation_matrix,
@@ -120,7 +119,6 @@ class DefaultTravelModel(TravelModel):
 
         for vector_region in vector_region_batch:
             self.transmission_in(
-                c_int(self.number_of_regions),
                 c_int(self.number_of_strains),
                 c_int(vector_region.number_of_agents),
                 c_int(vector_region.id),
@@ -146,12 +144,12 @@ class DefaultTravelModel(TravelModel):
         """Travel dynamics resulting in infection and health updates."""
 
         agents_travelling_matrix =\
-            np.zeros((self.number_of_regions, self.number_of_regions), dtype=np.int64)
+            np.zeros((self.number_of_regions, self.number_of_regions), dtype=np.int32)
 
         # Reset record of who is travelling abroad and apply border closure if necessary
         for vector_region in sim.vector_regions:
             vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                   vector_region.id, dtype=np.int64)
+                                                   vector_region.id, dtype=np.int32)
             self.close_borders(
                 c_int(self.number_of_regions),
                 c_int(vector_region.id),

@@ -145,7 +145,7 @@ class Simulator:
     def _seed_regions(self):
         """Sets random seeds for each region"""
 
-        ULONG_MAX = 18446744073709551615
+        UINT_MAX = 4294967295
 
         # Create a prng for each vector region
         for vector_region in self.vector_regions:
@@ -155,7 +155,7 @@ class Simulator:
             # Each vector region also gets a state for the prng used inside C functions
             np.random.seed(seed)
             vector_region.random_state =\
-                np.random.randint(0, ULONG_MAX + 1, size=2, dtype=np.uint64)
+                np.random.randint(0, UINT_MAX + 1, size=4, dtype=np.uint32)
 
     def _initial_conditions(self, offset):
         """Initialize the various submodels"""
@@ -360,11 +360,6 @@ class Simulator:
                     c_void_p(vector_region.current_strain.ctypes.data),
                     c_void_p(infections.ctypes.data)
                 )
-            # for vector_region in self.vector_regions:
-            #     for n in range(vector_region.number_of_agents):
-            #         if vector_region.current_strain[n] != -1:
-            #             infections[(vector_region.id * self.number_of_strains) + vector_region.current_strain[n]] += 1
-
             infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.int64)
             self.telemetry_bus.publish("strain_counts.update", self.clock, infections)
 

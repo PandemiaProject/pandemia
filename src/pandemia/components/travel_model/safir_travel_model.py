@@ -68,7 +68,7 @@ class SafirTravelModel(TravelModel):
 
         vector_region.current_border_closure_multiplier = 1.0
         vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                vector_region.id, dtype=np.int64)
+                                                vector_region.id, dtype=np.int32)
 
     def initial_conditions(self, sim):
         """Initial regional mixing"""
@@ -108,8 +108,7 @@ class SafirTravelModel(TravelModel):
                 c_void_p(vector_region.ef_transmission.ctypes.data),
                 c_void_p(vector_region.current_strain.ctypes.data),
                 c_void_p(vector_region.current_facemask.ctypes.data),
-                c_void_p(transmission_force.ctypes.data),
-                c_void_p(vector_region.random_state.ctypes.data)
+                c_void_p(transmission_force.ctypes.data)
             )
 
     def _in(self, sim, vector_region_batch, sum_f_by_strain, transmission_force, mutation_matrix,
@@ -137,7 +136,7 @@ class SafirTravelModel(TravelModel):
             vector_region.start_t[indexes] = time
             vector_region.current_strain[indexes] = 0
             vector_region.infection_event =\
-                np.full(vector_region.number_of_agents, -1, dtype=np.int64)
+                np.full(vector_region.number_of_agents, -1, dtype=np.int32)
 
     def dynamics(self, sim, day, ticks_in_day,
                  facemask_transmission_multiplier,
@@ -146,12 +145,12 @@ class SafirTravelModel(TravelModel):
         """Changes to regional mixing model"""
 
         agents_travelling_matrix =\
-            np.zeros((self.number_of_regions, self.number_of_regions), dtype=np.int64)
+            np.zeros((self.number_of_regions, self.number_of_regions), dtype=np.int32)
 
         # Reset record of who is travelling abroad and apply border closure if necessary
         for vector_region in sim.vector_regions:
             vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                   vector_region.id, dtype=np.int64)
+                                                   vector_region.id, dtype=np.int32)
             self.close_borders(
                 c_int(self.number_of_regions),
                 c_int(vector_region.id),
@@ -190,7 +189,7 @@ class SafirTravelModel(TravelModel):
         """Artificially inflate number of travellers for testing purposes or otherwise"""
 
         ids_to_population_sizes =\
-            {vr.id: np.int64(vr.number_of_agents * (1 / self.scale_factor))\
+            {vr.id: np.int32(vr.number_of_agents * (1 / self.scale_factor))\
                              for vr in vector_world.vector_regions}
 
         # Adjust matrix using interpolation parameter

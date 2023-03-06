@@ -32,9 +32,9 @@ class VoidHealthModel(HealthModel):
         number_of_agents = vector_region.number_of_agents
 
         vector_region.current_disease = np.zeros((number_of_agents), dtype=np.float64)
-        vector_region.current_strain =  np.full((number_of_agents), -1, dtype=np.int64)
+        vector_region.current_strain =  np.full((number_of_agents), -1, dtype=np.int32)
         vector_region.current_infectiousness =  np.zeros((number_of_agents), dtype=np.float64)
-        vector_region.requesting_immunity_update = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.requesting_immunity_update = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.rho_immunity_failure_values = np.ones((number_of_agents,
                                                              self.number_of_strains,
                                                              self.immunity_length,
@@ -51,7 +51,7 @@ class VoidHealthModel(HealthModel):
         vector_region.current_sigma_immunity_failure = np.ones((number_of_agents,
                                                                 self.number_of_strains),
                                                                 dtype=np.float64)
-        vector_region.infection_event = np.full((number_of_agents), -1, dtype=np.int64)
+        vector_region.infection_event = np.full((number_of_agents), -1, dtype=np.int32)
 
     def initial_conditions(self, vector_region):
 

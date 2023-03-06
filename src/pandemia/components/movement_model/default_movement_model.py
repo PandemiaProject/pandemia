@@ -57,21 +57,21 @@ class DefaultMovementModel(MovementModel):
         number_of_activities = vector_region.number_of_activities
         max_num_activity_locations = vector_region.max_num_activity_locations
 
-        vector_region.current_location = np.zeros((number_of_agents), dtype=np.int64)
-        vector_region.requested_location_update = np.zeros((number_of_agents), dtype=np.int64)
-        vector_region.requesting_location_update = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.current_location = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requested_location_update = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requesting_location_update = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.location_closure = np.ones((number_of_agents, number_of_activities,
-                                          max_num_activity_locations), dtype=np.int64)
+                                          max_num_activity_locations), dtype=np.int32)
         vector_region.lockdown_intervention = 0
-        vector_region.current_facemask = np.zeros((number_of_agents), dtype=np.int64)
-        vector_region.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
-        vector_region.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.current_facemask = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.wears_facemask = np.zeros((number_of_agents, number_of_activities),
-                                                dtype=np.int64)
+                                                dtype=np.int32)
         vector_region.facemask_intervention = 0
-        vector_region.current_quarantine = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.current_quarantine = np.zeros((number_of_agents), dtype=np.int32)
 
-        vector_region.home_location = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.home_location = np.zeros((number_of_agents), dtype=np.int32)
         assert self.home_activity in vector_region.activity_strings
         home_activity_id = vector_region.activity_strings.index(self.home_activity)
         for n in range(number_of_agents):

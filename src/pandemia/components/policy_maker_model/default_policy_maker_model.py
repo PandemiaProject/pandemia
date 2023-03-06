@@ -61,21 +61,21 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
         """Sets new policy."""
 
         self.lockdown_policy =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
         self.border_closure_policy =\
             np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=np.float64)
         self.facemask_policy =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
         self.random_testing_policy =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
         self.symptomatic_testing_policy =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
         self.contact_testing_policy =\
-            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
+            np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
         self.vaccination_policy =\
             np.full((self.simulation_length_days, self.number_of_regions,
                         self.number_of_vaccination_age_groups,
-                        self.number_of_vaccines), 0, dtype=np.int64)
+                        self.number_of_vaccines), 0, dtype=np.int32)
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component."""
@@ -87,23 +87,23 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
             array = np.genfromtxt(filepath, skip_header = 1, delimiter=',', dtype=np.float64)
             array = array.T
             assert array.shape[1] == self.simulation_length_days
-            self.lockdown_policy[:,id]            = array[1].astype(np.int64)
+            self.lockdown_policy[:,id]            = array[1].astype(np.int32)
             self.border_closure_policy[:,id]      = (1 - array[2]).astype(np.float64)
-            self.facemask_policy[:,id]            = array[3].astype(np.int64)
-            self.random_testing_policy[:,id]      = (self.scale_factor * array[4]).astype(np.int64)
-            self.symptomatic_testing_policy[:,id] = (self.scale_factor * array[5]).astype(np.int64)
-            self.contact_testing_policy[:,id]     = (self.scale_factor * array[6]).astype(np.int64)
+            self.facemask_policy[:,id]            = array[3].astype(np.int32)
+            self.random_testing_policy[:,id]      = (self.scale_factor * array[4]).astype(np.int32)
+            self.symptomatic_testing_policy[:,id] = (self.scale_factor * array[5]).astype(np.int32)
+            self.contact_testing_policy[:,id]     = (self.scale_factor * array[6]).astype(np.int32)
             if self.number_of_vaccines == 1:
-                self.vaccination_policy[:,id,0,0] = (self.scale_factor * array[7]).astype(np.int64)
-                self.vaccination_policy[:,id,1,0] = (self.scale_factor * array[8]).astype(np.int64)
-                self.vaccination_policy[:,id,2,0] = (self.scale_factor * array[9]).astype(np.int64)
+                self.vaccination_policy[:,id,0,0] = (self.scale_factor * array[7]).astype(np.int32)
+                self.vaccination_policy[:,id,1,0] = (self.scale_factor * array[8]).astype(np.int32)
+                self.vaccination_policy[:,id,2,0] = (self.scale_factor * array[9]).astype(np.int32)
             if self.number_of_vaccines == 2:
-                self.vaccination_policy[:,id,0,0] = (self.scale_factor * array[7]).astype(np.int64)
-                self.vaccination_policy[:,id,1,0] = (self.scale_factor * array[8]).astype(np.int64)
-                self.vaccination_policy[:,id,2,0] = (self.scale_factor * array[9]).astype(np.int64)
-                self.vaccination_policy[:,id,0,1] = (self.scale_factor * array[10]).astype(np.int64)
-                self.vaccination_policy[:,id,1,1] = (self.scale_factor * array[11]).astype(np.int64)
-                self.vaccination_policy[:,id,2,1] = (self.scale_factor * array[12]).astype(np.int64)
+                self.vaccination_policy[:,id,0,0] = (self.scale_factor * array[7]).astype(np.int32)
+                self.vaccination_policy[:,id,1,0] = (self.scale_factor * array[8]).astype(np.int32)
+                self.vaccination_policy[:,id,2,0] = (self.scale_factor * array[9]).astype(np.int32)
+                self.vaccination_policy[:,id,0,1] = (self.scale_factor * array[10]).astype(np.int32)
+                self.vaccination_policy[:,id,1,1] = (self.scale_factor * array[11]).astype(np.int32)
+                self.vaccination_policy[:,id,2,1] = (self.scale_factor * array[12]).astype(np.int32)
 
     def initial_conditions(self, vector_region):
         """Initial policy."""

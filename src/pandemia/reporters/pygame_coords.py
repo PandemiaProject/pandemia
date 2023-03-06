@@ -105,7 +105,7 @@ class PygameCoords(Reporter):
         self.locations_to_pixels_by_region = {}
         for vector_region in world.vector_regions:
             self.locations_to_pixels_by_region[vector_region.id] =\
-                np.zeros((vector_region.number_of_locations, ), dtype=np.int64)
+                np.zeros((vector_region.number_of_locations, ), dtype=np.int32)
         max_x_display = 0
         max_y_display = 0
         self.region_coordinates = []

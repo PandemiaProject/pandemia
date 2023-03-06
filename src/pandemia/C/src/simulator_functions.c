@@ -7,13 +7,13 @@ void collect_telemetry_data
     int N, // number_of_agents
     int S, // number_of_strains
     int id,
-    const uint64_t * current_strain,
-    uint64_t * strain_counts
+    const int32_t * current_strain,
+    int64_t * infections
 )
 {
     for(int n=0; n<N; n++){
         if(current_strain[n] != -1){
-            strain_counts[(id * S) + current_strain[n]] += 1;
+            infections[(id * S) + current_strain[n]] += 1;
         }
     }
     }

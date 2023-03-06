@@ -180,8 +180,8 @@ class HomogeneousWorldFactory(WorldFactory):
         region_isos = [region.name for region in regions]
         region_isos_to_ids = {region.name: region.id for region in regions}
         air_travel_matrix_by_month =\
-            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=np.int64)
-        air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.int64)
+            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=np.int32)
+        air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.int32)
         with open(air_travel_data_file, newline='') as csvfile:
             travel_data = csv.reader(csvfile, delimiter=',')
             next(travel_data, None)
@@ -220,7 +220,7 @@ class HomogeneousWorldFactory(WorldFactory):
         np.fill_diagonal(daily_air_travel_matrix, 0)
 
         # Get adjacency matrix, recording which regions border which others
-        adjacency_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.int64)
+        adjacency_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.int32)
         for region in regions:
             for other_region in regions:
                 if (region.coordinates is not None) and (other_region.coordinates is not None):

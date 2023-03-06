@@ -58,7 +58,7 @@ class ValidationPolicyMakerModel(PolicyMakerModel):
         self.vaccination_policy =\
             np.full((self.simulation_length_days, self.number_of_regions,
                      self.number_of_vaccination_age_groups,
-                     self.number_of_vaccines), 0, dtype=np.int64)
+                     self.number_of_vaccines), 0, dtype=np.int32)
 
         with open(self.stay_at_home_data_fp, newline='') as csvfile:
             next(csvfile)

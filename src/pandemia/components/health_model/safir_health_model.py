@@ -83,9 +83,9 @@ class SafirHealthModel(HealthModel):
         vector_region.ab_titre =\
             np.full(number_of_agents, -np.Inf, dtype=np.float64)
         vector_region.infection_number =\
-            np.zeros(number_of_agents, dtype=np.int64)
+            np.zeros(number_of_agents, dtype=np.int32)
         vector_region.days_since_last_infection =\
-            np.full(number_of_agents, self.number_of_days + 1, dtype=np.int64)
+            np.full(number_of_agents, self.number_of_days + 1, dtype=np.int32)
         vector_region.ef_infection =\
             np.ones(number_of_agents, dtype=np.float64)
         vector_region.ef_transmission =\
@@ -93,17 +93,17 @@ class SafirHealthModel(HealthModel):
         vector_region.ef_severe =\
             np.ones(number_of_agents, dtype=np.float64)
         vector_region.current_strain =\
-            np.full(number_of_agents, -1, dtype=np.int64)
+            np.full(number_of_agents, -1, dtype=np.int32)
         vector_region.current_disease =\
             np.full(number_of_agents, 0, dtype=np.float64)
         vector_region.current_infectiousness =\
             np.full(number_of_agents, 0, dtype=np.float64)
         vector_region.start_t =\
-            np.full(number_of_agents, -1, dtype=np.int64)
+            np.full(number_of_agents, -1, dtype=np.int32)
         vector_region.t_for_recovery =\
-            np.full(number_of_agents, -1, dtype=np.int64)
+            np.full(number_of_agents, -1, dtype=np.int32)
         vector_region.infection_event =\
-            np.full(number_of_agents, -1, dtype=np.int64)
+            np.full(number_of_agents, -1, dtype=np.int32)
         vector_region.location_transmission_multiplier =\
             np.ones(vector_region.number_of_locations, dtype=np.float64)
 
@@ -158,7 +158,7 @@ class SafirHealthModel(HealthModel):
         vector_region.t_for_recovery[indexes] = t + self.infectious_period_ticks
         vector_region.start_t[indexes] = t
         vector_region.current_strain[indexes] = 0
-        vector_region.infection_event = np.full(vector_region.number_of_agents, -1, dtype=np.int64)
+        vector_region.infection_event = np.full(vector_region.number_of_agents, -1, dtype=np.int32)
 
         # Recoveries
         indexes = np.argwhere(vector_region.t_for_recovery == t).flatten()
@@ -323,8 +323,8 @@ class SafirHealthModel(HealthModel):
             number_of_age_groups = self.number_of_age_groups
             discrete_age = np.floor_divide(vector_region.age, self.age_group_interval)
             discrete_age[discrete_age > number_of_age_groups - 1] = number_of_age_groups - 1
-            discrete_age = discrete_age.astype(np.int64)
-            pop_by_disc_age = np.zeros(number_of_age_groups, dtype=np.int64)
+            discrete_age = discrete_age.astype(np.int32)
+            pop_by_disc_age = np.zeros(number_of_age_groups, dtype=np.int32)
             for a in range(number_of_age_groups):
                 count = np.count_nonzero(vector_region.age == a)
                 pop_by_disc_age[a] = count
@@ -350,5 +350,5 @@ class SafirHealthModel(HealthModel):
 
             vector_region.number_of_subpopulations = 1
             vector_region.subpopulation_index =\
-                np.zeros((vector_region.number_of_agents), dtype=np.int64)
+                np.zeros((vector_region.number_of_agents), dtype=np.int32)
             vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=np.float64)

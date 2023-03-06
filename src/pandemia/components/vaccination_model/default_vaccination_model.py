@@ -77,11 +77,11 @@ class DefaultVaccinationModel(VaccinationModel):
         self.vaccine_rho_immunity_failure_partitions =\
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
-                      self.max_vaccine_length_immunity), dtype=np.int64)
+                      self.max_vaccine_length_immunity), dtype=np.int32)
 
         self.vaccine_rho_immunity_failure_lengths =\
             np.zeros((self.number_of_vaccines,
-                      self.number_of_strains), dtype=np.int64)
+                      self.number_of_strains), dtype=np.int32)
 
         self.vaccine_sigma_immunity_failure_values =\
             np.zeros((self.number_of_vaccines,
@@ -91,11 +91,11 @@ class DefaultVaccinationModel(VaccinationModel):
         self.vaccine_sigma_immunity_failure_partitions =\
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
-                      self.max_vaccine_length_immunity), dtype=np.int64)
+                      self.max_vaccine_length_immunity), dtype=np.int32)
 
         self.vaccine_sigma_immunity_failure_lengths =\
             np.zeros((self.number_of_vaccines,
-                      self.number_of_strains), dtype=np.int64)
+                      self.number_of_strains), dtype=np.int32)
 
         # Create vaccines
         self._get_vaccines(clock.ticks_in_day)
@@ -121,12 +121,12 @@ class DefaultVaccinationModel(VaccinationModel):
         number_of_vaccines = self.number_of_vaccines
 
         vector_region.number_of_vaccination_age_groups = 0
-        vector_region.vaccination_age_group = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.vaccination_age_group = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.num_to_vaccinate =\
             np.zeros((vector_region.number_of_vaccination_age_groups,
-                      number_of_vaccines), dtype=np.int64)
-        vector_region.most_recent_first_dose = np.zeros((number_of_agents), dtype=np.int64)
-        vector_region.vaccine_hesitant = np.zeros((number_of_agents), dtype=np.int64)
+                      number_of_vaccines), dtype=np.int32)
+        vector_region.most_recent_first_dose = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.vaccine_hesitant = np.zeros((number_of_agents), dtype=np.int32)
 
     def initial_conditions(self, vector_region):
         """Initial vaccination"""
