@@ -142,6 +142,7 @@ def test_vectorize_component(concrete_model, sample_vector_region):
     # Now do the actual tests for the remaining cases
     all_excepted_values = {
         "DefaultHealthModel": 27,
+        "SafirHealthModel": 16,
         "VoidHealthModel": 9,
         "DefaultHospitalizationAndDeathModel": 6,
         "VoidHospitalizationAndDeathModel": 0,
@@ -157,8 +158,10 @@ def test_vectorize_component(concrete_model, sample_vector_region):
         "DefaultTestingAndContactTracingModel": 8,
         "VoidTestingAndContactTracingModel": 0,
         "DefaultTravelModel": 2,
+        "SafirTravelModel": 2,
         "VoidTravelModel": 1,
         "DefaultVaccinationModel": 5,
+        "SafirVaccinationModel": 5,
         "VoidVaccinationModel": 0,
     }
 
@@ -177,7 +180,7 @@ def test_initial_conditions(concrete_model, sample_vector_region):
     """
     For all Component subclasses - test calling the `initial_conditions` method.
 
-    The `vectorize_component` method is called first, has it is typically the first method called, after construction.
+    The `vectorize_component` method is called first, as it is typically the first method called, after construction.
     Any errors from `vectorize_component` are ignored in this test.
 
     **At present the NO positive assertion that this has worked as expected. Only the absence of an error in
@@ -195,6 +198,7 @@ def test_initial_conditions(concrete_model, sample_vector_region):
         "ValidationPolicyMakerModel": 89,
         "DefaultTestingAndContactTracingModel": 90,
         "DefaultTravelModel": 90,
+        "SafirTravelModel": 90,
     }
 
     expected_fail_issue = xfail_if.get(type(concrete_model).__name__, None)

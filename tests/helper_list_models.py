@@ -1,4 +1,5 @@
 from pandemia.components.health_model.default_health_model import DefaultHealthModel
+from pandemia.components.health_model.safir_health_model import SafirHealthModel
 from pandemia.components.health_model.void_health_model import VoidHealthModel
 from pandemia.components.hospitalization_and_death_model.default_hospitalization_and_death_model import (
     DefaultHospitalizationAndDeathModel,
@@ -38,9 +39,13 @@ from pandemia.components.testing_and_contact_tracing_model.void_testing_and_cont
     VoidTestingAndContactTracingModel,
 )
 from pandemia.components.travel_model.default_travel_model import DefaultTravelModel
+from pandemia.components.travel_model.safir_travel_model import SafirTravelModel
 from pandemia.components.travel_model.void_travel_model import VoidTravelModel
 from pandemia.components.vaccination_model.default_vaccination_model import (
     DefaultVaccinationModel,
+)
+from pandemia.components.vaccination_model.safir_vaccination_model import (
+    SafirVaccinationModel,
 )
 from pandemia.components.vaccination_model.void_vaccination_model import (
     VoidVaccinationModel,
@@ -53,7 +58,8 @@ from pandemia.world.world_factory.control_world_factory import ControlWorldFacto
 default_conf = Config("Scenarios/Test/test_all_components.yaml")
 void_conf = Config(_dict={})
 
-heterogeneous_conf = Config("validation/heterogeneous_validation.yaml")
+validation_conf = Config("Scenarios/Validation/heterogeneous_validation_four_strains.yaml")
+safir_conf = Config("Scenarios/Safir/safir.yaml")
 
 world_factory_conf = Config(
     _dict={
@@ -111,6 +117,9 @@ all_model_list = [
     DefaultHealthModel(
         config=default_conf.subconfig("health_model"), scale_factor=1, clock=get_clock()
     ),
+    SafirHealthModel(
+        config=safir_conf.subconfig("health_model"), scale_factor=1, clock=get_clock()
+    ),
     VoidHealthModel(config=void_conf, scale_factor=1, clock=get_clock()),
     DefaultHospitalizationAndDeathModel(
         config=default_conf.subconfig("hospitalization_and_death_model")
@@ -143,7 +152,7 @@ all_model_list = [
         age_groups=[0, 18, 65],
     ),
     ValidationPolicyMakerModel(
-        config=heterogeneous_conf.subconfig("policy_maker_model"),
+        config=validation_conf.subconfig("policy_maker_model"),
         scale_factor=1,
         clock=get_clock(),
         number_of_regions=4,
@@ -178,11 +187,25 @@ all_model_list = [
         number_of_strains=2,
         vector_world=get_vector_world(),
     ),
+    SafirTravelModel(
+        config=safir_conf.subconfig("travel_model"),
+        scale_factor=1,
+        number_of_strains=2,
+        vector_world=get_vector_world(),
+    ),
     VoidTravelModel(
         config=void_conf, scale_factor=1, number_of_strains=2, number_of_regions=4
     ),
     DefaultVaccinationModel(
         config=default_conf.subconfig("vaccination_model"),
+        clock=get_clock(),
+        number_of_strains=2,
+        number_of_rho_immunity_outcomes=2,
+        immunity_length=14,
+        immunity_period_ticks=14 * 3,
+    ),
+    SafirVaccinationModel(
+        config=safir_conf.subconfig("vaccination_model"),
         clock=get_clock(),
         number_of_strains=2,
         number_of_rho_immunity_outcomes=2,

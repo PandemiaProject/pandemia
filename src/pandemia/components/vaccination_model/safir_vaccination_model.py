@@ -112,8 +112,9 @@ class SafirVaccinationModel(VaccinationModel):
 
         age_groups =\
             np.zeros((self.number_of_age_groups, vector_region.number_of_agents), dtype=int)
-        for a in range(self.number_of_age_groups):
-            age_groups[a][vector_region.subpopulation_index == a] = 1
+        if hasattr(vector_region, 'subpopulation_index'):
+            for a in range(self.number_of_age_groups):
+                age_groups[a][vector_region.subpopulation_index == a] = 1
         age_group_sizes = np.sum(age_groups, axis = 1)
 
         age_groups_copy = np.copy(age_groups)

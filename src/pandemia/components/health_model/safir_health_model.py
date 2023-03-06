@@ -282,8 +282,11 @@ class SafirHealthModel(HealthModel):
     def _update_ab_titre(self, vector_region, dr_vec, number_of_days):
         """Updates antibody titres"""
 
-        days_since_last = np.minimum(vector_region.days_since_last_infection,
-                                     vector_region.days_since_last_dose)
+        if hasattr(vector_region, 'days_since_last_dose'):
+            days_since_last = np.minimum(vector_region.days_since_last_infection,
+                                         vector_region.days_since_last_dose)
+        else:
+            days_since_last = vector_region.days_since_last_infection
         indexes = np.argwhere(days_since_last < number_of_days + 1).flatten()
         valid_days_since_last = days_since_last[indexes]
         valid_days_since_last[valid_days_since_last > len(dr_vec) - 1] = len(dr_vec) - 1

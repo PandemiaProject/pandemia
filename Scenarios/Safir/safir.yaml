@@ -184,6 +184,8 @@ travel_model:
   # travellers is given by the world travel matrix. Transmission is determined by the average
   # infectiousness of the destination region, adapted to the Safir3 transmission model.
   __type__: safir_travel_model.SafirTravelModel
+  # [KEY PARAMETER] Control parameter determining the transmission probability.
+  beta: [0.22]
   # [KEY PARAMETER] Travellers mix homogeneously with the entire population of the destination
   # region, with transmission probabilities divided by the number of agents in that region. This
   # parameter is a control parameter which multiplies that ratio.

@@ -57,6 +57,7 @@ class SafirTravelModel(TravelModel):
 
         self.travel_multiplier = config['travel_transmission_multiplier']
         self.interpolation     = config['interpolation']
+        self.beta              = np.array(config['beta'], dtype=np.float64)
 
         self.baseline_agents_travelling_matrix = vector_world.travel_matrix
         for r in range(self.number_of_regions):
@@ -72,11 +73,9 @@ class SafirTravelModel(TravelModel):
     def initial_conditions(self, sim):
         """Initial regional mixing"""
 
-        self.beta = sim.health_model.beta
-
         self.baseline_agents_travelling_matrix =\
-            self.interpolate_matrix(self.baseline_agents_travelling_matrix, sim.vector_world,
-                                    self.interpolation)
+            self._interpolate_matrix(self.baseline_agents_travelling_matrix, sim.vector_world,
+                                     self.interpolation)
 
         # Flatten arrays
         self.baseline_agents_travelling_matrix =\
@@ -187,7 +186,7 @@ class SafirTravelModel(TravelModel):
             self._in(sim, sim.vector_regions, sum_f_by_strain, transmission_force, mutation_matrix,
                      facemask_transmission_multiplier, day, ticks_in_day)
 
-    def interpolate_matrix(self, baseline_agents_travelling_matrix, vector_world, interpolation):
+    def _interpolate_matrix(self, baseline_agents_travelling_matrix, vector_world, interpolation):
         """Artificially inflate number of travellers for testing purposes or otherwise"""
 
         ids_to_population_sizes =\
