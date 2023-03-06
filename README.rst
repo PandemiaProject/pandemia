@@ -4,7 +4,6 @@
 About Pandemia
 ==============
 
-
 .. image:: https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml/badge.svg
    :target: https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml
    :alt: End to End tests
@@ -17,18 +16,16 @@ About Pandemia
    :target: https://pandemia.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
- 
-.. image::  docs/source/images/pandemia_logo.jpg
-   :target: docs/source/images/pandemia_logo.jpg
-   :alt: pandemia Logo
-
-
 Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
 
 Pandemia is able to simulate and visualize the spread of an infectious disease across multiple
 geographical regions, for example the countries of the world or the administrative divisions of
 a country. The model is fast and scalable, able to simulate extremely large numbers of individuals
 while supporting a wide range of highly adaptable features.
+
+.. image::  docs/source/images/pandemia_logo.jpg
+   :target: docs/source/images/pandemia_logo.jpg
+   :alt: pandemia Logo
 
 This software can be used by researchers looking to assess the impact of policy in the context of a
 public health emergency caused by an infectious disease of humans. The disease could, for example, be a
