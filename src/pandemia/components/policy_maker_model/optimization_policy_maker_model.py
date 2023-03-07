@@ -50,7 +50,7 @@ class OptimizationPolicyMakerModel(PolicyMakerModel):
             self.lockdown_policy =\
                 np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
             self.border_closure_policy =\
-                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=np.float64)
+                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=float)
             self.facemask_policy =\
                 np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
             self.random_testing_policy =\

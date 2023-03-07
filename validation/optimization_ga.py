@@ -19,7 +19,7 @@ class Policy():
     def __init__(self, T, R, A, V):
 
         self.lockdown_policy            = np.full((T, R), -1, dtype=np.int32)
-        self.border_closure_policy      = np.full((T, R), 1.0, dtype=np.float64)
+        self.border_closure_policy      = np.full((T, R), 1.0, dtype=float)
         self.facemask_policy            = np.full((T, R), -1, dtype=np.int32)
         self.random_testing_policy      = np.full((T, R), 0, dtype=np.int32)
         self.symptomatic_testing_policy = np.full((T, R), 0, dtype=np.int32)
@@ -39,7 +39,7 @@ def fitness_func(solution, solution_idx):
     VACCINATION_RATE = 0.006 # The maximum proportion of population a country can vaccinate each day
     LEN_SUPPLY_PERIOD = 30   # The time period is divided into supply periods of this length in days
 
-    vaccination_rate = np.full((num_regions), VACCINATION_RATE, dtype=np.float64)
+    vaccination_rate = np.full((num_regions), VACCINATION_RATE, dtype=float)
     num_supply_periods = (num_days // LEN_SUPPLY_PERIOD) + 1
     supply = np.full((num_supply_periods), int(TOTAL_DOSES / num_supply_periods), dtype=np.int32)
 
@@ -121,7 +121,7 @@ assert num_vaccines == 1
 scale_factor = sim.vector_world.scale_factor
 rescale_factor = 1 / scale_factor
 population_sizes =\
-    np.array([vr.number_of_agents * rescale_factor for vr in sim.vector_regions], dtype=np.float64)
+    np.array([vr.number_of_agents * rescale_factor for vr in sim.vector_regions], dtype=float)
 
 seeds = [0, 1, 2, 3, 4]
 

@@ -2,7 +2,7 @@
 
 import logging
 import numpy as np
-from ctypes import c_void_p, c_int, c_double
+from ctypes import c_void_p, c_int32, c_double
 
 from ..hospitalization_and_death_model import HospitalizationAndDeathModel
 
@@ -69,10 +69,10 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
         """Moves agents to and from hospitals and cemeteries."""
 
         self.dynamics_hospitalization_and_death(
-            c_int(vector_region.number_of_agents),
-            c_int(vector_region.number_of_hospitals),
-            c_int(vector_region.number_of_cemeteries),
-            c_int(vector_region.id),
+            c_int32(vector_region.number_of_agents),
+            c_int32(vector_region.number_of_hospitals),
+            c_int32(vector_region.number_of_cemeteries),
+            c_int32(vector_region.id),
             c_double(self.hospital_threshold),
             c_void_p(vector_region.current_location.ctypes.data),
             c_void_p(vector_region.current_region.ctypes.data),

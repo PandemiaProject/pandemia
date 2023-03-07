@@ -52,9 +52,9 @@ class ValidationPolicyMakerModel(PolicyMakerModel):
                 (self.epoch + datetime.timedelta(days=day))
 
         self.transmission_control_policy =\
-            np.ones((self.simulation_length_days, self.number_of_regions), dtype=np.float64)
+            np.ones((self.simulation_length_days, self.number_of_regions), dtype=float)
         self.border_closure_policy =\
-            np.ones((self.simulation_length_days, self.number_of_regions), dtype=np.float64)
+            np.ones((self.simulation_length_days, self.number_of_regions), dtype=float)
         self.vaccination_policy =\
             np.full((self.simulation_length_days, self.number_of_regions,
                      self.number_of_vaccination_age_groups,

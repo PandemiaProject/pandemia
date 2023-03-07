@@ -42,7 +42,7 @@ class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
 
         if seasonality_config is None:
             for vector_region in vector_world.vector_regions:
-                self.seasonal_multiplier_by_region[vector_region.id] = np.ones((12, ), dtype=np.float64)
+                self.seasonal_multiplier_by_region[vector_region.id] = np.ones((12, ), dtype=float)
         else:
             seasonal_multiplier_records = {}
             with open(seasonality_config, newline='') as csvfile:
@@ -57,7 +57,7 @@ class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
                         else:
                             multiplier = 0
                         seasonal_multipliers.append(multiplier)
-                    seasonal_multiplier_records[iso] = np.array(seasonal_multipliers, dtype=np.float64)
+                    seasonal_multiplier_records[iso] = np.array(seasonal_multipliers, dtype=float)
             names_to_ids = {r.name: r.id for r in vector_world.vector_regions}
             for vector_region in vector_world.vector_regions:
                 if vector_region.name in seasonal_multiplier_records:
@@ -68,7 +68,7 @@ class DefaultSeasonalEffectsModel(SeasonalEffectsModel):
         """Initializes numpy arrays associated to this component."""
 
         vector_region.region_transmission_multiplier =\
-            np.ones((self.simulation_length_days), dtype=np.float64)
+            np.ones((self.simulation_length_days), dtype=float)
         vector_region.current_region_transmission_multiplier = 1.0
 
     def initial_conditions(self, vector_region):

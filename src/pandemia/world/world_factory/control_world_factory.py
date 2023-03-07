@@ -160,7 +160,7 @@ class ControlWorldFactory(WorldFactory):
             np.zeros((num_of_regions, num_of_regions), dtype=np.int32)
 
         # Calculate local travel, rescaled according to step size
-        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
         for region in regions:
             for other_region in regions:
                 if region.id != other_region.id:

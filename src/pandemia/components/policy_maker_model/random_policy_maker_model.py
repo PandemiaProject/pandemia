@@ -44,7 +44,7 @@ class RandomPolicyMakerModel(PolicyMakerModel):
                      self.number_of_vaccination_age_groups, self.number_of_vaccines)
 
         self.lockdown_policy = np.random.randint(0, 2, shape, dtype=np.int32)
-        self.border_closure_policy = np.random.random(shape).astype(np.float64)
+        self.border_closure_policy = np.random.random(shape).astype(float)
         self.facemask_policy = np.random.randint(0, 2, shape, dtype=np.int32)
         self.random_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int32)
         self.symptomatic_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int32)

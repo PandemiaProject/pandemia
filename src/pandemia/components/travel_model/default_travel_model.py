@@ -5,7 +5,7 @@ import numpy as np
 import copy
 from joblib import Parallel, delayed
 
-from ctypes import c_void_p, c_double, c_int, cdll
+from ctypes import c_void_p, c_double, c_int32, cdll
 
 from ..travel_model import TravelModel
 log = logging.getLogger("default_travel_model")
@@ -88,9 +88,9 @@ class DefaultTravelModel(TravelModel):
 
         for vector_region in vector_region_batch:
             self.determine_travellers(
-                c_int(vector_region.number_of_agents),
-                c_int(vector_region.id),
-                c_int(self.number_of_regions),
+                c_int32(vector_region.number_of_agents),
+                c_int32(vector_region.id),
+                c_int32(self.number_of_regions),
                 c_void_p(vector_region.current_disease.ctypes.data),
                 c_void_p(vector_region.current_strain.ctypes.data),
                 c_void_p(vector_region.current_region.ctypes.data),
@@ -98,9 +98,9 @@ class DefaultTravelModel(TravelModel):
                 c_void_p(vector_region.random_state.ctypes.data)
             )
             self.transmission_out(
-                c_int(vector_region.number_of_agents),
-                c_int(self.number_of_strains),
-                c_int(vector_region.id),
+                c_int32(vector_region.number_of_agents),
+                c_int32(self.number_of_strains),
+                c_int32(vector_region.id),
                 c_void_p(self.beta.ctypes.data),
                 c_double(facemask_transmission_multiplier),
                 c_double(self.travel_multiplier),
@@ -119,9 +119,9 @@ class DefaultTravelModel(TravelModel):
 
         for vector_region in vector_region_batch:
             self.transmission_in(
-                c_int(self.number_of_strains),
-                c_int(vector_region.number_of_agents),
-                c_int(vector_region.id),
+                c_int32(self.number_of_strains),
+                c_int32(vector_region.number_of_agents),
+                c_int32(vector_region.id),
                 c_void_p(vector_region.current_facemask.ctypes.data),
                 c_void_p(vector_region.current_region.ctypes.data),
                 c_double(facemask_transmission_multiplier),
@@ -149,10 +149,11 @@ class DefaultTravelModel(TravelModel):
         # Reset record of who is travelling abroad and apply border closure if necessary
         for vector_region in sim.vector_regions:
             vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                   vector_region.id, dtype=np.int32)
+                                                    vector_region.id, dtype=np.int32)
+            self.baseline_agents_travelling_matrix = self.baseline_agents_travelling_matrix.astype(float)
             self.close_borders(
-                c_int(self.number_of_regions),
-                c_int(vector_region.id),
+                c_int32(self.number_of_regions),
+                c_int32(vector_region.id),
                 c_double(self.scale_factor),
                 c_double(vector_region.current_border_closure_multiplier),
                 c_void_p(agents_travelling_matrix.ctypes.data),
@@ -160,8 +161,8 @@ class DefaultTravelModel(TravelModel):
             )
 
         # Update record of who is travelling abroad and calculate transmission force for each region
-        sum_f_by_strain = np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.float64)
-        transmission_force = np.ones((self.number_of_regions), dtype=np.float64)
+        sum_f_by_strain = np.zeros((self.number_of_regions * self.number_of_strains), dtype=float)
+        transmission_force = np.ones((self.number_of_regions), dtype=float)
         if enable_parallel:
             Parallel(n_jobs=num_jobs, backend="threading",
                      verbose=0)(delayed(self._out)(vector_region_batch, agents_travelling_matrix,

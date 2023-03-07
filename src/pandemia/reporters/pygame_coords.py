@@ -170,8 +170,8 @@ class PygameCoords(Reporter):
                         if event.button == 3:
                             self.pause *= -1
 
-            num_infected = np.zeros((self.width * self.height), dtype=np.float64)
-            num_total    = np.zeros((self.width * self.height), dtype=np.float64)
+            num_infected = np.zeros((self.width * self.height), dtype=float)
+            num_total    = np.zeros((self.width * self.height), dtype=float)
 
             infected = 0
             for id in current_location:

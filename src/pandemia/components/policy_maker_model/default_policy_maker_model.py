@@ -63,7 +63,7 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
         self.lockdown_policy =\
             np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
         self.border_closure_policy =\
-            np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=np.float64)
+            np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=float)
         self.facemask_policy =\
             np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
         self.random_testing_policy =\
@@ -84,11 +84,11 @@ class DefaultPolicyMakerModel(PolicyMakerModel):
         id = vector_region.id
         filepath = self.policy_data_filepath + iso2 + ".csv"
         if exists(filepath):
-            array = np.genfromtxt(filepath, skip_header = 1, delimiter=',', dtype=np.float64)
+            array = np.genfromtxt(filepath, skip_header = 1, delimiter=',', dtype=float)
             array = array.T
             assert array.shape[1] == self.simulation_length_days
             self.lockdown_policy[:,id]            = array[1].astype(np.int32)
-            self.border_closure_policy[:,id]      = (1 - array[2]).astype(np.float64)
+            self.border_closure_policy[:,id]      = (1 - array[2]).astype(float)
             self.facemask_policy[:,id]            = array[3].astype(np.int32)
             self.random_testing_policy[:,id]      = (self.scale_factor * array[4]).astype(np.int32)
             self.symptomatic_testing_policy[:,id] = (self.scale_factor * array[5]).astype(np.int32)

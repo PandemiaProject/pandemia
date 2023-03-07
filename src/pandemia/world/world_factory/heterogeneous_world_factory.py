@@ -168,9 +168,9 @@ class HeterogeneousWorldFactory(WorldFactory):
                 filepath_id = os.path.join(self.population_id_data_folder, filename)
 
         # Load population distribution map
-        map_dist = np.genfromtxt(filepath_dist, delimiter=' ', skip_header=6, dtype=np.float64)
+        map_dist = np.genfromtxt(filepath_dist, delimiter=' ', skip_header=6, dtype=float)
         map_dist /= np.sum(map_dist)
-        map_id = np.genfromtxt(filepath_id, delimiter=' ', skip_header=6, dtype=np.float64)
+        map_id = np.genfromtxt(filepath_id, delimiter=' ', skip_header=6, dtype=float)
 
         # Determine which squares belong to each region, for plotting purposes
         region_x_coords = []
@@ -375,14 +375,14 @@ class HeterogeneousWorldFactory(WorldFactory):
 
         # This will be the matrix returned by the function
         baseline_agents_travelling_matrix =\
-            np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+            np.zeros((num_of_regions, num_of_regions), dtype=float)
 
         # It will be constructed by obtaining air travel with local travel, the latter meaning
         # travel to neighbouring regions
-        daily_air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+        daily_air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
         daily_air_travel_matrix_by_month =\
-            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=np.float64)
-        daily_local_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=float)
+        daily_local_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
 
         # Map airports to region isos
         airports_to_region_iso = {}
@@ -457,7 +457,7 @@ class HeterogeneousWorldFactory(WorldFactory):
         np.fill_diagonal(adjacency_matrix, 0)
 
         # Calculate local travel, rescaled according to step size
-        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
         ids_to_population_sizes =\
             {region.id: len(region.agents) * (1 / self.scale_factor)\
                         for region in regions}

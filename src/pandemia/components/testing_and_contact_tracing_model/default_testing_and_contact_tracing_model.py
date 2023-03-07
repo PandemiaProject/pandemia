@@ -4,7 +4,7 @@ from collections import defaultdict
 import logging
 import numpy as np
 
-from ctypes import c_void_p, c_double, c_int
+from ctypes import c_void_p, c_double, c_int32
 from ..testing_and_contact_tracing_model import TestingAndContactTracingModel
 
 log = logging.getLogger("default_testing_and_contact_tracing_model")
@@ -62,7 +62,7 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         vector_region.num_regular_contacts_to_test = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.regular_contacts_to_test = np.zeros((number_of_agents,
                                                   max_regular_contacts_to_test), dtype=np.int32)
-        vector_region.yesterdays_disease = np.zeros((number_of_agents), dtype=np.float64)
+        vector_region.yesterdays_disease = np.zeros((number_of_agents), dtype=float)
 
         # Flatten arrays
         vector_region.regular_contacts_to_test = vector_region.regular_contacts_to_test.flatten()
@@ -100,14 +100,14 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         """Implements testing and contact tracing system."""
 
         self.default_testing_and_contact_tracing_dynamics(
-            c_int(vector_region.number_of_agents),
-            c_int(day),
-            c_int(self.quarantine_period_days),
-            c_int(vector_region.num_to_test_random),
-            c_int(vector_region.num_to_test_symptomatic),
-            c_int(vector_region.num_to_test_contact),
-            c_int(self.max_regular_contacts_to_test),
-            c_int(vector_region.id),
+            c_int32(vector_region.number_of_agents),
+            c_int32(day),
+            c_int32(self.quarantine_period_days),
+            c_int32(vector_region.num_to_test_random),
+            c_int32(vector_region.num_to_test_symptomatic),
+            c_int32(vector_region.num_to_test_contact),
+            c_int32(self.max_regular_contacts_to_test),
+            c_int32(vector_region.id),
             c_double(self.symptomatic_disease_threshold),
             c_double(self.test_threshold),
             c_double(self.test_false_negative),

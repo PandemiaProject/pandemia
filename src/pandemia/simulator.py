@@ -6,7 +6,7 @@ import numpy as np
 import os
 import csv
 from datetime import datetime
-from ctypes import c_int, c_void_p, cdll
+from ctypes import c_int32, c_void_p, cdll
 from joblib import Parallel, delayed
 import platform
 ext=".dll" if platform.system() == 'Windows' else ".so"
@@ -75,7 +75,7 @@ class Simulator:
         self.count_dead             = self.lib.count_dead
 
         self.collect_telemetry_data.restype = None
-        self.count_dead.restype             = c_int
+        self.count_dead.restype             = c_int32
 
         # Parallel processing
         self.enable_parallel       = self.config['enable_parallel']
@@ -322,7 +322,7 @@ class Simulator:
                 cumulative_deaths_new = 0
                 cumulative_deaths_new +=\
                     self.count_dead(
-                        c_int(vector_region.number_of_agents),
+                        c_int32(vector_region.number_of_agents),
                         c_void_p(vector_region.current_disease.ctypes.data),
                     )
                 total_deaths += cumulative_deaths_new
@@ -354,9 +354,9 @@ class Simulator:
 
             for vector_region in self.vector_regions:
                 self.collect_telemetry_data(
-                    c_int(vector_region.number_of_agents),
-                    c_int(self.number_of_strains),
-                    c_int(vector_region.id),
+                    c_int32(vector_region.number_of_agents),
+                    c_int32(self.number_of_strains),
+                    c_int32(vector_region.id),
                     c_void_p(vector_region.current_strain.ctypes.data),
                     c_void_p(infections.ctypes.data)
                 )

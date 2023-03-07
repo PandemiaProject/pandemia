@@ -2,11 +2,10 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <math.h>
-#include "stdio.h"
 
-#define uint32_t_max 4294967295
+#define int32_t_max 2147483647
 
-static inline uint32_t rotl(const uint32_t x, int k) {
+static inline uint32_t rotl(const uint32_t x, int32_t k) {
 	return (x << k) | (x >> (32 - k));
 }
 
@@ -23,16 +22,16 @@ uint32_t next(uint32_t * s) {
 	return result;
 }
 
-uint32_t randrange(uint32_t * s, uint32_t num) {
+int32_t randrange(uint32_t * s, int32_t num) {
     // Returns an int in the range [0, num)
-    return next(s) % num;
+    return (int32_t) (next(s) % num);
 }
 
 int32_t bernoulli(uint32_t * s, double prob_success) {
     // Returns the value 1 if success, 0 otherwise
-    uint32_t rnd = randrange(s, uint32_t_max);
-    int result = 0;
-    if(rnd < (uint32_t) (prob_success * uint32_t_max)){
+    int32_t rnd = randrange(s, int32_t_max);
+    int32_t result = 0;
+    if(rnd < (int32_t) (prob_success * int32_t_max)){
         result = 1;
     }
     return result;
@@ -40,17 +39,17 @@ int32_t bernoulli(uint32_t * s, double prob_success) {
 
 int32_t random_choice(uint32_t * s, const double * weights, double sum_of_weights) {
     // Returns an int in the range [0,l) where l is the length of weights
-    uint32_t rnd = randrange(s, uint32_t_max);
+    int32_t rnd = randrange(s, int32_t_max);
     int32_t index = 0;
-    while (rnd >= (uint32_t) ((weights[index] / sum_of_weights) * uint32_t_max)){
-        rnd = rnd - (uint32_t) (weights[index] / sum_of_weights * uint32_t_max);
+    while (rnd >= (int32_t) ((weights[index] / sum_of_weights) * int32_t_max)){
+        rnd = rnd - (int32_t) (weights[index] / sum_of_weights * int32_t_max);
         ++index;
     }
     return index;
 }
 
-void random_shuffle(uint32_t * s, int32_t * array, int n) {
-    int i, j, tmp;
+void random_shuffle(uint32_t * s, int32_t * array, int32_t n) {
+    int32_t i, j, tmp;
     for (i = n - 1; i > 0; i--){
         j = randrange(s, i + 1);
         tmp = array[j];
@@ -59,13 +58,13 @@ void random_shuffle(uint32_t * s, int32_t * array, int n) {
     }
 }
 
-void random_sample(uint32_t * s, int32_t * sample, int n, int32_t * population, int N) {
-    int t = 0; // total input records dealt with
-    int m = 0; // number of items selected so far
-    int u;
+void random_sample(uint32_t * s, int32_t * sample, int32_t n, int32_t * population, int32_t N) {
+    int32_t t = 0; // total input records dealt with
+    int32_t m = 0; // number of items selected so far
+    int32_t u;
     while (m < n)
     {
-        u = randrange(s, (uint32_t) (N - t));
+        u = randrange(s, N - t);
         if ( u >= n - m )
         {
             t++;
@@ -78,14 +77,14 @@ void random_sample(uint32_t * s, int32_t * sample, int n, int32_t * population, 
     }
 }
 
-double rho_evaluate(const int32_t * partition, const double * values, int length, int r, int R, int t){
+double rho_evaluate(const int32_t * partition, const double * values, int32_t length, int32_t r, int32_t R, int32_t t){
     // Evaluates a rho immunity preset on rho immunity outcome r at time t, where R denotes the
     // total number of rho immunity outcomes
     double result;
     if(t < partition[1]){
         result = values[(0 * R) + r];
     } else {
-        int j;
+        int32_t j;
         j = length - 1;
         while(t < partition[j]){
             j = j - 1;
@@ -95,13 +94,13 @@ double rho_evaluate(const int32_t * partition, const double * values, int length
     return result;
 }
 
-double sigma_evaluate(const int32_t * partition, const double * values, int length, int t){
+double sigma_evaluate(const int32_t * partition, const double * values, int32_t length, int32_t t){
     // Evaluates a sigma immunity preset at time t
     double result;
     if(t < partition[1]){
         result = values[0];
     } else {
-        int j;
+        int32_t j;
         j = length - 1;
         while(t < partition[j]){
             j = j - 1;
@@ -113,13 +112,13 @@ double sigma_evaluate(const int32_t * partition, const double * values, int leng
 
 void update_health
         (
-                int t,
-                int N, // number_of_agents
-                int S, // number_of_strains
-                int I, // immunity_length
-                int R, // number_of_rho_immunity_outcomes
-                int H, // max_preset_length_health
-                int immunity_period_ticks,
+                int32_t t,
+                int32_t N, // number_of_agents
+                int32_t S, // number_of_strains
+                int32_t I, // immunity_length
+                int32_t R, // number_of_rho_immunity_outcomes
+                int32_t H, // max_preset_length_health
+                int32_t immunity_period_ticks,
                 const int32_t * i_partitions,
                 int32_t * i_indexes,
                 const double * i_values,
@@ -142,9 +141,9 @@ void update_health
                 int32_t * requesting_immunity_update
         )
 {
-    if(t % immunity_period_ticks == 0){for(int n=0; n<N; n++){requesting_immunity_update[n] = 1;}}
-    int i = t / immunity_period_ticks;
-    for(int n=0; n<N; n++){
+    if(t % immunity_period_ticks == 0){for(int32_t n=0; n<N; n++){requesting_immunity_update[n] = 1;}}
+    int32_t i = t / immunity_period_ticks;
+    for(int32_t n=0; n<N; n++){
         // Update infectiousness
         if(t == i_partitions[(n * H) + i_indexes[n]]){
             i_current[n] = i_values[(n * H) + i_indexes[n]];
@@ -168,18 +167,18 @@ void update_health
         }
         // Update rho and sigma immunity
         if(requesting_immunity_update[n] == 1){
-            int nSR, nSIR, nS, nSI, iR;
+            int32_t nSR, nSIR, nS, nSI, iR;
             iR = i * R;
             nSR = n * S * R;
             nSIR = n * S * I * R;
             nS = n * S;
             nSI = n * S * I;
-            for(int s=0; s<S; s++){
-                int sR, sRI, sI;
+            for(int32_t s=0; s<S; s++){
+                int32_t sR, sRI, sI;
                 sR = s * R;
                 sRI = s * R * I;
                 sI = s * I;
-                for(int r=0; r<R; r++){
+                for(int32_t r=0; r<R; r++){
                     current_rho_immunity_failure[nSR + sR + r] =
                             rho_immunity_failure_values[nSIR + sRI + iR + r];
                 }
@@ -193,13 +192,13 @@ void update_health
 
 void transmission
         (
-                int S, // number_of_strains
-                int L, // number_of_locations
-                int N, // number_of_agents
-                int id,
-                int sir_rescaling_int,
-                int ticks_in_day,
-                int A, // number of age groups
+                int32_t S, // number_of_strains
+                int32_t L, // number_of_locations
+                int32_t N, // number_of_agents
+                int32_t id,
+                int32_t sir_rescaling_int,
+                int32_t ticks_in_day,
+                int32_t A, // number of age groups
                 const double * beta,
                 const int32_t * subpopulation_index,
                 const double * subpopulation_mixing_matrix,
@@ -221,25 +220,25 @@ void transmission
     double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
     double * sum_by_strain_by_age_group = (double *)malloc(sizeof(double) * L * S * A);
     int32_t * num_agents_by_location_by_age_group = (int32_t *)malloc(sizeof(int32_t) * L * A);
-    for(int m=0; m<L; m++){
-        for(int a=0; a<A; a++){
+    for(int32_t m=0; m<L; m++){
+        for(int32_t a=0; a<A; a++){
             transmission_force_by_age_group[(m * A) + a] = 1.0;
             num_agents_by_location_by_age_group[(m * A) + a] = 0;
-            for(int s=0; s<S; s++){sum_by_strain_by_age_group[(m * S * A) + (s * A) + a] = 0.0;}
+            for(int32_t s=0; s<S; s++){sum_by_strain_by_age_group[(m * S * A) + (s * A) + a] = 0.0;}
         }
     }
 
     // Transmission out
     if(sir_rescaling_int == 1){
-        for(int n=0; n<N; n++){
+        for(int32_t n=0; n<N; n++){
             if(current_region[n] == id){
                 num_agents_by_location_by_age_group[(current_location[n] * A) +
                                                     subpopulation_index[n]] += 1;
             }
         }
     }
-    for(int a=0; a<A; a++){
-        for(int n=0; n<N; n++){
+    for(int32_t a=0; a<A; a++){
+        for(int32_t n=0; n<N; n++){
             if(current_region[n] == id && current_strain[n] != -1){
                 double f;
                 f = current_region_transmission_multiplier *
@@ -257,8 +256,8 @@ void transmission
             }
         }
     }
-    for(int a=0; a<A; a++){
-        for(int m=0; m<L; m++){
+    for(int32_t a=0; a<A; a++){
+        for(int32_t m=0; m<L; m++){
             transmission_force_by_age_group[(m * A) + a] =
                     1 - transmission_force_by_age_group[(m * A) + a];
         }
@@ -267,8 +266,8 @@ void transmission
     // Transmission in
     double * weights = (double *)malloc(sizeof(double) * S);
     double sum_of_weights;
-    int s1, s2;
-    for(int n=0; n<N; n++){
+    int32_t s1, s2;
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] == id && current_strain[n] == -1 && current_disease[n] < 1.0){
             double facemask_multiplier;
             facemask_multiplier =
@@ -280,7 +279,7 @@ void transmission
                                                        subpopulation_index[n]];
                 if(bernoulli(random_state, prob) == 1){
                     sum_of_weights = 0;
-                    for(int s=0; s<S; s++){
+                    for(int32_t s=0; s<S; s++){
                         weights[s] = sum_by_strain_by_age_group[(current_location[n] * S * A) +
                                                                 (s * A) + subpopulation_index[n]];
                         sum_of_weights += weights[s];
@@ -289,7 +288,7 @@ void transmission
                     prob = current_sigma_immunity_failure[(n * S) + s1];
                     if(bernoulli(random_state, prob) == 1){
                         sum_of_weights = 0;
-                        for(int s=0; s<S; s++){
+                        for(int32_t s=0; s<S; s++){
                             weights[s] = mutation_matrix[(s1 * S) + s];
                             sum_of_weights += weights[s];
                         }
@@ -317,14 +316,14 @@ void transmission
 
 void infect
         (
-                int t,
-                int N, // number_of_agents
-                int R, // number_of_rho_immunity_outcomes
-                int S, // number_of_strains
-                int H, // max_preset_length_health
-                int G, // max_preset_length_immunity
-                int I, // immunity_length
-                int immunity_period_ticks,
+                int32_t t,
+                int32_t N, // number_of_agents
+                int32_t R, // number_of_rho_immunity_outcomes
+                int32_t S, // number_of_strains
+                int32_t H, // max_preset_length_health
+                int32_t G, // max_preset_length_immunity
+                int32_t I, // immunity_length
+                int32_t immunity_period_ticks,
                 const double * current_rho_immunity_failure,
                 int32_t * infection_event,
                 int32_t * infectiousness_partitions,
@@ -361,11 +360,11 @@ void infect
                 uint32_t * random_state
         )
 {
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(infection_event[n] != -1){
 
             // The strain with which agent n is to be infected
-            int s1;
+            int32_t s1;
             s1 = infection_event[n];
 
             // Reset counters
@@ -374,7 +373,7 @@ void infect
             strain_indexes[n] = 1;
 
             // Determine the rho immunity outcome of agent n
-            int q, r1, r2;
+            int32_t q, r1, r2;
             q = presets[n];
             r2 = 0;
             while(bernoulli(random_state,
@@ -389,7 +388,7 @@ void infect
                                                   (r1 * S) +
                                                   s1];
 
-            for(int i=0; i<infectiousness_lengths[n]; i++){
+            for(int32_t i=0; i<infectiousness_lengths[n]; i++){
 
                 infectiousness_values[(n * H) + i] =
                         preset_infectiousness_values[(q * R * S * H) +
@@ -414,7 +413,7 @@ void infect
                                            (r1 * S) +
                                            s1];
 
-            for(int i=0; i<disease_lengths[n]; i++){
+            for(int32_t i=0; i<disease_lengths[n]; i++){
 
                 disease_values[(n * H) + i] =
                         preset_disease_values[(q * R * S * H) +
@@ -439,7 +438,7 @@ void infect
                                           (r1 * S) +
                                           s1];
 
-            for(int i=0; i<strain_lengths[n]; i++){
+            for(int32_t i=0; i<strain_lengths[n]; i++){
 
                 strain_values[(n * H) + i] =
                         preset_strain_values[(q * R * S * H) +
@@ -460,12 +459,12 @@ void infect
 
             int32_t * rho_part = (int32_t *)malloc(sizeof(int32_t) * G);
             double * rho_values = (double *)malloc(sizeof(double) * G * R);
-            int rho_length;
+            int32_t rho_length;
 
-            for(int s2=0; s2<S; s2++){
+            for(int32_t s2=0; s2<S; s2++){
 
-                for(int i=0; i<G; i++){
-                    for(int r=0; r<R; r++){
+                for(int32_t i=0; i<G; i++){
+                    for(int32_t r=0; r<R; r++){
 
                         rho_values[(i * R) + r] =
                                 preset_rho_immunity_failure_values[(q * R * S * S * G * R) +
@@ -493,8 +492,8 @@ void infect
                                                             (s1 * S) +
                                                             s2];
 
-                for(int i=0; i<I; i++){
-                    for(int r=0; r<R; r++){
+                for(int32_t i=0; i<I; i++){
+                    for(int32_t r=0; r<R; r++){
 
                         rho_immunity_failure_values[(n * S * I * R) +
                                                     (s2 * I * R) +
@@ -519,11 +518,11 @@ void infect
 
             int32_t * sigma_part = (int32_t *)malloc(sizeof(int32_t) * G);
             double * sigma_values = (double *)malloc(sizeof(double) * G);
-            int sigma_length;
+            int32_t sigma_length;
 
-            for(int s2=0; s2<S; s2++){
+            for(int32_t s2=0; s2<S; s2++){
 
-                for(int i=0; i<G; i++){
+                for(int32_t i=0; i<G; i++){
 
                     sigma_values[i] =
                             preset_sigma_immunity_failure_values[(q * R * S * S * G) +
@@ -548,7 +547,7 @@ void infect
                                                               (s1 * S) +
                                                               s2];
 
-                for(int i=0; i<I; i++){
+                for(int32_t i=0; i<I; i++){
 
                     sigma_immunity_failure_values[(n * S * I) +
                                                   (s2 * I) +
@@ -575,10 +574,10 @@ void infect
 
 void dynamics_hospitalization_and_death
         (
-                int N, // number_of_agents
-                int number_of_hospitals,
-                int number_of_cemeteries,
-                int id,
+                int32_t N, // number_of_agents
+                int32_t number_of_hospitals,
+                int32_t number_of_cemeteries,
+                int32_t id,
                 double hospital_threshold,
                 const int32_t * current_location,
                 const int32_t * current_region,
@@ -596,11 +595,12 @@ void dynamics_hospitalization_and_death
 {
     // Hospitals
     if(number_of_hospitals > 0){
-        for(int n=0; n<N; n++){
+        for(int32_t n=0; n<N; n++){
             if(current_region[n] == id && requesting_location_update[n] == 1){
                 if(current_disease[n] > hospital_threshold){
                     if(in_hospital[n] == 0){
-                        int index = (int) (next(random_state) % number_of_hospitals);
+                        int32_t index = 0;
+                        index = randrange(random_state, number_of_hospitals);
                         requested_location_update[n] = hospitals[index];
                         in_hospital[n] = 1;
                     } else {
@@ -619,11 +619,12 @@ void dynamics_hospitalization_and_death
 
     // Cemeteries
     if(number_of_cemeteries > 0){
-        for(int n=0; n<N; n++){
+        for(int32_t n=0; n<N; n++){
             if(current_region[n] == id && requesting_location_update[n] == 1){
                 if(current_disease[n] == 1.0){
                     if(in_cemetery[n] == 0){
-                        int index = (int) (next(random_state) % number_of_cemeteries);
+                        int32_t index = 0;
+                        index = randrange(random_state, number_of_cemeteries);
                         requested_location_update[n] = cemeteries[index];
                         in_cemetery[n] = 1;
                     } else {
@@ -638,7 +639,7 @@ void dynamics_hospitalization_and_death
 
 void update_movement
         (
-                int N, // number_of_agents
+                int32_t N, // number_of_agents
                 int32_t * requesting_location_update,
                 const int32_t * requested_location_update,
                 int32_t * current_location,
@@ -647,7 +648,7 @@ void update_movement
                 int32_t * current_facemask
         )
 {
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(requesting_location_update[n] == 1){
             current_location[n] = requested_location_update[n];
             requesting_location_update[n] = 0;
@@ -662,16 +663,16 @@ void update_movement
 
 void dynamics_movement
         (
-                int N, // number_of_agents
-                int A, // number_of_activities
-                int lockdown_intervention,
-                int facemask_intervention,
-                int id,
-                int use_weights,
-                int t,
-                int offset,
-                int ticks_in_week,
-                int max_num_activity_locations,
+                int32_t N, // number_of_agents
+                int32_t A, // number_of_activities
+                int32_t lockdown_intervention,
+                int32_t facemask_intervention,
+                int32_t id,
+                int32_t use_weights,
+                int32_t t,
+                int32_t offset,
+                int32_t ticks_in_week,
+                int32_t max_num_activity_locations,
                 const int32_t * current_region,
                 const uint8_t * weekly_routines,
                 const int32_t * current_facemask,
@@ -689,11 +690,11 @@ void dynamics_movement
                 uint32_t * random_state
         )
 {
-    int t_now = (t + offset) % ticks_in_week;
-    int t_next = (t + 1 + offset) % ticks_in_week;
+    int32_t t_now = (t + offset) % ticks_in_week;
+    int32_t t_next = (t + 1 + offset) % ticks_in_week;
 
     // Determine new locations, for those agents starting a new activity
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] == id){
             uint8_t new_activity = weekly_routines[(n * ticks_in_week) + t_next];
             if(new_activity != weekly_routines[(n * ticks_in_week) + t_now]){
@@ -715,16 +716,16 @@ void dynamics_movement
                 if(use_weights == 1){
                     double * weights = (double *)malloc(sizeof(double) * num);
                     double sum_of_weights = 0;
-                    int index_0 = (n * A * max_num_activity_locations) +
+                    int32_t index_0 = (n * A * max_num_activity_locations) +
                                   (new_activity * max_num_activity_locations);
-                    for(int j=0; j<num; j++){
+                    for(int32_t j=0; j<num; j++){
                         weights[j] = activity_location_weights[index_0 + j];
                         sum_of_weights += weights[j];
                     }
                     index = random_choice(random_state, weights, sum_of_weights);
                     free(weights);
                 } else {
-                    index = randrange(random_state, (uint32_t) num);
+                    index = randrange(random_state, num);
                 }
                 // Override location choice if necessary
                 if(current_quarantine[n] == 1 || (lockdown_intervention == 1 &&
@@ -745,7 +746,7 @@ void dynamics_movement
     return;
 }
 
-int test
+int32_t test
         (
                 uint32_t * s,
                 double infectiousness,
@@ -754,7 +755,7 @@ int test
         )
 {
     // Tests agent based on infectiousness
-    int test_result;
+    int32_t test_result;
     if(infectiousness >= test_threshold){
         test_result = bernoulli(s, 1 - test_false_negative);
     }
@@ -763,14 +764,14 @@ int test
 
 void default_testing_and_contact_tracing_dynamics
         (
-                int N, // number_of_agents
-                int day,
-                int quarantine_period_days,
-                int num_to_test_random,
-                int num_to_test_symptomatic,
-                int num_to_test_contact,
-                int max_regular_contacts_to_test,
-                int id,
+                int32_t N, // number_of_agents
+                int32_t day,
+                int32_t quarantine_period_days,
+                int32_t num_to_test_random,
+                int32_t num_to_test_symptomatic,
+                int32_t num_to_test_contact,
+                int32_t max_regular_contacts_to_test,
+                int32_t id,
                 double symptomatic_disease_threshold,
                 double test_threshold,
                 double test_false_negative,
@@ -788,7 +789,7 @@ void default_testing_and_contact_tracing_dynamics
         )
 {
     // End quarantine if necessary
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(end_of_quarantine_days[n] == day){
             current_quarantine[n] = 0;
         }
@@ -796,7 +797,7 @@ void default_testing_and_contact_tracing_dynamics
 
     // Population eligible to be tested today
     int32_t * eligible = (int32_t *)malloc(sizeof(int32_t) * N);
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] == id && current_disease[n] < 1.0){
             eligible[n] = 1;
         } else {
@@ -806,22 +807,22 @@ void default_testing_and_contact_tracing_dynamics
 
     // A record of agents newly testing positive today
     int32_t * newly_testing_positive = (int32_t *)malloc(sizeof(int32_t) * N);
-    for(int n=0; n<N; n++){newly_testing_positive[n] = 0;}
+    for(int32_t n=0; n<N; n++){newly_testing_positive[n] = 0;}
 
     // Random testing (test eligible agents at random)
     if(num_to_test_random > 0){
-        int num_eligible_rand = 0;
-        for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_rand += 1;}}
+        int32_t num_eligible_rand = 0;
+        for(int32_t n=0; n<N; n++){if(eligible[n] == 1){num_eligible_rand += 1;}}
         int32_t * eligible_agents_rand = (int32_t *)malloc(sizeof(int32_t) * num_eligible_rand);
-        int j = 0;
-        for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_rand[j] = n; j += 1;}}
-        int num_agents_to_test_random;
+        int32_t j = 0;
+        for(int32_t n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_rand[j] = n; j += 1;}}
+        int32_t num_agents_to_test_random;
         num_agents_to_test_random = fmin(num_to_test_random, num_eligible_rand);
         int32_t * agents_to_test_random = (int32_t *)malloc(sizeof(int32_t) * num_agents_to_test_random);
         random_sample(random_state, agents_to_test_random, num_agents_to_test_random,
                       eligible_agents_rand, num_eligible_rand);
-        for(int j=0; j<num_agents_to_test_random; j++){
-            int n, test_result;
+        for(int32_t j=0; j<num_agents_to_test_random; j++){
+            int32_t n, test_result;
             n = agents_to_test_random[j];
             eligible[n] = 0;
             test_result = test(random_state, current_infectiousness[n], test_threshold,
@@ -837,12 +838,12 @@ void default_testing_and_contact_tracing_dynamics
     }
 
     // Symptomatic testing (test eligible agents who have just become symptomatic)
-    int num_eligible_symp = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){num_eligible_symp += 1;}}
+    int32_t num_eligible_symp = 0; for(int32_t n=0; n<N; n++){if(eligible[n] == 1){num_eligible_symp += 1;}}
     int32_t * eligible_agents_symp = (int32_t *)malloc(sizeof(int32_t) * num_eligible_symp);
-    int j = 0; for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_symp[j] = n; j += 1;}}
+    int32_t j = 0; for(int32_t n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_symp[j] = n; j += 1;}}
     random_shuffle(random_state, eligible_agents_symp, num_eligible_symp);
-    for(int j=0; j<num_eligible_symp; j++){
-        int n, test_result;
+    for(int32_t j=0; j<num_eligible_symp; j++){
+        int32_t n, test_result;
         n = eligible_agents_symp[j];
         if(current_disease[n] >= symptomatic_disease_threshold){
             if(yesterdays_disease[n] < symptomatic_disease_threshold){
@@ -867,15 +868,15 @@ void default_testing_and_contact_tracing_dynamics
     free(eligible_agents_symp);
 
     // Contact tracing (contact trace and test eligible agents)
-    int num_newly_testing_positive = 0;
-    for(int n=0; n<N; n++){if(newly_testing_positive[n] == 1){num_newly_testing_positive += 1;}}
+    int32_t num_newly_testing_positive = 0;
+    for(int32_t n=0; n<N; n++){if(newly_testing_positive[n] == 1){num_newly_testing_positive += 1;}}
     if(num_newly_testing_positive > 0 && num_to_test_contact > 0){
         int32_t * at_risk = (int32_t *)malloc(sizeof(int32_t) * N);
-        for(int n=0; n<N; n++){at_risk[n] = 0;}
-        for(int n1=0; n1<N; n1++){
+        for(int32_t n=0; n<N; n++){at_risk[n] = 0;}
+        for(int32_t n1=0; n1<N; n1++){
             if(newly_testing_positive[n1] == 1){
-                for(int j=0; j<num_regular_contacts_to_test[n1]; j++){
-                    int n2;
+                for(int32_t j=0; j<num_regular_contacts_to_test[n1]; j++){
+                    int32_t n2;
                     n2 = regular_contacts_to_test[(n1 * max_regular_contacts_to_test) + j];
                     if(current_region[n2] == id && current_disease[n2] < 1.0){
                         at_risk[n2] = 1;
@@ -883,14 +884,14 @@ void default_testing_and_contact_tracing_dynamics
                 }
             }
         }
-        for(int n=0; n<N; n++){if(newly_testing_positive[n] == 1){at_risk[n] = 0;}}
-        int num_agents_at_risk = 0;
-        for(int n=0; n<N; n++){if(at_risk[n] == 1){num_agents_at_risk += 1;}}
+        for(int32_t n=0; n<N; n++){if(newly_testing_positive[n] == 1){at_risk[n] = 0;}}
+        int32_t num_agents_at_risk = 0;
+        for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){num_agents_at_risk += 1;}}
         int32_t * agents_at_risk = (int32_t *)malloc(sizeof(int32_t) * num_agents_at_risk);
-        int j = 0; for(int n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
+        int32_t j = 0; for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
         random_shuffle(random_state, agents_at_risk, num_agents_at_risk);
-        for(int j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){
-            int n, test_result;
+        for(int32_t j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){
+            int32_t n, test_result;
             n = agents_at_risk[j];
             test_result = test(random_state, current_infectiousness[n], test_threshold,
                                test_false_negative);
@@ -899,8 +900,8 @@ void default_testing_and_contact_tracing_dynamics
                 end_of_quarantine_days[n] = day + quarantine_period_days;
             }
         }
-        for(int j=fmin(num_to_test_contact, num_agents_at_risk); j<num_agents_at_risk; j++){
-            int n;
+        for(int32_t j=fmin(num_to_test_contact, num_agents_at_risk); j<num_agents_at_risk; j++){
+            int32_t n;
             n = agents_at_risk[j];
             if(bernoulli(random_state, prob_quarantine_with_contact_without_test)){
                 current_quarantine[n] = 1;
@@ -914,7 +915,7 @@ void default_testing_and_contact_tracing_dynamics
     free(newly_testing_positive);
 
     // Update yesterdays disease
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         yesterdays_disease[n] = current_disease[n];
     }
     return;
@@ -922,23 +923,23 @@ void default_testing_and_contact_tracing_dynamics
 
 void close_borders
         (
-                int R, // number_of_regions
-                int id,
+                int32_t R, // number_of_regions
+                int32_t id,
                 double scale_factor,
                 double current_border_closure_multiplier,
                 int32_t * agents_travelling_matrix,
                 const double * baseline_agents_travelling_matrix
         )
 {
-    int r1 = id;
+    int32_t r1 = id;
     double rescaled;
-    for(int r2=0; r2<R; r2++){
+    for(int32_t r2=0; r2<R; r2++){
         rescaled = baseline_agents_travelling_matrix[(r1 * R) + r2] * scale_factor *
                    current_border_closure_multiplier;
         if(rescaled > 0 && rescaled < 1){
             agents_travelling_matrix[(r1 * R) + r2] = 1;
         } else {
-            agents_travelling_matrix[(r1 * R) + r2] = (int) rescaled ;
+            agents_travelling_matrix[(r1 * R) + r2] = (int32_t) rescaled;
         }
     }
     return;
@@ -946,9 +947,9 @@ void close_borders
 
 void determine_travellers
         (
-                int N, // number_of_agents
-                int id,
-                int R, // number_of_regions
+                int32_t N, // number_of_agents
+                int32_t id,
+                int32_t R, // number_of_regions
                 const double * current_disease,
                 const int32_t * current_strain,
                 int32_t * current_region,
@@ -956,18 +957,18 @@ void determine_travellers
                 uint32_t * random_state
         )
 {
-    int r1 = id;
-    int total_num_to_travel = 0;
+    int32_t r1 = id;
+    int32_t total_num_to_travel = 0;
 
     // Determine how many agents travel from this region today
-    for(int r2=0; r2<R; r2++){total_num_to_travel += agents_travelling_matrix[(r1 * R) + r2];}
+    for(int32_t r2=0; r2<R; r2++){total_num_to_travel += agents_travelling_matrix[(r1 * R) + r2];}
 
     if(total_num_to_travel > 0){
 
         // Determine who is eligible to travel from this region today and count how many
         int32_t * agents_eligible_to_travel = (int32_t *)malloc(sizeof(int32_t) * N);
-        int num_eligible_to_travel = 0;
-        for(int n=0; n<N; n++){
+        int32_t num_eligible_to_travel = 0;
+        for(int32_t n=0; n<N; n++){
             if(current_strain[n] == -1 && current_disease[n] < 1.0){
                 agents_eligible_to_travel[num_eligible_to_travel] = n;
                 num_eligible_to_travel += 1;
@@ -975,21 +976,21 @@ void determine_travellers
         }
 
         // Among these eligible agents determine who actually travels today
-        int num_agents_to_travel;
-        num_agents_to_travel = fmin(total_num_to_travel, num_eligible_to_travel);
+        int32_t num_agents_to_travel;
+        num_agents_to_travel = (int32_t) fmin((double)total_num_to_travel, (double)num_eligible_to_travel);
         int32_t * agents_to_travel = (int32_t *)malloc(sizeof(int32_t) * num_agents_to_travel);
         random_sample(random_state, agents_to_travel, num_agents_to_travel,
                       agents_eligible_to_travel, num_eligible_to_travel);
 
         // Among those who actually travel determine to which region they travel
-        int num_agents_to_travel_r2;
-        int j_min, j_max;
+        int32_t num_agents_to_travel_r2;
+        int32_t j_min, j_max;
         j_min = 0;
         j_max = 0;
-        for(int r2=0; r2<R; r2++){
+        for(int32_t r2=0; r2<R; r2++){
             num_agents_to_travel_r2 = agents_travelling_matrix[(r1 * R) + r2];
             j_max += num_agents_to_travel_r2;
-            for(int j=fmin(j_min, num_agents_to_travel); j<fmin(j_max, num_agents_to_travel); j++){
+            for(int32_t j=(int32_t)fmin((double)j_min, (double)num_agents_to_travel); j<(int32_t)fmin((double)j_max, (double)num_agents_to_travel); j++){
                 current_region[agents_to_travel[j]] = r2;
             }
             j_min += num_agents_to_travel_r2;
@@ -1003,9 +1004,9 @@ void determine_travellers
 
 void transmission_out
         (
-                int N, // number_of_agents
-                int S, // number_of_strains
-                int id,
+                int32_t N, // number_of_agents
+                int32_t S, // number_of_strains
+                int32_t id,
                 const double * beta,
                 double facemask_transmission_multiplier,
                 double travel_multiplier,
@@ -1019,7 +1020,7 @@ void transmission_out
         )
 {
     double facemask_multiplier, f;
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] == id && current_strain[n] != -1){
             facemask_multiplier = 1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
             f = current_region_transmission_multiplier *
@@ -1036,9 +1037,9 @@ void transmission_out
 
 void transmission_in
         (
-                int S, // number_of_strains
-                int N, // number_of_agents
-                int r1,
+                int32_t S, // number_of_strains
+                int32_t N, // number_of_agents
+                int32_t r1,
                 int32_t * current_facemask,
                 int32_t * current_region,
                 double facemask_transmission_multiplier,
@@ -1052,10 +1053,10 @@ void transmission_in
 {
     double * weights = (double *)malloc(sizeof(double) * S);
     double sum_of_weights;
-    int s1, s2;
-    for(int n=0; n<N; n++){
+    int32_t s1, s2;
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] != r1){
-            int r2 = current_region[n];
+            int32_t r2 = current_region[n];
             double facemask_multiplier;
             facemask_multiplier =
                     1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
@@ -1064,7 +1065,7 @@ void transmission_in
                 prob = facemask_multiplier * transmission_force[r2];
                 if(bernoulli(random_state, prob) == 1){
                     sum_of_weights = 0;
-                    for(int s=0; s<S; s++){
+                    for(int32_t s=0; s<S; s++){
                         weights[s] = sum_f_by_strain[(r2 * S) + s];
                         sum_of_weights += weights[s];
                     }
@@ -1073,7 +1074,7 @@ void transmission_in
                     prob = current_sigma_immunity_failure[(n * S) + s1];
                     if(bernoulli(random_state, prob) == 1){
                         sum_of_weights = 0;
-                        for(int s=0; s<S; s++){
+                        for(int32_t s=0; s<S; s++){
                             weights[s] = mutation_matrix[(s1 * S) + s];
                             sum_of_weights += weights[s];
                         }
@@ -1099,18 +1100,18 @@ void transmission_in
 
 void dynamics_vaccination
         (
-                int day,
-                int ticks_in_day,
-                int N, // number_of_agents
-                int S, // number_of_strains
-                int I, // immunity_length
-                int R, // number_of_rho_immunity_outcomes
-                int A, // number_of_age_groups
-                int V, // number_of_vaccines
-                int W, // max_vaccine_length_immunity
-                int booster_waiting_time_days,
-                int immunity_period_ticks,
-                int id,
+                int32_t day,
+                int32_t ticks_in_day,
+                int32_t N, // number_of_agents
+                int32_t S, // number_of_strains
+                int32_t I, // immunity_length
+                int32_t R, // number_of_rho_immunity_outcomes
+                int32_t A, // number_of_age_groups
+                int32_t V, // number_of_vaccines
+                int32_t W, // max_vaccine_length_immunity
+                int32_t booster_waiting_time_days,
+                int32_t immunity_period_ticks,
+                int32_t id,
                 const double * vaccine_rho_immunity_failure_values,
                 const int32_t * vaccine_rho_immunity_failure_partitions,
                 const int32_t * vaccine_rho_immunity_failure_lengths,
@@ -1130,12 +1131,12 @@ void dynamics_vaccination
         )
 {
 
-    for(int age_group_index=0; age_group_index<A; age_group_index++){
+    for(int32_t age_group_index=0; age_group_index<A; age_group_index++){
 
         // Determine who is eligible to be vaccinated today for this age group
-        int num_eligible = 0;
+        int32_t num_eligible = 0;
         int32_t * eligible = (int32_t *)malloc(sizeof(int32_t) * N);
-        for(int n=0; n<N; n++){
+        for(int32_t n=0; n<N; n++){
             if((current_region[n] == id) &&
                (current_disease[n] < 1.0) &&
                (day - most_recent_first_dose[n] >= booster_waiting_time_days) &&
@@ -1148,23 +1149,23 @@ void dynamics_vaccination
             }
         }
         int32_t * eligible_agents = (int32_t *)malloc(sizeof(int32_t) * num_eligible);
-        int j = 0;
-        for(int n=0; n<N; n++){if(eligible[n] == 1){eligible_agents[j] = n; j += 1;}}
+        int32_t j = 0;
+        for(int32_t n=0; n<N; n++){if(eligible[n] == 1){eligible_agents[j] = n; j += 1;}}
 
         // Vaccinate a sample of the eligible population and update their immunity functions
-        int t = day * ticks_in_day;
-        int num_agents_to_vaccinate = 0;
-        for(int v=0; v<V; v++){
+        int32_t t = day * ticks_in_day;
+        int32_t num_agents_to_vaccinate = 0;
+        for(int32_t v=0; v<V; v++){
             num_agents_to_vaccinate += num_to_vaccinate[(age_group_index * V) + v];
         }
         num_agents_to_vaccinate = fmin(num_eligible, num_agents_to_vaccinate);
         int32_t * agents_to_vaccinate = (int32_t *)malloc(sizeof(int32_t) * num_agents_to_vaccinate);
         random_sample(random_state, agents_to_vaccinate, num_agents_to_vaccinate, eligible_agents,
                       num_eligible);
-        int v = 0;
-        int num_vaccinated = 0;
-        for(int j=0; j<num_agents_to_vaccinate; j++){
-            int n;
+        int32_t v = 0;
+        int32_t num_vaccinated = 0;
+        for(int32_t j=0; j<num_agents_to_vaccinate; j++){
+            int32_t n;
             n = agents_to_vaccinate[j];
             if(v < V){
 
@@ -1172,13 +1173,13 @@ void dynamics_vaccination
 
                 int32_t * rho_part = (int32_t *)malloc(sizeof(int32_t) * W);
                 double * rho_values = (double *)malloc(sizeof(double) * W * R);
-                int rho_length;
+                int32_t rho_length;
 
-                for(int s=0; s<S; s++){
+                for(int32_t s=0; s<S; s++){
 
-                    for(int i=0; i<W; i++){
+                    for(int32_t i=0; i<W; i++){
 
-                        for(int r=0; r<R; r++){
+                        for(int32_t r=0; r<R; r++){
 
                             rho_values[(i * R) + r] =
                                     vaccine_rho_immunity_failure_values[(v * S * W * R) +
@@ -1200,8 +1201,8 @@ void dynamics_vaccination
                     rho_length =
                             vaccine_rho_immunity_failure_lengths[(v * S) + s];
 
-                    for(int i=0; i<I; i++){
-                        for(int r=0; r<R; r++){
+                    for(int32_t i=0; i<I; i++){
+                        for(int32_t r=0; r<R; r++){
 
                             rho_immunity_failure_values[(n * S * I * R) +
                                                         (s * I * R) +
@@ -1224,11 +1225,11 @@ void dynamics_vaccination
 
                 int32_t * sigma_part = (int32_t *)malloc(sizeof(int32_t) * W);
                 double * sigma_values = (double *)malloc(sizeof(double) * W);
-                int sigma_length;
+                int32_t sigma_length;
 
-                for(int s=0; s<S; s++){
+                for(int32_t s=0; s<S; s++){
 
-                    for(int i=0; i<W; i++){
+                    for(int32_t i=0; i<W; i++){
 
                         sigma_values[i] =
                                 vaccine_sigma_immunity_failure_values[(v * S * W) +
@@ -1246,7 +1247,7 @@ void dynamics_vaccination
                     sigma_length =
                             vaccine_sigma_immunity_failure_lengths[(v * S) + s];
 
-                    for(int i=0; i<I; i++){
+                    for(int32_t i=0; i<I; i++){
 
                         sigma_immunity_failure_values[(n * S * I) +
                                                       (s * I) +
@@ -1281,12 +1282,12 @@ void dynamics_vaccination
 
 void safir3_transmission_model
     (
-        int L, // number_of_locations
-        int N, // number_of_agents
-        int id,
-        int sir_rescaling_int,
-        int ticks_in_day,
-        int A, // number of age groups
+        int32_t L, // number_of_locations
+        int32_t N, // number_of_agents
+        int32_t id,
+        int32_t sir_rescaling_int,
+        int32_t ticks_in_day,
+        int32_t A, // number of age groups
         const double * beta,
         const int32_t * subpopulation_index,
         const double * subpopulation_mixing_matrix,
@@ -1307,8 +1308,8 @@ void safir3_transmission_model
 {
     double * transmission_force_by_age_group = (double *)malloc(sizeof(double) * L * A);
     int32_t * num_agents_by_location_by_age_group = (int32_t *)malloc(sizeof(int32_t) * L * A);
-    for(int m=0; m<L; m++){
-        for(int a=0; a<A; a++){
+    for(int32_t m=0; m<L; m++){
+        for(int32_t a=0; a<A; a++){
             transmission_force_by_age_group[(m * A) + a] = 1.0;
             num_agents_by_location_by_age_group[(m * A) + a] = 0;
         }
@@ -1316,15 +1317,15 @@ void safir3_transmission_model
 
     // Transmission out
     if(sir_rescaling_int == 1){
-        for(int n=0; n<N; n++){
+        for(int32_t n=0; n<N; n++){
             if(current_region[n] == id){
                 num_agents_by_location_by_age_group[(current_location[n] * A) +
                                                     subpopulation_index[n]] += 1;
             }
         }
     }
-    for(int a=0; a<A; a++){
-        for(int n=0; n<N; n++){
+    for(int32_t a=0; a<A; a++){
+        for(int32_t n=0; n<N; n++){
             if(current_region[n] == id && current_strain[n] != -1){
                 double f;
                 f = current_region_transmission_multiplier *
@@ -1340,15 +1341,15 @@ void safir3_transmission_model
             }
         }
     }
-    for(int a=0; a<A; a++){
-        for(int m=0; m<L; m++){
+    for(int32_t a=0; a<A; a++){
+        for(int32_t m=0; m<L; m++){
             transmission_force_by_age_group[(m * A) + a] =
                 1 - transmission_force_by_age_group[(m * A) + a];
         }
     }
 
     // Transmission in
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] == id && current_strain[n] == -1 && current_disease[n] < 1.0){
             double facemask_multiplier;
             facemask_multiplier =
@@ -1370,8 +1371,8 @@ void safir3_transmission_model
 
 void safir_3_transmission_out
     (
-        int N, // number_of_agents
-        int id,
+        int32_t N, // number_of_agents
+        int32_t id,
         const double * beta,
         double facemask_transmission_multiplier,
         double travel_multiplier,
@@ -1385,7 +1386,7 @@ void safir_3_transmission_out
     )
 {
     double facemask_multiplier, f;
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] == id && current_strain[n] != -1){
             facemask_multiplier = 1 + current_facemask[n] * (facemask_transmission_multiplier - 1);
             f = current_region_transmission_multiplier * ef_transmission[n] *
@@ -1401,8 +1402,8 @@ void safir_3_transmission_out
 
 void safir3_transmission_in
     (
-        int N, // number_of_agents
-        int r1,
+        int32_t N, // number_of_agents
+        int32_t r1,
         int32_t * current_facemask,
         int32_t * current_region,
         double facemask_transmission_multiplier,
@@ -1412,7 +1413,7 @@ void safir3_transmission_in
         uint32_t * random_state
     )
 {
-    for(int n=0; n<N; n++){
+    for(int32_t n=0; n<N; n++){
         if(current_region[n] != r1){
             double facemask_multiplier;
             facemask_multiplier = 1 + current_facemask[n] * (facemask_transmission_multiplier - 1);

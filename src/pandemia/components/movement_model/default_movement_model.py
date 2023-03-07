@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 
-from ctypes import c_void_p, c_int
+from ctypes import c_void_p, c_int32
 from ..movement_model import MovementModel
 
 log = logging.getLogger("default_movement_model")
@@ -127,7 +127,7 @@ class DefaultMovementModel(MovementModel):
         """Updates related to movement."""
 
         self.update_movement(
-            c_int(vector_region.number_of_agents),
+            c_int32(vector_region.number_of_agents),
             c_void_p(vector_region.requesting_location_update.ctypes.data),
             c_void_p(vector_region.requested_location_update.ctypes.data),
             c_void_p(vector_region.current_location.ctypes.data),
@@ -140,16 +140,16 @@ class DefaultMovementModel(MovementModel):
         """Changes related to movement."""
 
         self.dynamics_movement(
-            c_int(vector_region.number_of_agents),
-            c_int(vector_region.number_of_activities),
-            c_int(vector_region.lockdown_intervention),
-            c_int(vector_region.facemask_intervention),
-            c_int(vector_region.id),
-            c_int(self.use_weights),
-            c_int(t),
-            c_int(offset),
-            c_int(ticks_in_week),
-            c_int(vector_region.max_num_activity_locations),
+            c_int32(vector_region.number_of_agents),
+            c_int32(vector_region.number_of_activities),
+            c_int32(vector_region.lockdown_intervention),
+            c_int32(vector_region.facemask_intervention),
+            c_int32(vector_region.id),
+            c_int32(self.use_weights),
+            c_int32(t),
+            c_int32(offset),
+            c_int32(ticks_in_week),
+            c_int32(vector_region.max_num_activity_locations),
             c_void_p(vector_region.current_region.ctypes.data),
             c_void_p(vector_region.weekly_routines.ctypes.data),
             c_void_p(vector_region.current_facemask.ctypes.data),

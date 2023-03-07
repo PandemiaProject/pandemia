@@ -156,14 +156,14 @@ class HomogeneousWorldFactory(WorldFactory):
 
         # This will be the matrix returned by the function
         baseline_agents_travelling_matrix =\
-            np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+            np.zeros((num_of_regions, num_of_regions), dtype=float)
 
         # It will be constructed by obtaining air travel with local travel, the latter meaning
         # travel to neighbouring regions
-        daily_air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+        daily_air_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
         daily_air_travel_matrix_by_month =\
-            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=np.float64)
-        daily_local_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+            np.zeros((months_in_year, num_of_regions, num_of_regions), dtype=float)
+        daily_local_travel_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
 
         # Map airports to region isos
         airports_to_region_iso = {}
@@ -238,7 +238,7 @@ class HomogeneousWorldFactory(WorldFactory):
         np.fill_diagonal(adjacency_matrix, 0)
 
         # Calculate local travel, rescaled according to step size
-        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=np.float64)
+        share_matrix = np.zeros((num_of_regions, num_of_regions), dtype=float)
         ids_to_population_sizes =\
             {region.id: len(region.agents) * (1 / self.scale_factor)\
                         for region in regions}
