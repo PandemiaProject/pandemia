@@ -64,9 +64,6 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
                                                   max_regular_contacts_to_test), dtype=np.int32)
         vector_region.yesterdays_disease = np.zeros((number_of_agents), dtype=float)
 
-        # Flatten arrays
-        vector_region.regular_contacts_to_test = vector_region.regular_contacts_to_test.flatten()
-
     def initial_conditions(self, vector_region):
         """Initial testing and contact tracing conditions."""
 
@@ -85,16 +82,19 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
             regular_contacts[n].remove(n)
             vector_region.num_regular_contacts_to_test[n] =\
                 min(len(regular_contacts[n]), vector_region.max_regular_contacts_to_test)
-        regular_contacts_sample =\
-            vector_region.prng.random_sample(regular_contacts,
-                                             vector_region.num_regular_contacts_to_test[n])
-        # Record the sample of regular contacts
-        for index in range(0, vector_region.num_regular_contacts_to_test[n]):
-            vector_region.regular_contacts_to_test[index] = regular_contacts_sample[index]
-        # Pad the remainder of the array if necessary
-        for index in range(vector_region.num_regular_contacts_to_test[n],
-                           vector_region.max_regular_contacts_to_test):
-            vector_region.regular_contacts_to_test[index] = -1
+            regular_contacts_sample =\
+                vector_region.prng.random_sample(regular_contacts[n],
+                                                 vector_region.num_regular_contacts_to_test[n])
+            # Record the sample of regular contacts
+            for index in range(0, vector_region.num_regular_contacts_to_test[n]):
+                vector_region.regular_contacts_to_test[n][index] = regular_contacts_sample[index]
+            # Pad the remainder of the array if necessary
+            for index in range(vector_region.num_regular_contacts_to_test[n],
+                               vector_region.max_regular_contacts_to_test):
+                vector_region.regular_contacts_to_test[n][index] = -1
+
+        # Flatten arrays
+        vector_region.regular_contacts_to_test = vector_region.regular_contacts_to_test.flatten()
 
     def dynamics(self, vector_region, day):
         """Implements testing and contact tracing system."""

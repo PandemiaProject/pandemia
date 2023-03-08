@@ -891,26 +891,26 @@ void default_testing_and_contact_tracing_dynamics
         for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){num_agents_at_risk += 1;}}
         int32_t * agents_at_risk = (int32_t *)malloc(sizeof(int32_t) * num_agents_at_risk);
         int32_t j = 0;
-        // for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
-        // random_shuffle(random_state, agents_at_risk, num_agents_at_risk);
-        // for(int32_t j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){
-        //     int32_t n, test_result;
-        //     n = agents_at_risk[j];
-        //     test_result = test(random_state, current_infectiousness[n], test_threshold,
-        //                        test_false_negative);
-        //     if(test_result == 1){
-        //         current_quarantine[n] = 1;
-        //         end_of_quarantine_days[n] = day + quarantine_period_days;
-        //     }
-        // }
-        // for(int32_t j=fmin(num_to_test_contact, num_agents_at_risk); j<num_agents_at_risk; j++){
-        //     int32_t n;
-        //     n = agents_at_risk[j];
-        //     if(bernoulli(random_state, prob_quarantine_with_contact_without_test)){
-        //         current_quarantine[n] = 1;
-        //         end_of_quarantine_days[n] = day + quarantine_period_days;
-        //     }
-        // }
+        for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
+        random_shuffle(random_state, agents_at_risk, num_agents_at_risk);
+        for(int32_t j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){
+            int32_t n, test_result;
+            n = agents_at_risk[j];
+            test_result = test(random_state, current_infectiousness[n], test_threshold,
+                               test_false_negative);
+            if(test_result == 1){
+                current_quarantine[n] = 1;
+                end_of_quarantine_days[n] = day + quarantine_period_days;
+            }
+        }
+        for(int32_t j=fmin(num_to_test_contact, num_agents_at_risk); j<num_agents_at_risk; j++){
+            int32_t n;
+            n = agents_at_risk[j];
+            if(bernoulli(random_state, prob_quarantine_with_contact_without_test)){
+                current_quarantine[n] = 1;
+                end_of_quarantine_days[n] = day + quarantine_period_days;
+            }
+        }
         free(at_risk);
         free(agents_at_risk);
     }
