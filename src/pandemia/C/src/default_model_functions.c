@@ -798,7 +798,7 @@ void default_testing_and_contact_tracing_dynamics
     // Population eligible to be tested today
     int32_t * eligible = (int32_t *)malloc(sizeof(int32_t) * N);
     for(int32_t n=0; n<N; n++){
-        if(current_region[n] == id && current_disease[n] < 1.0){
+        if((current_region[n] == id) && (current_disease[n] < 1.0)){
             eligible[n] = 1;
         } else {
             eligible[n] = 0;
@@ -837,80 +837,80 @@ void default_testing_and_contact_tracing_dynamics
         free(eligible_agents_rand);
     }
 
-    // Symptomatic testing (test eligible agents who have just become symptomatic)
-    int32_t num_eligible_symp = 0; for(int32_t n=0; n<N; n++){if(eligible[n] == 1){num_eligible_symp += 1;}}
-    int32_t * eligible_agents_symp = (int32_t *)malloc(sizeof(int32_t) * num_eligible_symp);
-    int32_t j = 0; for(int32_t n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_symp[j] = n; j += 1;}}
-    random_shuffle(random_state, eligible_agents_symp, num_eligible_symp);
-    for(int32_t j=0; j<num_eligible_symp; j++){
-        int32_t n, test_result;
-        n = eligible_agents_symp[j];
-        if(current_disease[n] >= symptomatic_disease_threshold){
-            if(yesterdays_disease[n] < symptomatic_disease_threshold){
-                if(num_to_test_symptomatic > 0){
-                    test_result = test(random_state, current_infectiousness[n], test_threshold,
-                                       test_false_negative);
-                    if(test_result == 1){
-                        newly_testing_positive[n] = 1;
-                        current_quarantine[n] = 1;
-                        end_of_quarantine_days[n] = day + quarantine_period_days;
-                    }
-                    num_to_test_symptomatic -= 1;
-                } else {
-                    if(bernoulli(random_state, prob_quarantine_with_symptoms_without_test)){
-                        current_quarantine[n] = 1;
-                        end_of_quarantine_days[n] = day + quarantine_period_days;
-                    }
-                }
-            }
-        }
-    }
-    free(eligible_agents_symp);
+    // // Symptomatic testing (test eligible agents who have just become symptomatic)
+    // int32_t num_eligible_symp = 0; for(int32_t n=0; n<N; n++){if(eligible[n] == 1){num_eligible_symp += 1;}}
+    // int32_t * eligible_agents_symp = (int32_t *)malloc(sizeof(int32_t) * num_eligible_symp);
+    // int32_t j = 0; for(int32_t n=0; n<N; n++){if(eligible[n] == 1){eligible_agents_symp[j] = n; j += 1;}}
+    // random_shuffle(random_state, eligible_agents_symp, num_eligible_symp);
+    // for(int32_t j=0; j<num_eligible_symp; j++){
+    //     int32_t n, test_result;
+    //     n = eligible_agents_symp[j];
+    //     if(current_disease[n] >= symptomatic_disease_threshold){
+    //         if(yesterdays_disease[n] < symptomatic_disease_threshold){
+    //             if(num_to_test_symptomatic > 0){
+    //                 test_result = test(random_state, current_infectiousness[n], test_threshold,
+    //                                    test_false_negative);
+    //                 if(test_result == 1){
+    //                     newly_testing_positive[n] = 1;
+    //                     current_quarantine[n] = 1;
+    //                     end_of_quarantine_days[n] = day + quarantine_period_days;
+    //                 }
+    //                 num_to_test_symptomatic -= 1;
+    //             } else {
+    //                 if(bernoulli(random_state, prob_quarantine_with_symptoms_without_test)){
+    //                     current_quarantine[n] = 1;
+    //                     end_of_quarantine_days[n] = day + quarantine_period_days;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    // free(eligible_agents_symp);
 
-    // Contact tracing (contact trace and test eligible agents)
-    int32_t num_newly_testing_positive = 0;
-    for(int32_t n=0; n<N; n++){if(newly_testing_positive[n] == 1){num_newly_testing_positive += 1;}}
-    if(num_newly_testing_positive > 0 && num_to_test_contact > 0){
-        int32_t * at_risk = (int32_t *)malloc(sizeof(int32_t) * N);
-        for(int32_t n=0; n<N; n++){at_risk[n] = 0;}
-        for(int32_t n1=0; n1<N; n1++){
-            if(newly_testing_positive[n1] == 1){
-                for(int32_t j=0; j<num_regular_contacts_to_test[n1]; j++){
-                    int32_t n2;
-                    n2 = regular_contacts_to_test[(n1 * max_regular_contacts_to_test) + j];
-                    if(current_region[n2] == id && current_disease[n2] < 1.0){
-                        at_risk[n2] = 1;
-                    }
-                }
-            }
-        }
-        for(int32_t n=0; n<N; n++){if(newly_testing_positive[n] == 1){at_risk[n] = 0;}}
-        int32_t num_agents_at_risk = 0;
-        for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){num_agents_at_risk += 1;}}
-        int32_t * agents_at_risk = (int32_t *)malloc(sizeof(int32_t) * num_agents_at_risk);
-        int32_t j = 0; for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
-        random_shuffle(random_state, agents_at_risk, num_agents_at_risk);
-        for(int32_t j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){
-            int32_t n, test_result;
-            n = agents_at_risk[j];
-            test_result = test(random_state, current_infectiousness[n], test_threshold,
-                               test_false_negative);
-            if(test_result == 1){
-                current_quarantine[n] = 1;
-                end_of_quarantine_days[n] = day + quarantine_period_days;
-            }
-        }
-        for(int32_t j=fmin(num_to_test_contact, num_agents_at_risk); j<num_agents_at_risk; j++){
-            int32_t n;
-            n = agents_at_risk[j];
-            if(bernoulli(random_state, prob_quarantine_with_contact_without_test)){
-                current_quarantine[n] = 1;
-                end_of_quarantine_days[n] = day + quarantine_period_days;
-            }
-        }
-        free(at_risk);
-        free(agents_at_risk);
-    }
+    // // Contact tracing (contact trace and test eligible agents)
+    // int32_t num_newly_testing_positive = 0;
+    // for(int32_t n=0; n<N; n++){if(newly_testing_positive[n] == 1){num_newly_testing_positive += 1;}}
+    // if(num_newly_testing_positive > 0 && num_to_test_contact > 0){
+    //     int32_t * at_risk = (int32_t *)malloc(sizeof(int32_t) * N);
+    //     for(int32_t n=0; n<N; n++){at_risk[n] = 0;}
+    //     for(int32_t n1=0; n1<N; n1++){
+    //         if(newly_testing_positive[n1] == 1){
+    //             for(int32_t j=0; j<num_regular_contacts_to_test[n1]; j++){
+    //                 int32_t n2;
+    //                 n2 = regular_contacts_to_test[(n1 * max_regular_contacts_to_test) + j];
+    //                 if(current_region[n2] == id && current_disease[n2] < 1.0){
+    //                     at_risk[n2] = 1;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     for(int32_t n=0; n<N; n++){if(newly_testing_positive[n] == 1){at_risk[n] = 0;}}
+    //     int32_t num_agents_at_risk = 0;
+    //     for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){num_agents_at_risk += 1;}}
+    //     int32_t * agents_at_risk = (int32_t *)malloc(sizeof(int32_t) * num_agents_at_risk);
+    //     int32_t j = 0; for(int32_t n=0; n<N; n++){if(at_risk[n] == 1){agents_at_risk[j] = n; j += 1;}}
+    //     random_shuffle(random_state, agents_at_risk, num_agents_at_risk);
+    //     for(int32_t j=0; j<fmin(num_to_test_contact, num_agents_at_risk); j++){
+    //         int32_t n, test_result;
+    //         n = agents_at_risk[j];
+    //         test_result = test(random_state, current_infectiousness[n], test_threshold,
+    //                            test_false_negative);
+    //         if(test_result == 1){
+    //             current_quarantine[n] = 1;
+    //             end_of_quarantine_days[n] = day + quarantine_period_days;
+    //         }
+    //     }
+    //     for(int32_t j=fmin(num_to_test_contact, num_agents_at_risk); j<num_agents_at_risk; j++){
+    //         int32_t n;
+    //         n = agents_at_risk[j];
+    //         if(bernoulli(random_state, prob_quarantine_with_contact_without_test)){
+    //             current_quarantine[n] = 1;
+    //             end_of_quarantine_days[n] = day + quarantine_period_days;
+    //         }
+    //     }
+    //     free(at_risk);
+    //     free(agents_at_risk);
+    // }
     free(eligible);
     free(newly_testing_positive);
 
