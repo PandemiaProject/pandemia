@@ -939,11 +939,7 @@ void close_borders
     for(int32_t r2=0; r2<R; r2++){
         rescaled = baseline_agents_travelling_matrix[(r1 * R) + r2] * scale_factor *
                    current_border_closure_multiplier;
-        if(rescaled > 0 && rescaled < 1){
-            agents_travelling_matrix[(r1 * R) + r2] = 1;
-        } else {
-            agents_travelling_matrix[(r1 * R) + r2] = (int32_t) rescaled;
-        }
+        agents_travelling_matrix[(r1 * R) + r2] = (int32_t) rescaled;
     }
     return;
 }
