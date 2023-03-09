@@ -8,9 +8,9 @@ name: Flake tests
 
 on:
   schedule:
-    # At 04:17 every morning
-    # https://crontab.guru/#17_4_*_*_*
-    - cron: '17 4 * * *'
+    # At 04:17 every Saturday
+    # https://crontab.guru/#17_4_*_*_6
+    - cron: '17 4 * * 6'
   workflow_dispatch:
 
 jobs:
