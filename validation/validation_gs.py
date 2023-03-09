@@ -7,8 +7,8 @@ import csv
 
 from joblib import Parallel, delayed
 
-from pandemia.messagebus import MessageBus
-from pandemia.sim_factory import SimulationFactory
+from .messagebus import MessageBus
+from .sim_factory import SimulationFactory
 
 # Global module log
 log = logging.getLogger()
@@ -23,7 +23,7 @@ def build_and_run(validation_config, num_configs, world_filepath):
     sim_factory.build_components()
     telemetry_bus = MessageBus()
     sim = sim_factory.new_sim(telemetry_bus)
-    sim.input_model.new_input(None)
+    sim.policy_maker_model.new_input(None)
     sim.enable_parallel = False
 
     # set validation parameter values
@@ -43,9 +43,9 @@ def build_and_run(validation_config, num_configs, world_filepath):
         validation_config['preexisting_rho_multiplier']
     sim.travel_model.travel_multiplier =\
         validation_config['travel_multiplier']
-    sim.input_model.max_transmission_control =\
+    sim.policy_maker_model.max_transmission_control =\
         validation_config['max_transmission_control']
-    sim.input_model.max_travel_control =\
+    sim.policy_maker_model.max_travel_control =\
         validation_config['max_travel_control']
 
     # Run simulation and calculate error versus historical data

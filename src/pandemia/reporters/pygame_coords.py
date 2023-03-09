@@ -5,7 +5,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import numpy as np
 import matplotlib.pyplot as plt
-from pandemia.reporters import Reporter
+from . import Reporter
 import pygame
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
@@ -32,7 +32,7 @@ class PygameCoords(Reporter):
         self.font_size            = config['font_size']
         self.display_width        = config['display_width']
         self.display_height       = config['display_height']
-        self.square_width_config  = config['square_width']
+        self.cellsize_config  = config['cellsize']
         self.fullscreen           = config['fullscreen']
         cmap                      = config['cmap']
 
@@ -49,6 +49,8 @@ class PygameCoords(Reporter):
         self.rectangle_height = None
 
         self.done = False
+
+        self.pause = -1
 
     def initialize(self, world, number_of_strains):
         """Intializes reporter"""
@@ -92,18 +94,18 @@ class PygameCoords(Reporter):
             self.height = int(self.display_height)
             self.width = int(self.height * r_old)
 
-        if self.square_width_config is not None:
-            self.square_width = int(self.width / (spatial_width / self.square_width_config)) + 1
-            self.square_height = int(self.height / (spatial_height / self.square_width_config)) + 1
+        if self.cellsize_config is not None:
+            self.cellsize = int(self.width / (spatial_width / self.cellsize_config)) + 1
+            self.square_height = int(self.height / (spatial_height / self.cellsize_config)) + 1
         else:
-            self.square_width = 1
+            self.cellsize = 1
             self.square_height = 1
 
         # Determine the mapping of spatial coordinates to display coordinates on screen
         self.locations_to_pixels_by_region = {}
         for vector_region in world.vector_regions:
             self.locations_to_pixels_by_region[vector_region.id] =\
-                np.zeros((vector_region.number_of_locations, ), dtype=int)
+                np.zeros((vector_region.number_of_locations, ), dtype=np.int32)
         max_x_display = 0
         max_y_display = 0
         self.region_coordinates = []
@@ -151,7 +153,7 @@ class PygameCoords(Reporter):
             for coord in self.region_coordinates:
                 colour = self.prevalence_to_colour[0]
                 pygame.draw.rect(self.screen, colour, pygame.Rect(coord[0] + self.x_offset,
-                                 coord[1] + self.y_offset, self.square_width,
+                                 coord[1] + self.y_offset, self.cellsize,
                                  self.square_height))
         self.background_screen = self.screen.copy()
 
@@ -161,6 +163,12 @@ class PygameCoords(Reporter):
         """Draws polygonal plots of regions"""
 
         if not self.done:
+
+            while self.pause == 1:
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.button == 3:
+                            self.pause *= -1
 
             num_infected = np.zeros((self.width * self.height), dtype=float)
             num_total    = np.zeros((self.width * self.height), dtype=float)
@@ -185,7 +193,7 @@ class PygameCoords(Reporter):
                                         self.max_num_inf_to_plot
             prevalence = (prevalence * 10).astype(int)
 
-            # # Refresh screen
+            # Refresh screen
             self.screen.blit(self.background_screen, (0,0))
 
             # Colour squares
@@ -194,7 +202,7 @@ class PygameCoords(Reporter):
                     if not empty_pixels[(x * self.height) + y]:
                         colour = self.prevalence_to_colour[prevalence[(x * self.height) + y]]
                         pygame.draw.rect(self.screen, colour, pygame.Rect(x + self.x_offset,
-                                         y + self.y_offset, self.square_width, self.square_height))
+                                         y + self.y_offset, self.cellsize, self.square_height))
 
             infected = int((1 / self.scale_factor) * infected)
 
@@ -220,6 +228,8 @@ class PygameCoords(Reporter):
                     if event.button == 1:
                         pygame.quit()
                         self.done = True
+                    if event.button == 3:
+                        self.pause *= -1
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     self.done = True

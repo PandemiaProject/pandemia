@@ -2,20 +2,25 @@
 
 import logging
 from typing import Optional
+from abc import ABC, abstractmethod
 
-from pandemia.config import Config
-from pandemia.messagebus import MessageBus
-
+from .config import Config
+from .messagebus import MessageBus
+from ctypes import cdll
+import platform
+import os
+ext=".dll" if platform.system() == 'Windows' else ".so"
 log = logging.getLogger("component")
 
 #pylint: disable=attribute-defined-outside-init
-class Component:
+class Component(ABC):
     """A simulation component. Submodels, for example of movement and health, are represented as
     objects of this class."""
 
     def __init__(self, component_config: Config):
         """Initialize the component"""
 
+        self.lib = cdll.LoadLibrary(os.path.split(__file__)[0]+"/C/build/default_model_functions"+ext)
         self.config = component_config
         self.telemetry_bus: Optional[MessageBus] = None
 
@@ -31,3 +36,14 @@ class Component:
             return
 
         self.telemetry_bus.publish(topic, *args, **kwargs)
+
+    @abstractmethod
+    def vectorize_component(self, vector_region):
+        """Initializes numpy arrays associated to this component"""
+        pass
+
+    @abstractmethod
+    def initial_conditions(self, vector_region):
+        """Define the initial state of the vector_regions"""
+        pass
+

@@ -6,14 +6,15 @@ import numpy as np
 import os
 import csv
 from datetime import datetime
-from ctypes import c_int, c_void_p, cdll
+from ctypes import c_int32, c_void_p, cdll
 from joblib import Parallel, delayed
-
-from pandemia.random_tools import Random
+import platform
+ext=".dll" if platform.system() == 'Windows' else ".so"
+from .random_tools import Random
 
 import uuid
 
-from pandemia.version import VERSION
+from .version import VERSION
 
 log = logging.getLogger('sim')
 
@@ -33,13 +34,14 @@ class Simulator:
                  testing_and_contact_tracing_model,
                  vaccination_model,
                  travel_model,
-                 input_model,
+                 policy_maker_model,
                  telemetry_bus):
 
         # Static info
         self.pandemia_version = VERSION
         self.created_at       = datetime.now()
         self.run_id           = uuid.uuid4().hex
+        self.lib = cdll.LoadLibrary(os.path.split(__file__)[0]+"/C/build/simulator_functions"+ext)
 
         log.info("Simulation created at %s with ID=%s", self.created_at, self.run_id)
 
@@ -63,19 +65,17 @@ class Simulator:
         self.testing_and_contact_tracing_model = testing_and_contact_tracing_model
         self.vaccination_model = vaccination_model
         self.travel_model = travel_model
-        self.input_model = input_model
+        self.policy_maker_model = policy_maker_model
 
         self.number_of_strains = self.health_model.number_of_strains
         self.number_of_vaccines = self.vaccination_model.number_of_vaccines
         self.number_of_regions = vector_world.number_of_regions
 
-        lib = cdll.LoadLibrary("./src/pandemia/simulator_functions.dll")
-
-        self.collect_telemetry_data = lib.collect_telemetry_data
-        self.count_dead             = lib.count_dead
+        self.collect_telemetry_data = self.lib.collect_telemetry_data
+        self.count_dead             = self.lib.count_dead
 
         self.collect_telemetry_data.restype = None
-        self.count_dead.restype             = c_int
+        self.count_dead.restype             = c_int32
 
         # Parallel processing
         self.enable_parallel       = self.config['enable_parallel']
@@ -86,6 +86,7 @@ class Simulator:
         self.error = 0
         self.historical_data_filepath = self.config['historical_data_filepath']
         self.average_deaths_dict_historical = None
+
    
     def _set_telemetry_bus(self):
         """Assigns telemetry bus to each component"""
@@ -97,7 +98,7 @@ class Simulator:
         self.testing_and_contact_tracing_model.set_telemetry_bus(self.telemetry_bus)
         self.vaccination_model.set_telemetry_bus(self.telemetry_bus)
         self.travel_model.set_telemetry_bus(self.telemetry_bus)
-        self.input_model.set_telemetry_bus(self.telemetry_bus)
+        self.policy_maker_model.set_telemetry_bus(self.telemetry_bus)
 
     def _vectorize_components(self):
         """Initialize the numpy arrays associated to each component"""
@@ -105,7 +106,7 @@ class Simulator:
         for vector_region in self.vector_regions:
 
             self.travel_model.vectorize_component(vector_region)
-            self.input_model.vectorize_component(vector_region)
+            self.policy_maker_model.vectorize_component(vector_region)
             self.seasonal_effects_model.vectorize_component(vector_region)
             self.health_model.vectorize_component(vector_region)
             self.movement_model.vectorize_component(vector_region)
@@ -120,7 +121,7 @@ class Simulator:
         number_of_cpus = os.cpu_count()
 
         if self.num_jobs < 1:
-            self.num_jobs = min(max(number_of_cpus + 1 + self.num_jobs, 1), number_of_cpus)
+            self.num_jobs = number_of_cpus
         elif self.num_jobs >= 1:
             self.num_jobs = min(self.num_jobs, number_of_cpus)
         else:
@@ -144,7 +145,7 @@ class Simulator:
     def _seed_regions(self):
         """Sets random seeds for each region"""
 
-        ULONG_MAX = 18446744073709551615
+        UINT_MAX = 4294967295
 
         # Create a prng for each vector region
         for vector_region in self.vector_regions:
@@ -154,7 +155,7 @@ class Simulator:
             # Each vector region also gets a state for the prng used inside C functions
             np.random.seed(seed)
             vector_region.random_state =\
-                np.random.randint(0, ULONG_MAX + 1, size=2, dtype=np.uint64)
+                np.random.randint(0, UINT_MAX + 1, size=4, dtype=np.uint32)
 
     def _initial_conditions(self, offset):
         """Initialize the various submodels"""
@@ -163,7 +164,7 @@ class Simulator:
 
         for vector_region in self.vector_regions:
 
-            self.input_model.initial_conditions(vector_region)
+            self.policy_maker_model.initial_conditions(vector_region)
             self.seasonal_effects_model.initial_conditions(vector_region)
             self.health_model.initial_conditions(vector_region)
             self.movement_model.initial_conditions(vector_region, offset)
@@ -182,7 +183,7 @@ class Simulator:
         for vector_region in vector_regions:
 
             self.seasonal_effects_model.dynamics(vector_region, day)
-            self.input_model.dynamics(vector_region, day)
+            self.policy_maker_model.dynamics(vector_region, day)
 
             for tick in range(ticks_in_day):
 
@@ -277,6 +278,7 @@ class Simulator:
         self.total_deaths = 0
         self.daily_deaths = defaultdict(dict)
         self.cumulative_deaths = defaultdict(dict)
+        self.reporter_deaths = defaultdict(dict)
 
         if self.config['reporters'] is not None:
 
@@ -300,6 +302,14 @@ class Simulator:
             self.telemetry_bus.publish("vector_world.data", self.vector_world,
                                                             self.health_model.number_of_strains)
 
+            region_to_omit = self.config['regions_omitted_from_death_counts']
+
+            self.telemetry_bus.publish("death_counts.initialize", self.number_of_regions,
+                                                                  self.number_of_strains,
+                                                                  region_names,
+                                                                  population_sizes,
+                                                                  region_to_omit)
+
     def _output_data_update(self, day):
         """Published strain count updates to the telemetry bus"""
 
@@ -312,7 +322,7 @@ class Simulator:
                 cumulative_deaths_new = 0
                 cumulative_deaths_new +=\
                     self.count_dead(
-                        c_int(vector_region.number_of_agents),
+                        c_int32(vector_region.number_of_agents),
                         c_void_p(vector_region.current_disease.ctypes.data),
                     )
                 total_deaths += cumulative_deaths_new
@@ -340,17 +350,22 @@ class Simulator:
             ("pygame_shapes.PygameShapes" in self.config['reporters']):
 
             infections =\
-                np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.uint64)
+                np.zeros((self.number_of_regions * self.number_of_strains), dtype=np.int64)
+
             for vector_region in self.vector_regions:
                 self.collect_telemetry_data(
-                    c_int(vector_region.number_of_agents),
-                    c_int(self.number_of_strains),
-                    c_int(vector_region.id),
+                    c_int32(vector_region.number_of_agents),
+                    c_int32(self.number_of_strains),
+                    c_int32(vector_region.id),
                     c_void_p(vector_region.current_strain.ctypes.data),
                     c_void_p(infections.ctypes.data)
                 )
-            infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.uint64)
+            infections = ((1 / self.vector_world.scale_factor) * infections).astype(np.int64)
             self.telemetry_bus.publish("strain_counts.update", self.clock, infections)
+
+        if ("csv.DeathCounts" in self.config['reporters']):
+
+            self.telemetry_bus.publish("death_counts.update", self.clock, self.daily_deaths[date])
 
         if ("plot.PlotDeaths" in self.config['reporters']):
 

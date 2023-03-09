@@ -3,32 +3,37 @@
 import logging
 import numpy as np
 
-from ctypes import c_void_p, c_int, cdll
-
-from pandemia.components.movement_model import MovementModel
+from ctypes import c_void_p, c_int32
+from ..movement_model import MovementModel
 
 log = logging.getLogger("default_movement_model")
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultMovementModel(MovementModel):
-    """Uses random sampling to select locations in response to activity changes. When an agent
+    """Default model of agent movement.
+
+    Uses random sampling to select locations in response to activity changes. When an agent
     n selects a new activity a, a new location is chosen for them at random from the array
     activity_locations[n][a]. If weighted sampling is used, then the random choice is made using
     the weights contained in the array activity_location_weights[n][a]. Location closures are also
     implemented here, which can be used to represent, for example, lockdowns. The wearing of
     facemasks is also determined here, since the wearing of facemasks is assumed to depend on the
-    location type and activity of agents."""
+    location type and activity of agents.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    """
 
     def __init__(self, config):
-        """Initial agent locations"""
+        """Initialize agent movement model."""
         super().__init__(config)
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/movement_model/"
-                                "default_movement_model_functions.dll")
-
-        self.update_movement   = lib.update_movement
-        self.dynamics_movement = lib.dynamics_movement
+        self.update_movement   = self.lib.update_movement
+        self.dynamics_movement = self.lib.dynamics_movement
 
         self.update_movement.restype   = None
         self.dynamics_movement.restype = None
@@ -46,27 +51,27 @@ class DefaultMovementModel(MovementModel):
             self.use_weights = 0
 
     def vectorize_component(self, vector_region):
-        """Initializes numpy arrays associated to this component"""
+        """Initializes numpy arrays associated to this component."""
 
         number_of_agents = vector_region.number_of_agents
         number_of_activities = vector_region.number_of_activities
         max_num_activity_locations = vector_region.max_num_activity_locations
 
-        vector_region.current_location = np.zeros((number_of_agents), dtype=int)
-        vector_region.requested_location_update = np.zeros((number_of_agents), dtype=int)
-        vector_region.requesting_location_update = np.zeros((number_of_agents), dtype=int)
+        vector_region.current_location = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requested_location_update = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requesting_location_update = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.location_closure = np.ones((number_of_agents, number_of_activities,
-                                          max_num_activity_locations), dtype=int)
-        vector_region.lockdown_intervention = -1
-        vector_region.current_facemask = np.zeros((number_of_agents), dtype=int)
-        vector_region.requested_facemask_update = np.zeros((number_of_agents), dtype=int)
-        vector_region.requesting_facemask_update = np.zeros((number_of_agents), dtype=int)
+                                          max_num_activity_locations), dtype=np.int32)
+        vector_region.lockdown_intervention = 0
+        vector_region.current_facemask = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.wears_facemask = np.zeros((number_of_agents, number_of_activities),
-                                                dtype=int)
-        vector_region.facemask_intervention = -1
-        vector_region.current_quarantine = np.zeros((number_of_agents), dtype=int)
+                                                dtype=np.int32)
+        vector_region.facemask_intervention = 0
+        vector_region.current_quarantine = np.zeros((number_of_agents), dtype=np.int32)
 
-        vector_region.home_location = np.zeros((number_of_agents), dtype=int)
+        vector_region.home_location = np.zeros((number_of_agents), dtype=np.int32)
         assert self.home_activity in vector_region.activity_strings
         home_activity_id = vector_region.activity_strings.index(self.home_activity)
         for n in range(number_of_agents):
@@ -74,7 +79,7 @@ class DefaultMovementModel(MovementModel):
                 vector_region.activity_locations[n][home_activity_id][0]
 
     def initial_conditions(self, vector_region, offset):
-        """Initialize location of each agent"""
+        """Establish initial location of each agent."""
 
         # Assign initial locations
         for n in range(vector_region.number_of_agents):
@@ -119,10 +124,10 @@ class DefaultMovementModel(MovementModel):
         vector_region.location_closure = vector_region.location_closure.flatten()
 
     def update(self, vector_region, t):
-        """Updates related to movement"""
+        """Updates related to movement."""
 
         self.update_movement(
-            c_int(vector_region.number_of_agents),
+            c_int32(vector_region.number_of_agents),
             c_void_p(vector_region.requesting_location_update.ctypes.data),
             c_void_p(vector_region.requested_location_update.ctypes.data),
             c_void_p(vector_region.current_location.ctypes.data),
@@ -132,19 +137,19 @@ class DefaultMovementModel(MovementModel):
         )
 
     def dynamics(self, vector_region, t, offset, ticks_in_week):
-        """Changes related to movement"""
+        """Changes related to movement."""
 
         self.dynamics_movement(
-            c_int(vector_region.number_of_agents),
-            c_int(vector_region.number_of_activities),
-            c_int(vector_region.lockdown_intervention),
-            c_int(vector_region.facemask_intervention),
-            c_int(vector_region.id),
-            c_int(self.use_weights),
-            c_int(t),
-            c_int(offset),
-            c_int(ticks_in_week),
-            c_int(vector_region.max_num_activity_locations),
+            c_int32(vector_region.number_of_agents),
+            c_int32(vector_region.number_of_activities),
+            c_int32(vector_region.lockdown_intervention),
+            c_int32(vector_region.facemask_intervention),
+            c_int32(vector_region.id),
+            c_int32(self.use_weights),
+            c_int32(t),
+            c_int32(offset),
+            c_int32(ticks_in_week),
+            c_int32(vector_region.max_num_activity_locations),
             c_void_p(vector_region.current_region.ctypes.data),
             c_void_p(vector_region.weekly_routines.ctypes.data),
             c_void_p(vector_region.current_facemask.ctypes.data),

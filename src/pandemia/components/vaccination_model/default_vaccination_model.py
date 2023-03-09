@@ -4,27 +4,44 @@ import logging
 
 import numpy as np
 
-from ctypes import c_void_p, c_int, cdll
+from ctypes import c_void_p, c_int32, cdll
 
-from pandemia.components.vaccination_model import VaccinationModel
-
+from ..vaccination_model import VaccinationModel
 log = logging.getLogger("default_vaccination_model")
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultVaccinationModel(VaccinationModel):
-    """Default model of vaccination. This supports multiple vaccines, acting on multiple strains of
-    the pathogen. Vaccines update individual immunity according to the same mechanism used to update
-    immunity in the default health model."""
+    """Default model of vaccination.
 
-    def __init__(self, config, clock, number_of_strains, immunity_length, immunity_period_ticks):
+    This supports multiple vaccines, acting on multiple strains of
+    the pathogen. Vaccines update individual immunity according to the same mechanism used to update
+    immunity in the default health model.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    number_of_strains : int
+        The number of strains appearing the model.
+    number_of_rho_immunity_outcomes : int
+        The number of (inner) immunity layers appearing the model.
+    immunity_length : int
+        The number of time periods the simulation is divided into, from the point of view of
+        immunity updates. These periods should have length immunity_period_ticks in ticks.
+    immunity_period_ticks : int
+        How frequently agent immunity is updated, in ticks of the simulation clock.
+    """
+
+    def __init__(self, config, clock, number_of_strains, number_of_rho_immunity_outcomes,
+                 immunity_length, immunity_period_ticks):
         """Initialize component"""
         super().__init__(config)
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/vaccination_model/"
-                                "default_vaccination_model_functions.dll")
-
-        self.dynamics_vaccination = lib.dynamics_vaccination
+        self.dynamics_vaccination = self.lib.dynamics_vaccination
 
         self.dynamics_vaccination.restype = None
 
@@ -41,7 +58,14 @@ class DefaultVaccinationModel(VaccinationModel):
         self.vaccine_names             = list(self.vaccines_config.keys())
         self.number_of_vaccines        = len(self.vaccines_config)
 
+        self.number_of_strains = self._get_number_of_strains()
+        assert self.number_of_strains == number_of_strains,\
+            "Number of strains in vaccination model must match health model"
+
         self.number_of_rho_immunity_outcomes = self._get_number_of_rho_immunity_outcomes()
+        assert self.number_of_rho_immunity_outcomes == number_of_rho_immunity_outcomes,\
+            "Number of rho immunity outcomes in vaccination model must match health model"
+
         self.max_vaccine_length_immunity     = self._get_max_vaccine_length_immunity()
 
         self.vaccine_rho_immunity_failure_values =\
@@ -53,11 +77,11 @@ class DefaultVaccinationModel(VaccinationModel):
         self.vaccine_rho_immunity_failure_partitions =\
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
-                      self.max_vaccine_length_immunity), dtype=int)
+                      self.max_vaccine_length_immunity), dtype=np.int32)
 
         self.vaccine_rho_immunity_failure_lengths =\
             np.zeros((self.number_of_vaccines,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int32)
 
         self.vaccine_sigma_immunity_failure_values =\
             np.zeros((self.number_of_vaccines,
@@ -67,11 +91,11 @@ class DefaultVaccinationModel(VaccinationModel):
         self.vaccine_sigma_immunity_failure_partitions =\
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
-                      self.max_vaccine_length_immunity), dtype=int)
+                      self.max_vaccine_length_immunity), dtype=np.int32)
 
         self.vaccine_sigma_immunity_failure_lengths =\
             np.zeros((self.number_of_vaccines,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int32)
 
         # Create vaccines
         self._get_vaccines(clock.ticks_in_day)
@@ -97,12 +121,12 @@ class DefaultVaccinationModel(VaccinationModel):
         number_of_vaccines = self.number_of_vaccines
 
         vector_region.number_of_vaccination_age_groups = 0
-        vector_region.vaccination_age_group = np.zeros((number_of_agents), dtype=int)
+        vector_region.vaccination_age_group = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.num_to_vaccinate =\
             np.zeros((vector_region.number_of_vaccination_age_groups,
-                      number_of_vaccines), dtype=int)
-        vector_region.most_recent_first_dose = np.zeros((number_of_agents), dtype=int)
-        vector_region.vaccine_hesitant = np.zeros((number_of_agents), dtype=int)
+                      number_of_vaccines), dtype=np.int32)
+        vector_region.most_recent_first_dose = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.vaccine_hesitant = np.zeros((number_of_agents), dtype=np.int32)
 
     def initial_conditions(self, vector_region):
         """Initial vaccination"""
@@ -122,18 +146,18 @@ class DefaultVaccinationModel(VaccinationModel):
         if np.sum(vector_region.num_to_vaccinate) > 0:
             vector_region.num_to_vaccinate = vector_region.num_to_vaccinate.flatten()
             self.dynamics_vaccination(
-                c_int(day),
-                c_int(ticks_in_day),
-                c_int(vector_region.number_of_agents),
-                c_int(self.number_of_strains),
-                c_int(self.immunity_length),
-                c_int(self.number_of_rho_immunity_outcomes),
-                c_int(self.number_of_age_groups),
-                c_int(self.number_of_vaccines),
-                c_int(self.max_vaccine_length_immunity),
-                c_int(self.booster_waiting_time_days),
-                c_int(self.immunity_period_ticks),
-                c_int(vector_region.id),
+                c_int32(day),
+                c_int32(ticks_in_day),
+                c_int32(vector_region.number_of_agents),
+                c_int32(self.number_of_strains),
+                c_int32(self.immunity_length),
+                c_int32(self.number_of_rho_immunity_outcomes),
+                c_int32(self.number_of_age_groups),
+                c_int32(self.number_of_vaccines),
+                c_int32(self.max_vaccine_length_immunity),
+                c_int32(self.booster_waiting_time_days),
+                c_int32(self.immunity_period_ticks),
+                c_int32(vector_region.id),
                 c_void_p(self.vaccine_rho_immunity_failure_values.ctypes.data),
                 c_void_p(self.vaccine_rho_immunity_failure_partitions.ctypes.data),
                 c_void_p(self.vaccine_rho_immunity_failure_lengths.ctypes.data),
@@ -152,12 +176,29 @@ class DefaultVaccinationModel(VaccinationModel):
                 c_void_p(vector_region.random_state.ctypes.data)
             )
 
+    def _get_number_of_strains(self):
+        """Determines number of strains in config"""
+
+        num_strains = len(self.vaccines_config[self.vaccine_names[0]]['rho_immunity_failure'])
+
+        for vaccine_name in self.vaccine_names:
+            assert len(self.vaccines_config[vaccine_name]['rho_immunity_failure']) == num_strains
+            assert len(self.vaccines_config[vaccine_name]['sigma_immunity_failure']) == num_strains
+
+        return num_strains
+
     def _get_number_of_rho_immunity_outcomes(self):
         """Determines number of rho immunity outcomes in config"""
 
-        num_rho_outcomes = len(self.vaccines_config[self.vaccine_names[0]])
-        for vaccine_name in self.vaccines_config:
-            assert len(self.vaccines_config[vaccine_name]) == num_rho_outcomes
+        num_rho_outcomes =\
+            len(self.vaccines_config[self.vaccine_names[0]]['rho_immunity_failure'][0][1][0])
+
+        for vaccine_name in self.vaccine_names:
+            for s in range(self.number_of_strains):
+                items = len(self.vaccines_config[vaccine_name]['rho_immunity_failure'][s][1])
+                for i in range(items):
+                    assert len(self.vaccines_config[vaccine_name]['rho_immunity_failure'][s][1][i])\
+                           == num_rho_outcomes
 
         return num_rho_outcomes
 

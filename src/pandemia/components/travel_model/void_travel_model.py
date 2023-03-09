@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 
-from pandemia.components.travel_model import TravelModel
+from ..travel_model import TravelModel
 
 log = logging.getLogger("void_travel_model")
 
@@ -21,7 +21,7 @@ class VoidTravelModel(TravelModel):
         """Initializes numpy arrays associated to this component"""
 
         vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                vector_region.id, dtype=int)
+                                                vector_region.id, dtype=np.int32)
 
     def initial_conditions(self, sim):
 

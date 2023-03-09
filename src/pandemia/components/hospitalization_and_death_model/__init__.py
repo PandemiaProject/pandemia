@@ -1,6 +1,6 @@
 """Manages hospitalization and death"""
 
-from pandemia.component import Component
+from ...component import Component
 
 class HospitalizationAndDeathModel(Component):
     """Defines the hospitalization and death model"""

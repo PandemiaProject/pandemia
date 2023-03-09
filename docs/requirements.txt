@@ -1,0 +1,8 @@
+sphinx_rtd_theme
+myst-parser
+sphinxcontrib-devhelp
+sphinxcontrib-htmlhelp
+sphinxcontrib-jsmath
+sphinxcontrib-serializinghtml
+sphinx-autoapi
+m2r2

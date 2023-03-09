@@ -1,0 +1,197 @@
+name,iso 2,iso 3,strain_0,strain_1
+Afghanistan,AF,AFG,1,1
+Albania,AL,ALB,1,1
+Algeria,DZ,DZA,1,1
+Angola,AO,AGO,1,1
+Antigua and Barbuda,AG,ATG,1,1
+Argentina,AR,ARG,1,1
+Armenia,AM,ARM,1,1
+Aruba,AW,ABW,1,1
+Australia,AU,AUS,1,1
+Austria,AT,AUT,1,1
+Azerbaijan,AZ,AZE,1,1
+Bahamas (the),BS,BHS,1,1
+Bahrain,BH,BHR,1,1
+Bangladesh,BD,BGD,1,1
+Barbados,BB,BRB,1,1
+Belarus,BY,BLR,1,1
+Belgium,BE,BEL,1,1
+Belize,BZ,BLZ,1,1
+Benin,BJ,BEN,1,1
+Bhutan,BT,BTN,1,1
+Bolivia (Plurinational State of),BO,BOL,1,1
+Bosnia and Herzegovina,BA,BIH,1,1
+Botswana,BW,BWA,1,1
+Brazil,BR,BRA,1,1
+Brunei Darussalam,BN,BRN,0.8,0.8
+Bulgaria,BG,BGR,1,1
+Burkina Faso,BF,BFA,1,1
+Burundi,BI,BDI,1,1
+Cabo Verde,CV,CPV,1,1
+Cambodia,KH,KHM,0.7,0.7
+Cameroon,CM,CMR,1,1
+Canada,CA,CAN,1,1
+Central African Republic (the),CF,CAF,1,1
+Chad,TD,TCD,1,1
+Chile,CL,CHL,1,1
+China,CN,CHN,0.7,0.7
+Colombia,CO,COL,1,1
+Comoros (the),KM,COM,1,1
+Congo (the Democratic Republic of the),CD,COD,1,1
+Congo (the),CG,COG,1,1
+Costa Rica,CR,CRI,1,1
+Croatia,HR,HRV,1,1
+Cuba,CU,CUB,1,1
+Cyprus,CY,CYP,1,1
+Czechia,CZ,CZE,1,1
+Côte d'Ivoire,CI,CIV,1,1
+Denmark,DK,DNK,1,1
+Djibouti,DJ,DJI,1,1
+Dominican Republic (the),DO,DOM,1,1
+Ecuador,EC,ECU,1,1
+Egypt,EG,EGY,1,1
+El Salvador,SV,SLV,1,1
+Equatorial Guinea,GQ,GNQ,1,1
+Eritrea,ER,ERI,1,1
+Estonia,EE,EST,1,1
+Eswatini,SZ,SWZ,1,1
+Ethiopia,ET,ETH,1,1
+Fiji,FJ,FJI,1,1
+Finland,FI,FIN,1,1
+France,FR,FRA,1,1
+French Guiana,GF,GUF,1,1
+French Polynesia,PF,PYF,1,1
+Gabon,GA,GAB,1,1
+Gambia (the),GM,GMB,1,1
+Georgia,GE,GEO,1,1
+Germany,DE,DEU,1,1
+Ghana,GH,GHA,1,1
+Greece,GR,GRC,1,1
+Grenada,GD,GRD,1,1
+Guadeloupe,GP,GLP,1,1
+Guam,GU,GUM,1,1
+Guatemala,GT,GTM,1,1
+Guinea,GN,GIN,1,1
+Guinea-Bissau,GW,GNB,1,1
+Guyana,GY,GUY,1,1
+Haiti,HT,HTI,1,1
+Honduras,HN,HND,1,1
+Hong Kong,HK,HKG,0.7,0.7
+Hungary,HU,HUN,1,1
+Iceland,IS,ISL,1,1
+India,IN,IND,1,1
+Indonesia,ID,IDN,0.9,0.9
+Iran (Islamic Republic of),IR,IRN,1,1
+Iraq,IQ,IRQ,1,1
+Ireland,IE,IRL,1,1
+Israel,IL,ISR,1,1
+Italy,IT,ITA,1,1
+Jamaica,JM,JAM,1,1
+Japan,JP,JPN,0.9,0.9
+Jordan,JO,JOR,1,1
+Kazakhstan,KZ,KAZ,1,1
+Kenya,KE,KEN,1,1
+Kiribati,KI,KIR,1,1
+Korea (the Democratic People's Republic of),KP,PRK,0.9,0.9
+Korea (the Republic of),KR,KOR,0.9,0.9
+Kuwait,KW,KWT,1,1
+Kyrgyzstan,KG,KGZ,1,1
+Lao People's Democratic Republic (the),LA,LAO,0.7,0.7
+Latvia,LV,LVA,1,1
+Lebanon,LB,LBN,1,1
+Lesotho,LS,LSO,1,1
+Liberia,LR,LBR,1,1
+Libya,LY,LBY,1,1
+Lithuania,LT,LTU,1,1
+Luxembourg,LU,LUX,1,1
+Macao,MO,MAC,1,1
+Madagascar,MG,MDG,1,1
+Malawi,MW,MWI,1,1
+Malaysia,MY,MYS,0.8,0.8
+Maldives,MV,MDV,1,1
+Mali,ML,MLI,1,1
+Malta,MT,MLT,1,1
+Martinique,MQ,MTQ,1,1
+Mauritania,MR,MRT,1,1
+Mauritius,MU,MUS,1,1
+Mayotte,YT,MYT,1,1
+Mexico,MX,MEX,1,1
+Micronesia (Federated States of),FM,FSM,1,1
+Moldova (the Republic of),MD,MDA,1,1
+Mongolia,MN,MNG,0.9,0.9
+Morocco,MA,MAR,1,1
+Mozambique,MZ,MOZ,1,1
+Myanmar,MM,MMR,0.7,0.7
+Namibia,NA,NAM,1,1
+Nepal,NP,NPL,1,1
+Netherlands (the),NL,NLD,1,1
+New Caledonia,NC,NCL,1,1
+New Zealand,NZ,NZL,1,1
+Nicaragua,NI,NIC,1,1
+Niger (the),NE,NER,1,1
+Nigeria,NG,NGA,1,1
+Norway,NO,NOR,1,1
+Oman,OM,OMN,1,1
+Pakistan,PK,PAK,1,1
+"Palestine, State of",PS,PSE,1,1
+Panama,PA,PAN,1,1
+Papua New Guinea,PG,PNG,1,1
+Paraguay,PY,PRY,1,1
+Peru,PE,PER,1,1
+Philippines (the),PH,PHL,0.9,0.9
+Poland,PL,POL,1,1
+Portugal,PT,PRT,1,1
+Puerto Rico,PR,PRI,1,1
+Qatar,QA,QAT,1,1
+Republic of North Macedonia,MK,MKD,1,1
+Romania,RO,ROU,1,1
+Russian Federation (the),RU,RUS,1,1
+Rwanda,RW,RWA,1,1
+Réunion,RE,REU,1,1
+Saint Lucia,LC,LCA,1,1
+Saint Vincent and the Grenadines,VC,VCT,1,1
+Samoa,WS,WSM,1,1
+Sao Tome and Principe,ST,STP,1,1
+Saudi Arabia,SA,SAU,1,1
+Senegal,SN,SEN,1,1
+Serbia and Montenegro,CS,SCG,1,1
+Seychelles,SC,SYC,1,1
+Sierra Leone,SL,SLE,1,1
+Singapore,SG,SGP,0.8,0.8
+Slovakia,SK,SVK,1,1
+Slovenia,SI,SVN,1,1
+Solomon Islands,SB,SLB,1,1
+Somalia,SO,SOM,1,1
+South Africa,ZA,ZAF,1,1
+Spain,ES,ESP,1,1
+Sri Lanka,LK,LKA,1,1
+Sudan,SD,SDN,1,1
+Suriname,SR,SUR,1,1
+Sweden,SE,SWE,1,1
+Switzerland,CH,CHE,1,1
+Syrian Arab Republic,SY,SYR,1,1
+Taiwan (Province of China),TW,TWN,0.7,0.7
+Tajikistan,TJ,TJK,1,1
+"Tanzania, United Republic of",TZ,TZA,1,1
+Thailand,TH,THA,0.8,0.8
+Timor-Leste,TL,TLS,1,1
+Togo,TG,TGO,1,1
+Tonga,TO,TON,1,1
+Trinidad and Tobago,TT,TTO,1,1
+Tunisia,TN,TUN,1,1
+Turkey,TR,TUR,1,1
+Turkmenistan,TM,TKM,1,1
+Uganda,UG,UGA,1,1
+Ukraine,UA,UKR,1,1
+United Arab Emirates (the),AE,ARE,1,1
+United Kingdom of Great Britain and Northern Ireland (the),GB,GBR,1,1
+United States of America (the),US,USA,1,1
+Uruguay,UY,URY,1,1
+Uzbekistan,UZ,UZB,1,1
+Vanuatu,VU,VUT,1,1
+Venezuela (Bolivarian Republic of),VE,VEN,1,1
+Viet Nam,VN,VNM,0.7,0.7
+Virgin Islands (U.S.),VI,VIR,1,1
+Yemen,YE,YEM,1,1
+Zambia,ZM,ZMB,1,1
+Zimbabwe,ZW,ZWE,1,1

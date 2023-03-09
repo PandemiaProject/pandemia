@@ -7,8 +7,8 @@ from functools import partial
 from multiprocessing import Pool
 import numpy as np
 
-from pandemia.messagebus import MessageBus
-from pandemia.sim_factory import SimulationFactory
+from .messagebus import MessageBus
+from .sim_factory import SimulationFactory
 
 # Global module log
 log = logging.getLogger()
@@ -18,13 +18,13 @@ class Policy():
 
     def __init__(self, T, R, A, V):
 
-        self.lockdown_input            = np.full((T, R), -1, dtype=int)
-        self.border_closure_input      = np.full((T, R), 1.0, dtype=float)
-        self.facemask_input            = np.full((T, R), -1, dtype=int)
-        self.random_testing_input      = np.full((T, R), 0, dtype=int)
-        self.symptomatic_testing_input = np.full((T, R), 0, dtype=int)
-        self.contact_testing_input     = np.full((T, R), 0, dtype=int)
-        self.vaccination_input         = np.full((T, R, A, V), 0, dtype=int)
+        self.lockdown_policy            = np.full((T, R), -1, dtype=np.int32)
+        self.border_closure_policy      = np.full((T, R), 1.0, dtype=float)
+        self.facemask_policy            = np.full((T, R), -1, dtype=np.int32)
+        self.random_testing_policy      = np.full((T, R), 0, dtype=np.int32)
+        self.symptomatic_testing_policy = np.full((T, R), 0, dtype=np.int32)
+        self.contact_testing_policy     = np.full((T, R), 0, dtype=np.int32)
+        self.vaccination_policy         = np.full((T, R, A, V), 0, dtype=np.int32)
 
 def fitness_func(solution, solution_idx):
     """Builds simulator and runs"""
@@ -41,7 +41,7 @@ def fitness_func(solution, solution_idx):
 
     vaccination_rate = np.full((num_regions), VACCINATION_RATE, dtype=float)
     num_supply_periods = (num_days // LEN_SUPPLY_PERIOD) + 1
-    supply = np.full((num_supply_periods), int(TOTAL_DOSES / num_supply_periods), dtype=int)
+    supply = np.full((num_supply_periods), int(TOTAL_DOSES / num_supply_periods), dtype=np.int32)
 
     solution_part_1 = solution[0: num_regions * num_supply_periods]
     solution_part_2 = solution[num_regions * num_supply_periods:]
@@ -58,14 +58,14 @@ def fitness_func(solution, solution_idx):
 
     num_can_vaccinate_each_day = (np.multiply(vaccination_rate, population_sizes)).astype(int)
 
-    vaccination_sol = np.zeros((num_days, num_regions, num_age_groups), dtype=int)
+    vaccination_sol = np.zeros((num_days, num_regions, num_age_groups), dtype=np.int32)
     for day in range(num_days):
         supply_period = day // LEN_SUPPLY_PERIOD
         share = np.minimum((vac_sol[supply_period] / LEN_SUPPLY_PERIOD).astype(int),
                             num_can_vaccinate_each_day)
         vaccination_sol[day] = (np.multiply(share[:, None], dist[supply_period])).astype(int)
 
-    policy.vaccination_input = vaccination_sol[:, :, :, np.newaxis]
+    policy.vaccination_policy = vaccination_sol[:, :, :, np.newaxis]
 
     average_cost = 0
     num_valid_runs = 0
@@ -82,7 +82,7 @@ def fitness_func(solution, solution_idx):
         sim.random_seed = seed
 
         # Run sim
-        sim.input_model.new_input(policy)
+        sim.policy_maker_model.new_policy(policy)
         sim.setup()
         sim.run()
         cost = sim.calculate_cost(policy)
@@ -111,10 +111,10 @@ sim_factory.build_components()
 telemetry_bus = MessageBus()
 sim = sim_factory.new_sim(telemetry_bus)
 
-num_days = sim.input_model.simulation_length_days
-num_regions = sim.input_model.number_of_regions
-num_vaccines = sim.input_model.number_of_vaccines
-num_age_groups = sim.input_model.number_of_vaccination_age_groups
+num_days = sim.policy_maker_model.simulation_length_days
+num_regions = sim.policy_maker_model.number_of_regions
+num_vaccines = sim.policy_maker_model.number_of_vaccines
+num_age_groups = sim.policy_maker_model.number_of_vaccination_age_groups
 
 assert num_vaccines == 1
 

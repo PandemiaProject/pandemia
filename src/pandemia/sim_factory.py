@@ -8,21 +8,21 @@ import logging
 import uuid
 import pickle
 from datetime import datetime
-from pandemia.utils import instantiate_class
+from .utils import instantiate_class
 
-from pandemia.config import Config
-from pandemia.clock import Clock
-from pandemia.version import VERSION
-from pandemia.world import VectorWorld
-from pandemia.simulator import Simulator
-from pandemia.components.seasonal_effects_model import SeasonalEffectsModel
-from pandemia.components.health_model import HealthModel
-from pandemia.components.movement_model import MovementModel
-from pandemia.components.hospitalization_and_death_model import HospitalizationAndDeathModel
-from pandemia.components.testing_and_contact_tracing_model import TestingAndContactTracingModel
-from pandemia.components.vaccination_model import VaccinationModel
-from pandemia.components.travel_model import TravelModel
-from pandemia.components.input_model import InputModel
+from .config import Config
+from .clock import Clock
+from .version import VERSION
+from .world import VectorWorld
+from .simulator import Simulator
+from .components.seasonal_effects_model import SeasonalEffectsModel
+from .components.health_model import HealthModel
+from .components.movement_model import MovementModel
+from .components.hospitalization_and_death_model import HospitalizationAndDeathModel
+from .components.testing_and_contact_tracing_model import TestingAndContactTracingModel
+from .components.vaccination_model import VaccinationModel
+from .components.travel_model import TravelModel
+from .components.policy_maker_model import PolicyMakerModel
 
 log = logging.getLogger("sim_state")
 
@@ -49,7 +49,7 @@ class SimulationFactory:
         self.vector_world = None
 
         # Components
-        self.input_model = None
+        self.policy_maker_model = None
         self.seasonal_effects_model = None
         self.health_model = None
         self.movement_model = None
@@ -96,9 +96,9 @@ class SimulationFactory:
         """Sets regional mixing model"""
         self.travel_model = travel_model
 
-    def set_input_model(self, input_model: InputModel) -> None:
+    def set_policy_maker_model(self, policy_maker_model: PolicyMakerModel) -> None:
         """Sets seasonal effects model"""
-        self.input_model = input_model
+        self.policy_maker_model = policy_maker_model
 
     def build_clock_and_world(self):
         """Builds the model on which the simulator acts. The model consists of a clock, to represent
@@ -186,6 +186,7 @@ class SimulationFactory:
                                             vaccination_model_class, vaccination_model_config,
                                             self.clock,
                                             health_model.number_of_strains,
+                                            health_model.number_of_rho_immunity_outcomes,
                                             health_model.immunity_length,
                                             health_model.immunity_period_ticks)
         self.set_vaccination_model(vaccination_model)
@@ -200,16 +201,16 @@ class SimulationFactory:
                                             self.vector_world)
         self.set_travel_model(travel)
 
-        # Create input model
-        input_class = config['input_model.__type__']
-        input_config = config.subconfig('input_model')
-        input = instantiate_class("pandemia.components.input_model",
-                                input_class, input_config, scale_factor,
+        # Create policy maker model
+        policy_maker_class = config['policy_maker_model.__type__']
+        policy_maker_config = config.subconfig('policy_maker_model')
+        policy_maker = instantiate_class("pandemia.components.policy_maker_model",
+                                policy_maker_class, policy_maker_config, scale_factor,
                                 self.clock,
                                 self.vector_world.number_of_regions,
                                 vaccination_model.number_of_vaccines,
                                 vaccination_model.age_groups)
-        self.set_input_model(input)
+        self.set_policy_maker_model(policy_maker)
 
     def build_reporters(self, telemetry_bus):
         """Instantiates reporters, which record output data on the simulation for analysis"""
@@ -241,7 +242,7 @@ class SimulationFactory:
                         self.testing_and_contact_tracing_model,
                         self.vaccination_model,
                         self.travel_model,
-                        self.input_model,
+                        self.policy_maker_model,
                         telemetry_bus)
 
         return sim

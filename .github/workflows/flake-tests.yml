@@ -1,0 +1,63 @@
+# These tests related to this issue:
+# https://github.com/PandemiaProject/pandemia/issues/66
+#
+# This workflow runs certain test repeatedly to ensure that they produce consistent results
+# Once these tests repeated run without failing, this workflow file cna be removed and issue #66 closed.
+
+name: Flake tests
+
+on:
+  schedule:
+    # At 04:17 every morning
+    # https://crontab.guru/#17_4_*_*_*
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.allow-fail }}
+
+    strategy:
+      # We use `fail-fast: false` for teaching purposes. This ensure that all combinations of the matrix
+      # will run even if one or more fail. 
+      fail-fast: false
+      matrix:
+        python-version: ["3.10"]
+        # Tests are run on MacOS, Windows and Linux.
+        # There does not appear to be any additional cost for running on Mac:
+        os: [ubuntu-22.04, windows-latest, macos-12]
+        test-group: [slow]
+        allow-fail: [false]
+
+        # This is the syntax for adding an one-off variation to the matrix configuration above
+        # include:
+        #   - python-version: "3.10"
+        #     os: ubuntu-22.04
+        #     test-group: known_failing
+        #     allow-fail: true
+
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    # Install Pandemia itself from then source
+    - name: Install Pandemia
+      run: |
+        python -m pip install -e .
+    # Install any packages require for testing
+    - name: Install tests for Pandemia
+      run: |
+        python -m pip install -e .[test]
+    - name: Compile the C code
+      run: |
+        make
+    # Now run the tests
+    - name: Test with pytest with the "slow" marker (other tests will be excluded)
+      run: |
+        pytest -m slow -k test_end_to_end_all_components --flake-finder --flake-runs=20
+        pytest -m slow -k test_end_to_end_homogeneous --flake-finder --flake-runs=20

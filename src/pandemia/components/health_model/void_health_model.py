@@ -1,10 +1,9 @@
 """Void health model"""
 
 import logging
-import copy
 import numpy as np
 
-from pandemia.components.health_model import HealthModel
+from ..health_model import HealthModel
 
 log = logging.getLogger("void_health_model")
 
@@ -17,14 +16,42 @@ class VoidHealthModel(HealthModel):
         """Initial agent health"""
         super().__init__(config, scale_factor)
 
-        self.number_of_strains = 0
-        self.immunity_length = 1
-        self.immunity_period_ticks = 1
+        self.number_of_strains = 1
+        self.number_of_rho_immunity_outcomes = 1
+
+        self.immunity_period_days = 365
+        self.immunity_length = (clock.simulation_length_days // self.immunity_period_days) + 1
+        self.immunity_period_ticks = self.immunity_period_days * clock.ticks_in_day
+        self.facemask_transmission_multiplier = 1.0
+        self.beta = np.array([0.0], dtype=float)
+        self.mutation_matrix = np.asarray([[1.0]], dtype=float).flatten()
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
 
-        pass
+        number_of_agents = vector_region.number_of_agents
+
+        vector_region.current_disease = np.zeros((number_of_agents), dtype=float)
+        vector_region.current_strain =  np.full((number_of_agents), -1, dtype=np.int32)
+        vector_region.current_infectiousness =  np.zeros((number_of_agents), dtype=float)
+        vector_region.requesting_immunity_update = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.rho_immunity_failure_values = np.ones((number_of_agents,
+                                                             self.number_of_strains,
+                                                             self.immunity_length,
+                                                             self.number_of_rho_immunity_outcomes),
+                                                             dtype=float)
+        vector_region.sigma_immunity_failure_values = np.ones((number_of_agents,
+                                                               self.number_of_strains,
+                                                               self.immunity_length),
+                                                               dtype=float)
+        vector_region.current_rho_immunity_failure = np.ones((number_of_agents,
+                                                              self.number_of_strains,
+                                                              self.number_of_rho_immunity_outcomes),
+                                                              dtype=float)
+        vector_region.current_sigma_immunity_failure = np.ones((number_of_agents,
+                                                                self.number_of_strains),
+                                                                dtype=float)
+        vector_region.infection_event = np.full((number_of_agents), -1, dtype=np.int32)
 
     def initial_conditions(self, vector_region):
 
@@ -32,5 +59,15 @@ class VoidHealthModel(HealthModel):
 
     def dynamics(self, vector_region, t):
         """Changes agent health"""
+
+        pass
+
+    def infect_wrapper(self, vector_region, t):
+        """Changes to agent health"""
+
+        pass
+
+    def update(self, vector_region, t):
+        """Updates health functions"""
 
         pass

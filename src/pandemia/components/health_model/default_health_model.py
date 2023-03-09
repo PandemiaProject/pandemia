@@ -8,24 +8,32 @@ import numpy as np
 from collections import defaultdict
 from numpy import genfromtxt
 
-from ctypes import c_void_p, c_double, c_int, cdll
+from ctypes import c_void_p, c_double, c_int32, cdll
 
-from pandemia.components.health_model import HealthModel
+from ..health_model import HealthModel
 
 log = logging.getLogger("default_health_model")
 
 #pylint: disable=unused-argument
 #pylint: disable=attribute-defined-outside-init
 class DefaultHealthModel(HealthModel):
-    """Default model of agent health. This model abandons the compartmental description of health
-    often applied in epidemic models. Instead, an agent's health is determined by five parameters:
-    
-        - sigma immunity (protection against infection)
-        - rho immunity (protection against severe outcomes)
-        - infectiousness
-        - disease
-        - strain
-    
+    """Default model of agent health.
+
+    Instead of the compartmental description of health often applied in epidemic models, the default
+    health model describes an agent's health with five attributes. These are sigma immunity
+    (protection against infection), rho immunity (protection against severe outcomes),
+    infectiousness, disease and strain. Low-level C functions, wrapped in Python functions,
+    implement changes to agent health.
+
+    Parameters:
+    -----------
+    config : Config
+        A Pandemia Config object. A sub-config of the full config, containing the data used to
+        configure this component.
+    clock : Clock
+        A Pandemia Clock object, discretizing the day.
+    scale_factor : float
+        The scale factor, coming from the full config.
     """
 
     def __init__(self, config, scale_factor, clock):
@@ -36,12 +44,9 @@ class DefaultHealthModel(HealthModel):
 
         self.clock = clock
 
-        lib = cdll.LoadLibrary("./src/pandemia/components/health_model/"
-                                "default_health_model_functions.dll")
-
-        self.update_health = lib.update_health
-        self.transmission  = lib.transmission
-        self.infect        = lib.infect
+        self.update_health = self.lib.update_health
+        self.transmission  = self.lib.transmission
+        self.infect        = self.lib.infect
 
         self.update_health.restype = None
         self.transmission.restype  = None
@@ -51,7 +56,6 @@ class DefaultHealthModel(HealthModel):
 
         self.number_of_strains                = config['number_of_strains']
         self.num_initial_infections_by_region = config['num_initial_infections_by_region_by_strain']
-
         self.sir_rescaling                    = config['sir_rescaling']
         self.sir_rescaling_int                = int(self.sir_rescaling == True)
 
@@ -129,13 +133,13 @@ class DefaultHealthModel(HealthModel):
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
                       self.number_of_strains,
-                      self.max_preset_length_immunity), dtype=int)
+                      self.max_preset_length_immunity), dtype=np.int32)
 
         self.preset_rho_immunity_failure_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int32)
 
         self.preset_sigma_immunity_failure_values =\
             np.zeros((self.number_of_presets,
@@ -149,13 +153,13 @@ class DefaultHealthModel(HealthModel):
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
                       self.number_of_strains,
-                      self.max_preset_length_immunity), dtype=int)
+                      self.max_preset_length_immunity), dtype=np.int32)
 
         self.preset_sigma_immunity_failure_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int32)
 
         self.preset_infectiousness_values =\
             np.zeros((self.number_of_presets,
@@ -167,12 +171,12 @@ class DefaultHealthModel(HealthModel):
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int32)
 
         self.preset_infectiousness_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int32)
 
         self.preset_disease_values =\
             np.zeros((self.number_of_presets,
@@ -184,29 +188,29 @@ class DefaultHealthModel(HealthModel):
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int32)
 
         self.preset_disease_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int32)
 
         self.preset_strain_values =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int32)
 
         self.preset_strain_partitions =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
                       self.number_of_strains,
-                      self.max_preset_length_health), dtype=int)
+                      self.max_preset_length_health), dtype=np.int32)
 
         self.preset_strain_lengths =\
             np.zeros((self.number_of_presets,
                       self.number_of_rho_immunity_outcomes,
-                      self.number_of_strains), dtype=int)
+                      self.number_of_strains), dtype=np.int32)
 
         # Create presets, thereby filling the above arrays, and validate them
         self._get_presets(self.clock.ticks_in_day)
@@ -246,7 +250,7 @@ class DefaultHealthModel(HealthModel):
             self.preset_sigma_immunity_failure_lengths.flatten()
 
     def vectorize_component(self, vector_region):
-        """Initializes vector region numpy arrays related to this component"""
+        """Initializes vector region numpy arrays related to this component."""
 
         number_of_agents                = vector_region.number_of_agents
         number_of_locations             = vector_region.number_of_locations
@@ -255,11 +259,11 @@ class DefaultHealthModel(HealthModel):
         immunity_length                 = self.immunity_length
         max_preset_length_health        = self.max_preset_length_health
 
-        vector_region.health_age_group                 = np.zeros((number_of_agents), dtype=int)
+        vector_region.health_age_group                 = np.zeros((number_of_agents), dtype=np.int32)
         vector_region.location_transmission_multiplier = np.ones((number_of_locations), dtype=float)
-        vector_region.infection_event                  = np.full((number_of_agents), -1, dtype=int)
-        vector_region.presets                          = np.zeros((number_of_agents), dtype=int)
-        vector_region.requesting_immunity_update       = np.zeros((number_of_agents), dtype=int)
+        vector_region.infection_event                  = np.full((number_of_agents), -1, dtype=np.int32)
+        vector_region.presets                          = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.requesting_immunity_update       = np.zeros((number_of_agents), dtype=np.int32)
 
         vector_region.current_rho_immunity_failure   = np.ones((number_of_agents,
                                                                 number_of_strains,
@@ -271,7 +275,7 @@ class DefaultHealthModel(HealthModel):
 
         vector_region.current_infectiousness = np.zeros((number_of_agents), dtype=float)
         vector_region.current_disease        = np.zeros((number_of_agents), dtype=float)
-        vector_region.current_strain         = np.full((number_of_agents), -1, dtype=int)
+        vector_region.current_strain         = np.full((number_of_agents), -1, dtype=np.int32)
 
         vector_region.rho_immunity_failure_values   = np.ones((number_of_agents,
                                                                number_of_strains,
@@ -286,26 +290,26 @@ class DefaultHealthModel(HealthModel):
         vector_region.infectiousness_values     = np.zeros((number_of_agents,
                                                             max_preset_length_health), dtype=float)
         vector_region.infectiousness_partitions = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=int)
-        vector_region.infectiousness_lengths    = np.zeros((number_of_agents), dtype=int)
-        vector_region.infectiousness_indexes    = np.ones((number_of_agents), dtype=int)
+                                                            max_preset_length_health), dtype=np.int32)
+        vector_region.infectiousness_lengths    = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.infectiousness_indexes    = np.ones((number_of_agents), dtype=np.int32)
         vector_region.disease_values            = np.zeros((number_of_agents,
                                                             max_preset_length_health), dtype=float)
         vector_region.disease_partitions        = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=int)
-        vector_region.disease_lengths           = np.zeros((number_of_agents), dtype=int)
-        vector_region.disease_indexes           = np.ones((number_of_agents), dtype=int)
+                                                            max_preset_length_health), dtype=np.int32)
+        vector_region.disease_lengths           = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.disease_indexes           = np.ones((number_of_agents), dtype=np.int32)
         vector_region.strain_values             = np.full((number_of_agents,
-                                                           max_preset_length_health), -1, dtype=int)
+                                                           max_preset_length_health), -1, dtype=np.int32)
         vector_region.strain_partitions         = np.zeros((number_of_agents,
-                                                            max_preset_length_health), dtype=int)
-        vector_region.strain_lengths            = np.zeros((number_of_agents), dtype=int)
-        vector_region.strain_indexes            = np.ones((number_of_agents), dtype=int)
+                                                            max_preset_length_health), dtype=np.int32)
+        vector_region.strain_lengths            = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.strain_indexes            = np.ones((number_of_agents), dtype=np.int32)
 
         self._get_age_mixing_matrix(vector_region)
 
     def initial_conditions(self, vector_region):
-        """Updates health functions"""
+        """Establishes initial conditions for default health model."""
 
         # Complete assignment of default health function values
         num_r_vals = self.number_of_rho_immunity_outcomes
@@ -421,16 +425,16 @@ class DefaultHealthModel(HealthModel):
         self.update(vector_region, 0)
 
     def update(self, vector_region, t):
-        """Updates health functions"""
+        """Updates agent health."""
 
         self.update_health(
-            c_int(t),
-            c_int(vector_region.number_of_agents),
-            c_int(self.number_of_strains),
-            c_int(self.immunity_length),
-            c_int(self.number_of_rho_immunity_outcomes),
-            c_int(self.max_preset_length_health),
-            c_int(self.immunity_period_ticks),
+            c_int32(t),
+            c_int32(vector_region.number_of_agents),
+            c_int32(self.number_of_strains),
+            c_int32(self.immunity_length),
+            c_int32(self.number_of_rho_immunity_outcomes),
+            c_int32(self.max_preset_length_health),
+            c_int32(self.immunity_period_ticks),
             c_void_p(vector_region.infectiousness_partitions.ctypes.data),
             c_void_p(vector_region.infectiousness_indexes.ctypes.data),
             c_void_p(vector_region.infectiousness_values.ctypes.data),
@@ -454,16 +458,16 @@ class DefaultHealthModel(HealthModel):
         )
 
     def dynamics(self, vector_region, t):
-        """Changes to agent health"""
+        """The transmission dynamics."""
 
         self.transmission(
-            c_int(self.number_of_strains),
-            c_int(vector_region.number_of_locations),
-            c_int(vector_region.number_of_agents),
-            c_int(vector_region.id),
-            c_int(self.sir_rescaling_int),
-            c_int(self.clock.ticks_in_day),
-            c_int(vector_region.number_of_subpopulations),
+            c_int32(self.number_of_strains),
+            c_int32(vector_region.number_of_locations),
+            c_int32(vector_region.number_of_agents),
+            c_int32(vector_region.id),
+            c_int32(self.sir_rescaling_int),
+            c_int32(self.clock.ticks_in_day),
+            c_int32(vector_region.number_of_subpopulations),
             c_void_p(self.beta.ctypes.data),
             c_void_p(vector_region.subpopulation_index.ctypes.data),
             c_void_p(vector_region.subpopulation_mixing_matrix.ctypes.data),
@@ -485,17 +489,17 @@ class DefaultHealthModel(HealthModel):
         self.infect_wrapper(vector_region, t)
 
     def infect_wrapper(self, vector_region, t):
-        """Changes to agent health"""
+        """The infection system."""
 
         self.infect(
-            c_int(t),
-            c_int(vector_region.number_of_agents),
-            c_int(self.number_of_rho_immunity_outcomes),
-            c_int(self.number_of_strains),
-            c_int(self.max_preset_length_health),
-            c_int(self.max_preset_length_immunity),
-            c_int(self.immunity_length),
-            c_int(self.immunity_period_ticks),
+            c_int32(t),
+            c_int32(vector_region.number_of_agents),
+            c_int32(self.number_of_rho_immunity_outcomes),
+            c_int32(self.number_of_strains),
+            c_int32(self.max_preset_length_health),
+            c_int32(self.max_preset_length_immunity),
+            c_int32(self.immunity_length),
+            c_int32(self.immunity_period_ticks),
             c_void_p(vector_region.current_rho_immunity_failure.ctypes.data),
             c_void_p(vector_region.infection_event.ctypes.data),
             c_void_p(vector_region.infectiousness_partitions.ctypes.data),
@@ -538,6 +542,16 @@ class DefaultHealthModel(HealthModel):
         num_rho_outcomes = len(self.health_presets_config[self.preset_names[0]])
         for p in self.health_presets_config:
             assert len(self.health_presets_config[p]) == num_rho_outcomes
+
+        for preset_name in self.preset_names:
+            for r in range(num_rho_outcomes):
+                for s1 in range(self.number_of_strains):
+                    for s2 in range(self.number_of_strains):
+                        f = 'rho_immunity_failure'
+                        items = len(self.health_presets_config[preset_name][r][f][s1][s2][1])
+                        for i in range(items):
+                            assert len(self.health_presets_config[preset_name][r][f][s1][s2][1][i])\
+                                   == num_rho_outcomes
 
         return num_rho_outcomes
 
@@ -741,7 +755,7 @@ class DefaultHealthModel(HealthModel):
                 else:
                     vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=float)
                     vector_region.number_of_subpopulations = 1
-            vector_region.age_group = np.zeros((vector_region.number_of_agents), dtype=int)
+            vector_region.age_group = np.zeros((vector_region.number_of_agents), dtype=np.int32)
             for n in range(vector_region.number_of_agents):
                 age_group = min(vector_region.age[n] // self.age_group_interval,
                                 vector_region.number_of_subpopulations - 1)
@@ -749,7 +763,7 @@ class DefaultHealthModel(HealthModel):
         else:
             vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=float)
             vector_region.subpopulation_index =\
-                np.zeros((vector_region.number_of_agents), dtype=int)
+                np.zeros((vector_region.number_of_agents), dtype=np.int32)
             vector_region.number_of_subpopulations = 1
 
     def _generate_presets_and_weights(self, sir_beta, sir_gamma_inverse,

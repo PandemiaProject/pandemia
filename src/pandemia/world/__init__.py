@@ -1,28 +1,54 @@
-"""Represents a world consisting of regions"""
 
-from pandemia.world.region import Region, VectorRegion
+import numpy as np
+from typing import Union
 
-class VectorWorld:
-    """Represents a world consisting of regions using numpy arrays"""
-
-    def __init__(self, scale_factor):
-
-        self.vector_regions: list[VectorRegion] = []
-        self.number_of_regions = None
-        self.scale_factor = scale_factor
-        self.travel_matrix = None
+from .region import Region, VectorRegion
 
 class World:
-    """Represents a world consisting of regions"""
+    """A world consiting of regions.
+    
+    For example, a country consisting of administrative divisions, or the whole world consisting of
+    countries.
+
+    Parameters:
+    -----------
+    scale_factor : float
+        Attached to each world is a scale factor, indicating that scaling may have taken place in
+        the creation of the world. For example, a world with 1 million agents representing a real
+        world with 100 million agents would have the scale factor 0.01. This is stored as an
+        attribute since the scale factor is needed to scale quantities during input and output.
+
+    Attributes:
+    -----------
+    regions : list[Region]
+        The list of regions in this world.
+    number_of_regions : int
+        How many regions are in this world.
+    scale_factor : float
+        Attached to each world is a scale factor, indicating that scaling may have taken place in
+        the creation of the world. For example, a world with 1 million agents representing
+        a real world with 100 million agents would have the scale factor 0.01. This is stored as an
+        attribute since the scale factor is needed to scale quantities during input and output.
+    travel_matrix : np.ndarray
+        An array of integers of dimension number_of_regions x number_of_regions.
+    """
 
     def __init__(self, scale_factor):
 
         self.regions: list[Region] = []
-        self.number_of_regions = None
-        self.scale_factor = scale_factor
-        self.travel_matrix = None
+        self.number_of_regions: int = None
+        self.scale_factor: float = scale_factor
+        self.travel_matrix: Union[None, np.ndarray] = None
 
     def vectorize_world(self):
+        """Converts an object of type World to an object of type VectorWorld. A VectorWorld contains
+        a list of objects of type VectorRegion, as opposed to objects of type Region, as in a World.
+
+        Returns:
+        --------
+        new_vector_world : VectorWorld
+            A vector representation of the world.
+        """
 
         new_vector_world = VectorWorld(self.scale_factor)
 
@@ -36,3 +62,39 @@ class World:
         new_vector_world.travel_matrix = self.travel_matrix
 
         return new_vector_world
+
+class VectorWorld:
+    """A world consiting of vectorized regions.
+    
+    For example, a country consisting of administrative divisions, or the whole world consisting of
+    countries.
+
+    Parameters:
+    -----------
+    scale_factor : float
+        Attached to each world is a scale factor, indicating that scaling may have taken place in
+        the creation of the world. For example, a world with 1 million agents representing a real
+        world with 100 million agents would have the scale factor 0.01. This is stored as an
+        attribute since the scale factor is needed to scale quantities during input and output.
+
+    Attributes:
+    -----------
+    vector_regions : list[VectorRegion]
+        The list of regions in this vectorized world.
+    number_of_regions : int
+        How many vectorized regions are in this vectorized world.
+    scale_factor : float
+        Attached to each world is a scale factor, indicating that scaling may have taken place in
+        the creation of the world. For example, a world with 1 million agents representing
+        a real world with 100 million agents would have the scale factor 0.01. This is stored as an
+        attribute since the scale factor is needed to scale quantities during input and output.
+    travel_matrix : np.ndarray
+        An array of integers of dimension number_of_regions x number_of_regions.
+    """
+
+    def __init__(self, scale_factor):
+
+        self.vector_regions: list[VectorRegion] = []
+        self.number_of_regions = None
+        self.scale_factor = scale_factor
+        self.travel_matrix = None
