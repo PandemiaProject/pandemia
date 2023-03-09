@@ -829,7 +829,7 @@ travel_model:
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels
   # each day. Values in between interpolate between these numbers.
-  interpolation: 0.0                                                                                # POSSIBLE FREE VARIABLE
+  interpolation: 0.001                                                                              # POSSIBLE FREE VARIABLE
 
 # ######################################### Policy Maker ###########################################
 
@@ -845,7 +845,7 @@ policy_maker_model:
   vaccination_data_fp:
     Scenarios/Validation/data/owid-covid-data.csv
   max_transmission_control: 0.7                                                                     # POSSIBLE FREE VARIABLE
-  max_travel_control: 0.7                                                                           # POSSIBLE FREE VARIABLE
+  max_travel_control: 0.9                                                                           # POSSIBLE FREE VARIABLE
 
 # ######################################### Output #################################################
 

@@ -21,7 +21,7 @@ class VoidTravelModel(TravelModel):
         """Initializes numpy arrays associated to this component"""
 
         vector_region.current_region = np.full((vector_region.number_of_agents),
-                                                vector_region.id, dtype=np.int64)
+                                                vector_region.id, dtype=np.int32)
 
     def initial_conditions(self, sim):
 

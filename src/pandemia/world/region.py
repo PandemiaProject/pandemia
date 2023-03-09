@@ -193,9 +193,9 @@ class VectorRegion:
         The group of regions to which this region belongs. For example, if the regions represents a
         country, its super region might be the continent to which it belongs.
     random_state : np.ndarray
-        A pair of 64-bit integers. This pair is the random seed to be used by the prng inside the C
-        libraries. This is an numpy array of length 2, consisting of two integers of type
-        np.uint64. Each region gets it own random state, to preserve determinism when
+        A quadruplet of 32-bit integers. This quadruplet is the random seed to be used by the prng
+        inside the C libraries. This is an numpy array of length 4, consisting of four integers of
+        type np.uint32. Each region gets it own random state, to preserve determinism when
         parallelizing.
     prng : Random
         An instance of the Random class for this region. Each region gets it own instance of the
@@ -270,17 +270,17 @@ class VectorRegion:
         self.number_of_locations: int = number_of_locations
         self.number_of_activities: int = number_of_activities
         assert self.number_of_activities <= 255
-        self.age = np.zeros((number_of_agents), dtype=np.int64)
+        self.age = np.zeros((number_of_agents), dtype=np.int32)
         self.weekly_routines = np.zeros((number_of_agents, ticks_in_week), dtype=np.uint8)
-        self.num_activity_locations = np.zeros((number_of_agents, number_of_activities), dtype=np.int64)
+        self.num_activity_locations = np.zeros((number_of_agents, number_of_activities), dtype=np.int32)
         self.activity_locations = np.zeros((number_of_agents, number_of_activities,
-                                            max_num_activity_locations), dtype=np.int64)
+                                            max_num_activity_locations), dtype=np.int32)
         self.activity_location_weights = np.zeros((number_of_agents, number_of_activities,
-                                                   max_num_activity_locations), dtype=np.float64)
+                                                   max_num_activity_locations), dtype=float)
         self.max_num_activity_locations = max_num_activity_locations
         self.activity_strings = [None for _ in range(number_of_activities)]
         self.location_typ_strings = [None for _ in range(number_of_locations)]
-        self.location_x_coords = np.zeros((number_of_locations), dtype=np.float64)
-        self.location_y_coords = np.zeros((number_of_locations), dtype=np.float64)
+        self.location_x_coords = np.zeros((number_of_locations), dtype=float)
+        self.location_y_coords = np.zeros((number_of_locations), dtype=float)
         self.coordinates: Union[None, list] = None
         self.region_coordinates: Union[None, list] = None

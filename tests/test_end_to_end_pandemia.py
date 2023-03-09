@@ -162,7 +162,7 @@ def test_end_to_end_homogeneous(run_end_to_end_simulation):
 
 @pytest.mark.slow
 @pytest.mark.approx_matching
-@pytest.mark.parametrize("rel_tol, abs_tol", [(0.5, 100)])
+@pytest.mark.parametrize("rel_tol, abs_tol", [(None, None)])
 def test_end_to_end_all_components(run_end_to_end_simulation, rel_tol, abs_tol):
     input_scenario = "Scenarios/Test/test_all_components.yaml"
     expect_results = "tests/e2e_expected_outputs/test_end_to_end_all_components.csv"
