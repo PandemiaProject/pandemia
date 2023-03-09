@@ -362,7 +362,7 @@ policy_maker_model:
   # intervention for that country each day.
   __type__: default_policy_maker_model.DefaultPolicyMakerModel
   # The data files are found in the following folder.
-  policy_data_filepath: Scenarios/Heterogeneous/policy_data
+  policy_data_filepath: Scenarios/Heterogeneous/policy_data/
 
 # ######################################### Output #################################################
 
