@@ -136,7 +136,7 @@ void dynamics_vaccination
         int t = day * ticks_in_day;
         int num_agents_to_vaccinate = 0;
         for(int v=0; v<V; v++){
-            num_agents_to_vaccinate += num_to_vaccinate[(age_group_index * V) + v];
+            num_agents_to_vaccinate += num_to_vaccinate[(age_group_index * A) + v];
         }
         num_agents_to_vaccinate = fmin(num_eligible, num_agents_to_vaccinate);
         int * agents_to_vaccinate = (int *)malloc(sizeof(int) * num_agents_to_vaccinate);
@@ -225,7 +225,7 @@ void dynamics_vaccination
                     }
 
                     sigma_length =
-                        vaccine_sigma_immunity_failure_lengths[(v * S) + s];
+                        vaccine_rho_immunity_failure_lengths[(v * S) + s];
 
                     for(int i=0; i<I; i++){
 
@@ -248,7 +248,7 @@ void dynamics_vaccination
                 requesting_immunity_update[n] = 1;
 
             }
-            if(num_vaccinated >= num_to_vaccinate[(age_group_index * V) + v]){
+            if(num_vaccinated >= num_to_vaccinate[(age_group_index * A) + v]){
                 v += 1;
                 num_vaccinated = 0;
             }
