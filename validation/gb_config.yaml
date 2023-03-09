@@ -231,7 +231,7 @@ travel_model:
 # ######################################### Policy Maker ###########################################
 
 policy_maker_model:
-  __type__: default_policy_maker_model.DefaultPolicyMakerModel
+  __type__: optimization_policy_maker_model.OptimizationPolicyMakerModel
 
 # ######################################### Output #################################################
 
