@@ -125,10 +125,10 @@ health_model:
   number_of_strains: 4
   # Control parameters determining the transmission probability of each strain each tick. This list
   # should be of length equal to the number of strains.
-  beta: [0.035, 0.045, 0.069, 0.228]                                                                # POSSIBLE FREE VARIABLE
+  beta: [0.034, 0.043, 0.066, 0.219]                                                                # POSSIBLE FREE VARIABLE
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
-  mutation_matrix: [[0.9950000, 0.0050000, 0.0000000, 0.0000000],
+  mutation_matrix: [[0.9990000, 0.0010000, 0.0000000, 0.0000000],
                     [0.0000000, 0.9999900, 0.0000100, 0.0000000],
                     [0.0000000, 0.0000000, 0.9999995, 0.0000005],
                     [0.0000000, 0.0000000, 0.0000000, 1.0000000]]                                   # POSSIBLE FREE VARIABLE
@@ -825,7 +825,7 @@ travel_model:
   # Travellers mix homogeneously with the entire population of the destination region, with
   # transmission probabilities divided by the number of agents in that region. This parameter is a
   # control parameter which multiplies that ratio.
-  travel_transmission_multiplier: 25.0                                                              # POSSIBLE FREE VARIABLE
+  travel_transmission_multiplier: 50.0                                                              # POSSIBLE FREE VARIABLE
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels
   # each day. Values in between interpolate between these numbers.
