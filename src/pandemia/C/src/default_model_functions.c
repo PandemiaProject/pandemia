@@ -696,7 +696,8 @@ void dynamics_movement
     // Determine new locations, for those agents starting a new activity
     for(int32_t n=0; n<N; n++){
         if(current_region[n] == id){
-            uint8_t new_activity = weekly_routines[(n * ticks_in_week) + t_next];
+            int32_t new_activity;
+            new_activity = (int32_t)weekly_routines[(n * ticks_in_week) + t_next];
             if(new_activity != weekly_routines[(n * ticks_in_week) + t_now]){
                 // If the agent is not currently wearing a facemask but should be, put it on
                 if(current_facemask[n] == 0 && facemask_intervention == 1 &&
