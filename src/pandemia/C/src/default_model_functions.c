@@ -5,7 +5,7 @@
 
 #define int32_t_max 2147483647
 
-static inline uint32_t rotl(const uint32_t x, int32_t k) {
+static inline uint32_t rotl(const uint32_t x, int k) {
 	return (x << k) | (x >> (32 - k));
 }
 
