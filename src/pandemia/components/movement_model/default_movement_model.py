@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 
-from ctypes import c_void_p, c_int32
+from ctypes import c_void_p, c_int64
 from ..movement_model import MovementModel
 
 log = logging.getLogger("default_movement_model")
@@ -57,21 +57,21 @@ class DefaultMovementModel(MovementModel):
         number_of_activities = vector_region.number_of_activities
         max_num_activity_locations = vector_region.max_num_activity_locations
 
-        vector_region.current_location = np.zeros((number_of_agents), dtype=np.int32)
-        vector_region.requested_location_update = np.zeros((number_of_agents), dtype=np.int32)
-        vector_region.requesting_location_update = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.current_location = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.requested_location_update = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.requesting_location_update = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.location_closure = np.ones((number_of_agents, number_of_activities,
-                                          max_num_activity_locations), dtype=np.int32)
+                                          max_num_activity_locations), dtype=np.int64)
         vector_region.lockdown_intervention = 0
-        vector_region.current_facemask = np.zeros((number_of_agents), dtype=np.int32)
-        vector_region.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int32)
-        vector_region.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.current_facemask = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.requested_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.requesting_facemask_update = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.wears_facemask = np.zeros((number_of_agents, number_of_activities),
-                                                dtype=np.int32)
+                                                dtype=np.int64)
         vector_region.facemask_intervention = 0
-        vector_region.current_quarantine = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.current_quarantine = np.zeros((number_of_agents), dtype=np.int64)
 
-        vector_region.home_location = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.home_location = np.zeros((number_of_agents), dtype=np.int64)
         assert self.home_activity in vector_region.activity_strings
         home_activity_id = vector_region.activity_strings.index(self.home_activity)
         for n in range(number_of_agents):
@@ -127,7 +127,7 @@ class DefaultMovementModel(MovementModel):
         """Updates related to movement."""
 
         self.update_movement(
-            c_int32(vector_region.number_of_agents),
+            c_int64(vector_region.number_of_agents),
             c_void_p(vector_region.requesting_location_update.ctypes.data),
             c_void_p(vector_region.requested_location_update.ctypes.data),
             c_void_p(vector_region.current_location.ctypes.data),
@@ -140,16 +140,16 @@ class DefaultMovementModel(MovementModel):
         """Changes related to movement."""
 
         self.dynamics_movement(
-            c_int32(vector_region.number_of_agents),
-            c_int32(vector_region.number_of_activities),
-            c_int32(vector_region.lockdown_intervention),
-            c_int32(vector_region.facemask_intervention),
-            c_int32(vector_region.id),
-            c_int32(self.use_weights),
-            c_int32(t),
-            c_int32(offset),
-            c_int32(ticks_in_week),
-            c_int32(vector_region.max_num_activity_locations),
+            c_int64(vector_region.number_of_agents),
+            c_int64(vector_region.number_of_activities),
+            c_int64(vector_region.lockdown_intervention),
+            c_int64(vector_region.facemask_intervention),
+            c_int64(vector_region.id),
+            c_int64(self.use_weights),
+            c_int64(t),
+            c_int64(offset),
+            c_int64(ticks_in_week),
+            c_int64(vector_region.max_num_activity_locations),
             c_void_p(vector_region.current_region.ctypes.data),
             c_void_p(vector_region.weekly_routines.ctypes.data),
             c_void_p(vector_region.current_facemask.ctypes.data),

@@ -61,9 +61,9 @@ def get_arrays(dates_to_data):
         averages.append(dates_to_data[date])
         date += datetime.timedelta(days=1)
 
-    averages = np.array(averages).astype(float)
+    averages = np.array(averages).astype(np.float64)
 
-    y_mean = np.mean(averages, axis=1, dtype=float)
+    y_mean = np.mean(averages, axis=1, dtype=np.float64)
     y_median = np.median(averages, axis=1)
     y_025 = np.percentile(averages, 2.5, axis=1)
     y_25 = np.percentile(averages, 25, axis=1)
@@ -119,7 +119,7 @@ if historical_data_fp is not None:
 hist_daily_deaths = []
 for day in range(number_of_days):
     hist_daily_deaths.append(historical_daily_deaths_dict[day_to_date[day]])
-hist_daily_deaths = np.array(hist_daily_deaths).astype(float)
+hist_daily_deaths = np.array(hist_daily_deaths).astype(np.float64)
 hist_daily_deaths = smooth(hist_daily_deaths)
 
 plt.plot(range(number_of_days), hist_daily_deaths, colour, linestyle='dashed', label="Deaths - Reported")

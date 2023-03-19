@@ -43,23 +43,23 @@ class RandomPolicyMakerModel(PolicyMakerModel):
         shape_vac = (self.simulation_length_days, self.number_of_regions,
                      self.number_of_vaccination_age_groups, self.number_of_vaccines)
 
-        self.lockdown_policy = np.random.randint(0, 2, shape, dtype=np.int32)
-        self.border_closure_policy = np.random.random(shape).astype(float)
-        self.facemask_policy = np.random.randint(0, 2, shape, dtype=np.int32)
-        self.random_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int32)
-        self.symptomatic_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int32)
-        self.contact_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int32)
-        self.vaccination_policy = np.random.randint(0, 100000, shape_vac, dtype=np.int32)
+        self.lockdown_policy = np.random.randint(0, 2, shape, dtype=np.int64)
+        self.border_closure_policy = np.random.random(shape).astype(np.float64)
+        self.facemask_policy = np.random.randint(0, 2, shape, dtype=np.int64)
+        self.random_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int64)
+        self.symptomatic_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int64)
+        self.contact_testing_policy = np.random.randint(0, 100000, shape, dtype=np.int64)
+        self.vaccination_policy = np.random.randint(0, 100000, shape_vac, dtype=np.int64)
 
         # Rescale
         self.random_testing_policy =\
-            (self.scale_factor * self.random_testing_policy).astype(np.int32)
+            (self.scale_factor * self.random_testing_policy).astype(np.int64)
         self.symptomatic_testing_policy =\
-            (self.scale_factor * self.symptomatic_testing_policy).astype(np.int32)
+            (self.scale_factor * self.symptomatic_testing_policy).astype(np.int64)
         self.contact_testing_policy =\
-            (self.scale_factor * self.contact_testing_policy).astype(np.int32)
+            (self.scale_factor * self.contact_testing_policy).astype(np.int64)
         self.vaccination_policy =\
-            (self.scale_factor * self.vaccination_policy).astype(np.int32)
+            (self.scale_factor * self.vaccination_policy).astype(np.int64)
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""

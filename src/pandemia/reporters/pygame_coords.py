@@ -105,7 +105,7 @@ class PygameCoords(Reporter):
         self.locations_to_pixels_by_region = {}
         for vector_region in world.vector_regions:
             self.locations_to_pixels_by_region[vector_region.id] =\
-                np.zeros((vector_region.number_of_locations, ), dtype=np.int32)
+                np.zeros((vector_region.number_of_locations, ), dtype=np.int64)
         max_x_display = 0
         max_y_display = 0
         self.region_coordinates = []
@@ -170,8 +170,8 @@ class PygameCoords(Reporter):
                         if event.button == 3:
                             self.pause *= -1
 
-            num_infected = np.zeros((self.width * self.height), dtype=float)
-            num_total    = np.zeros((self.width * self.height), dtype=float)
+            num_infected = np.zeros((self.width * self.height), dtype=np.float64)
+            num_total    = np.zeros((self.width * self.height), dtype=np.float64)
 
             infected = 0
             for id in current_location:

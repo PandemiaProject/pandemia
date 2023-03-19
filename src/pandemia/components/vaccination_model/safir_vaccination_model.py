@@ -50,7 +50,7 @@ class SafirVaccinationModel(VaccinationModel):
         coverage = 1.0
         self.strategy_matrix =\
             np.flip(np.triu(np.full((self.number_of_steps, self.number_of_age_groups),
-                                     coverage, dtype=float)), axis=0)
+                                     coverage, dtype=np.float64)), axis=0)
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
@@ -61,11 +61,11 @@ class SafirVaccinationModel(VaccinationModel):
         vector_region.third_doses_total = 0
 
         vector_region.dose_number =\
-            np.zeros(number_of_agents, dtype=int)
+            np.zeros(number_of_agents, dtype=np.int64)
         vector_region.days_since_last_dose =\
-            np.full(number_of_agents, self.number_of_days + 1, dtype=int)
+            np.full(number_of_agents, self.number_of_days + 1, dtype=np.int64)
         vector_region.day_for_second_dose =\
-            np.full(number_of_agents, -1, dtype=int)
+            np.full(number_of_agents, -1, dtype=np.int64)
 
     def initial_conditions(self, vector_region):
         """Initial vaccination"""
@@ -111,7 +111,7 @@ class SafirVaccinationModel(VaccinationModel):
         """Determines the default order in which individuals are vaccinated"""
 
         age_groups =\
-            np.zeros((self.number_of_age_groups, vector_region.number_of_agents), dtype=int)
+            np.zeros((self.number_of_age_groups, vector_region.number_of_agents), dtype=np.int64)
         if hasattr(vector_region, 'subpopulation_index'):
             for a in range(self.number_of_age_groups):
                 age_groups[a][vector_region.subpopulation_index == a] = 1
@@ -136,7 +136,7 @@ class SafirVaccinationModel(VaccinationModel):
             vector_region.prng.random_shuffle(sub_order)
             order += sub_order
 
-        order = np.array(order, dtype=int)
+        order = np.array(order, dtype=np.int64)
 
         return order
 

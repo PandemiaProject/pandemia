@@ -4,7 +4,7 @@ from collections import defaultdict
 import logging
 import numpy as np
 
-from ctypes import c_void_p, c_double, c_int32
+from ctypes import c_void_p, c_double, c_int64
 from ..testing_and_contact_tracing_model import TestingAndContactTracingModel
 
 log = logging.getLogger("default_testing_and_contact_tracing_model")
@@ -57,12 +57,12 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         vector_region.num_to_test_random = 0
         vector_region.num_to_test_symptomatic = 0
         vector_region.num_to_test_contact = 0
-        vector_region.end_of_quarantine_days = np.full((number_of_agents), -1, dtype=np.int32)
+        vector_region.end_of_quarantine_days = np.full((number_of_agents), -1, dtype=np.int64)
         vector_region.max_regular_contacts_to_test = max_regular_contacts_to_test
-        vector_region.num_regular_contacts_to_test = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.num_regular_contacts_to_test = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.regular_contacts_to_test = np.zeros((number_of_agents,
-                                                  max_regular_contacts_to_test), dtype=np.int32)
-        vector_region.yesterdays_disease = np.zeros((number_of_agents), dtype=float)
+                                                  max_regular_contacts_to_test), dtype=np.int64)
+        vector_region.yesterdays_disease = np.zeros((number_of_agents), dtype=np.float64)
 
     def initial_conditions(self, vector_region):
         """Initial testing and contact tracing conditions."""
@@ -100,14 +100,14 @@ class DefaultTestingAndContactTracingModel(TestingAndContactTracingModel):
         """Implements testing and contact tracing system."""
 
         self.default_testing_and_contact_tracing_dynamics(
-            c_int32(vector_region.number_of_agents),
-            c_int32(day),
-            c_int32(self.quarantine_period_days),
-            c_int32(vector_region.num_to_test_random),
-            c_int32(vector_region.num_to_test_symptomatic),
-            c_int32(vector_region.num_to_test_contact),
-            c_int32(self.max_regular_contacts_to_test),
-            c_int32(vector_region.id),
+            c_int64(vector_region.number_of_agents),
+            c_int64(day),
+            c_int64(self.quarantine_period_days),
+            c_int64(vector_region.num_to_test_random),
+            c_int64(vector_region.num_to_test_symptomatic),
+            c_int64(vector_region.num_to_test_contact),
+            c_int64(self.max_regular_contacts_to_test),
+            c_int64(vector_region.id),
             c_double(self.symptomatic_disease_threshold),
             c_double(self.test_threshold),
             c_double(self.test_false_negative),

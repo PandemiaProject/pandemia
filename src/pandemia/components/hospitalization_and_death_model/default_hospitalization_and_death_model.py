@@ -2,7 +2,7 @@
 
 import logging
 import numpy as np
-from ctypes import c_void_p, c_int32, c_double
+from ctypes import c_void_p, c_int64, c_double
 
 from ..hospitalization_and_death_model import HospitalizationAndDeathModel
 
@@ -53,10 +53,10 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
 
         vector_region.number_of_hospitals = len(hospitals)
         vector_region.number_of_cemeteries = len(cemeteries)
-        vector_region.hospitals = np.array(hospitals).astype(np.int32)
-        vector_region.cemeteries = np.array(cemeteries).astype(np.int32)
-        vector_region.in_hospital = np.zeros((number_of_agents), dtype=np.int32)
-        vector_region.in_cemetery = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.hospitals = np.array(hospitals).astype(np.int64)
+        vector_region.cemeteries = np.array(cemeteries).astype(np.int64)
+        vector_region.in_hospital = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.in_cemetery = np.zeros((number_of_agents), dtype=np.int64)
 
     def initial_conditions(self, vector_region):
         """Establishes initial conditions for hospitalization and death."""
@@ -69,10 +69,10 @@ class DefaultHospitalizationAndDeathModel(HospitalizationAndDeathModel):
         """Moves agents to and from hospitals and cemeteries."""
 
         self.dynamics_hospitalization_and_death(
-            c_int32(vector_region.number_of_agents),
-            c_int32(vector_region.number_of_hospitals),
-            c_int32(vector_region.number_of_cemeteries),
-            c_int32(vector_region.id),
+            c_int64(vector_region.number_of_agents),
+            c_int64(vector_region.number_of_hospitals),
+            c_int64(vector_region.number_of_cemeteries),
+            c_int64(vector_region.id),
             c_double(self.hospital_threshold),
             c_void_p(vector_region.current_location.ctypes.data),
             c_void_p(vector_region.current_region.ctypes.data),
