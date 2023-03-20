@@ -42,7 +42,7 @@ def get_iso_and_name_dicts():
 
     iso2s_to_names = {}
     iso2s_to_iso3s = {}
-    # all_countries = []
+    all_countries = []
     with open('C:/Users/jt511/Documents/Github/Pandemia/Scenarios/Heterogeneous/data/country_data.csv', newline='') as csvfile:
         next(csvfile)
         data = csv.reader(csvfile, delimiter=',')
@@ -52,9 +52,9 @@ def get_iso_and_name_dicts():
             iso3 = row[2]
             iso2s_to_names[iso2] = name
             iso2s_to_iso3s[iso2] = iso3
-            # all_countries.append(name)
+            all_countries.append(name)
 
-    return iso2s_to_names, iso2s_to_iso3s
+    return all_countries, iso2s_to_names, iso2s_to_iso3s
 
 def get_date_of_first_infection_reported():
 
@@ -91,28 +91,26 @@ def calculate_differences(hist_data, date_of_first_infection_simulated, date_of_
     
     return hist_data
 
-# countries_hit = []
-# for date in dates:
-#     countries = []
-#     for iso2 in date_of_first_infection_simulated:
-#         if date_of_first_infection_simulated[iso2] == date:
-#             countries.append(iso2s_to_names[iso2])
-#             countries_hit.append(iso2s_to_names[iso2])
-#     # print("Date: " + str(date.strftime('%d/%m/%Y')))
-#     # print(countries)
+def print_dates(dates, date_of_first_infection_simulated, all_countries, iso2s_to_names):
 
-# countries_not_hit = []
-# for country in all_countries:
-#     if country not in countries_hit:
-#         countries_not_hit.append(country)
-# # print("Countries without infections: ")
-# # print(countries_not_hit)
+    countries_hit = []
+    for date in dates:
+        countries = []
+        for iso2 in date_of_first_infection_simulated:
+            if date_of_first_infection_simulated[iso2] == date:
+                countries.append(iso2s_to_names[iso2])
+                countries_hit.append(iso2s_to_names[iso2])
+        print("Date: " + str(date.strftime('%d/%m/%Y')))
+        print(countries)
 
-# for iso2 in date_of_first_infection:
-#     date = date_of_first_infection[iso2]
-#     date_of_first_infection[iso2] = date # str(date.strftime('%d/%m/%Y'))
+    countries_not_hit = []
+    for country in all_countries:
+        if country not in countries_hit:
+            countries_not_hit.append(country)
+    print("Countries without infections: ")
+    print(countries_not_hit)
 
-iso2s_to_names, iso2s_to_iso3s = get_iso_and_name_dicts()
+all_countries, iso2s_to_names, iso2s_to_iso3s = get_iso_and_name_dicts()
 date_of_first_infection_reported = get_date_of_first_infection_reported()
 
 hist_data = defaultdict(list)
@@ -122,58 +120,62 @@ dates = get_dates(filename)
 date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
 hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
+print_dates(dates, date_of_first_infection_simulated, all_countries, iso2s_to_names)
+
 filename = 'C:/tmp/strain_counts_validation_2.csv'
 dates = get_dates(filename)
 date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
 hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_3.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_3.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_4.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_4.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_5.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_5.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_6.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_6.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_7.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_7.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_8.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_8.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_9.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_9.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
-filename = 'C:/tmp/strain_counts_validation_10.csv'
-dates = get_dates(filename)
-date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
-hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
+# filename = 'C:/tmp/strain_counts_validation_10.csv'
+# dates = get_dates(filename)
+# date_of_first_infection_simulated = get_date_of_first_infection_simulated(filename, dates)
+# hist_data = calculate_differences(hist_data, date_of_first_infection_simulated, date_of_first_infection_reported, iso2s_to_names, iso2s_to_iso3s)
 
 averages = []
 for iso2 in hist_data:
     average = sum(hist_data[iso2]) / len(hist_data[iso2])
     averages.append(average)
 
+averages = [a for a in averages if a > -100]
+
 print(averages)
 print(sum(averages) / len(averages))
 
-plt.hist(averages) #, bins=100)
+plt.hist(averages, bins=40)
 plt.show()

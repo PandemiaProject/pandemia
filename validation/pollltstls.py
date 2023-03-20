@@ -144,9 +144,11 @@ plt.gca().set_ylim(bottom=0)
 plt.grid(False)
 fig = plt.gcf()
 
-dirname = os.path.dirname(fname)
-if dirname != '':
-    os.makedirs(dirname, exist_ok=True)
-fig.savefig(fname, bbox_inches='tight')
+# dirname = os.path.dirname(fname)
+# if dirname != '':
+#     os.makedirs(dirname, exist_ok=True)
+# fig.savefig(fname, bbox_inches='tight')
 
-plt.close()
+plt.show()
+
+# plt.close()

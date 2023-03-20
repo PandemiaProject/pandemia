@@ -9,7 +9,7 @@ scale_factor: 0.0005
 profile: False
 pstats_records: 100
 # Random seed. Pandemia is stochastic and therefore requires a random seed.
-random_seed: 10
+random_seed: 4
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
 # simulator. If num_jobs < 1 then this maximum is os.cpu_count().
 enable_parallel: True
@@ -22,7 +22,7 @@ tick_length_s: 28800
 # Length of the simulation, in days.
 simulation_length_days: 1000
 # The date on which the simulation starts.
-epoch: 7th December 2019                                                                            # POSSIBLE FREE VARIABLE
+epoch: 21st December 2019                                                                           # POSSIBLE FREE VARIABLE
 
 # ######################################### World ##################################################
 
@@ -38,7 +38,7 @@ world_factory:
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
   # This world factory is stochastic, and therefore gets its own random seed.
-  random_seed: 10
+  random_seed: 4
   # Filepath to country data, including age structure and population sizes. The actual number of
   # agents is given by multiplying this data by the scale_factor.
   regions_data_file:
@@ -125,7 +125,7 @@ health_model:
   number_of_strains: 4
   # Control parameters determining the transmission probability of each strain each tick. This list
   # should be of length equal to the number of strains.
-  beta: [0.034, 0.043, 0.066, 0.219]                                                                # POSSIBLE FREE VARIABLE
+  beta: [0.0408, 0.0516, 0.0792, 0.2628]                                                            # POSSIBLE FREE VARIABLE
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
   mutation_matrix: [[0.9990000, 0.0010000, 0.0000000, 0.0000000],
@@ -825,7 +825,7 @@ travel_model:
   # Travellers mix homogeneously with the entire population of the destination region, with
   # transmission probabilities divided by the number of agents in that region. This parameter is a
   # control parameter which multiplies that ratio.
-  travel_transmission_multiplier: 50.0                                                              # POSSIBLE FREE VARIABLE
+  travel_transmission_multiplier: 150.0                                                             # POSSIBLE FREE VARIABLE
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels
   # each day. Values in between interpolate between these numbers.
@@ -844,8 +844,8 @@ policy_maker_model:
     Scenarios/Heterogeneous/data/historical_data/country_data_international_travel_controls.csv
   vaccination_data_fp:
     Scenarios/Validation/data/owid-covid-data.csv
-  max_transmission_control: 0.7                                                                     # POSSIBLE FREE VARIABLE
-  max_travel_control: 0.9                                                                           # POSSIBLE FREE VARIABLE
+  max_transmission_control: 0.70                                                                    # POSSIBLE FREE VARIABLE
+  max_travel_control: 0.95                                                                          # POSSIBLE FREE VARIABLE
 
 # ######################################### Output #################################################
 
@@ -868,29 +868,29 @@ reporters:
   # each day.
   csv.StrainCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/strain_counts_validation_10.csv
+    filename: /tmp/strain_counts_validation_4.csv
 
   # This reporter outputs a csv file, recording the number of deaths in each region each day.
   csv.DeathCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/death_counts_validation_10.csv
+    filename: /tmp/death_counts_validation_4.csv
 
   # This reporter plots the number of individuals infected each day.
   plot.PlotInfected:
     show: False
     savefig: True
     # Where the user would like the plot saved.
-    filename: /tmp/infected_validation_10.png
+    filename: /tmp/infected_validation_4.png
 
   # This reporter plots the number of new deaths each day and also cumulative deaths each day.
   plot.PlotDeaths:
     show: False
     savefig: True
     # Where the user would like the plots saved.
-    daily_deaths_filename: /tmp/daily_deaths_validation_10.png
-    cumulative_deaths_filename: /tmp/cumulative_deaths_validation_10.png
+    daily_deaths_filename: /tmp/daily_deaths_validation_4.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths_validation_4.png
     # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
-    deaths_by_country_filename: /tmp/deaths_by_country_validation_10.csv
+    deaths_by_country_filename: /tmp/deaths_by_country_validation_4.csv
     # If a filepath is provided here, the plots will include curves of historical deaths.
     historical_data: Scenarios/Homogeneous/data/historical_data/who_data.csv
 
