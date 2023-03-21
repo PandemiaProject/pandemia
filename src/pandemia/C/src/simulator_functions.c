@@ -4,28 +4,28 @@
 
 void collect_telemetry_data
 (
-    int N, // number_of_agents
-    int S, // number_of_strains
-    int id,
-    const int32_t * current_strain,
+    int64_t N, // number_of_agents
+    int64_t S, // number_of_strains
+    int64_t id,
+    const int64_t * current_strain,
     int64_t * infections
 )
 {
-    for(int n=0; n<N; n++){
+    for(int64_t n=0; n<N; n++){
         if(current_strain[n] != -1){
             infections[(id * S) + current_strain[n]] += 1;
         }
     }
     }
 
-int count_dead
+int64_t count_dead
 (
-    int N, // number_of_agents
+    int64_t N, // number_of_agents
     const double * current_disease
 )
 {
-    int deaths = 0;
-    for(int n=0; n<N; n++){
+    int64_t deaths = 0;
+    for(int64_t n=0; n<N; n++){
         if(current_disease[n] == 1.0){
             deaths += 1;
         }

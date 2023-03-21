@@ -8,7 +8,7 @@ import numpy as np
 from collections import defaultdict
 from numpy import genfromtxt
 
-from ctypes import c_void_p, c_double, c_int32, cdll
+from ctypes import c_void_p, c_double, c_int64, cdll
 
 from ..health_model import HealthModel
 
@@ -51,7 +51,7 @@ class SafirHealthModel(HealthModel):
         self.transmission = self.lib.safir3_transmission_model
         self.transmission.restype = None
 
-        self.beta                             = np.array(config['beta'], dtype=float)
+        self.beta                             = np.array(config['beta'], dtype=np.float64)
         self.num_initial_infections_by_region = config['num_initial_infections_by_region']
         self.facemask_transmission_multiplier = config['facemask_transmission_multiplier']
         self.location_typ_multipliers         = config['location_typ_multipliers']
@@ -69,10 +69,10 @@ class SafirHealthModel(HealthModel):
             np.array([0.000395985, 0.001768802, 0.125221560, 0.222678871,
                       0.210222459, 0.176880156, 0.125221560, 0.070417258,
                       0.039598534, 0.017688016, 0.007041726, 0.002226789,
-                      0.000994670], dtype=float)
+                      0.000994670], dtype=np.float64)
         self.infectious_period_days = self.infectiousness_profile.size
         self.infectious_period_ticks = self.infectious_period_days * self.ticks_in_day
-        self.vfr = np.ones(self.number_of_days, dtype=float)
+        self.vfr = np.ones(self.number_of_days, dtype=np.float64)
         self.dr_vec = self._build_dr_vec()
 
     def vectorize_component(self, vector_region):
@@ -81,31 +81,31 @@ class SafirHealthModel(HealthModel):
         number_of_agents = vector_region.number_of_agents
 
         vector_region.ab_titre =\
-            np.full(number_of_agents, -np.Inf, dtype=float)
+            np.full(number_of_agents, -np.Inf, dtype=np.float64)
         vector_region.infection_number =\
-            np.zeros(number_of_agents, dtype=np.int32)
+            np.zeros(number_of_agents, dtype=np.int64)
         vector_region.days_since_last_infection =\
-            np.full(number_of_agents, self.number_of_days + 1, dtype=np.int32)
+            np.full(number_of_agents, self.number_of_days + 1, dtype=np.int64)
         vector_region.ef_infection =\
-            np.ones(number_of_agents, dtype=float)
+            np.ones(number_of_agents, dtype=np.float64)
         vector_region.ef_transmission =\
-            np.ones(number_of_agents, dtype=float)
+            np.ones(number_of_agents, dtype=np.float64)
         vector_region.ef_severe =\
-            np.ones(number_of_agents, dtype=float)
+            np.ones(number_of_agents, dtype=np.float64)
         vector_region.current_strain =\
-            np.full(number_of_agents, -1, dtype=np.int32)
+            np.full(number_of_agents, -1, dtype=np.int64)
         vector_region.current_disease =\
-            np.full(number_of_agents, 0, dtype=float)
+            np.full(number_of_agents, 0, dtype=np.float64)
         vector_region.current_infectiousness =\
-            np.full(number_of_agents, 0, dtype=float)
+            np.full(number_of_agents, 0, dtype=np.float64)
         vector_region.start_t =\
-            np.full(number_of_agents, -1, dtype=np.int32)
+            np.full(number_of_agents, -1, dtype=np.int64)
         vector_region.t_for_recovery =\
-            np.full(number_of_agents, -1, dtype=np.int32)
+            np.full(number_of_agents, -1, dtype=np.int64)
         vector_region.infection_event =\
-            np.full(number_of_agents, -1, dtype=np.int32)
+            np.full(number_of_agents, -1, dtype=np.int64)
         vector_region.location_transmission_multiplier =\
-            np.ones(vector_region.number_of_locations, dtype=float)
+            np.ones(vector_region.number_of_locations, dtype=np.float64)
 
         self._load_contact_matrix(vector_region)
 
@@ -158,7 +158,7 @@ class SafirHealthModel(HealthModel):
         vector_region.t_for_recovery[indexes] = t + self.infectious_period_ticks
         vector_region.start_t[indexes] = t
         vector_region.current_strain[indexes] = 0
-        vector_region.infection_event = np.full(vector_region.number_of_agents, -1, dtype=np.int32)
+        vector_region.infection_event = np.full(vector_region.number_of_agents, -1, dtype=np.int64)
 
         # Recoveries
         indexes = np.argwhere(vector_region.t_for_recovery == t).flatten()
@@ -166,7 +166,7 @@ class SafirHealthModel(HealthModel):
 
         # Infectiousness
         vector_region.current_infectiousness =\
-            np.full(vector_region.number_of_agents, 0, dtype=float)
+            np.full(vector_region.number_of_agents, 0, dtype=np.float64)
         indexes = np.argwhere(vector_region.current_strain == 0).flatten()
         vector_region.current_infectiousness[indexes] =\
             self.infectiousness_profile[(t - vector_region.start_t[indexes]) // self.ticks_in_day]
@@ -195,12 +195,12 @@ class SafirHealthModel(HealthModel):
         """Changes to agent health"""
 
         self.transmission(
-            c_int32(vector_region.number_of_locations),
-            c_int32(vector_region.number_of_agents),
-            c_int32(vector_region.id),
-            c_int32(self.sir_rescaling_int),
-            c_int32(self.ticks_in_day),
-            c_int32(vector_region.number_of_subpopulations),
+            c_int64(vector_region.number_of_locations),
+            c_int64(vector_region.number_of_agents),
+            c_int64(vector_region.id),
+            c_int64(self.sir_rescaling_int),
+            c_int64(self.ticks_in_day),
+            c_int64(vector_region.number_of_subpopulations),
             c_void_p(self.beta.ctypes.data),
             c_void_p(vector_region.subpopulation_index.ctypes.data),
             c_void_p(vector_region.subpopulation_mixing_matrix.ctypes.data),
@@ -231,9 +231,9 @@ class SafirHealthModel(HealthModel):
         dr_s = -np.log(2)/hl_s
         dr_l = -np.log(2)/hl_l
 
-        dr_vec = np.concatenate((np.full(period_s, dr_s, dtype=float),
+        dr_vec = np.concatenate((np.full(period_s, dr_s, dtype=np.float64),
                                 np.linspace(start=dr_s, stop=dr_l, num=time_to_decay),
-                                np.array([dr_l], dtype=float)), dtype=float)
+                                np.array([dr_l], dtype=np.float64)), dtype=np.float64)
 
         return dr_vec
 
@@ -323,15 +323,15 @@ class SafirHealthModel(HealthModel):
             number_of_age_groups = self.number_of_age_groups
             discrete_age = np.floor_divide(vector_region.age, self.age_group_interval)
             discrete_age[discrete_age > number_of_age_groups - 1] = number_of_age_groups - 1
-            discrete_age = discrete_age.astype(np.int32)
-            pop_by_disc_age = np.zeros(number_of_age_groups, dtype=np.int32)
+            discrete_age = discrete_age.astype(np.int64)
+            pop_by_disc_age = np.zeros(number_of_age_groups, dtype=np.int64)
             for a in range(number_of_age_groups):
                 count = np.count_nonzero(vector_region.age == a)
                 pop_by_disc_age[a] = count
 
             # Contact matrix
             filepath = self.age_mixing_matrices_directory + '/' + vector_region.other_name + '.csv'
-            contact_matrix = np.genfromtxt(filepath, delimiter=',', dtype=float)
+            contact_matrix = np.genfromtxt(filepath, delimiter=',', dtype=np.float64)
             contact_matrix = np.vstack((contact_matrix, contact_matrix[15]))
             contact_matrix = np.hstack((contact_matrix, contact_matrix[:,15][:, np.newaxis] *\
                 (pop_by_disc_age[16] / (pop_by_disc_age[15] + pop_by_disc_age[16]))))
@@ -350,5 +350,5 @@ class SafirHealthModel(HealthModel):
 
             vector_region.number_of_subpopulations = 1
             vector_region.subpopulation_index =\
-                np.zeros((vector_region.number_of_agents), dtype=np.int32)
-            vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=float)
+                np.zeros((vector_region.number_of_agents), dtype=np.int64)
+            vector_region.subpopulation_mixing_matrix = np.ones((1, 1), dtype=np.float64)

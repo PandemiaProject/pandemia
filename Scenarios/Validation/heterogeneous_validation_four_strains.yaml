@@ -125,10 +125,10 @@ health_model:
   number_of_strains: 4
   # Control parameters determining the transmission probability of each strain each tick. This list
   # should be of length equal to the number of strains.
-  beta: [0.035, 0.045, 0.069, 0.228]                                                                # POSSIBLE FREE VARIABLE
+  beta: [0.0408, 0.0516, 0.0792, 0.2628]                                                            # POSSIBLE FREE VARIABLE
   # A square matrix, whose rows should be probability vectors, indicating the probability of each
   # strain mutating into each other strain at the moment of infection.
-  mutation_matrix: [[0.9950000, 0.0050000, 0.0000000, 0.0000000],
+  mutation_matrix: [[0.9990000, 0.0010000, 0.0000000, 0.0000000],
                     [0.0000000, 0.9999900, 0.0000100, 0.0000000],
                     [0.0000000, 0.0000000, 0.9999995, 0.0000005],
                     [0.0000000, 0.0000000, 0.0000000, 1.0000000]]                                   # POSSIBLE FREE VARIABLE
@@ -825,7 +825,7 @@ travel_model:
   # Travellers mix homogeneously with the entire population of the destination region, with
   # transmission probabilities divided by the number of agents in that region. This parameter is a
   # control parameter which multiplies that ratio.
-  travel_transmission_multiplier: 25.0                                                              # POSSIBLE FREE VARIABLE
+  travel_transmission_multiplier: 150.0                                                             # POSSIBLE FREE VARIABLE
   # This parameter, between 0.0 and 1.0, boosts the numbers travelling internationally. If 0.0 then
   # the number of travellers is as in the travel matrix. If 1.0 then the entire population travels
   # each day. Values in between interpolate between these numbers.
@@ -844,8 +844,8 @@ policy_maker_model:
     Scenarios/Heterogeneous/data/historical_data/country_data_international_travel_controls.csv
   vaccination_data_fp:
     Scenarios/Validation/data/owid-covid-data.csv
-  max_transmission_control: 0.7                                                                     # POSSIBLE FREE VARIABLE
-  max_travel_control: 0.9                                                                           # POSSIBLE FREE VARIABLE
+  max_transmission_control: 0.70                                                                    # POSSIBLE FREE VARIABLE
+  max_travel_control: 0.95                                                                          # POSSIBLE FREE VARIABLE
 
 # ######################################### Output #################################################
 
@@ -868,29 +868,29 @@ reporters:
   # each day.
   csv.StrainCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/strain_counts_validation.csv
+    filename: /tmp/strain_counts_validation_1.csv
 
   # This reporter outputs a csv file, recording the number of deaths in each region each day.
   csv.DeathCounts:
     # Where the user would like the csv saved.
-    filename: /tmp/death_counts_validation.csv
+    filename: /tmp/death_counts_validation_1.csv
 
   # This reporter plots the number of individuals infected each day.
   plot.PlotInfected:
     show: False
     savefig: True
     # Where the user would like the plot saved.
-    filename: /tmp/infected_validation.png
+    filename: /tmp/infected_validation_1.png
 
   # This reporter plots the number of new deaths each day and also cumulative deaths each day.
   plot.PlotDeaths:
     show: False
     savefig: True
     # Where the user would like the plots saved.
-    daily_deaths_filename: /tmp/daily_deaths_validation.png
-    cumulative_deaths_filename: /tmp/cumulative_deaths_validation.png
+    daily_deaths_filename: /tmp/daily_deaths_validation_1.png
+    cumulative_deaths_filename: /tmp/cumulative_deaths_validation_1.png
     # If a filepath is provided, the reporter also outputs a csv, recording total deaths by region.
-    deaths_by_country_filename: /tmp/deaths_by_country_validation.csv
+    deaths_by_country_filename: /tmp/deaths_by_country_validation_1.csv
     # If a filepath is provided here, the plots will include curves of historical deaths.
     historical_data: Scenarios/Homogeneous/data/historical_data/who_data.csv
 

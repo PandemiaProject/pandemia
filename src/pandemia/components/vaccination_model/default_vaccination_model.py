@@ -4,7 +4,7 @@ import logging
 
 import numpy as np
 
-from ctypes import c_void_p, c_int32, cdll
+from ctypes import c_void_p, c_int64, cdll
 
 from ..vaccination_model import VaccinationModel
 log = logging.getLogger("default_vaccination_model")
@@ -72,30 +72,30 @@ class DefaultVaccinationModel(VaccinationModel):
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
                       self.max_vaccine_length_immunity,
-                      self.number_of_rho_immunity_outcomes), dtype=float)
+                      self.number_of_rho_immunity_outcomes), dtype=np.float64)
 
         self.vaccine_rho_immunity_failure_partitions =\
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
-                      self.max_vaccine_length_immunity), dtype=np.int32)
+                      self.max_vaccine_length_immunity), dtype=np.int64)
 
         self.vaccine_rho_immunity_failure_lengths =\
             np.zeros((self.number_of_vaccines,
-                      self.number_of_strains), dtype=np.int32)
+                      self.number_of_strains), dtype=np.int64)
 
         self.vaccine_sigma_immunity_failure_values =\
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
-                      self.max_vaccine_length_immunity), dtype=float)
+                      self.max_vaccine_length_immunity), dtype=np.float64)
 
         self.vaccine_sigma_immunity_failure_partitions =\
             np.zeros((self.number_of_vaccines,
                       self.number_of_strains,
-                      self.max_vaccine_length_immunity), dtype=np.int32)
+                      self.max_vaccine_length_immunity), dtype=np.int64)
 
         self.vaccine_sigma_immunity_failure_lengths =\
             np.zeros((self.number_of_vaccines,
-                      self.number_of_strains), dtype=np.int32)
+                      self.number_of_strains), dtype=np.int64)
 
         # Create vaccines
         self._get_vaccines(clock.ticks_in_day)
@@ -121,12 +121,12 @@ class DefaultVaccinationModel(VaccinationModel):
         number_of_vaccines = self.number_of_vaccines
 
         vector_region.number_of_vaccination_age_groups = 0
-        vector_region.vaccination_age_group = np.zeros((number_of_agents), dtype=np.int32)
+        vector_region.vaccination_age_group = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.num_to_vaccinate =\
             np.zeros((vector_region.number_of_vaccination_age_groups,
-                      number_of_vaccines), dtype=np.int32)
-        vector_region.most_recent_first_dose = np.zeros((number_of_agents), dtype=np.int32)
-        vector_region.vaccine_hesitant = np.zeros((number_of_agents), dtype=np.int32)
+                      number_of_vaccines), dtype=np.int64)
+        vector_region.most_recent_first_dose = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.vaccine_hesitant = np.zeros((number_of_agents), dtype=np.int64)
 
     def initial_conditions(self, vector_region):
         """Initial vaccination"""
@@ -146,18 +146,18 @@ class DefaultVaccinationModel(VaccinationModel):
         if np.sum(vector_region.num_to_vaccinate) > 0:
             vector_region.num_to_vaccinate = vector_region.num_to_vaccinate.flatten()
             self.dynamics_vaccination(
-                c_int32(day),
-                c_int32(ticks_in_day),
-                c_int32(vector_region.number_of_agents),
-                c_int32(self.number_of_strains),
-                c_int32(self.immunity_length),
-                c_int32(self.number_of_rho_immunity_outcomes),
-                c_int32(self.number_of_age_groups),
-                c_int32(self.number_of_vaccines),
-                c_int32(self.max_vaccine_length_immunity),
-                c_int32(self.booster_waiting_time_days),
-                c_int32(self.immunity_period_ticks),
-                c_int32(vector_region.id),
+                c_int64(day),
+                c_int64(ticks_in_day),
+                c_int64(vector_region.number_of_agents),
+                c_int64(self.number_of_strains),
+                c_int64(self.immunity_length),
+                c_int64(self.number_of_rho_immunity_outcomes),
+                c_int64(self.number_of_age_groups),
+                c_int64(self.number_of_vaccines),
+                c_int64(self.max_vaccine_length_immunity),
+                c_int64(self.booster_waiting_time_days),
+                c_int64(self.immunity_period_ticks),
+                c_int64(vector_region.id),
                 c_void_p(self.vaccine_rho_immunity_failure_values.ctypes.data),
                 c_void_p(self.vaccine_rho_immunity_failure_partitions.ctypes.data),
                 c_void_p(self.vaccine_rho_immunity_failure_lengths.ctypes.data),

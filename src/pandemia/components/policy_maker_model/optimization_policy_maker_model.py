@@ -48,30 +48,30 @@ class OptimizationPolicyMakerModel(PolicyMakerModel):
             self.vaccination_policy         = policy.vaccination_policy
         else:
             self.lockdown_policy =\
-                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
             self.border_closure_policy =\
-                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=float)
+                np.full((self.simulation_length_days, self.number_of_regions), 1.0, dtype=np.float64)
             self.facemask_policy =\
-                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
             self.random_testing_policy =\
-                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
             self.symptomatic_testing_policy =\
-                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
             self.contact_testing_policy =\
-                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int32)
+                np.full((self.simulation_length_days, self.number_of_regions), 0, dtype=np.int64)
             self.vaccination_policy =\
                 np.full((self.simulation_length_days, self.number_of_regions,
                          self.number_of_vaccination_age_groups,
-                         self.number_of_vaccines), 0, dtype=np.int32)
+                         self.number_of_vaccines), 0, dtype=np.int64)
 
         self.random_testing_policy =\
-            (self.scale_factor * self.random_testing_policy).astype(np.int32)
+            (self.scale_factor * self.random_testing_policy).astype(np.int64)
         self.symptomatic_testing_policy =\
-            (self.scale_factor * self.symptomatic_testing_policy).astype(np.int32)
+            (self.scale_factor * self.symptomatic_testing_policy).astype(np.int64)
         self.contact_testing_policy =\
-            (self.scale_factor * self.contact_testing_policy).astype(np.int32)
+            (self.scale_factor * self.contact_testing_policy).astype(np.int64)
         self.vaccination_policy =\
-            (self.scale_factor * self.vaccination_policy).astype(np.int32)
+            (self.scale_factor * self.vaccination_policy).astype(np.int64)
 
     def vectorize_component(self, vector_region):
         """Initializes numpy arrays associated to this component"""
