@@ -46,7 +46,7 @@ Such might be the devastating impact of a future pandemic, that the difference b
 
 While a large number of mathematical and computational epidemic models have been developed over the course of the COVID-19 pandemic, many are lacking in key features and limited in scope [@LORIG2021].
 
-A useful pandemic model must encompass a wide range of advanced features, including spatial dynamics, international travel, multiple variants, waning and cross immunity, and multiple vaccines of differing efficacy. As evidenced during the COVID-19 pandemic, these factors cannot be ignored [@KANG202096, @FRANCHPARDO2020140033, @CHINAZIIETAL, @CASCELLAETAL].
+A useful pandemic model must encompass a wide range of advanced features, including spatial dynamics, international travel, multiple variants, waning and cross immunity, and multiple vaccines of differing efficacy. As evidenced during the COVID-19 pandemic, these factors cannot be ignored [@KANG202096] [@FRANCHPARDO2020140033] [@CHINAZIIETAL] [@CASCELLAETAL].
 
 Moreover, there is a need for flexible model architecture that supports fast and scalable simulations and variable resolution at the level of the synthetic populations. While for many high-income countries, sufficient data are available to model those populations in some detail, this is simply not the case throughout much of the rest of the world [@WORLDBANK].
 
