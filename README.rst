@@ -39,8 +39,7 @@ Getting Started
 Requirements
 ------------
 
-* Python 3.10
-  * Python version other than 3.10 may produce errors.
+* Python 3.10 (versions other than 3.10 may produce errors)
 * A GCC compiler.
 
 Installation
