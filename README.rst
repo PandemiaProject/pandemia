@@ -97,7 +97,7 @@ their collective behaviour. This *bottom-up* approach contrasts with the *top-do
 approach to epidemic modelling. While individual-based models are more computationally intensive,
 they provide the most realistic approximations of social interaction and infectious disease dynamics.
 
-**Pandemia** is based on the `\ **ABMlux** <https://github.com/abm-covid-lux/abmlux>`_ model, developed
+**Pandemia** is based on the **`\ ABMlux <https://github.com/abm-covid-lux/abmlux>`_** model, developed
 in Luxembourg between July 2020 and February 2021, funded by the National Research Fund of
 Luxembourg. ABMlux was used in the article:
 
