@@ -40,12 +40,12 @@ Requirements
 ------------
 
 * Python 3.10 (versions other than 3.10 may produce errors)
-* A GCC compiler.
+* A GCC compiler
 
 Installation
 ------------
 
-To build C libraries
+To build C libraries:
 
 .. code-block::
 
@@ -76,13 +76,13 @@ To run the heterogeneous mixing scenario and save after the world building phase
 
 .. code-block::
 
-   pandemia Scenarios/Heterogeneous/heterogeneous_baseline.yaml Scenarios/Heterogeneous/heterogeneous_world.wld
+   pandemia Scenarios/Heterogeneous/heterogeneous_baseline.yaml heterogeneous_world.wld
 
 To run the heterogeneous mixing scenario using the save, thereby skipping the world building phase:
 
 .. code-block::
 
-   pandemia Scenarios/Heterogeneous/heterogeneous_baseline.yaml Scenarios/Heterogeneous/heterogeneous_world.wld
+   pandemia Scenarios/Heterogeneous/heterogeneous_baseline.yaml heterogeneous_world.wld
 
 To configure a new scenario, the user can choose one of the YAMLs already provided, as a
 template, which they can then edit as necessary. These YAMLs are annotated with comments
