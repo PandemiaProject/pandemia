@@ -97,15 +97,14 @@ their collective behaviour. This *bottom-up* approach contrasts with the *top-do
 approach to epidemic modelling. While individual-based models are more computationally intensive,
 they provide the most realistic approximations of social interaction and infectious disease dynamics.
 
-**Pandemia** is based on the **`\ ABMlux <https://github.com/abm-covid-lux/abmlux>`_** model, developed
-in Luxembourg between July 2020 and February 2021, funded by the National Research Fund of
-Luxembourg. ABMlux was used in the article:
+**Pandemia** is based on the `\ ABMlux <https://github.com/abm-covid-lux/abmlux>`_ model of the
+COVID-19 pandemic in Luxembourg, developed in Luxembourg between July 2020 and February 2021, funded
+by the National Research Fund of Luxembourg. ABMlux was used in the article:
 
 * Thompson, J. and Wattam, S. "Estimating the impact of interventions against COVID-19: from
   lockdown to vaccination", 2021, PLOS ONE, https://doi.org/10.1371/journal.pone.0261330
 
-In that article, the authors presented an agent-based model of the COVID-19 pandemic in Luxembourg,
-and used it to simulate the impact of interventions over the first 6 months of the pandemic. Pandemia
+In that article, the authors simualated the first 6 months of the pandemic in Luxembourg. Pandemia
 is a far-reaching generalization of the ABMlux model.
 
 Model
@@ -151,20 +150,20 @@ Objects of type **Reporter** collect output data for visualization and analysis.
 A number of **World Factory** and **Component** examples are provided for the user. In particular,
 for each **Component**\ , a default model is provided, as well as a void model in case the user does
 not wish for this component to be active during a simulation. Among the **World Factory** examples
-are **Homogeneous** and **Heterogeneous**. Both these factories build the countries of the world, using
+are **Homogeneous** and **Heterogeneous**. Both these factories build global models, using
 air travel data to configure travel between countries. However, whereas **Homogeneous** implements
 homogeneous mixing within each country, **Heterogeneous** implements a simple model of heterogeneous
-mixing, based on a gravity model and population density grids. **Heterogeneous** also allows
+mixing, based on a gravity model and population density grids. **Heterogeneous** allows
 the user to limit the simulation to a chosen subset of countries. In particular, the user can run
-**Heterogeneous** on only a single country, if the user wishes. For both of these world factories,
+**Heterogeneous** on only a single country. For both of these world factories,
 the recommended scale factor is 0.0005.
 
 Scenarios
 ---------
 
-Scenarios are configured using YAML. A scenario consists of a choice of world factory, and a choice
+Scenarios are configured using YAML. A scenario consists of a choice of world factory and a choice
 of model for each of the simulation components, together with configurations for each of these
-objects and the reporters. Example scenarios can be found in the `Scenarios <Scenarios/>`_
+objects and the reporters. Example scenarios can be found in the `Scenarios/ <Scenarios/>`_
 directory.
 
 The homogeneous mixing scenario uses the **Homogeneous** world factory. In this scenario,
@@ -185,15 +184,15 @@ the numbers infected, the scenario can be visualized as follows:
    :alt: pandemia_heterogeneous
 
 For each scenario, parameter values are set in the corresponding YAML file. For example, the
-**Homogeneous** config can be found `here <Scenarios/Homogeneous/homogeneous_config.yaml>`_ while the **Heterogeneous**
-config can be found `here <Scenarios/Heterogeneous/heterogeneous_config.yaml>`_.
+**Homogeneous** config can be found `here <Scenarios/Homogeneous/homogeneous_baseline.yaml>`_ while the **Heterogeneous**
+config can be found `here <Scenarios/Heterogeneous/heterogeneous_baseline.yaml>`_.
 
 Input Data
 ----------
 
 Input data for each scenario are found in the `Scenarios/ <Scenarios/>`_ directory. For example, all
-input data for the **Homogeneous** scenario are found in `Scenarios/Homogeneous/data <Scenarios/Homogeneous/data>`_.
-All input data for the **Heterogeneous** scenario are found in `Scenarios/Heterogeneous/data <Scenarios/Heterogeneous/data>`_.
+input data for the **Homogeneous** scenario are found in `Scenarios/Homogeneous/data/ <Scenarios/Homogeneous/data>`_.
+All input data for the **Heterogeneous** scenario are found in `Scenarios/Heterogeneous/data/ <Scenarios/Heterogeneous/data>`_.
 
 The **Heterogeneous** world factory uses the following grid data, available under a CC BY 4.0 license:
 
@@ -275,9 +274,9 @@ All the scenarios files for integration tests are in ``./Scenarios/Tests``.
 A number of other tests use the ``test_e2e_health_and_movement_model.yaml``. These tests use the
 "DefaultHealthModel", "DefaultMovementModel" and the Default model for *one* other component
 (the "Void" models are used for the remaining components). The scenario config is read and patched
-using literals hardcoded in the tests in ``test_end_to_end_pandimia.py``. In most cases the expected
+using literals hardcoded in the tests in ``test_end_to_end_pandemia.py``. In most cases the expected
 results are in ``./tests/e2e_expected_outputs`` in a csv file which takes its name from the test
-name (see ``test_end_to_end_pandimia.py`` for details).
+name (see ``test_end_to_end_pandemia.py`` for details).
 ..
    **NOTE** In many cases, these tests are not designed to be realistic, but to demonstrate
    particular aspects of the model. For example in some tests, individuals lose their immunity
