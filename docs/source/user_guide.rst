@@ -1,8 +1,3 @@
-.. container:: centering
-
-   | 
-   | |image|
-   | 2023-01-18
 
 .. sectnum::
 
@@ -1097,8 +1092,3 @@ system, may not be obvious to the modeller. Such strategies could save
 lives and reduce the cost of interventions. By inverting the cost
 function, Pandemia can also be used to determine which strategies are
 best avoided.
-
-.. |image| image:: images/pandemia_logo.jpg
-   :width: 20.0%
-
-
