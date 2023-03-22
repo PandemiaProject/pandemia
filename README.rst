@@ -1,9 +1,6 @@
 .. role:: raw-html-m2r(raw)
    :format: html
 
-About Pandemia
-==============
-
 .. image:: https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml/badge.svg
    :target: https://github.com/PandemiaProject/pandemia/actions/workflows/end-to-end-tests.yml
    :alt: End to End tests
@@ -15,6 +12,9 @@ About Pandemia
 .. image:: https://readthedocs.org/projects/pandemia/badge/?version=latest
    :target: https://pandemia.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+
+About Pandemia
+==============
 
 Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
 
