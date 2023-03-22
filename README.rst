@@ -16,12 +16,6 @@ About Pandemia
    :target: https://pandemia.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. container:: center
-
-   .. image::  docs/source/images/pandemia_logo.jpg
-      :target: docs/source/images/pandemia_logo.jpg
-      :alt: pandemia Logo
-
 Pandemia is an individual-based stochastic pandemic simulator. It is currently a work in progress.
 
 Pandemia is able to simulate and visualize the spread of an infectious disease across multiple
