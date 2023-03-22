@@ -34,16 +34,16 @@ found below.
 The code is mixed Python and C.
 
 Getting Started
----------------
+===============
 
 Requirements
-^^^^^^^^^^^^
+------------
 
 * Python 3.10 (versions other than 3.10 may produce errors)
 * A GCC compiler
 
 Installation
-^^^^^^^^^^^^
+------------
 
 To build C libraries:
 
@@ -58,7 +58,7 @@ To install pandemia python package:
    pip install .
 
 Demos
-^^^^^
+-----
 
 To run the homogeneous mixing scenario:
 
@@ -89,7 +89,7 @@ template, which they can then edit as necessary. These YAMLs are annotated with 
 briefly explaining the meaning of each of the parameters.
 
 Overview
---------
+========
 
 In an individual-based model, the simultaneous actions and interactions of multiple individuals are
 simulated in an attempt to re-create and predict the emergence of complex phenomena resulting from
@@ -108,7 +108,7 @@ In that article, the authors simualated the first 6 months of the pandemic in Lu
 is a far-reaching generalization of the ABMlux model.
 
 Model
-^^^^^
+-----
 
 The Pandemia simulator acts upon a **World**. A **World** consists of a number of objects of type
 **Region** and a **Travel Matrix**. The **Travel Matrix** represents the number of individuals travelling
@@ -159,7 +159,7 @@ the user to limit the simulation to a chosen subset of countries. In particular,
 the recommended scale factor is 0.0005.
 
 Scenarios
-^^^^^^^^^
+---------
 
 Scenarios are configured using YAML. A scenario consists of a choice of world factory and a choice
 of model for each of the simulation components, together with configurations for each of these
@@ -188,7 +188,7 @@ For each scenario, parameter values are set in the corresponding YAML file. For 
 config can be found `here <Scenarios/Heterogeneous/heterogeneous_baseline.yaml>`_.
 
 Input Data
-^^^^^^^^^^
+----------
 
 Input data for each scenario are found in the `Scenarios/ <Scenarios/>`_ directory. For example, all
 input data for the **Homogeneous** scenario are found in `Scenarios/Homogeneous/data/ <Scenarios/Homogeneous/data>`_.
@@ -202,7 +202,7 @@ New York: NASA Socioeconomic Data and Applications Center (SEDAC). https://doi.o
 Accessed 31 OCTOBER 2022.
 
 Output Data
-^^^^^^^^^^^
+-----------
 
 Output data are stored in an output directory, configured by the user in the reporters
 section of the scenario configuration. Output can include a csv file of the numbers infected with
@@ -210,7 +210,7 @@ each strain, in each region each day, numbers of deaths, and plots in png format
 deaths over time. Real-time visualizations are also an option.
 
 Testing
--------
+=======
 
 To install additional dependencies required for testing:
 
@@ -219,7 +219,7 @@ To install additional dependencies required for testing:
    pip install .[test]
 
 Unit tests
-^^^^^^^^^^
+----------
 
 Unit tests have been written using the standard pytest framework. To run the tests use:
 
@@ -237,7 +237,7 @@ It is possible to force these tests to run by using pytest's `--runxfail` switch
    pytest --runxfail
 
 Integration tests
-^^^^^^^^^^^^^^^^^
+-----------------
 
 Integration tests (and other tests which take a long time to execute) should be marked with the
 ``@pytest.mark.slow`` decorator, eg:
@@ -296,7 +296,7 @@ They may need to be manually moved to the relevant location in ``./tests/e2e_exp
 This command can be combined with selecting individual tests if required.
 
 Test Coverage
-^^^^^^^^^^^^^
+-------------
 
 Test coverage is reported automatically on each run of pytest. To obtain the html coverage report
 use the ``--cov-report`` argument:
@@ -306,7 +306,7 @@ use the ``--cov-report`` argument:
    pytest --cov-report=html
 
 Documentation
--------------
+=============
 
 Consult the documenation `here <https://pandemia.readthedocs.io/en/latest/>`_\. To generate and view
 a local copy of this documenation:
@@ -326,7 +326,7 @@ Alternatively, the user can generate documentation using:
    pdoc --html --overwrite --html-dir docs pandemia
 
 Contributors
-------------
+============
 
 Researchers and students are welcome to contribute to this project.
 
@@ -336,7 +336,7 @@ More advanced contributions could involve, for example, the creation of new worl
 component models, or further development of the validation and optimization methods.
 
 Acknowledgements
-----------------
+================
 
 The Pandemia software was created by James Thompson in early 2022, based on the ABMlux software
 written by Stephen Wattam and James Thompson. Between October 2022 and February 2023, Andy Smith and
@@ -350,7 +350,7 @@ Alan Turing Institute, between April 2021 and May 2022.
 Stephen Wattam contributed to the ABMlux project via WAP Academic Consulting Ltd.
 
 Citing this work
-----------------
+================
 
 If you publish using technology from this repository, please cite the following article using this
 BibTeX:
@@ -372,6 +372,6 @@ BibTeX:
    }
 
 License
--------
+=======
 
 :raw-html-m2r:`<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>`\ :raw-html-m2r:`<br />`\ This work is licensed under a :raw-html-m2r:`<a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>`.
