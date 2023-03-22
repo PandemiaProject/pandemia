@@ -64,6 +64,10 @@ In `Pandemia`, the policy maker is directly represented as a component in the si
 
 # Acknowledgements
 
-We acknowledge contributions from ?
+The Pandemia software was created by James Thompson in early 2022, based on the ABMlux software written by Stephen Wattam and James Thompson. Between October 2022 and February 2023, Andy Smith and Aoife Hughes contributed to the project as members of the Research Engineering Group at The Alan Turing Institute.
+
+Since June 2022, James Thompson has been employed as a Research Associate at the Department of Infectious Disease Epidemiology at Imperial College London, having been previously employed by The Alan Turing Institute, between April 2021 and May 2022.
+
+Stephen Wattam contributed to the ABMlux project via WAP Academic Consulting Ltd.
 
 # References
