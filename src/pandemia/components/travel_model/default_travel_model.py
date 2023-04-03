@@ -186,9 +186,13 @@ class DefaultTravelModel(TravelModel):
     def _interpolate_matrix(self, baseline_agents_travelling_matrix, vector_world, interpolation):
         """Artificially inflate number of travellers for testing purposes or otherwise"""
 
-        ids_to_population_sizes =\
+        ids_to_population_sizes_dict =\
             {vr.id: np.float64(vr.number_of_agents * (1 / self.scale_factor))\
                     for vr in vector_world.vector_regions}
+
+        ids_to_population_sizes = np.zeros((vector_world.number_of_regions), dtype=np.int64)
+        for i in range(vector_world.number_of_regions):
+            ids_to_population_sizes[i] = ids_to_population_sizes_dict[i]
 
         # Adjust matrix using interpolation parameter
         row_sums = baseline_agents_travelling_matrix.sum(axis=1)

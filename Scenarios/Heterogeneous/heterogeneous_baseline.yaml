@@ -276,7 +276,7 @@ movement_model:
   location_closure_exemptions:
     House: ["Home_Activity"]
   # For which activities might an individual wear a facemask.
-  facemask_activities: [Other_Activity]
+  facemask_activities: ["Community_Activity"]
   # Facemask hesitancy by age group. A probability 1.0 means that nobody in that age group wears a
   # mask, a probability 0.0 means that everyone does.
   age_groups:         [  0,  18,  65]
