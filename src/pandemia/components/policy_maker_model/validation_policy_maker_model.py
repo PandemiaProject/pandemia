@@ -152,15 +152,14 @@ class ValidationPolicyMakerModel(PolicyMakerModel):
         for date in missing_dates:
             vaccination_data[date] = [0,0]
 
-        # Get number of agents in each age group
-        num_by_age_groups = [0, 0, 0]
-        for n in range(vector_region.number_of_agents):
-            if vector_region.age[n] < 18:
-                num_by_age_groups[0] += 1
-            if (vector_region.age[n] >= 18) and (vector_region.age[n] < 65):                        # TODO do age groups properly...
-                num_by_age_groups[1] += 1
-            if vector_region.age[n] >= 65:
-                num_by_age_groups[2] += 1
+        # Calculate the number of agents in each age group
+        age_group_thresholds = np.array([18, 65])
+        ages = vector_region.age
+        num_by_age_groups = np.zeros(3, dtype=int)
+        num_by_age_groups[0] = np.sum(ages < age_group_thresholds[0])
+        num_by_age_groups[1] = np.sum((ages >= age_group_thresholds[0]) &\
+                                      (ages < age_group_thresholds[1]))
+        num_by_age_groups[2] = np.sum(ages >= age_group_thresholds[1])
 
         # Construct vaccinations arrays
         date = start_date
