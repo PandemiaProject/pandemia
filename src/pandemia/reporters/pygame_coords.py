@@ -32,7 +32,7 @@ class PygameCoords(Reporter):
         self.font_size            = config['font_size']
         self.display_width        = config['display_width']
         self.display_height       = config['display_height']
-        self.cellsize_config  = config['cellsize']
+        self.cellsize_config      = config['cellsize']
         self.fullscreen           = config['fullscreen']
         cmap                      = config['cmap']
 
@@ -65,10 +65,12 @@ class PygameCoords(Reporter):
         self.scale_factor = world.scale_factor
 
         # Simplify colour map for faster rendering
-        self.prevalence_to_colour = {}
-        for prevalence in range(11):
+        self.number_of_prevalence_levels = 11
+        self.prevalence_to_colour = np.zeros((self.number_of_prevalence_levels, 4), dtype=np.uint8)
+        for prevalence in range(self.number_of_prevalence_levels):
             self.prevalence_to_colour[prevalence] =\
-                self.scalar_cmap.to_rgba((prevalence + 1) / 11, bytes = True)
+                self.scalar_cmap.to_rgba((prevalence + 1) /\
+                                         self.number_of_prevalence_levels, bytes = True)
 
         # Store number of agents in each region
         self.number_of_agents =\
@@ -175,13 +177,14 @@ class PygameCoords(Reporter):
 
             infected = 0
             for id in current_location:
-                for n in range(self.number_of_agents[id]):
-                    m = current_location[id][n]
-                    pixel = self.locations_to_pixels_by_region[id][m]
-                    num_total[pixel] += 1
-                    if current_infectiousness[id][n] > 0:
-                        num_infected[pixel] += 1
-                        infected += 1
+                pixels = self.locations_to_pixels_by_region[id][current_location[id]]
+                unique_pixels, counts = np.unique(pixels, return_counts=True)
+                num_total[unique_pixels] += counts
+                infected_pixels = pixels[current_infectiousness[id] > 0]
+                unique_infected_pixels, infected_counts =\
+                    np.unique(infected_pixels, return_counts=True)
+                num_infected[unique_infected_pixels] += infected_counts
+                infected += len(infected_pixels)
 
             empty_pixels = num_total == 0
             num_total += empty_pixels.astype(int)
@@ -191,18 +194,25 @@ class PygameCoords(Reporter):
             if self.plot_num_infected and not self.plot_prevalence:
                 prevalence = np.minimum(num_infected, self.max_num_inf_to_plot) /\
                                         self.max_num_inf_to_plot
-            prevalence = (prevalence * 10).astype(int)
+            prevalence = (prevalence * (self.number_of_prevalence_levels - 1)).astype(int)
 
             # Refresh screen
             self.screen.blit(self.background_screen, (0,0))
 
             # Colour squares
+            colour = self.prevalence_to_colour[prevalence]
             for x in range(self.width):
                 for y in range(self.height):
                     if not empty_pixels[(x * self.height) + y]:
-                        colour = self.prevalence_to_colour[prevalence[(x * self.height) + y]]
-                        pygame.draw.rect(self.screen, colour, pygame.Rect(x + self.x_offset,
+                        pygame.draw.rect(self.screen, colour[(x * self.height) + y], pygame.Rect(x + self.x_offset,
                                          y + self.y_offset, self.cellsize, self.square_height))
+
+            # grid = np.full((self.width, self.height, 3), 255, dtype=np.uint8)
+            # grid[self.region_coordinates] = self.prevalence_to_colour[0]
+            # prevalence = prevalence.reshape((self.width, self.height))
+            # rgb = self.prevalence_to_colour[prevalence][:, :, [0, 1, 2]]
+            # grid[prevalence > 0] = rgb
+            # pygame.surfarray.blit_array(self.screen, grid)
 
             infected = int((1 / self.scale_factor) * infected)
 
