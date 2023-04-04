@@ -7,7 +7,7 @@ scale_factor: 0.0005
 # Profiler. If True then performance data is saved in a file called profiler_output. The parameter
 # pstats_records determines how many lines to print in the profiler report.
 profile: False
-pstats_records: 100
+pstats_records: 1000
 # Random seed. Pandemia is stochastic and therefore requires a random seed.
 random_seed: 1
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
@@ -37,6 +37,8 @@ world_factory:
   # 0.0005. It implements a simple model of hetergeneous mixing, based on average household size and
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
+  # The time discretization (should match with tick_length_s)
+  ticks_in_day_world: 3
   # This world factory is stochastic, and therefore gets its own random seed.
   random_seed: 1
   # Filepath to country data, including age structure and population sizes. The actual number of

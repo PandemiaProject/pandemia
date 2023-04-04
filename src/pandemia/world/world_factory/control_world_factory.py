@@ -24,16 +24,13 @@ class ControlWorldFactory(WorldFactory):
     config : Config
         A Pandemia Config object. A sub-config of the full config, containing the data used to
         configure this world factory.
-    clock : Clock
-        A Pandemia Clock object, discretizing the day.
     scale_factor : float
         The scale factor, coming from the full config.
     """
 
-    def __init__(self, config, clock, scale_factor):
+    def __init__(self, config, scale_factor):
 
         self.config = config
-        self.clock = clock
         self.scale_factor = scale_factor
 
         self.contacts            = self.config['contacts']
@@ -66,6 +63,7 @@ class ControlWorldFactory(WorldFactory):
         activities                    = self.config['activities']
         activity_location_types       = self.config['activity_location_types']
         number_of_locations_for_agent = self.config['number_of_locations_for_agent_by_activity']
+        ticks_in_day_world            = self.config['ticks_in_day_world']
 
         # Locations
         location_type_counts          = self.config['location_type_counts']
@@ -76,8 +74,8 @@ class ControlWorldFactory(WorldFactory):
             location_type_counts[typ] =\
                 max(int(location_type_counts[typ] * self.scale_factor), 1)
 
-        ticks_in_week = self.clock.ticks_in_week
-        ticks_in_day = self.clock.ticks_in_day
+        ticks_in_day = ticks_in_day_world
+        ticks_in_week = ticks_in_day * 7
 
         world.regions = []
         world.number_of_regions = number_of_regions

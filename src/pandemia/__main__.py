@@ -6,9 +6,11 @@ import logging
 import logging.config
 import time
 import cProfile, pstats
+from .utils import instantiate_class
 
 from .messagebus import MessageBus
 from .sim_factory import SimulationFactory
+from .world import VectorWorld
 
 from .version import VERSION
 from .config import Config
@@ -16,6 +18,23 @@ from .config import Config
 # Global module log
 log = logging.getLogger()
 
+def build_world(config):
+    """Builds the world on which the simulator acts. The world consists of regions. Each region
+    consists of agents and locations, with agents able to perform activities in selected locations.
+    There is also a scale factor, which can be used to rescale the numbers of agents and locations
+    in each region"""
+
+    scale_factor = config['scale_factor']
+
+    # Create world
+    world_factory_class = config['world_factory.__type__']
+    world_factory_config = config.subconfig('world_factory')
+    world_factory = instantiate_class("pandemia.world.world_factory", world_factory_class,
+                                      world_factory_config, scale_factor)
+    world = world_factory.get_world()
+    vector_world = world.vectorize_world()
+
+    return vector_world
 
 def main():
     """Main pandemia entry point. Two command-line arguments may be passed, the first is required
@@ -32,26 +51,24 @@ def main():
         log.warning("No config given")
         exit(1)
 
-    # System configuration and setup
+    # Load or build world
+    config = Config(sys.argv[1])
     if len(sys.argv) > 2 and osp.isfile(sys.argv[2]):
-        sim_factory = SimulationFactory.from_file(sys.argv[2])
-        logging.config.dictConfig(sim_factory.config['logging'])
-        log.warning("Existing factory loaded from %s", sys.argv[2])
+        log.info('Reading data from %s...', sys.argv[2])
+        vector_world = VectorWorld.from_file(sys.argv[2])
+        log.warning("Existing world loaded from %s", sys.argv[2])
     else:
-        config = Config(sys.argv[1])
-        sim_factory = SimulationFactory(config)
-        logging.config.dictConfig(sim_factory.config['logging'])
-
-        log.info("State info:")
-        log.info("  Run ID: %s", sim_factory.run_id)
-        log.info("  pandemia version: %s", sim_factory.pandemia_version)
-        log.info("  Created at: %s", sim_factory.created_at)
-
-        sim_factory.build_clock_and_world()
-
+        vector_world = build_world(config)
         if len(sys.argv) > 2:
-            log.info("Writing to state file: %s", sys.argv[2])
-            sim_factory.to_file(sys.argv[2])
+            log.info("Writing to world file: %s", sys.argv[2])
+            vector_world.to_file(sys.argv[2])
+
+    # Instantiate simulation factory
+    sim_factory = SimulationFactory(config, vector_world)
+    logging.config.dictConfig(sim_factory.config['logging'])
+
+    # Build simulation clock
+    sim_factory.build_clock()
 
     # Build simulation components
     sim_factory.build_components()

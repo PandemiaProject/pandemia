@@ -37,6 +37,8 @@ world_factory:
   # 0.0005. It implements a simple model of hetergeneous mixing, based on average household size and
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
+  # The time discretization (should match with tick_length_s)
+  ticks_in_day_world: 3
   # This world factory is stochastic, and therefore gets its own random seed.
   random_seed: 1
   # Filepath to country data, including age structure and population sizes. The actual number of

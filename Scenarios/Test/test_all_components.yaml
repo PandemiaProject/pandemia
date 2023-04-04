@@ -32,6 +32,8 @@ epoch: 23rd February 2020
 world_factory:
   __type__: control_world_factory.ControlWorldFactory
   random_seed: 1
+  # The time discretization (should match with tick_length_s)
+  ticks_in_day_world: 144
   # The order in which the region names are listed here determines the index of that region referred
   # to in vectors and matrices appearing in other components:
   region_names: ["Test Region 0", "Test Region 1", "Test Region 2", "Test Region 3"]

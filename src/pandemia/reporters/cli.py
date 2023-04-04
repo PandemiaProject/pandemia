@@ -20,7 +20,7 @@ class TimeReporter(Reporter):
         """Plots progress bar with tick and clock time"""
 
         if self.tqdm is None:
-            self.tqdm = tqdm(total=clock.simulation_length_days)
+            self.tqdm = tqdm(total=clock.simulation_length_days - 1)
 
         self.tqdm.n = clock.day
         self.tqdm.set_description(f"{clock.iso8601()}")

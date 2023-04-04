@@ -43,16 +43,13 @@ class HeterogeneousWorldFactory(WorldFactory):
     config : Config
         A Pandemia Config object. A sub-config of the full config, containing the data used to
         configure this world factory.
-    clock : Clock
-        A Pandemia Clock object, discretizing the day.
     scale_factor : float
         The scale factor, coming from the full config.
     """
 
-    def __init__(self, config, clock, scale_factor):
+    def __init__(self, config, scale_factor):
 
         self.config = config
-        self.clock = clock
         self.scale_factor = scale_factor
 
         # Random seed
@@ -80,6 +77,9 @@ class HeterogeneousWorldFactory(WorldFactory):
         self.nonlocal_sample_size        = self.config['nonlocal_sample_size']
         self.subsample_size              = self.config['num_locs_for_community_activity']
         self.gamma                       = self.config['gravity_model_exponent']
+        self.ticks_in_day_world          = self.config['ticks_in_day_world']
+
+        assert self.ticks_in_day_world == 3, "Heterogeneous world factory requires 3 ticks per day"
 
         # Travel matrix
         self.local_travel_prob_per_day   = self.config['local_travel_prob_per_day']
@@ -140,8 +140,6 @@ class HeterogeneousWorldFactory(WorldFactory):
     def _create_region(self, id, iso2, iso3, super_region, number_of_agents,
                        age_distribution, household_size):
         """Creates test agents and test locations and assembles them into test regions."""
-
-        assert self.clock.ticks_in_day == 3
 
         #log.info("Creating region: " + iso2 + "...")
 

@@ -1,6 +1,7 @@
 
 import numpy as np
 from typing import Union
+import pickle
 
 from .region import Region, VectorRegion
 
@@ -98,3 +99,33 @@ class VectorWorld:
         self.number_of_regions = None
         self.scale_factor = scale_factor
         self.travel_matrix = None
+
+    def to_file(self, output_filename: str):
+        """Write an object to disk at the filename given.
+
+        Parameters:
+            output_filename (str):The filename to write to.  Files get overwritten
+                                  by default.
+
+        Returns:
+            None
+        """
+
+        with open(output_filename, 'wb') as fout:
+            pickle.dump(self, fout, protocol=pickle.HIGHEST_PROTOCOL)
+
+    @staticmethod
+    def from_file(input_filename: str):
+        """Read an object from disk from the filename given.
+
+        Parameters:
+            input_filename (str):The filename to read from.
+
+        Returns:
+            obj(Object):The python object read from disk
+        """
+
+        with open(input_filename, 'rb') as fin:
+            payload = pickle.load(fin)
+
+        return payload

@@ -25,16 +25,13 @@ class ABMluxWorldFactory(WorldFactory):
     config : Config
         A Pandemia Config object. A sub-config of the full config, containing the data used to
         configure this world factory.
-    clock : Clock
-        A Pandemia Clock object, discretizing the day.
     scale_factor : float
         The scale factor, coming from the full config.
     """
 
-    def __init__(self, config, clock, scale_factor):
+    def __init__(self, config, scale_factor):
 
         self.config = config
-        self.clock = clock
         self.scale_factor = scale_factor
 
         self.world_fp = self.config['world_fp']
@@ -63,7 +60,6 @@ class ABMluxWorldFactory(WorldFactory):
             ms_abmlux_sim_factory = pickle.load(fin)
 
         assert ms_abmlux_sim_factory.world.scale_factor == self.scale_factor
-        assert ms_abmlux_sim_factory.clock.tick_length_s == self.clock.tick_length_s
 
         total_number_of_agents = len(ms_abmlux_sim_factory.world.agents)
 

@@ -27,8 +27,8 @@ def instantiate_class(module_base, module_path, *args, **kwargs):
     class_name  = module_path.split(".")[-1]
 
     log.debug("Dynamically loading class '%s' from module name '%s'", module_name, class_name)
-    print(module_base)
-    print(module_name)
+    # print(module_base)
+    # print(module_name)
     mod = importlib.import_module(module_name)
     cls = getattr(mod, class_name)
 
