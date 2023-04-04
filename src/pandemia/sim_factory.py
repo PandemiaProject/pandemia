@@ -23,7 +23,7 @@ from .components.vaccination_model import VaccinationModel
 from .components.travel_model import TravelModel
 from .components.policy_maker_model import PolicyMakerModel
 
-log = logging.getLogger("sim_state")
+log = logging.getLogger("sim_factory")
 
 class SimulationFactory:
     """Class that allows for gradual composition of a number of components, eventually outputting

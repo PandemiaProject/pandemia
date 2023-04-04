@@ -53,6 +53,7 @@ def main():
 
     # Load or build world
     config = Config(sys.argv[1])
+    logging.config.dictConfig(config['logging'])
     if len(sys.argv) > 2 and osp.isfile(sys.argv[2]):
         log.info('Reading data from %s...', sys.argv[2])
         vector_world = VectorWorld.from_file(sys.argv[2])
@@ -65,7 +66,6 @@ def main():
 
     # Instantiate simulation factory
     sim_factory = SimulationFactory(config, vector_world)
-    logging.config.dictConfig(sim_factory.config['logging'])
 
     # Build simulation clock
     sim_factory.build_clock()

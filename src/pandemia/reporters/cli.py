@@ -24,3 +24,6 @@ class TimeReporter(Reporter):
 
         self.tqdm.n = clock.day
         self.tqdm.set_description(f"{clock.iso8601()}")
+
+        if clock.day == clock.simulation_length_days - 1:
+            self.tqdm.close()

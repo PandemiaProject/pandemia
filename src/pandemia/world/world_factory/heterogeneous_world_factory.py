@@ -126,7 +126,8 @@ class HeterogeneousWorldFactory(WorldFactory):
 
         number_of_agents = sum([len(region.agents) for region in world.regions])
 
-        log.info("Created world with %d agents", number_of_agents)
+        log.info("World created with %d regions and %d agents", world.number_of_regions,
+                                                                number_of_agents)
 
         self.add_shape_data(self.regions_shape_data_file, world)
 
