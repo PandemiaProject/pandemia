@@ -207,13 +207,6 @@ class PygameCoords(Reporter):
                         pygame.draw.rect(self.screen, colour[(x * self.height) + y], pygame.Rect(x + self.x_offset,
                                          y + self.y_offset, self.cellsize, self.square_height))
 
-            # grid = np.full((self.width, self.height, 3), 255, dtype=np.uint8)
-            # grid[self.region_coordinates] = self.prevalence_to_colour[0]
-            # prevalence = prevalence.reshape((self.width, self.height))
-            # rgb = self.prevalence_to_colour[prevalence][:, :, [0, 1, 2]]
-            # grid[prevalence > 0] = rgb
-            # pygame.surfarray.blit_array(self.screen, grid)
-
             infected = int((1 / self.scale_factor) * infected)
 
             # Print day and infections
