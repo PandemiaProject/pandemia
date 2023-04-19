@@ -20,7 +20,7 @@ authors:
     orcid: 0000-0000-0000-0000
     affiliation: 4
 affiliations:
- - name: Research Associate, Imperial College London, UK
+ - name: Department of Infectious Disease Epidemiology, Imperial College London, UK
    index: 1
  - name: xxx, WAP Academic Consulting, UK
    index: 2
