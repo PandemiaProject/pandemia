@@ -160,7 +160,7 @@ def test_vectorize_component(concrete_model, sample_vector_region):
         "DefaultTravelModel": 2,
         "SafirTravelModel": 2,
         "VoidTravelModel": 1,
-        "DefaultVaccinationModel": 5,
+        "DefaultVaccinationModel": 4,
         "SafirVaccinationModel": 5,
         "VoidVaccinationModel": 0,
     }

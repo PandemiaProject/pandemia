@@ -66,7 +66,7 @@ class DefaultVaccinationModel(VaccinationModel):
         assert self.number_of_rho_immunity_outcomes == number_of_rho_immunity_outcomes,\
             "Number of rho immunity outcomes in vaccination model must match health model"
 
-        self.max_vaccine_length_immunity     = self._get_max_vaccine_length_immunity()
+        self.max_vaccine_length_immunity = self._get_max_vaccine_length_immunity()
 
         self.vaccine_rho_immunity_failure_values =\
             np.zeros((self.number_of_vaccines,
