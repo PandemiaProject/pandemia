@@ -86,7 +86,6 @@ class Simulator:
         self.error = 0
         self.historical_data_filepath = self.config['historical_data_filepath']
         self.average_deaths_dict_historical = None
-
    
     def _set_telemetry_bus(self):
         """Assigns telemetry bus to each component"""
@@ -157,12 +156,10 @@ class Simulator:
             vector_region.random_state =\
                 np.random.randint(0, ULONG_MAX + 1, size=2, dtype=np.uint64)
 
-    def _initial_conditions(self, offset):
+    def initial_conditions(self, vector_regions, offset):
         """Initialize the various submodels"""
 
-        self.travel_model.initial_conditions(self)
-
-        for vector_region in self.vector_regions:
+        for vector_region in vector_regions:
 
             self.policy_maker_model.initial_conditions(vector_region)
             self.seasonal_effects_model.initial_conditions(vector_region)
@@ -171,8 +168,6 @@ class Simulator:
             self.hospitalization_and_death_model.initial_conditions(vector_region)
 
             self._update(vector_region, 0)
-
-        for vector_region in self.vector_regions:
 
             self.testing_and_contact_tracing_model.initial_conditions(vector_region)
             self.vaccination_model.initial_conditions(vector_region)
@@ -221,7 +216,15 @@ class Simulator:
         self._seed_regions()
 
         # Initialise components, such as disease model, movement model, interventions etc
-        self._initial_conditions(offset)
+        # self._initial_conditions(offset)
+        if self.enable_parallel:
+            self.travel_model.initial_conditions(self)
+            Parallel(n_jobs=self.num_jobs, backend="threading",
+                        verbose=0)(delayed(self.initial_conditions)(vector_region_batch, offset)
+                                   for vector_region_batch in self.vector_region_batches)
+        else:
+            self.travel_model.initial_conditions(self)
+            self.initial_conditions(self.vector_regions, offset)
 
     def run(self):
         """Run the simulation"""

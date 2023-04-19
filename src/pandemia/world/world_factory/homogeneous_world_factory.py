@@ -27,16 +27,13 @@ class HomogeneousWorldFactory(WorldFactory):
     config : Config
         A Pandemia Config object. A sub-config of the full config, containing the data used to
         configure this world factory.
-    clock : Clock
-        A Pandemia Clock object, discretizing the day.
     scale_factor : float
         The scale factor, coming from the full config.
     """
 
-    def __init__(self, config, clock, scale_factor):
+    def __init__(self, config, scale_factor):
 
         self.config = config
-        self.clock = clock
         self.scale_factor = scale_factor
 
         self.regions_shape_data_file   = self.config['regions_shape_data_file']
@@ -45,6 +42,7 @@ class HomogeneousWorldFactory(WorldFactory):
         self.air_travel_path           = self.config['air_travel_path']
         self.local_travel_prob_per_day = self.config['local_travel_prob_per_day']
         self.distance_threshold        = self.config['distance_threshold']
+        self.ticks_in_day_world        = self.config['ticks_in_day_world']
 
     def get_world(self) -> World:
 
@@ -64,7 +62,7 @@ class HomogeneousWorldFactory(WorldFactory):
     def _create_regions(self, world):
         """Creates regions."""
 
-        ticks_in_week = self.clock.ticks_in_week
+        ticks_in_week = self.ticks_in_day_world * 7
 
         # Initialize regions
         self.initialize_regions(self.regions_data_path, ticks_in_week, world)

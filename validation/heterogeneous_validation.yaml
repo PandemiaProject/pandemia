@@ -37,6 +37,8 @@ world_factory:
   # 0.0005. It implements a simple model of hetergeneous mixing, based on average household size and
   # population density grids.
   __type__: heterogeneous_world_factory.HeterogeneousWorldFactory
+  # The time discretization (should match with tick_length_s)
+  ticks_in_day_world: 3
   # This world factory is stochastic, and therefore gets its own random seed.
   random_seed: 1
   # Filepath to country data, including age structure and population sizes. The actual number of
@@ -277,7 +279,7 @@ movement_model:
   location_closure_exemptions:
     House: ["Home_Activity"]
   # For which activities might an individual wear a facemask.
-  facemask_activities: [Other_Activity]
+  facemask_activities: ["Community_Activity"]
   # Facemask hesitancy by age group. A probability 1.0 means that nobody in that age group wears a
   # mask, a probability 0.0 means that everyone does.
   age_groups:         [  0,  18,  65]

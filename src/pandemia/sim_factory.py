@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import logging
 import uuid
-import pickle
 from datetime import datetime
 from .utils import instantiate_class
 
@@ -24,13 +23,13 @@ from .components.vaccination_model import VaccinationModel
 from .components.travel_model import TravelModel
 from .components.policy_maker_model import PolicyMakerModel
 
-log = logging.getLogger("sim_state")
+log = logging.getLogger("sim_factory")
 
 class SimulationFactory:
     """Class that allows for gradual composition of a number of components, eventually outputting
     a Simulator object that can be used to run simulations with the given config."""
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, vector_world: VectorWorld):
 
         # Static info
         self.pandemia_version = VERSION
@@ -46,7 +45,7 @@ class SimulationFactory:
         self.clock = None
 
         # World
-        self.vector_world = None
+        self.vector_world = vector_world
 
         # Components
         self.policy_maker_model = None
@@ -61,10 +60,6 @@ class SimulationFactory:
     def set_clock(self, clock: Clock) -> None:
         """Sets clock"""
         self.clock = clock
-
-    def set_vector_world(self, vector_world: VectorWorld) -> None:
-        """Sets world model"""
-        self.vector_world = vector_world
 
     def set_seasonal_effects_model(self, seasonal_effects_model: SeasonalEffectsModel) -> None:
         """Sets seasonal effects model"""
@@ -100,15 +95,10 @@ class SimulationFactory:
         """Sets seasonal effects model"""
         self.policy_maker_model = policy_maker_model
 
-    def build_clock_and_world(self):
-        """Builds the model on which the simulator acts. The model consists of a clock, to represent
-        time, and a world, representing regions. Each region consists of agents and locations, with
-        agents able to perform activities in selected locations. There is also a scale factor, which
-        can be used to rescale the numbers of agents and locations in each region"""
+    def build_clock(self):
+        """Builds the simulation clock"""
 
         config = self.config
-
-        scale_factor = config['scale_factor']
 
         # Create clock
         _clock = Clock(config['tick_length_s'], config['simulation_length_days'], config['epoch'])
@@ -116,14 +106,11 @@ class SimulationFactory:
                  _clock.epoch, _clock.tick_length_s, _clock.simulation_length_days)
         self.set_clock(_clock)
 
-        # Create world
-        world_factory_class = config['world_factory.__type__']
-        world_factory_config = config.subconfig('world_factory')
-        world_factory = instantiate_class("pandemia.world.world_factory", world_factory_class,
-                                        world_factory_config, self.clock, scale_factor)
-        world = world_factory.get_world()
-        vector_world = world.vectorize_world()
-        self.set_vector_world(vector_world)
+        # Check that time discretization in world (weekly routines) matches that of clock
+        ticks_in_week_clock = self.clock.ticks_in_week
+        for vector_region in self.vector_world.vector_regions:
+            ticks_in_week_region = vector_region.weekly_routines.shape[1]
+            assert ticks_in_week_clock == ticks_in_week_region
 
     def build_components(self):
         """The model also features a number of components, representing agent mobility, health and
@@ -246,34 +233,3 @@ class SimulationFactory:
                         telemetry_bus)
 
         return sim
-
-    def to_file(self, output_filename: str) -> None:
-        """Write an object to disk at the filename given.
-
-        Parameters:
-            output_filename (str):The filename to write to.  Files get overwritten
-                                  by default.
-
-        Returns:
-            None
-        """
-
-        with open(output_filename, 'wb') as fout:
-            pickle.dump(self, fout, protocol=pickle.HIGHEST_PROTOCOL)
-
-    @staticmethod
-    def from_file(input_filename: str) -> SimulationFactory:
-        """Read an object from disk from the filename given.
-
-        Parameters:
-            input_filename (str):The filename to read from.
-
-        Returns:
-            obj(Object):The python object read from disk
-        """
-
-        log.info('Reading data from %s...', input_filename)
-        with open(input_filename, 'rb') as fin:
-            payload = pickle.load(fin)
-
-        return payload

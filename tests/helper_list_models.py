@@ -64,6 +64,8 @@ safir_conf = Config("Scenarios/Safir/safir.yaml")
 world_factory_conf = Config(
     _dict={
         "random_seed": 1,
+        # Time discretization
+        "ticks_in_day_world": 144,
         # The order in which the region names are listed here determines the index of that region referred
         # to in vectors and matrices appearing in other components:
         "region_names": [
@@ -106,8 +108,7 @@ def get_clock():
 def get_vector_world():
     world_factory = ControlWorldFactory(
         config=world_factory_conf,
-        clock=get_clock(),
-        scale_factor=1,
+        scale_factor=1
     )
 
     return world_factory.get_world().vectorize_world()

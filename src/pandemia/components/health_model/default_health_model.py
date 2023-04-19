@@ -62,6 +62,11 @@ class DefaultHealthModel(HealthModel):
         self.age_mixing_matrices_directory    = config['age_mixing_matrices']
         self.age_group_interval               = config['age_group_interval']
 
+        self.facemask_transmission_multiplier = config['facemask_transmission_multiplier']
+        self.mutation_matrix                  = config['mutation_matrix']
+        self.location_typ_multipliers         = config['location_typ_multipliers']
+        self.immunity_period_days             = config['immunity_period_days']
+
         # Pre-existing immunity
         self.preexisting_sigma_multiplier     = config['preexisting_sigma_multiplier']
         self.preexisting_rho_multiplier       = config['preexisting_rho_multiplier']
@@ -101,13 +106,9 @@ class DefaultHealthModel(HealthModel):
             self.health_presets_config = config['health_presets']
             self.preset_weights_by_age = config['preset_weights_by_age']
 
-        self.facemask_transmission_multiplier = config['facemask_transmission_multiplier']
-        self.mutation_matrix                  = config['mutation_matrix']
-        self.location_typ_multipliers         = config['location_typ_multipliers']
-        self.immunity_period_days             = config['immunity_period_days']
-
         self.age_groups = list(self.preset_weights_by_age.keys())
         self.age_groups.sort()
+        self.number_of_age_groups = len(self.age_groups)
 
         self.preset_ids_dict   = {}
         self.preset_names      = list(self.health_presets_config.keys())
@@ -216,6 +217,15 @@ class DefaultHealthModel(HealthModel):
         self._get_presets(self.clock.ticks_in_day)
         self._validate_presets()
 
+        # Create array of weighted presets by age group
+        self.preset_weights = np.zeros((self.number_of_age_groups, self.number_of_presets))
+        for a in range(self.number_of_age_groups):
+            for preset_name in self.preset_names:
+                id = self.preset_ids_dict[preset_name]
+                age_group = self.age_groups[a]
+                self.preset_weights[a][id] = self.preset_weights_by_age[age_group][preset_name]
+        self.preset_weights /= np.sum(self.preset_weights, axis=1)[:, np.newaxis]
+
         # Flatten arrays
         self.mutation_matrix = np.asarray(self.mutation_matrix, dtype=np.float64).flatten()
         self.preset_infectiousness_lengths =\
@@ -313,57 +323,44 @@ class DefaultHealthModel(HealthModel):
 
         # Complete assignment of default health function values
         num_r_vals = self.number_of_rho_immunity_outcomes
-        for n in range(vector_region.number_of_agents):
-            vector_region.infectiousness_lengths[n] = 1
-            vector_region.infectiousness_partitions[n][0] = -1
-            vector_region.disease_lengths[n] = 1
-            vector_region.disease_partitions[n][0] = -1
-            vector_region.strain_lengths[n] = 1
-            vector_region.strain_partitions[n][0] = -1
-            for s in range(self.number_of_strains):
-                for index in range(self.immunity_length):
-                    vector_region.rho_immunity_failure_values[n][s][index][num_r_vals - 1] = 0.0
+        vector_region.infectiousness_lengths[:] = 1
+        vector_region.infectiousness_partitions[:, 0] = -1
+        vector_region.disease_lengths[:] = 1
+        vector_region.disease_partitions[:, 0] = -1
+        vector_region.strain_lengths[:] = 1
+        vector_region.strain_partitions[:, 0] = -1
+        vector_region.rho_immunity_failure_values[:, :, :, num_r_vals - 1] = 0.0
 
         # Assign levels of pre-existing immunity
         if self.country_data_sigma_immunity_fp is not None:
             if vector_region.name in self.preexisting_sigma_immunity:
-                for s in range(self.number_of_strains):
-                    level = self.preexisting_sigma_immunity[vector_region.name][s]
-                    if level < 1.0:
-                        level *= self.preexisting_sigma_multiplier
-                        for n in range(vector_region.number_of_agents):
-                            for index in range(self.immunity_length):
-                                vector_region.sigma_immunity_failure_values[n][s][index] = level
+                levels = np.array(self.preexisting_sigma_immunity[vector_region.name])
+                levels[levels < 1.0] *= self.preexisting_sigma_multiplier
+                vector_region.sigma_immunity_failure_values[:, :, :] =\
+                    levels[np.newaxis, :, np.newaxis]
         if (self.country_data_rho_immunity_fp is not None) and (num_r_vals > 1):
             if vector_region.name in self.preexisting_rho_immunity:
-                for s in range(self.number_of_strains):
-                    level = self.preexisting_rho_immunity[vector_region.name][s]
-                    if level < 1.0:
-                        level *= self.preexisting_rho_multiplier
-                        for n in range(vector_region.number_of_agents):
-                            for index in range(self.immunity_length):
-                                vector_region.rho_immunity_failure_values[n][s][index][0] = level
-
+                levels = np.array(self.preexisting_rho_immunity[vector_region.name])
+                levels[levels < 1.0] *= self.preexisting_rho_multiplier
+                vector_region.rho_immunity_failure_values[:, :, :, 0] =\
+                    levels[np.newaxis, :, np.newaxis]
         self.update(vector_region, 0)
 
         # Determine location transmission multipliers
-        for m in range(vector_region.number_of_locations):
-            location_typ = vector_region.location_typ_strings[m]
-            if (self.location_typ_multipliers is not None) and\
-                (location_typ in self.location_typ_multipliers):
-                multiplier = self.location_typ_multipliers[location_typ]
-            else:
-                multiplier = 1.0
-            vector_region.location_transmission_multiplier[m] = multiplier
+        if (self.location_typ_multipliers is not None):
+            location_typ = vector_region.location_typ_strings
+            multipliers = np.array([self.location_typ_multipliers.get(loc_typ, 1.0)
+                                    for loc_typ in location_typ], dtype=np.float64)
+            vector_region.location_transmission_multiplier = multipliers
 
         # Assign health presets for each agent by age
-        for n in range(vector_region.number_of_agents):
-            age = vector_region.age[n]
-            age_group = self._determine_age_group(age, self.age_groups)
-            preset_name =\
-                self._assign_preset_name(age_group, vector_region.prng, vector_region.name)
-            preset_id = self.preset_ids_dict[preset_name]
-            vector_region.presets[n] = preset_id
+        age_group_indices =\
+            np.searchsorted(np.asarray(self.age_groups), vector_region.age, side='right') - 1
+        weights = self.preset_weights[age_group_indices]
+        cum_weights = np.cumsum(weights, axis=1)
+        random_probs = vector_region.prng.prng_np.random((vector_region.number_of_agents, 1))
+        preset_ids = (random_probs < cum_weights).argmax(axis=1)
+        vector_region.presets = preset_ids
 
         # Flatten arrays
         vector_region.infectiousness_partitions =\
@@ -407,19 +404,15 @@ class DefaultHealthModel(HealthModel):
         else:
             for s in range(self.number_of_strains):
                 num_initial_infections_rescaled[s] = 1
-        uninfected_population =\
-            copy.deepcopy([n for n in range(vector_region.number_of_agents) if
-                        vector_region.current_strain[n] == -1])
+        uninfected_population = np.where(vector_region.current_strain == -1)[0]
         for s in range(self.number_of_strains):
             num_initial_infections =\
                 min(num_initial_infections_rescaled[s], vector_region.number_of_agents)
-            initial_infections =\
-                vector_region.prng.random_sample(uninfected_population,
-                                                 num_initial_infections)
-            for n in initial_infections:
-                vector_region.infection_event[n] = s
-                uninfected_population.remove(n)
-     
+            initial_infections = vector_region.prng.prng_np.choice(uninfected_population,
+                                                              num_initial_infections, replace=False)
+            vector_region.infection_event[initial_infections] = s
+            uninfected_population = np.setdiff1d(uninfected_population, initial_infections)
+
         self.infect_wrapper(vector_region, 0)
 
         self.update(vector_region, 0)
@@ -692,26 +685,6 @@ class DefaultHealthModel(HealthModel):
                         self.preset_strain_partitions[id][r][s][strain_length - 1]
                     assert final_infectiousness_partition <= final_strain_partition
                     assert final_disease_partition <= final_strain_partition
-
-    def _assign_preset_name(self, age_group, prng, region_name):
-        """Assigns agents infection response preset names by age"""
-
-        preset_name = prng.multinoulli_dict(self.preset_weights_by_age[age_group])
-
-        return preset_name
-
-    def _determine_age_group(self, age, age_groups):
-        """Determine to which age group the agent belongs"""
-
-        if age >= age_groups[-1]:
-            return age_groups[-1]
-        elif age < age_groups[0]:
-            return age_groups[0]
-        else:
-            i = 0
-            while age < age_groups[i] or age >= age_groups[i+1]:
-                i = i + 1
-            return age_groups[i]
 
     def _get_age_mixing_matrix(self, vector_region):
         """Extracts age mixing matrix from data (optional)"""

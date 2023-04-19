@@ -66,7 +66,7 @@ class DefaultVaccinationModel(VaccinationModel):
         assert self.number_of_rho_immunity_outcomes == number_of_rho_immunity_outcomes,\
             "Number of rho immunity outcomes in vaccination model must match health model"
 
-        self.max_vaccine_length_immunity     = self._get_max_vaccine_length_immunity()
+        self.max_vaccine_length_immunity = self._get_max_vaccine_length_immunity()
 
         self.vaccine_rho_immunity_failure_values =\
             np.zeros((self.number_of_vaccines,
@@ -121,24 +121,25 @@ class DefaultVaccinationModel(VaccinationModel):
         number_of_vaccines = self.number_of_vaccines
 
         vector_region.number_of_vaccination_age_groups = 0
-        vector_region.vaccination_age_group = np.zeros((number_of_agents), dtype=np.int64)
         vector_region.num_to_vaccinate =\
             np.zeros((vector_region.number_of_vaccination_age_groups,
                       number_of_vaccines), dtype=np.int64)
-        vector_region.most_recent_first_dose = np.zeros((number_of_agents), dtype=np.int64)
+        vector_region.most_recent_first_dose =\
+            np.full(vector_region.number_of_agents, -self.booster_waiting_time_days, dtype=np.int64)
         vector_region.vaccine_hesitant = np.zeros((number_of_agents), dtype=np.int64)
 
     def initial_conditions(self, vector_region):
         """Initial vaccination"""
 
         # Determine who belongs to each vaccination age group and set other initial data
-        for n in range(vector_region.number_of_agents):
-            age = vector_region.age[n]
-            age_group_index = self._determine_age_group_index(age, self.age_groups)
-            vector_region.vaccination_age_group[n] = age_group_index
-            vector_region.most_recent_first_dose[n] = - self.booster_waiting_time_days
-            if vector_region.prng.random_float(1.0) < self.vaccine_hesitancy[age_group_index]:
-                vector_region.vaccine_hesitant[n] = 1
+        self.vaccine_hesitancy = np.asarray(self.vaccine_hesitancy)
+        age = vector_region.age
+        age_group_indices = np.searchsorted(self.age_groups, age, side='right') - 1
+        age_group_indices = np.clip(age_group_indices, 0, len(self.age_groups) - 1)
+        hesitancy_thresholds = self.vaccine_hesitancy[age_group_indices]
+        vector_region.vaccine_hesitant =\
+            (vector_region.prng.prng_np.random(vector_region.number_of_agents) <\
+             hesitancy_thresholds).astype(np.int64)
 
     def dynamics(self, vector_region, day, ticks_in_day):
         """Changes to agent health"""
@@ -253,16 +254,3 @@ class DefaultVaccinationModel(VaccinationModel):
                 for i in range(length, self.max_vaccine_length_immunity):
                     self.vaccine_sigma_immunity_failure_partitions[id][s][i] = -1
                     self.vaccine_sigma_immunity_failure_values[id][s][i] = 1.0
-
-    def _determine_age_group_index(self, age, age_groups):
-        """Determine to which age group the agent belongs"""
-
-        if age >= age_groups[-1]:
-            return len(age_groups) - 1
-        elif age < age_groups[0]:
-            return 0
-        else:
-            i = 0
-            while age < age_groups[i] or age >= age_groups[i+1]:
-                i = i + 1
-            return i

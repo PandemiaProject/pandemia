@@ -74,45 +74,39 @@ class DefaultMovementModel(MovementModel):
         vector_region.home_location = np.zeros((number_of_agents), dtype=np.int64)
         assert self.home_activity in vector_region.activity_strings
         home_activity_id = vector_region.activity_strings.index(self.home_activity)
-        for n in range(number_of_agents):
-            vector_region.home_location[n] =\
-                vector_region.activity_locations[n][home_activity_id][0]
+        vector_region.home_location =\
+            vector_region.activity_locations[np.arange(number_of_agents), home_activity_id, 0]
 
     def initial_conditions(self, vector_region, offset):
         """Establish initial location of each agent."""
 
         # Assign initial locations
-        for n in range(vector_region.number_of_agents):
-            initial_activity = vector_region.weekly_routines[n][offset]
-            locs = vector_region.activity_locations[n][initial_activity]
-            num = vector_region.num_activity_locations[n][initial_activity]
-            index = vector_region.prng.random_randrange(num)
-            vector_region.current_location[n] = locs[index]
-            vector_region.current_quarantine[n] = 0
+        initial_activities = vector_region.weekly_routines[:, offset]
+        ids = np.arange(vector_region.number_of_agents)
+        locs = vector_region.activity_locations[ids, initial_activities]
+        nums = vector_region.num_activity_locations[ids, initial_activities]
+        indices = vector_region.prng.prng_np.randint(nums)
+        vector_region.current_location = locs[np.arange(vector_region.number_of_agents), indices]
 
         # Determine who wears facemasks
-        for n in range(vector_region.number_of_agents):
-            age = vector_region.age[n]
-            age_group_index = self._determine_age_group_index(age, self.age_groups)
-            if vector_region.prng.random_float(1.0) < self.facemask_hesitancy[age_group_index]:
-                for a in range(vector_region.number_of_activities):
-                    vector_region.wears_facemask[n][a] = 0
-            else:
-                for a in range(vector_region.number_of_activities):
-                    if vector_region.activity_strings[a] in self.facemask_activities:
-                        vector_region.wears_facemask[n][a] = 1
+        self.facemask_hesitancy = np.asarray(self.facemask_hesitancy)
+        age_group_indices = np.searchsorted(self.age_groups, vector_region.age, side='right') - 1
+        age_group_indices = np.clip(age_group_indices, 0, len(self.age_groups) - 1)
+        random_probabilities = vector_region.prng.prng_np.random(vector_region.number_of_agents)
+        facemask_decision = random_probabilities < self.facemask_hesitancy[age_group_indices]
+        facemask_activities_mask = np.isin(vector_region.activity_strings, self.facemask_activities)
+        vector_region.wears_facemask[:, facemask_activities_mask] = 1
+        vector_region.wears_facemask[facemask_decision, :] = 0
 
         # Determine which locations may be subject to closure
-        for n in range(vector_region.number_of_agents):
-            for a in range(vector_region.number_of_activities):
-                locs = vector_region.activity_locations[n][a]
-                num = vector_region.num_activity_locations[n][a]
-                for index in range(num):
-                    activity = vector_region.activity_strings[a]
-                    location_typ = vector_region.location_typ_strings[locs[index]]
-                    if location_typ in self.location_closure_exemptions:
-                        if activity in self.location_closure_exemptions[location_typ]:
-                            vector_region.location_closure[n][a][index] = 0
+        location_typ_strings = np.array(vector_region.location_typ_strings)
+        location_typs = location_typ_strings[vector_region.activity_locations]
+        exemption_mask = np.zeros_like(location_typs, dtype=bool)
+        for location_typ, activities in self.location_closure_exemptions.items():
+            location_mask = location_typs == location_typ
+            activity_mask = np.isin(vector_region.activity_strings, activities)[None, :, None]
+            exemption_mask |= location_mask & activity_mask
+        vector_region.location_closure[exemption_mask] = 0
 
         # Flatten arrays
         vector_region.weekly_routines = vector_region.weekly_routines.flatten()
@@ -166,16 +160,3 @@ class DefaultMovementModel(MovementModel):
             c_void_p(vector_region.requesting_location_update.ctypes.data),
             c_void_p(vector_region.random_state.ctypes.data)
         )
-
-    def _determine_age_group_index(self, age, age_groups):
-        """Determine to which age group the agent belongs"""
-
-        if age >= age_groups[-1]:
-            return len(age_groups) - 1
-        elif age < age_groups[0]:
-            return 0
-        else:
-            i = 0
-            while age < age_groups[i] or age >= age_groups[i+1]:
-                i = i + 1
-            return i
