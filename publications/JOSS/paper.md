@@ -11,22 +11,19 @@ authors:
     corresponding: true
     affiliation: 1 # (Multiple affiliations must be quoted)
   - name: Stephen Wattam
-    orcid: 0000-0000-0000-0000
     affiliation: 2
   - name: Andrew Smith
-    orcid: 0000-0000-0000-0000
     affiliation: 3
   - name: Aoife Hughes
-    orcid: 0000-0000-0000-0000
     affiliation: 4
 affiliations:
  - name: Department of Infectious Disease Epidemiology, Imperial College London, UK
    index: 1
- - name: xxx, WAP Academic Consulting, UK
+ - name: WAP Academic Consulting, UK
    index: 2
- - name: xxx, The Alan Turing Institute, UK
+ - name: The Alan Turing Institute, UK
    index: 3
- - name: xxx, The Alan Turing Institute, UK
+ - name: The Alan Turing Institute, UK
    index: 4
 date: 21 March 2023
 bibliography: paper.bib
