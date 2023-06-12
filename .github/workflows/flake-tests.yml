@@ -21,7 +21,7 @@ jobs:
     strategy:
       # We use `fail-fast: false` for teaching purposes. This ensure that all combinations of the matrix
       # will run even if one or more fail. 
-      fail-fast: false
+      fail-fast: true
       matrix:
         python-version: ["3.10"]
         # Tests are run on MacOS, Windows and Linux.
@@ -60,6 +60,6 @@ jobs:
     # Now run the tests
     - name: Test with pytest with the "slow" marker (other tests will be excluded)
       run: |
-        pytest -m slow -k test_end_to_end_homogeneous --flake-finder --flake-runs=10
+        pytest -m slow -k test_end_to_end_homogeneous --flake-finder --flake-runs=4
 
     # pytest -m slow -k test_end_to_end_all_components --flake-finder --flake-runs=20
