@@ -362,9 +362,6 @@ class DefaultHealthModel(HealthModel):
         preset_ids = (random_probs < cum_weights).argmax(axis=1)
         vector_region.presets = preset_ids
 
-    def initial_conditions_2(self, vector_region):
-        """Establishes initial conditions for default health model."""
-
         # Flatten arrays
         vector_region.infectiousness_partitions =\
             vector_region.infectiousness_partitions.flatten()

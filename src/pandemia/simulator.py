@@ -163,7 +163,7 @@ class Simulator:
 
             self.policy_maker_model.initial_conditions(vector_region)
             self.seasonal_effects_model.initial_conditions(vector_region)
-            self.health_model.initial_conditions_2(vector_region)
+            self.health_model.initial_conditions(vector_region)
             self.movement_model.initial_conditions(vector_region, offset)
             self.hospitalization_and_death_model.initial_conditions(vector_region)
 
@@ -216,17 +216,14 @@ class Simulator:
         self._seed_regions()
 
         # Initialise components, such as disease model, movement model, interventions etc
-        if self.enable_parallel:
-            for vector_region in self.vector_regions:
-                self.health_model.initial_conditions(vector_region)
-                self._update(vector_region, 0)
-            self.travel_model.initial_conditions(self)
-            Parallel(n_jobs=self.num_jobs, backend="threading",
-                        verbose=0)(delayed(self.initial_conditions)(vector_region_batch, offset)
-                                   for vector_region_batch in self.vector_region_batches)
-        else:
-            self.travel_model.initial_conditions(self)
-            self.initial_conditions(self.vector_regions, offset)
+        # if self.enable_parallel:
+        #     self.travel_model.initial_conditions(self)
+        #     Parallel(n_jobs=self.num_jobs, backend="threading",
+        #                 verbose=0)(delayed(self.initial_conditions)(vector_region_batch, offset)
+        #                            for vector_region_batch in self.vector_region_batches)
+        # else:
+        self.travel_model.initial_conditions(self)
+        self.initial_conditions(self.vector_regions, offset)
 
     def run(self):
         """Run the simulation"""
