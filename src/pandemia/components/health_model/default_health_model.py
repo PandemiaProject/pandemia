@@ -346,15 +346,15 @@ class DefaultHealthModel(HealthModel):
                     levels[np.newaxis, :, np.newaxis]
         self.update(vector_region, 0)
 
-    def initial_conditions_2(self, vector_region):
-        """Establishes initial conditions for default health model."""
-
         # Determine location transmission multipliers
         if (self.location_typ_multipliers is not None):
             location_typ = vector_region.location_typ_strings
             multipliers = np.array([self.location_typ_multipliers.get(loc_typ, 1.0)
                                     for loc_typ in location_typ], dtype=np.float64)
             vector_region.location_transmission_multiplier = multipliers
+
+    def initial_conditions_2(self, vector_region):
+        """Establishes initial conditions for default health model."""
 
         # Assign health presets for each agent by age
         age_group_indices =\
