@@ -346,6 +346,9 @@ class DefaultHealthModel(HealthModel):
                     levels[np.newaxis, :, np.newaxis]
         self.update(vector_region, 0)
 
+    def initial_conditions_2(self, vector_region):
+        """Establishes initial conditions for default health model."""
+
         # Determine location transmission multipliers
         if (self.location_typ_multipliers is not None):
             location_typ = vector_region.location_typ_strings
@@ -385,9 +388,6 @@ class DefaultHealthModel(HealthModel):
             vector_region.sigma_immunity_failure_values.flatten()
         vector_region.subpopulation_mixing_matrix =\
             vector_region.subpopulation_mixing_matrix.flatten()
-
-    def initial_conditions_2(self, vector_region):
-        """Establishes initial conditions for default health model."""
 
         # Initial infections
         num_initial_infections_rescaled = [0 for _ in range(self.number_of_strains)]
