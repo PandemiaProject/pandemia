@@ -163,7 +163,7 @@ class Simulator:
 
             self.policy_maker_model.initial_conditions(vector_region)
             self.seasonal_effects_model.initial_conditions(vector_region)
-            self.health_model.initial_conditions(vector_region)
+            # self.health_model.initial_conditions(vector_region)
             self.movement_model.initial_conditions(vector_region, offset)
             self.hospitalization_and_death_model.initial_conditions(vector_region)
 
@@ -216,7 +216,11 @@ class Simulator:
         self._seed_regions()
 
         # Initialise components, such as disease model, movement model, interventions etc
-        # self._initial_conditions(offset)
+
+        for vector_region in self.vector_regions:
+            self.health_model.initial_conditions(vector_region)
+            self._update(vector_region, 0)
+
         # if self.enable_parallel:
         #     self.travel_model.initial_conditions(self)
         #     Parallel(n_jobs=self.num_jobs, backend="threading",
