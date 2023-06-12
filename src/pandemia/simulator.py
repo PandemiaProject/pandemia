@@ -221,7 +221,7 @@ class Simulator:
         #     Parallel(n_jobs=self.num_jobs, backend="threading",
         #                 verbose=0)(delayed(self.initial_conditions)(vector_region_batch, offset)
         #                            for vector_region_batch in self.vector_region_batches)
-        # else:
+        # else:                                                                                     # Parallelizing the initial conditions fails on Linux for some reason with test_end_to_end_homogeneous...
         self.travel_model.initial_conditions(self)
         self.initial_conditions(self.vector_regions, offset)
 
