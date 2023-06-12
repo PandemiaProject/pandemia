@@ -218,7 +218,7 @@ class Simulator:
         # Initialise components, such as disease model, movement model, interventions etc
         if self.enable_parallel:
             for vector_region in self.vector_regions:
-                self.health_model.initial_conditions_1(vector_region)
+                self.health_model.initial_conditions(vector_region)
                 self._update(vector_region, 0)
             self.travel_model.initial_conditions(self)
             Parallel(n_jobs=self.num_jobs, backend="threading",
