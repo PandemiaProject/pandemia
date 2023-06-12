@@ -318,7 +318,7 @@ class DefaultHealthModel(HealthModel):
 
         self._get_age_mixing_matrix(vector_region)
 
-    def initial_conditions(self, vector_region):
+    def initial_conditions_1(self, vector_region):
         """Establishes initial conditions for default health model."""
 
         # Complete assignment of default health function values
@@ -345,6 +345,9 @@ class DefaultHealthModel(HealthModel):
                 vector_region.rho_immunity_failure_values[:, :, :, 0] =\
                     levels[np.newaxis, :, np.newaxis]
         self.update(vector_region, 0)
+
+    def initial_conditions_2(self, vector_region):
+        """Establishes initial conditions for default health model."""
 
         # Determine location transmission multipliers
         if (self.location_typ_multipliers is not None):
