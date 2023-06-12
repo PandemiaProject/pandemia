@@ -14,7 +14,7 @@ random_seed: 1
 # Enable or disable the use of parallel processing. Note that the number of jobs is automatically
 # reset according to the number of regions and population ratio between regions:
 enable_parallel: True
-num_jobs: 3 # -2
+num_jobs: 1 # -2
 
 # ######################################### Clock ##################################################
 
