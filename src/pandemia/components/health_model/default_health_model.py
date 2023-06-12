@@ -321,18 +321,6 @@ class DefaultHealthModel(HealthModel):
     def initial_conditions(self, vector_region):
         """Establishes initial conditions for default health model."""
 
-        # Assign health presets for each agent by age
-        age_group_indices =\
-            np.searchsorted(np.asarray(self.age_groups), vector_region.age, side='right') - 1
-        weights = self.preset_weights[age_group_indices]
-        cum_weights = np.cumsum(weights, axis=1)
-        random_probs = vector_region.prng.prng_np.random((vector_region.number_of_agents, 1))
-        preset_ids = (random_probs < cum_weights).argmax(axis=1)
-        vector_region.presets = preset_ids
-
-    def initial_conditions_2(self, vector_region):
-        """Establishes initial conditions for default health model."""
-
         # Complete assignment of default health function values
         num_r_vals = self.number_of_rho_immunity_outcomes
         vector_region.infectiousness_lengths[:] = 1
@@ -364,6 +352,18 @@ class DefaultHealthModel(HealthModel):
             multipliers = np.array([self.location_typ_multipliers.get(loc_typ, 1.0)
                                     for loc_typ in location_typ], dtype=np.float64)
             vector_region.location_transmission_multiplier = multipliers
+
+        # Assign health presets for each agent by age
+        age_group_indices =\
+            np.searchsorted(np.asarray(self.age_groups), vector_region.age, side='right') - 1
+        weights = self.preset_weights[age_group_indices]
+        cum_weights = np.cumsum(weights, axis=1)
+        random_probs = vector_region.prng.prng_np.random((vector_region.number_of_agents, 1))
+        preset_ids = (random_probs < cum_weights).argmax(axis=1)
+        vector_region.presets = preset_ids
+
+    def initial_conditions_2(self, vector_region):
+        """Establishes initial conditions for default health model."""
 
         # Flatten arrays
         vector_region.infectiousness_partitions =\
