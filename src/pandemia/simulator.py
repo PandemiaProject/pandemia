@@ -216,15 +216,14 @@ class Simulator:
         self._seed_regions()
 
         # Initialise components, such as disease model, movement model, interventions etc
-        # self._initial_conditions(offset)
-        if self.enable_parallel:
-            self.travel_model.initial_conditions(self)
-            Parallel(n_jobs=self.num_jobs, backend="threading",
-                        verbose=0)(delayed(self.initial_conditions)(vector_region_batch, offset)
-                                   for vector_region_batch in self.vector_region_batches)
-        else:
-            self.travel_model.initial_conditions(self)
-            self.initial_conditions(self.vector_regions, offset)
+        # if self.enable_parallel:
+        #     self.travel_model.initial_conditions(self)
+        #     Parallel(n_jobs=self.num_jobs, backend="threading",
+        #                 verbose=0)(delayed(self.initial_conditions)(vector_region_batch, offset)
+        #                            for vector_region_batch in self.vector_region_batches)
+        # else:                                                                                     # Parallelizing the initial conditions fails on Linux for some reason with test_end_to_end_homogeneous...
+        self.travel_model.initial_conditions(self)
+        self.initial_conditions(self.vector_regions, offset)
 
     def run(self):
         """Run the simulation"""

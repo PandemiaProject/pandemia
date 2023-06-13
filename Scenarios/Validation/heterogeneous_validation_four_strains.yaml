@@ -7,7 +7,7 @@ scale_factor: 0.0005
 # Profiler. If True then performance data is saved in a file called profiler_output. The parameter
 # pstats_records determines how many lines to print in the profiler report.
 profile: False
-pstats_records: 1000
+pstats_records: 100
 # Random seed. Pandemia is stochastic and therefore requires a random seed.
 random_seed: 1
 # Parallel processing. The parameter num_jobs sets the maximum number of CPUs to used by the
