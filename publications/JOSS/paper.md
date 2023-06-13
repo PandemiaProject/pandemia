@@ -11,22 +11,19 @@ authors:
     corresponding: true
     affiliation: 1 # (Multiple affiliations must be quoted)
   - name: Stephen Wattam
-    orcid: 0000-0000-0000-0000
     affiliation: 2
   - name: Andrew Smith
-    orcid: 0000-0000-0000-0000
     affiliation: 3
   - name: Aoife Hughes
-    orcid: 0000-0000-0000-0000
     affiliation: 4
 affiliations:
- - name: Research Associate, Imperial College London, UK
+ - name: Department of Infectious Disease Epidemiology, Imperial College London, UK
    index: 1
- - name: xxx, WAP Academic Consulting, UK
+ - name: WAP Academic Consulting, UK
    index: 2
- - name: xxx, The Alan Turing Institute, UK
+ - name: The Alan Turing Institute, UK
    index: 3
- - name: xxx, The Alan Turing Institute, UK
+ - name: The Alan Turing Institute, UK
    index: 4
 date: 21 March 2023
 bibliography: paper.bib
@@ -34,23 +31,21 @@ bibliography: paper.bib
 
 # Summary
 
-Emerging infectious diseases threaten the physical and mental health of people all over the world.
+Emerging infectious diseases pose a significant threat to the physical and mental well-being of individuals across the globe. The ongoing COVID-19 pandemic, for example, is one of the most disruptive worldwide events in recent history. The SARS-CoV-2 virus has led to millions of deaths and hundreds of millions of confirmed cases [@WHO], with potential future pandemics posing even graver consequences [@GPMB].
 
-The ongoing COVID-19 pandemic, for example, is among the most disruptive global events in modern history. The SARS-CoV-2 virus has resulted in millions of deaths and hundreds of millions of confirmed cases [@WHO]. A future pandemic could be an order of magnitude worse [@GPMB].
+It is of vital importance that we deepen our understanding of the epidemiology of pandemic pathogens, and predict the impact of public health interventions, to help policy makers respond to future pandemics with cost-effective strategies that not only save lives but also balance the economic and social implications.
 
-It is of vital importance that we continue to build our understanding of the epidemiology of pandemic pathogens, and predict the impact of public health interventions, to help policy makers respond to future pandemics with cost-effective strategies, that save lives while balancing the economic and social impact.
-
-Such might be the devastating impact of a future pandemic, that the difference between an optimal strategy and a sub-optimal strategy could equate to millions of lives lost, and widespread economic and social disruption, that could otherwise have been avoided.
+Such might be the devastating impact of a future pandemic, that the difference between an optimal strategy and a sub-optimal strategy could equate to millions of lives lost, and widespread economic and social disruption, that could otherwise have been averted.
 
 # Statement of need
 
 While a large number of mathematical and computational epidemic models have been developed over the course of the COVID-19 pandemic, many are lacking in key features and limited in scope [@LORIG2021].
 
-A useful pandemic model must encompass a wide range of advanced features, including spatial dynamics, international travel, multiple variants, waning and cross immunity, and multiple vaccines of differing efficacy. As evidenced during the COVID-19 pandemic, these factors cannot be ignored [@KANG202096] [@FRANCHPARDO2020140033] [@CHINAZIIETAL] [@CASCELLAETAL].
+A useful pandemic model must encompass a wide range of advanced features, including spatial dynamics, international travel, multiple variants, waning and cross immunity, and multiple vaccines of differing efficacies. As evidenced during the COVID-19 pandemic, these factors cannot be ignored [@KANG202096] [@FRANCHPARDO2020140033] [@CHINAZIIETAL] [@CASCELLAETAL].
 
-Moreover, there is a need for flexible model architecture that supports fast and scalable simulations and variable resolution at the level of the synthetic populations. While for many high-income countries, sufficient data are available to model those populations in some detail, this is simply not the case throughout much of the rest of the world [@WORLDBANK].
+Moreover, there is a need for flexible model architecture capable of supporting fast and scalable simulations and variable resolution at the level of the synthetic populations. While ample data exists for modeling populations in many high-income countries, the same level of detail is often unattainable for a substantial portion of the global population [@WORLDBANK].
 
-The universal impact of a pandemic calls for scientific methods that are well-documented and transparent, based on open-source software accessible to researchers around the world, not requiring the expensive resources of a high-performance computer.
+The global ramifications of a pandemic necessitate the adoption of robust, transparent, and well-documented scientific approaches, which rely on open-source software that is readily available to researchers worldwide, without mandating the use of costly high-performance computing resources.
 
 `Pandemia` is an individual-based stochastic pandemic simulator, able to simulate and visualize the spread of an infectious disease of humans across multiple geographical regions, that addresses these needs.
 
